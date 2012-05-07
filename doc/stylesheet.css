@@ -1,0 +1,37 @@
+body
+{
+	background-color: #141414;
+	font-family: verdana, arial;
+	color: #dcdcdc;
+	padding-top: 20px;
+	text-align: justify
+}
+
+a:link
+{
+	color: #777777;
+	text-decoration: none;
+}
+a:hover
+{
+	text-decoration: underline;
+}
+
+.image
+{
+	padding-top: 20px;
+	padding-bottom: 20px;
+	text-align: center;
+	font-size: 10pt;
+}
+
+code
+{
+	font-size: 12pt;
+}
+
+img.icon
+{
+	float: left;
+	padding-right: 10px;
+}

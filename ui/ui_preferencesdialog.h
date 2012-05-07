@@ -1,0 +1,165 @@
+/********************************************************************************
+** Form generated from reading UI file 'preferencesdialog.ui'
+**
+** Created: Sat May 12 10:46:39 2012
+**      by: Qt User Interface Compiler version 4.8.1
+**
+** WARNING! All changes made in this file will be lost when recompiling UI file!
+********************************************************************************/
+
+#ifndef UI_PREFERENCESDIALOG_H
+#define UI_PREFERENCESDIALOG_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
+#include <QtGui/QDialog>
+#include <QtGui/QDialogButtonBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QVBoxLayout>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_PreferencesDialog
+{
+public:
+    QVBoxLayout *verticalLayout;
+    QGroupBox *groupBox;
+    QGridLayout *gridLayout;
+    QPushButton *commentaryFontButton;
+    QPushButton *mainFontButton;
+    QLabel *label;
+    QLabel *label_2;
+    QCheckBox *ltCheckBox;
+    QCheckBox *altCheckBox;
+    QCheckBox *autoRecordBox;
+    QGroupBox *groupBox_2;
+    QVBoxLayout *verticalLayout_2;
+    QCheckBox *revLHBox;
+    QCheckBox *revH2HBox;
+    QCheckBox *revLTCBox;
+    QDialogButtonBox *buttonBox;
+
+    void setupUi(QDialog *PreferencesDialog)
+    {
+        if (PreferencesDialog->objectName().isEmpty())
+            PreferencesDialog->setObjectName(QString::fromUtf8("PreferencesDialog"));
+        PreferencesDialog->resize(447, 339);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        PreferencesDialog->setWindowIcon(icon);
+        verticalLayout = new QVBoxLayout(PreferencesDialog);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        groupBox = new QGroupBox(PreferencesDialog);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setFlat(false);
+        gridLayout = new QGridLayout(groupBox);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        commentaryFontButton = new QPushButton(groupBox);
+        commentaryFontButton->setObjectName(QString::fromUtf8("commentaryFontButton"));
+
+        gridLayout->addWidget(commentaryFontButton, 2, 1, 1, 1);
+
+        mainFontButton = new QPushButton(groupBox);
+        mainFontButton->setObjectName(QString::fromUtf8("mainFontButton"));
+
+        gridLayout->addWidget(mainFontButton, 0, 1, 1, 1);
+
+        label = new QLabel(groupBox);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        gridLayout->addWidget(label, 0, 0, 1, 1);
+
+        label_2 = new QLabel(groupBox);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout->addWidget(label_2, 2, 0, 1, 1);
+
+
+        verticalLayout->addWidget(groupBox);
+
+        ltCheckBox = new QCheckBox(PreferencesDialog);
+        ltCheckBox->setObjectName(QString::fromUtf8("ltCheckBox"));
+        ltCheckBox->setChecked(true);
+
+        verticalLayout->addWidget(ltCheckBox);
+
+        altCheckBox = new QCheckBox(PreferencesDialog);
+        altCheckBox->setObjectName(QString::fromUtf8("altCheckBox"));
+
+        verticalLayout->addWidget(altCheckBox);
+
+        autoRecordBox = new QCheckBox(PreferencesDialog);
+        autoRecordBox->setObjectName(QString::fromUtf8("autoRecordBox"));
+
+        verticalLayout->addWidget(autoRecordBox);
+
+        groupBox_2 = new QGroupBox(PreferencesDialog);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        verticalLayout_2 = new QVBoxLayout(groupBox_2);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        revLHBox = new QCheckBox(groupBox_2);
+        revLHBox->setObjectName(QString::fromUtf8("revLHBox"));
+
+        verticalLayout_2->addWidget(revLHBox);
+
+        revH2HBox = new QCheckBox(groupBox_2);
+        revH2HBox->setObjectName(QString::fromUtf8("revH2HBox"));
+
+        verticalLayout_2->addWidget(revH2HBox);
+
+        revLTCBox = new QCheckBox(groupBox_2);
+        revLTCBox->setObjectName(QString::fromUtf8("revLTCBox"));
+
+        verticalLayout_2->addWidget(revLTCBox);
+
+
+        verticalLayout->addWidget(groupBox_2);
+
+        buttonBox = new QDialogButtonBox(PreferencesDialog);
+        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
+        buttonBox->setOrientation(Qt::Horizontal);
+        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+
+        verticalLayout->addWidget(buttonBox);
+
+
+        retranslateUi(PreferencesDialog);
+        QObject::connect(buttonBox, SIGNAL(accepted()), PreferencesDialog, SLOT(accept()));
+        QObject::connect(buttonBox, SIGNAL(rejected()), PreferencesDialog, SLOT(reject()));
+
+        QMetaObject::connectSlotsByName(PreferencesDialog);
+    } // setupUi
+
+    void retranslateUi(QDialog *PreferencesDialog)
+    {
+        PreferencesDialog->setWindowTitle(QApplication::translate("PreferencesDialog", "Preferences", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QApplication::translate("PreferencesDialog", "Fonts", 0, QApplication::UnicodeUTF8));
+        commentaryFontButton->setText(QApplication::translate("PreferencesDialog", "Tahoma", 0, QApplication::UnicodeUTF8));
+        mainFontButton->setText(QApplication::translate("PreferencesDialog", "Arial", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("PreferencesDialog", "Main font:", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("PreferencesDialog", "Commentary font:", 0, QApplication::UnicodeUTF8));
+        ltCheckBox->setText(QApplication::translate("PreferencesDialog", "Show contents during LT window resize", 0, QApplication::UnicodeUTF8));
+        altCheckBox->setText(QApplication::translate("PreferencesDialog", "Alternate row colors in LT window", 0, QApplication::UnicodeUTF8));
+        autoRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically start recording when session starts", 0, QApplication::UnicodeUTF8));
+        groupBox_2->setTitle(QApplication::translate("PreferencesDialog", "Print laps in reverse order", 0, QApplication::UnicodeUTF8));
+        revLHBox->setText(QApplication::translate("PreferencesDialog", "In lap history", 0, QApplication::UnicodeUTF8));
+        revH2HBox->setText(QApplication::translate("PreferencesDialog", "In head to head", 0, QApplication::UnicodeUTF8));
+        revLTCBox->setText(QApplication::translate("PreferencesDialog", "In lap time comparison", 0, QApplication::UnicodeUTF8));
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class PreferencesDialog: public Ui_PreferencesDialog {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // UI_PREFERENCESDIALOG_H
