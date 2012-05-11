@@ -25,7 +25,7 @@ LT_FILES.path = ~/.f1lt/ltdata/
 DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/$$TARGET/
 
-#DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 
 SOURCES += src/main.cpp\
         src/ltwindow.cpp \
