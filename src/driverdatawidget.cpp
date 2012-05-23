@@ -648,6 +648,10 @@ void DriverDataWidget::printDriverData(int driverIdx)
 
         if (driverData.driver == eventData.sec1Record[0] && driverData.lapData[lapIndex].numLap == eventData.sec1Record[2].toInt())
             item->setTextColor(LTData::colors[LTData::VIOLET]);
+
+        else if (driverData.bestSectors[0].second == driverData.lapData[lapIndex].numLap)
+            item->setTextColor(LTData::colors[LTData::GREEN]);
+
         else
             item->setTextColor(LTData::colors[LTData::WHITE]);
 
@@ -672,6 +676,10 @@ void DriverDataWidget::printDriverData(int driverIdx)
 
         if (driverData.driver == eventData.sec2Record[0] && driverData.lapData[lapIndex].numLap == eventData.sec2Record[2].toInt())
             item->setTextColor(LTData::colors[LTData::VIOLET]);
+
+        else if (driverData.bestSectors[1].second == driverData.lapData[lapIndex].numLap)
+            item->setTextColor(LTData::colors[LTData::GREEN]);
+
         else
             item->setTextColor(LTData::colors[LTData::WHITE]);
 
@@ -695,6 +703,10 @@ void DriverDataWidget::printDriverData(int driverIdx)
 
         if (driverData.driver == eventData.sec3Record[0] && driverData.lapData[lapIndex].numLap == eventData.sec3Record[2].toInt())
             item->setTextColor(LTData::colors[LTData::VIOLET]);
+
+        else if (driverData.bestSectors[2].second == driverData.lapData[lapIndex].numLap)
+            item->setTextColor(LTData::colors[LTData::GREEN]);
+
         else
             item->setTextColor(LTData::colors[LTData::WHITE]);
 

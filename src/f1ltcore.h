@@ -12,7 +12,7 @@ class F1LTCore
 public:
     F1LTCore();
 
-    static QString programVersion() { return "1.1.0"; }
+    static QString programVersion() { return "1.2.0"; }
 
 
     static QString programHomeDir()

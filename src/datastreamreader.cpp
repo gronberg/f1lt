@@ -742,19 +742,23 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
             if (packet.length > -1)
                 eventData.driversData[packet.carID-1].lastLap.sector3 = LapTime(packet.longData.constData());
 
-            if ((LTData::Colors)packet.data == LTData::VIOLET)
+            //sector 3 time is sent after the lap time, therefore we have to update recently added lap
+            eventData.driversData[packet.carID-1].updateLastLap();
+            eventData.driversData[packet.carID-1].colorData[LTData::RACE_SECTOR_3] = (LTData::Colors)packet.data;
+
+            if (((LTData::Colors)packet.data == LTData::VIOLET) || ((LTData::Colors)packet.data == LTData::GREEN))
             {
-                if (eventData.driversData[packet.carID-1].lastLap.sector3.toString() != "")
+                if ((LTData::Colors)packet.data == LTData::VIOLET && eventData.driversData[packet.carID-1].lastLap.sector3.toString() != "")
                 {
                     eventData.sec3Record[0] = eventData.driversData[packet.carID-1].driver;
                     eventData.sec3Record[1] = eventData.driversData[packet.carID-1].lastLap.sector3.toString();
 
                     eventData.sec3Record[2] = QString("%1").arg(eventData.driversData[packet.carID-1].lastLap.numLap);//.driversData[packet.carID-1].lastLap.numLap);
                 }
-            }
-            //sector 3 time is sent after the lap time, therefore we have to update recently added lap
-            eventData.driversData[packet.carID-1].updateLastLap();
-            eventData.driversData[packet.carID-1].colorData[LTData::RACE_SECTOR_3] = (LTData::Colors)packet.data;
+
+                eventData.driversData[packet.carID-1].bestSectors[2].first = QString(packet.longData);
+                eventData.driversData[packet.carID-1].bestSectors[2].second = eventData.driversData[packet.carID-1].lapData.last().numLap;
+            }            
 
             if (eventData.driversData[packet.carID-1].lastLap.sector3.toString() == "STOP" && eventData.flagStatus != LTData::RED_FLAG)
                 eventData.driversData[packet.carID-1].retired = true;
@@ -860,8 +864,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 
              if (!eventData.frame) // || decryption_failure
              {
-//                eventData.frame = number;
-//                httpReader.obtainKeyFrame(number);
+                eventData.frame = number;
+                httpReader.obtainKeyFrame(number);
 
 
 //                onDecryptionKeyObtained(3585657959);  //?
@@ -875,7 +879,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 //                  onDecryptionKeyObtained(2942703366);      //bahrain race
 
 //                 onDecryptionKeyObtained(3710001497);       //malaysia race
-                onDecryptionKeyObtained(2922444379);      //spain race
+//                onDecryptionKeyObtained(2922444379);      //spain race
 //                httpReader.obtainKeyFrame(53);
 
              }
@@ -1116,9 +1120,9 @@ void DataStreamReader::onDecryptionKeyObtained(unsigned int key)
 
 void DataStreamReader::onCookieReceived(QString cookie)
 {
-//    socketReader.openStream(host, port);
+    socketReader.openStream(host, port);
 //    socketReader.openStream("localhost", 6666);
-    socketReader.openStream("192.168.1.2", 6666);
+//    socketReader.openStream("192.168.1.2", 6666);
 //    eventData.key = 2976363859;
 //    eventData.key = 2462388168;     //bahrain quali
 //    eventData.key = 3875488254; //fp1

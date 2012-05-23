@@ -1,6 +1,7 @@
 #ifndef DRIVERDATA_H
 #define DRIVERDATA_H
 
+#include <QPair>
 #include <QTime>
 
 #include "ltdata.h"
@@ -181,6 +182,9 @@ struct DriverData
             colorData[i] = LTData::DEFAULT;
 
         lastLap.carID = carID;
+
+        for (int i = 0; i < 3; ++i)
+            bestSectors[i].second = 0;
     }
 
     DriverData &operator=(const DriverData &dd);
@@ -312,6 +316,7 @@ struct DriverData
     QList<int> posHistory;
     LTData::Colors colorData[14];
     QList<PitData> pitData;
+    QPair<LapTime, int> bestSectors[3];
 
     LapData lastLap;
     LapData bestLap;

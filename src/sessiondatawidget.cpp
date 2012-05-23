@@ -881,6 +881,10 @@ void SessionDataWidget::updateFastestLaps()
 
         if (eventData.driversData[bestLaps[i].carID-1].driver == eventData.sec1Record[0] && bestLaps[i].numLap == eventData.sec1Record[2].toInt())
             item->setTextColor(LTData::colors[LTData::VIOLET]);
+
+        else if (eventData.driversData[bestLaps[i].carID-1].bestSectors[0].second == bestLaps[i].numLap)
+            item->setTextColor(LTData::colors[LTData::GREEN]);
+
         else
             item->setTextColor(LTData::colors[LTData::WHITE]);
 
@@ -901,6 +905,10 @@ void SessionDataWidget::updateFastestLaps()
 
         if (eventData.driversData[bestLaps[i].carID-1].driver == eventData.sec2Record[0] && bestLaps[i].numLap == eventData.sec2Record[2].toInt())
             item->setTextColor(LTData::colors[LTData::VIOLET]);
+
+        else if (eventData.driversData[bestLaps[i].carID-1].bestSectors[1].second == bestLaps[i].numLap)
+            item->setTextColor(LTData::colors[LTData::GREEN]);
+
         else
             item->setTextColor(LTData::colors[LTData::WHITE]);
 
@@ -921,6 +929,10 @@ void SessionDataWidget::updateFastestLaps()
 
         if (eventData.driversData[bestLaps[i].carID-1].driver == eventData.sec3Record[0] && bestLaps[i].numLap == eventData.sec3Record[2].toInt())
             item->setTextColor(LTData::colors[LTData::VIOLET]);
+
+        else if (eventData.driversData[bestLaps[i].carID-1].bestSectors[2].second == bestLaps[i].numLap)
+            item->setTextColor(LTData::colors[LTData::GREEN]);
+
         else
             item->setTextColor(LTData::colors[LTData::WHITE]);
 
