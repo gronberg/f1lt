@@ -30,6 +30,9 @@ public:
     void setSplitterOpaqueResize(bool);
     bool isSplitterOpaqueResize();
 
+    void setDrawCarThumbnails(bool);
+    bool drawCarThumbnails();
+
     void setReverseOrderLapHistory(bool);
     bool isReverseOrderLapHistory();
 

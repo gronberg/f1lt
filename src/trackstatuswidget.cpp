@@ -51,6 +51,24 @@ TrackStatusWidget::TrackStatusWidget(QWidget *parent) :
 //    setStyleSheet("QHeaderView::section:horizontal {margin-right: 20}");
 }
 
+QTableWidgetItem* TrackStatusWidget::setItem(int row, int col, QString text, Qt::ItemFlags flags, int align,
+             QColor textColor, QBrush background)
+{
+    QTableWidgetItem *item = QTableWidget::item(row, col);
+    if (!item)
+    {
+        item = new QTableWidgetItem(text);
+        item->setFlags(flags);
+        QTableWidget::setItem(row, col, item);
+    }
+    item->setTextAlignment(align);
+    item->setBackground(background);
+    item->setText(text);
+    item->setTextColor(textColor);
+
+    return item;
+}
+
 void TrackStatusWidget::setupItems()
 {
     insertRow(0);    
@@ -64,84 +82,28 @@ void TrackStatusWidget::setupItems()
 
     QFont tFont = QTableWidget::font();
     tFont.setPointSize(tFont.pointSize() + 4);
-    item = new QTableWidgetItem("");
-    item->setFlags(Qt::NoItemFlags);
+
+    item = setItem(0, 1, "", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::WHITE]);
     item->setFont(tFont);
-    item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    item->setTextColor(LTData::colors[LTData::WHITE]);
-    setItem(0, 1, item);
 
-    item = new QTableWidgetItem("");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    item->setTextColor(LTData::colors[LTData::WHITE]);
-    setItem(0, 2, item);
+    setItem(0, 2, "", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::WHITE]);
 
-    item = new QTableWidgetItem("Air temp:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    setItem(0, 3, item);
+    setItem(0, 3, "Air temp:", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(0, 4, "", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::VIOLET]);
 
-    item = new QTableWidgetItem("");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::VIOLET]);
-    setItem(0, 4, item);
+    setItem(0, 5, "Track temp:", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(0, 6, "", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::YELLOW]);
 
-    item = new QTableWidgetItem("Track temp:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    setItem(0, 5, item);
+    setItem(0, 7, "Wind speed:", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(0, 8, "", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::GREEN]);
 
-    item = new QTableWidgetItem("");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::YELLOW]);
-    setItem(0, 6, item);
+    setItem(0, 9, "Pressure:", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(0, 10, "", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::YELLOW]);
 
-    item = new QTableWidgetItem("Wind speed:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    setItem(0, 7, item);
+    setItem(0, 11, "Humidity:", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(0, 12, "", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
 
-    item = new QTableWidgetItem("");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::GREEN]);
-    setItem(0, 8, item);
-
-    item = new QTableWidgetItem("Pressure:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    setItem(0, 9, item);
-
-    item = new QTableWidgetItem("");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::YELLOW]);
-    setItem(0, 10, item);
-
-    item = new QTableWidgetItem("Humidity:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    setItem(0, 11, item);
-
-    item = new QTableWidgetItem("");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::WHITE]);
-    setItem(0, 12, item);
-
-    item = new QTableWidgetItem("");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::YELLOW]);
-    setItem(0, 13, item);
+    setItem(0, 13, "", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::YELLOW]);
 
     setRowHeight(1, 20);
 
@@ -204,7 +166,7 @@ void TrackStatusWidget::updateTrackStatus(const EventData &eventData)
         setColumnWidth(2, 0);
     }
     else
-        setColumnWidth(2, 80);
+        setColumnWidth(2, 0.05*(width()-20));
 
     int i = 4;
 
@@ -368,22 +330,27 @@ void TrackStatusWidget::resizeEvent(QResizeEvent *event)
 {
     int w;
     if (event)
-        w = event->size().width() - 20;
+        w = event->size().width() - 40;
     else
         w = width()-20;
 
 
     setColumnWidth(0, 0.05*w);  //track status
-    setColumnWidth(1, 0.06*w);  //rem. time
-    setColumnWidth(2, 0.06*w);  //rem. time
+    setColumnWidth(1, 0.07*w);  //rem. time
+
+    if (eventData.eventType == LTData::RACE_EVENT)
+        setColumnWidth(2, 0.05*w);  //rem. time
+    else
+        setColumnWidth(2, 0);  //rem. time
+
     setColumnWidth(3, 0.1*w);  //Air temp
     setColumnWidth(4, 0.04*w);  // -||-
     setColumnWidth(5, 0.1*w);  //Track temp
     setColumnWidth(6, 0.04*w);  // -||-
     setColumnWidth(7, 0.1*w);  //Wind speed
     setColumnWidth(8, 0.06*w);  // -||-
-    setColumnWidth(9, 0.1*w);  //Pressure
-    setColumnWidth(10, 0.05*w);  // -||-
+    setColumnWidth(9, 0.085*w);  //Pressure
+    setColumnWidth(10, 0.065*w);  // -||-
     setColumnWidth(11, 0.1*w);  //Humidity
     setColumnWidth(12, 0.04*w);  // -||-
     setColumnWidth(13, 0.1*w);  //Dry/wet track

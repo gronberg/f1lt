@@ -7,6 +7,7 @@
 #include <QKeyEvent>
 #include <QPixmap>
 #include <QLabel>
+#include <QTableWidgetItem>
 
 namespace Ui {
 class DriverDataWidget;
@@ -32,7 +33,7 @@ public:
     void setReversedOrder(bool rev) { reversedOrder = rev; }
     bool isReversedOrder() { return reversedOrder; }
 
-    void clearData();
+    void clearData();       
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -42,6 +43,10 @@ private slots:
     void on_tabWidget_currentChanged(int index);
 
 private:
+
+    QTableWidgetItem* setItem(int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
+                 QColor textColor = LTData::colors[LTData::DEFAULT], QBrush background = QBrush());
+
     Ui::DriverDataWidget *ui;
 
     ChartWidget *posChart;

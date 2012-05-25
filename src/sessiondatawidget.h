@@ -5,6 +5,7 @@
 #include <QList>
 #include <QPair>
 #include <QWidget>
+#include <QTableWidgetItem>
 
 #include "eventdata.h"
 
@@ -45,6 +46,10 @@ private slots:
     void on_tabWidget_currentChanged(int index);
 
 private:
+
+    QTableWidgetItem* setItem(QTableWidget *table, int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
+                 QColor textColor = LTData::colors[LTData::DEFAULT], QBrush background = QBrush());
+
     Ui::SessionDataWidget *ui;
     QList<LapData> bestLaps;
 

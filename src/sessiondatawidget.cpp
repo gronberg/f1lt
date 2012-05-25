@@ -39,276 +39,74 @@ SessionDataWidget::~SessionDataWidget()
     delete ui;
 }
 
+QTableWidgetItem* SessionDataWidget::setItem(QTableWidget *table, int row, int col, QString text, Qt::ItemFlags flags, int align,
+             QColor textColor, QBrush background)
+{
+    QTableWidgetItem *item = table->item(row, col);
+    if (!item)
+    {
+        item = new QTableWidgetItem(text);
+        item->setFlags(flags);
+        table->setItem(row, col, item);
+    }
+    item->setTextAlignment(align);
+    item->setBackground(background);
+    item->setText(text);
+    item->setTextColor(textColor);
+
+    return item;
+}
+
 void SessionDataWidget::setupContents()
 {
-    ui->tableWidget_5->setColumnWidth(0, ui->tableWidget_5->width());
+    ui->tableWidget_5->setColumnWidth(0, ui->tableWidget_5->width());    
 
-    QTableWidgetItem *item;
-
-
-
-    item = ui->tableWidget_3->item(0, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Fastest lap:");
-        ui->tableWidget_3->setItem(0, 0, item);
-    }
-    else
-        item->setText("Fastest lap:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 0, 0, "Fastest lap:", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_3->setSpan(0, 0, 1, 2);
-
     ui->tableWidget_3->setRowHeight(0, 20);
 
-    item = ui->tableWidget_3->item(1, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Fastest sector 1:");
-        ui->tableWidget_3->setItem(1, 0, item);
-    }
-    else
-        item->setText("Fastest sector 1:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 1, 0, "Fastest sector 1:", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_3->setSpan(1, 0, 1, 2);
-
     ui->tableWidget_3->setRowHeight(1, 20);
 
-    item = ui->tableWidget_3->item(2, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Fastest sector 2:");
-        ui->tableWidget_3->setItem(2, 0, item);
-    }
-    else
-        item->setText("Fastest sector 2:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 2, 0, "Fastest sector 2:", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_3->setSpan(2, 0, 1, 2);
-
     ui->tableWidget_3->setRowHeight(2, 20);
 
-    item = ui->tableWidget_3->item(3, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Fastest sector 3:");
-        ui->tableWidget_3->setItem(3, 0, item);
-    }
-    else
-        item->setText("Fastest sector 3:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 3, 0, "Fastest sector 3:", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_3->setSpan(3, 0, 1, 2);
-
     ui->tableWidget_3->setRowHeight(3, 20);
 
-    item = ui->tableWidget_3->item(4, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Theoretical lap time:");
-        ui->tableWidget_3->setItem(4, 0, item);
-    }
-    else
-        item->setText("Theoretical lap time:");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 4, 0, "Theor. lap time:", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_3->setSpan(4, 0, 1, 2);
-
     ui->tableWidget_3->setRowHeight(4, 20);
 
-    item = ui->tableWidget_3->item(5, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Best laps");
-        ui->tableWidget_3->setItem(5, 0, item);
-    }
-    else
-        item->setText("Best laps");
-    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 5, 0, "Best laps", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_3->setSpan(5, 0, 1, 7);
 
-    item = ui->tableWidget_3->item(6, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem("P");
-        ui->tableWidget_3->setItem(6, 0, item);
-    }
-    else
-        item->setText("P");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 6, 0, "P", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 6, 1, "Name", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 6, 2, "Time", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 6, 3, "Gap", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 6, 4, "S1", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 6, 5, "S2", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 6, 6, "S3", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_3, 6, 7, "Lap", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
 
-    item = ui->tableWidget_3->item(6, 1);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Name");
-        ui->tableWidget_3->setItem(6, 1, item);
-    }
-    else
-        item->setText("Name");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-
-    item = ui->tableWidget_3->item(6, 2);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Time");
-        ui->tableWidget_3->setItem(6, 2, item);
-    }
-    else
-        item->setText("Time");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-
-    item = ui->tableWidget_3->item(6, 3);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Gap");
-        ui->tableWidget_3->setItem(6, 3, item);
-    }
-    else
-        item->setText("Gap");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-
-    item = ui->tableWidget_3->item(6, 4);
-    if (!item)
-    {
-        item = new QTableWidgetItem("S1");
-        ui->tableWidget_3->setItem(6, 4, item);
-    }
-    else
-        item->setText("S1");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-
-    item = ui->tableWidget_3->item(6, 5);
-    if (!item)
-    {
-        item = new QTableWidgetItem("S2");
-        ui->tableWidget_3->setItem(6, 5, item);
-    }
-    else
-        item->setText("S2");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-
-    item = ui->tableWidget_3->item(6, 6);
-    if (!item)
-    {
-        item = new QTableWidgetItem("S3");
-        ui->tableWidget_3->setItem(6, 6, item);
-    }
-    else
-        item->setText("S3");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-
-    item = ui->tableWidget_3->item(6, 7);
-    if (!item)
-    {
-        item = new QTableWidgetItem("Lap");
-        ui->tableWidget_3->setItem(6, 7, item);
-    }
-    else
-        item->setText("Lap");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-
-    item = new QTableWidgetItem("Sector 1");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_2->setItem(0, 0, item);
-
-    item = new QTableWidgetItem("KPH");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_2->setItem(0, 1, item);
-
-    item = new QTableWidgetItem("Sector 2");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_2->setItem(0, 3, item);
-
-    item = new QTableWidgetItem("KPH");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_2->setItem(0, 4, item);
-
-    item = new QTableWidgetItem("Sector 3");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_2->setItem(8, 0, item);
-
-    item = new QTableWidgetItem("KPH");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_2->setItem(8, 1, item);
-
-    item = new QTableWidgetItem("Speed trap");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_2->setItem(8, 3, item);
-
-    item = new QTableWidgetItem("KPH");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_2->setItem(8, 4, item);
+    setItem(ui->tableWidget_2, 0, 0, "Sector 1", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_2, 0, 1, "KPH", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_2, 0, 3, "Sector 2", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_2, 0, 4, "KPH", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_2, 8, 0, "Sector 3", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_2, 8, 1, "KPH", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_2, 8, 3, "Speed trap", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_2, 8, 4, "KPH", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
 
 
-    item = new QTableWidgetItem("");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_4->setItem(0, 0, item);
-
-    item = new QTableWidgetItem("Lap");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_4->setItem(0, 1, item);
-
-//    item = new QTableWidgetItem("No");
-//    item->setFlags(Qt::NoItemFlags);
-//    item->setTextAlignment(Qt::AlignRight);
-//    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-//    ui->tableWidget_4->setItem(0, 2, item);
-
-    item = new QTableWidgetItem("Name");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_4->setItem(0, 3, item);
-
-    item = new QTableWidgetItem("Time");
-//    item->setFlags(Qt::NoItemFlags);
-    item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
-    ui->tableWidget_4->setItem(0, 4, item);
+    setItem(ui->tableWidget_4, 0, 0, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_4, 0, 1, "Lap", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_4, 0, 3, "Name", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_4, 0, 4, "Time", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
 
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
 }
@@ -342,57 +140,17 @@ void SessionDataWidget::updateEventInfo()
     QTableWidgetItem *item;
     LTEvent event = eventData.eventInfo;
 
-    item = ui->tableWidget_5->item(0, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem(event.eventName);
-        item->setTextAlignment(Qt::AlignCenter);
-        item->setFont(QFont("Arial", 15, QFont::Bold));
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextColor(LTData::colors[LTData::YELLOW]);
-        ui->tableWidget_5->setItem(0, 0, item);
-    }
-    else
-        item->setText(event.eventName);
+    item = setItem(ui->tableWidget_5, 0, 0, event.eventName, Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::YELLOW]);
+    item->setFont(QFont("Arial", 15, QFont::Bold));
 
-    item = ui->tableWidget_5->item(1, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem(event.eventPlace);
-        item->setTextAlignment(Qt::AlignCenter);
-        item->setFont(QFont("Arial", 12, QFont::Bold));
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextColor(LTData::colors[LTData::GREEN]);
-        ui->tableWidget_5->setItem(1, 0, item);
-    }
-    else
-        item->setText(event.eventPlace);
+    item = setItem(ui->tableWidget_5, 1, 0, event.eventPlace, Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::GREEN]);
+    item->setFont(QFont("Arial", 12, QFont::Bold));
 
-    item = ui->tableWidget_5->item(2, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem(event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"));
-        item->setTextAlignment(Qt::AlignCenter);
-        item->setFont(QFont("Arial", 10, QFont::Bold));
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextColor(LTData::colors[LTData::WHITE]);
-        ui->tableWidget_5->setItem(2, 0, item);
-    }
-    else
-        item->setText(event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"));
+    item = setItem(ui->tableWidget_5, 2, 0, event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"), Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::WHITE]);
+    item->setFont(QFont("Arial", 10, QFont::Bold));
 
-    item = ui->tableWidget_5->item(3, 0);
-    if (!item)
-    {
-        item = new QTableWidgetItem(QString::number(event.laps) + " laps");
-        item->setTextAlignment(Qt::AlignCenter);
-//        item->setFont(QFont("Arial", 15, QFont::Bold));
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextColor(LTData::colors[LTData::CYAN]);
-        ui->tableWidget_5->setItem(3, 0, item);
-    }
-    else
-        item->setText(QString::number(event.laps) + " laps");
+    item = setItem(ui->tableWidget_5, 3, 0, QString::number(event.laps) + " laps", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::CYAN]);
+
 
     QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget_5->cellWidget(4, 0));
     if (!lab)
@@ -423,110 +181,19 @@ void SessionDataWidget::updateSpeedRecords()
 
     for (int i = 0, j = 0; i < 6; i+=1, j += 2)
     {
-        item = ui->tableWidget_2->item(1+i, 0);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1").arg(eventData.sec1Speed[j]));
-            ui->tableWidget_2->setItem(1+i, 0, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::WHITE]);
-        }
-        else
-            item->setText(eventData.sec1Speed[j]);
+        setItem(ui->tableWidget_2, 1+i, 0, QString("%1").arg(eventData.sec1Speed[j]), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_2, 1+i, 1, eventData.sec1Speed[j+1], Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::YELLOW]);
 
-
-        item = ui->tableWidget_2->item(1+i, 1);
-        if (!item)
-        {
-            item = new QTableWidgetItem(eventData.sec1Speed[j+1]);
-            ui->tableWidget_2->setItem(1+i, 1, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::YELLOW]);
-        }
-        else
-            item->setText(eventData.sec1Speed[j+1]);
-
-
-        item = ui->tableWidget_2->item(1+i, 3);
-        if (!item)
-        {            
-            item = new QTableWidgetItem(QString("%1").arg(eventData.sec2Speed[j]));
-
-            ui->tableWidget_2->setItem(1+i, 3, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::WHITE]);
-        }
-        else
-            item->setText(eventData.sec2Speed[j]);
-
-
-        item = ui->tableWidget_2->item(1+i, 4);
-        if (!item)
-        {
-            item = new QTableWidgetItem(eventData.sec2Speed[j+1]);
-            ui->tableWidget_2->setItem(1+i, 4, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::YELLOW]);
-        }
-        else
-            item->setText(eventData.sec2Speed[j+1]);
+        setItem(ui->tableWidget_2, 1+i, 3, QString("%1").arg(eventData.sec2Speed[j]), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_2, 1+i, 4, eventData.sec2Speed[j+1], Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::YELLOW]);
 
         ui->tableWidget_2->setRowHeight(1+i, 20);
 
-        item = ui->tableWidget_2->item(9+i, 0);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1").arg(eventData.sec3Speed[j]));
-            ui->tableWidget_2->setItem(9+i, 0, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::WHITE]);
-        }
-        else
-            item->setText(eventData.sec3Speed[j]);
+        setItem(ui->tableWidget_2, 9+i, 0, QString("%1").arg(eventData.sec3Speed[j]), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_2, 9+i, 1, eventData.sec3Speed[j+1], Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::YELLOW]);
 
-
-        item = ui->tableWidget_2->item(9+i, 1);
-        if (!item)
-        {
-            item = new QTableWidgetItem(eventData.sec3Speed[j+1]);
-            ui->tableWidget_2->setItem(9+i, 1, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::YELLOW]);
-        }
-        else
-            item->setText(eventData.sec3Speed[j+1]);
-
-
-        item = ui->tableWidget_2->item(9+i, 3);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1").arg(eventData.speedTrap[j]));
-            ui->tableWidget_2->setItem(9+i, 3, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::WHITE]);
-        }
-        else
-            item->setText(eventData.speedTrap[j]);
-
-
-        item = ui->tableWidget_2->item(9+i, 4);
-        if (!item)
-        {
-            item = new QTableWidgetItem(eventData.speedTrap[j+1]);
-            ui->tableWidget_2->setItem(9+i, 4, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::YELLOW]);
-        }
-        else
-            item->setText(eventData.speedTrap[j+1]);
+        setItem(ui->tableWidget_2, 9+i, 3, QString("%1").arg(eventData.speedTrap[j]), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_2, 9+i, 4, eventData.speedTrap[j+1], Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::YELLOW]);
 
         ui->tableWidget_2->setRowHeight(9+i, 20);
     }   
@@ -559,36 +226,14 @@ void SessionDataWidget::updateFastestLaps()
     if (eventData.eventType != LTData::RACE_EVENT && !bestLaps.isEmpty())
         str = bestLaps[0].lapTime.toString();
 
-    item = ui->tableWidget_3->item(0, 2);
-    if (!item)
-    {
-        item = new QTableWidgetItem(str);
-        ui->tableWidget_3->setItem(0, 2, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignCenter);
-    }
-    else
-        item->setText(str);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 0, 2, str, Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::VIOLET]);
 
 
     str = eventData.FLDriver;
     if (eventData.eventType != LTData::RACE_EVENT && !bestLaps.isEmpty() && bestLaps[0].carID != -1)
         str = eventData.driversData[bestLaps[0].carID-1].driver;
 
-    item = ui->tableWidget_3->item(0, 3);
-    if (!item)
-    {
-        item = new QTableWidgetItem(str);
-        ui->tableWidget_3->setItem(0, 3, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    }
-    else
-        item->setText(str);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 0, 3, str, Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
     ui->tableWidget_3->setSpan(0, 3, 1, 3);
 
     str = QString("L%1").arg(eventData.FLLap);
@@ -600,46 +245,13 @@ void SessionDataWidget::updateFastestLaps()
 
     if (str.toInt() != -1)
     {
-        item = ui->tableWidget_3->item(0, 6);
-        if (!item)
-        {
-            item = new QTableWidgetItem(str);
-            ui->tableWidget_3->setItem(0, 6, item);
-            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        }
-        else
-            item->setText(str);
-
-        item->setTextColor(LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_3, 0, 6, str, Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::YELLOW]);
         ui->tableWidget_3->setSpan(0, 6, 1, 2);
     }
 
-    item = ui->tableWidget_3->item(1, 2);
-    if (!item)
-    {
-        item = new QTableWidgetItem(eventData.sec1Record[1]);
-        ui->tableWidget_3->setItem(1, 2, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignCenter);
-    }
-    else
-        item->setText(eventData.sec1Record[1]);
+    setItem(ui->tableWidget_3, 1, 2, eventData.sec1Record[1], Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::VIOLET]);
 
-    item->setTextColor(LTData::colors[LTData::WHITE]);
-
-    item = ui->tableWidget_3->item(1, 3);
-    if (!item)
-    {
-        item = new QTableWidgetItem(eventData.sec1Record[0]);
-        ui->tableWidget_3->setItem(1, 3, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    }
-    else
-        item->setText(eventData.sec1Record[0]);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 1, 3, eventData.sec1Record[0], Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
     ui->tableWidget_3->setSpan(1, 3, 1, 3);
 
     str = "";
@@ -650,46 +262,13 @@ void SessionDataWidget::updateFastestLaps()
     else if (eventData.eventType != LTData::RACE_EVENT && QTime::fromString(eventData.sec1Record[3], "h:mm:ss").isValid())
         str = eventData.sec1Record[3];
 
-    item = ui->tableWidget_3->item(1, 6);
-    if (!item)
-    {
-        item = new QTableWidgetItem(str);
-        ui->tableWidget_3->setItem(1, 6, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        ui->tableWidget_3->setSpan(1, 6, 1, 2);
-    }
-    else
-        item->setText(str);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 1, 6, str, Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::YELLOW]);
+    ui->tableWidget_3->setSpan(1, 6, 1, 2);
 
 
-    item = ui->tableWidget_3->item(2, 2);
-    if (!item)
-    {
-        item = new QTableWidgetItem(eventData.sec2Record[1]);
-        ui->tableWidget_3->setItem(2, 2, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignCenter);
-    }
-    else
-        item->setText(eventData.sec2Record[1]);
+    setItem(ui->tableWidget_3, 2, 2, eventData.sec2Record[1], Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::VIOLET]);
 
-    item->setTextColor(LTData::colors[LTData::WHITE]);
-
-    item = ui->tableWidget_3->item(2, 3);
-    if (!item)
-    {
-        item = new QTableWidgetItem(eventData.sec2Record[0]);
-        ui->tableWidget_3->setItem(2, 3, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    }
-    else
-        item->setText(eventData.sec2Record[0]);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 2, 3, eventData.sec2Record[0], Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
     ui->tableWidget_3->setSpan(2, 3, 1, 3);
 
     str = "";
@@ -699,45 +278,12 @@ void SessionDataWidget::updateFastestLaps()
     else if (eventData.eventType != LTData::RACE_EVENT && QTime::fromString(eventData.sec2Record[3], "h:mm:ss").isValid())
         str = eventData.sec2Record[3];
 
-    item = ui->tableWidget_3->item(2, 6);
-    if (!item)
-    {
-        item = new QTableWidgetItem(str);
-        ui->tableWidget_3->setItem(2, 6, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        ui->tableWidget_3->setSpan(2, 6, 1, 2);
-    }
-    else
-        item->setText(str);
+    setItem(ui->tableWidget_3, 2, 6, str, Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::YELLOW]);
+    ui->tableWidget_3->setSpan(2, 6, 1, 2);
 
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 3, 2, eventData.sec3Record[1], Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::VIOLET]);
 
-    item = ui->tableWidget_3->item(3, 2);
-    if (!item)
-    {
-        item = new QTableWidgetItem(eventData.sec3Record[1]);
-        ui->tableWidget_3->setItem(3, 2, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignCenter);
-    }
-    else
-        item->setText(eventData.sec3Record[1]);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
-
-    item = ui->tableWidget_3->item(3, 3);
-    if (!item)
-    {
-        item = new QTableWidgetItem(eventData.sec3Record[0]);
-        ui->tableWidget_3->setItem(3, 3, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    }
-    else
-        item->setText(eventData.sec3Record[0]);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 3, 3, eventData.sec3Record[0], Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
     ui->tableWidget_3->setSpan(3, 3, 1, 3);
 
     str = "";
@@ -747,216 +293,77 @@ void SessionDataWidget::updateFastestLaps()
     else if (eventData.eventType != LTData::RACE_EVENT && QTime::fromString(eventData.sec3Record[3], "h:mm:ss").isValid())
         str = eventData.sec3Record[3];
 
-    item = ui->tableWidget_3->item(3, 6);
-    if (!item)
-    {
-        item = new QTableWidgetItem(str);
-        ui->tableWidget_3->setItem(3, 6, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        ui->tableWidget_3->setSpan(3, 6, 1, 2);
-    }
-    else
-        item->setText(str);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 3, 6, str, Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::YELLOW]);
+    ui->tableWidget_3->setSpan(3, 6, 1, 2);
 
     QString tL = "";
     if (eventData.sec1Record[1] != "" && eventData.sec2Record[1] != "" && eventData.sec3Record[1] != "")
         tL = LapData::sumSectors(eventData.sec1Record[1], eventData.sec2Record[1], eventData.sec3Record[1]);
 
-    item = ui->tableWidget_3->item(4, 2);
-    if (!item)
-    {
-        item = new QTableWidgetItem(tL);
-        ui->tableWidget_3->setItem(4, 2, item);
-        item->setFlags(Qt::NoItemFlags);
-        item->setTextAlignment(Qt::AlignCenter);
-    }
-    else
-        item->setText(tL);
-
-    item->setTextColor(LTData::colors[LTData::WHITE]);
+    setItem(ui->tableWidget_3, 4, 2, tL, Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::CYAN]);
 
     for (int i = 0, j = 0; i < bestLaps.size(); ++i)
     {
         if (bestLaps[i].lapTime.toString() == "" || bestLaps[i].carID == -1)
             continue;
 
-        item = ui->tableWidget_3->item(7+j, 0);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1.").arg(j+1));
-            ui->tableWidget_3->setItem(7+j, 0, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        }
-        else
-            item->setText(QString("%1.").arg(j+1));
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
-
-        item->setTextColor(LTData::colors[LTData::DEFAULT]);
+        setItem(ui->tableWidget_3, 7+j, 0, QString("%1.").arg(j+1), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft,
+                       LTData::colors[LTData::DEFAULT], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
 
-        item = ui->tableWidget_3->item(7+j, 1);
-        if (!item)
-        {
-            item = new QTableWidgetItem(eventData.driversData[bestLaps[i].carID-1].driver);
-            ui->tableWidget_3->setItem(7+j, 1, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        }
-        else
-            item->setText(eventData.driversData[bestLaps[i].carID-1].driver);
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
+        setItem(ui->tableWidget_3, 7+j, 1, eventData.driversData[bestLaps[i].carID-1].driver, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft,
+                       LTData::colors[j == 0 ? LTData::VIOLET : LTData::WHITE], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        if (j == 0)
-            item->setTextColor(LTData::colors[LTData::VIOLET]);
-        else
-            item->setTextColor(LTData::colors[LTData::WHITE]);
-
-
-        item = ui->tableWidget_3->item(7+j, 2);
-        if (!item)
-        {
-            item = new QTableWidgetItem(bestLaps[i].lapTime);
-            ui->tableWidget_3->setItem(7+j, 2, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignCenter);
-        }
-        else
-            item->setText(bestLaps[i].lapTime);
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
-
-        if (j == 0)
-            item->setTextColor(LTData::colors[LTData::VIOLET]);
-        else
-            item->setTextColor(LTData::colors[LTData::GREEN]);
+        setItem(ui->tableWidget_3, 7+j, 2, bestLaps[i].lapTime, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
+                       LTData::colors[j == 0 ? LTData::VIOLET : LTData::GREEN], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
         if (i != 0)
         {
             QString gap = DriverData::calculateGap(bestLaps[i].lapTime, bestLaps[0].lapTime);
-            item = ui->tableWidget_3->item(7+j, 3);
-            if (!item)
-            {
-                item = new QTableWidgetItem(gap);
-                ui->tableWidget_3->setItem(7+j, 3, item);
-//                item->setFlags(Qt::NoItemFlags);
-                item->setTextAlignment(Qt::AlignCenter);
-            }
-            else
-                item->setText(gap);
-            if (i % 2 == 0 )
-                item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-            else
-                item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
 
-            item->setTextColor(LTData::colors[LTData::YELLOW]);
+            setItem(ui->tableWidget_3, 7+j, 3, gap, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
+                           LTData::colors[LTData::YELLOW], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
         }
-
-
-        item = ui->tableWidget_3->item(7+j, 4);
-        if (!item)
-        {
-            item = new QTableWidgetItem(bestLaps[i].sector1);
-            ui->tableWidget_3->setItem(7+j, 4, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignCenter);
-        }
-        else
-            item->setText(bestLaps[i].sector1);
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
-
+        QColor color = LTData::colors[LTData::WHITE];
         if (eventData.driversData[bestLaps[i].carID-1].driver == eventData.sec1Record[0] && bestLaps[i].numLap == eventData.sec1Record[2].toInt())
-            item->setTextColor(LTData::colors[LTData::VIOLET]);
+            color = LTData::colors[LTData::VIOLET];
 
         else if (eventData.driversData[bestLaps[i].carID-1].bestSectors[0].second == bestLaps[i].numLap)
-            item->setTextColor(LTData::colors[LTData::GREEN]);
+            color = LTData::colors[LTData::GREEN];
 
-        else
-            item->setTextColor(LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_3, 7+j, 4, bestLaps[i].sector1, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
+                       color, LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        item = ui->tableWidget_3->item(7+j, 5);
-        if (!item)
-        {
-            item = new QTableWidgetItem(bestLaps[i].sector2);
-            ui->tableWidget_3->setItem(7+j, 5, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignCenter);
-        }
-        else
-            item->setText(bestLaps[i].sector2);
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
 
+        color = LTData::colors[LTData::WHITE];
         if (eventData.driversData[bestLaps[i].carID-1].driver == eventData.sec2Record[0] && bestLaps[i].numLap == eventData.sec2Record[2].toInt())
-            item->setTextColor(LTData::colors[LTData::VIOLET]);
+            color = LTData::colors[LTData::VIOLET];
 
         else if (eventData.driversData[bestLaps[i].carID-1].bestSectors[1].second == bestLaps[i].numLap)
-            item->setTextColor(LTData::colors[LTData::GREEN]);
+            color = LTData::colors[LTData::GREEN];
 
-        else
-            item->setTextColor(LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_3, 7+j, 5, bestLaps[i].sector2, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
+                       color, LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        item = ui->tableWidget_3->item(7+j, 6);
-        if (!item)
-        {
-            item = new QTableWidgetItem(bestLaps[i].sector3);
-            ui->tableWidget_3->setItem(7+j, 6, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignCenter);
-        }
-        else
-            item->setText(bestLaps[i].sector3);
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
-
+        color = LTData::colors[LTData::WHITE];
         if (eventData.driversData[bestLaps[i].carID-1].driver == eventData.sec3Record[0] && bestLaps[i].numLap == eventData.sec3Record[2].toInt())
-            item->setTextColor(LTData::colors[LTData::VIOLET]);
+            color = LTData::colors[LTData::VIOLET];
 
         else if (eventData.driversData[bestLaps[i].carID-1].bestSectors[2].second == bestLaps[i].numLap)
-            item->setTextColor(LTData::colors[LTData::GREEN]);
+            color = LTData::colors[LTData::GREEN];
 
-        else
-            item->setTextColor(LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_3, 7+j, 6, bestLaps[i].sector3, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
+                       color, LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
+
 
 
         str = QString("%1").arg(bestLaps[i].numLap);
 
         if (eventData.eventType == LTData::QUALI_EVENT)
                 str += QString(" (Q%1)").arg(bestLaps[i].qualiPeriod);
-        item = ui->tableWidget_3->item(7+j, 7);
-        if (!item)
-        {
-            item = new QTableWidgetItem(str);
-            ui->tableWidget_3->setItem(7+j, 7, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-        }
-        else
-            item->setText(str);
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
 
-        item->setTextColor(LTData::colors[LTData::WHITE]);
+        setItem(ui->tableWidget_3, 7+j, 7, str, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
+                       LTData::colors[LTData::WHITE], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
         ++j;
     }
@@ -994,89 +401,20 @@ void SessionDataWidget::updatePitStops(bool clear)
         if (ui->tableWidget_4->rowCount() - 1 < pitData.size())
             ui->tableWidget_4->insertRow(ui->tableWidget_4->rowCount());
 
-        item = ui->tableWidget_4->item(i+1, 0);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1.").arg(i+1));
-            ui->tableWidget_4->setItem(i+1, 0, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-            item->setTextColor(LTData::colors[LTData::DEFAULT]);
-        }
-        else
-            item->setText(QString("%1.").arg(i+1));
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
+        setItem(ui->tableWidget_4, i+1, 0, QString("%1.").arg(i+1), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
+                       LTData::colors[LTData::DEFAULT], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
+        setItem(ui->tableWidget_4, i+1, 1, QString("%1").arg(pitData[i].first.second), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
+                       LTData::colors[LTData::YELLOW], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        item = ui->tableWidget_4->item(i+1, 1);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1").arg(pitData[i].first.second));
-            ui->tableWidget_4->setItem(i+1, 1, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-            item->setTextColor(LTData::colors[LTData::YELLOW]);
-        }
-        else
-            item->setText(QString("%1").arg(pitData[i].first.second));
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
+        setItem(ui->tableWidget_4, i+1, 2, QString("%1").arg(LTData::getDriverNo(pitData[i].second)), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
+                       LTData::colors[LTData::WHITE], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        item = ui->tableWidget_4->item(i+1, 2);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1").arg(LTData::getDriverNo(pitData[i].second)));
-            ui->tableWidget_4->setItem(i+1, 2, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-            item->setTextColor(LTData::colors[LTData::WHITE]);
-        }
-        else
-            item->setText(QString("%1").arg(LTData::getDriverNo(pitData[i].second)));
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
+        setItem(ui->tableWidget_4, i+1, 3, QString("%1").arg(pitData[i].second), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft,
+                       LTData::colors[LTData::WHITE], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-
-        item = ui->tableWidget_4->item(i+1, 3);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1").arg(pitData[i].second));
-            ui->tableWidget_4->setItem(i+1, 3, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-            item->setTextColor(LTData::colors[LTData::WHITE]);
-        }
-        else
-            item->setText(QString("%1").arg(pitData[i].second));
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
-
-
-        item = ui->tableWidget_4->item(i+1, 4);
-        if (!item)
-        {
-            item = new QTableWidgetItem(QString("%1").arg(pitData[i].first.first, 0, 'f', 1));
-            ui->tableWidget_4->setItem(i+1, 4, item);
-//            item->setFlags(Qt::NoItemFlags);
-            item->setTextAlignment(Qt::AlignCenter);
-            item->setTextColor(LTData::colors[LTData::YELLOW]);
-        }
-        else
-            item->setText(QString("%1").arg(pitData[i].first.first, 0, 'f', 1));
-        if (i % 2 == 0)
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND]);
-        else
-            item->setBackgroundColor(LTData::colors[LTData::BACKGROUND2]);
-
+        setItem(ui->tableWidget_4, i+1, 4, QString("%1").arg(pitData[i].first.first, 0, 'f', 1), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
+                       LTData::colors[LTData::YELLOW], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
         ui->tableWidget_4->setRowHeight(i+1, 20);
     }

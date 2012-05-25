@@ -263,7 +263,7 @@ void DriverData::addLap(const EventData &ed)
     {
         //during practice and quali we only save timed laps
         if ((lastLap.lapTime.toString() != "") && (lapData.empty() ||
-            ((lastLap.numLap > lapData.last().numLap) && lastLap.sector1.toString() != "" && lastLap.sector2.toString() != "" && lastLap.sector3.toString() != "")))
+            (/*(lastLap.numLap > lapData.last().numLap) &&*/ lastLap.sector1.toString() != "" && lastLap.sector2.toString() != "" && lastLap.sector3.toString() != "")))
         {            
 //            std::cout<<"LASTLAP="<<lastLap.lapTime.toString().toStdString()<<std::endl;
 

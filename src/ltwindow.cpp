@@ -409,6 +409,7 @@ void LTWindow::loadSettings()
 //    prefs->setReverseOrderLapTimeComparison(settings->value("ui/reversed_lap_time_comparison").toBool());
 
     ui->driverDataWidget->setReversedOrder(settings->value("ui/reversed_lap_history").toBool());
+    ui->tableWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
 }
 
 void LTWindow::saveSettings()
@@ -476,6 +477,8 @@ void LTWindow::on_actionPreferences_triggered()
 
         if (currDriver >= 0)
             ui->driverDataWidget->printDriverData(currDriver);
+
+        ui->tableWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
     }
 }
 

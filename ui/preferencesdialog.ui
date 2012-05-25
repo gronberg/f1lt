@@ -83,6 +83,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="thumbnailsCheckBox">
+     <property name="text">
+      <string>Draw car thumbnails</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Print laps in reverse order</string>

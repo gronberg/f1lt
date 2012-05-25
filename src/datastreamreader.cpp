@@ -185,8 +185,8 @@ bool DataStreamReader::parsePacket(const QByteArray &buf, Packet &packet, int &p
 
             case LTData::SYS_VALID_MARKER:
             case LTData::SYS_REFRESH_RATE:
-                packet.length = LTData::getShortPacketLength(pbuf);
-                packet.data = LTData::getShortPacketData(pbuf);
+                packet.length = 0;//LTData::getShortPacketLength(pbuf);
+                packet.data = 0;//LTData::getShortPacketData(pbuf);
                 break;
 
             default:
@@ -267,7 +267,7 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
     {
         packet.longData = "";
         packet.length = 0;
-        eventData.frame = 0;
+//        eventData.frame = 0;
     }
 
     //return;
@@ -316,8 +316,8 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
                 eventData.driversData[packet.carID-1].retired = true;
 
             //If the packet data isn't a number, probably the decryption has failed. Set the frame number to 0 and wait for another SYS=2 packet to obtain the keyframe again
-            if (!ok)
-                eventData.frame = 0;
+//            if (!ok)
+//                eventData.frame = 0;
 
             if ((eventData.eventType == LTData::PRACTICE_EVENT || eventData.eventType == LTData::QUALI_EVENT) && !eventData.driversData[packet.carID-1].lapData.isEmpty())
             {
@@ -342,9 +342,10 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
         case LTData::RACE_DRIVER:
         //case LTData::PRACTICE_DRIVER:
         //case LTData::QUALI_DRIVER:
-            if (packet.longData != "" && packet.length > 0 && QString(packet.longData).indexOf(QRegExp("[A-Z]")) != -1)//eventData.driversData[packet.carID-1].driver == "")
+            if (packet.longData != "" /*&& packet.length > 0*/ && QString(packet.longData).indexOf(QRegExp("[A-Z]")) != -1)//eventData.driversData[packet.carID-1].driver == "")
             {
                 s = packet.longData;
+                qDebug() << "IMIE=" << s << ", " << LTData::getDriverName(s);
                 eventData.driversData[packet.carID-1].driver = LTData::getDriverName(s);
             }
             eventData.driversData[packet.carID-1].colorData[LTData::RACE_DRIVER] = (LTData::Colors)packet.data;
@@ -823,7 +824,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
     {
         packet.longData = "";
         packet.length = 0;
-        eventData.frame = 0;
+//        eventData.frame = 0;
     }
 
     switch(packet.type)
@@ -881,6 +882,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 //                 onDecryptionKeyObtained(3710001497);       //malaysia race
 //                onDecryptionKeyObtained(2922444379);      //spain race
 //                httpReader.obtainKeyFrame(53);
+
+//                resetDecryption();
 
              }
              else
@@ -1151,10 +1154,10 @@ void DataStreamReader::onStreamBlockObtained(const QByteArray &buf)
 
 void DataStreamReader::onKeyFrameObtained(QByteArray keyFrame)
 {
-//    std::cout<<"tu powinienem byc tylko raz!! parsing="<<parsing<<", size="<<keyFrame.size()<<std::endl;
+    std::cout<<"tu powinienem byc tylko raz!! parsing="<<parsing<<", size="<<keyFrame.size()<<std::endl;
     //streamData = keyFrame;
     savePacket(keyFrame);
-    resetDecryption();
+//    resetDecryption();
 
 //    resetDecryption();
     if (parsing)

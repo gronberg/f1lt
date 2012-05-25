@@ -49,6 +49,7 @@ int PreferencesDialog::exec(QSettings *set)
     setSplitterOpaqueResize(settings->value("ui/ltresize").toBool());
     setAlternatingRowColors(settings->value("ui/alt_colors").toBool());
     setAutoRecord(settings->value("ui/auto_record").toBool());
+    setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
 
     setReverseOrderLapHistory(settings->value("ui/reversed_lap_history").toBool());
     setReverseOrderHeadToHead(settings->value("ui/reversed_head_to_head").toBool());
@@ -71,6 +72,7 @@ void PreferencesDialog::on_buttonBox_accepted()
 
     settings->setValue("ui/ltresize", isSplitterOpaqueResize());
     settings->setValue("ui/alt_colors", isAlternatingRowColors());
+    settings->setValue("ui/car_thumbnails", drawCarThumbnails());
 
     settings->setValue("ui/reversed_lap_history", isReverseOrderLapHistory());
     settings->setValue("ui/reversed_head_to_head", isReverseOrderHeadToHead());
@@ -136,6 +138,16 @@ void PreferencesDialog::setAlternatingRowColors(bool val)
     ui->altCheckBox->setChecked(val);
 }
 
+
+bool PreferencesDialog::drawCarThumbnails()
+{
+    return ui->thumbnailsCheckBox->isChecked();
+}
+
+void PreferencesDialog::setDrawCarThumbnails(bool val)
+{
+    ui->thumbnailsCheckBox->setChecked(val);
+}
 
 void PreferencesDialog::setReverseOrderLapHistory(bool val)
 {

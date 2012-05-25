@@ -5,7 +5,7 @@
 #include <QResizeEvent>
 #include <QString>
 #include <QTableWidget>
-//#include <QTextEdit>
+#include <QTableWidgetItem>
 
 #include "eventdata.h"
 
@@ -26,6 +26,9 @@ protected:
     void resizeEvent(QResizeEvent *);
 
 private:
+    QTableWidgetItem* setItem(int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
+                 QColor textColor = LTData::colors[LTData::DEFAULT], QBrush background = QBrush());
+
     QPixmap icons[5];
 
     EventData &eventData;

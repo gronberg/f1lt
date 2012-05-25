@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Sat May 12 10:46:39 2012
+** Created: Sat May 26 00:14:17 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -39,6 +39,7 @@ public:
     QCheckBox *ltCheckBox;
     QCheckBox *altCheckBox;
     QCheckBox *autoRecordBox;
+    QCheckBox *thumbnailsCheckBox;
     QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout_2;
     QCheckBox *revLHBox;
@@ -100,6 +101,11 @@ public:
 
         verticalLayout->addWidget(autoRecordBox);
 
+        thumbnailsCheckBox = new QCheckBox(PreferencesDialog);
+        thumbnailsCheckBox->setObjectName(QString::fromUtf8("thumbnailsCheckBox"));
+
+        verticalLayout->addWidget(thumbnailsCheckBox);
+
         groupBox_2 = new QGroupBox(PreferencesDialog);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
         verticalLayout_2 = new QVBoxLayout(groupBox_2);
@@ -148,6 +154,7 @@ public:
         ltCheckBox->setText(QApplication::translate("PreferencesDialog", "Show contents during LT window resize", 0, QApplication::UnicodeUTF8));
         altCheckBox->setText(QApplication::translate("PreferencesDialog", "Alternate row colors in LT window", 0, QApplication::UnicodeUTF8));
         autoRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically start recording when session starts", 0, QApplication::UnicodeUTF8));
+        thumbnailsCheckBox->setText(QApplication::translate("PreferencesDialog", "Draw car thumbnails", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("PreferencesDialog", "Print laps in reverse order", 0, QApplication::UnicodeUTF8));
         revLHBox->setText(QApplication::translate("PreferencesDialog", "In lap history", 0, QApplication::UnicodeUTF8));
         revH2HBox->setText(QApplication::translate("PreferencesDialog", "In head to head", 0, QApplication::UnicodeUTF8));

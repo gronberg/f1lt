@@ -3,6 +3,7 @@
 
 #include <QItemDelegate>
 #include <QTableWidget>
+#include <QTableWidgetItem>
 
 #include "eventdata.h"
 
@@ -44,6 +45,13 @@ public:
     void setHeader();
     void loadCarImages();
 
+    void setDrawCarThumbnails(bool val)
+    {
+        drawCarThumbnails = val;
+        resizeEvent(0);
+        updateLT();
+    }
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void resizeEvent(QResizeEvent *event);
@@ -54,6 +62,9 @@ signals:
 public slots:
 
 private:
+    QTableWidgetItem* setItem(int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
+                 QColor textColor = LTData::colors[LTData::DEFAULT], QBrush background = QBrush());
+
     QIcon upArrowIcon;
     QIcon downArrowIcon;
 
@@ -61,6 +72,8 @@ private:
 
     EventData &eventData;
     LTData::EventType eventType;
+
+    bool drawCarThumbnails;
 };
 
 #endif // LTTABLEWIDGET_H
