@@ -16,7 +16,6 @@
         <file>head2head-s.png</file>
         <file>media-playback-stop.png</file>
         <file>media-record.png</file>
-        <file>icon.png</file>
         <file>rewind.png</file>
         <file>forward.png</file>
         <file>skip-forward.png</file>
@@ -27,5 +26,6 @@
         <file>pause.png</file>
         <file>document-open.png</file>
         <file>ltc-s.png</file>
+        <file>icon.png</file>
     </qresource>
 </RCC>

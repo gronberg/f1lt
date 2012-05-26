@@ -345,7 +345,11 @@ void EventPlayer::on_seekSlider_sliderMoved(int position)
         {
             LTpackets.append(packets[currentPos].second);
             ++currentPos;
-            elapsedSeconds = packets[currentPos].first-1;
+
+            if (currentPos < packets.size())
+                elapsedSeconds = packets[currentPos].first-1;
+            else
+                break;
         }
         emit nextPackets(LTpackets);
     }

@@ -72,13 +72,14 @@ void DataStreamReader::parseStreamBlock()
 
     parsing = true;
     while(parsePacket(streamData, packet, pos))
-    {
+    {        
         //socketReader.wakeUpServer();
         if (packet.encrypted && !eventData.key)
         {
             packet.longData.clear();
             continue;
         }
+        Packet copyPacket = packet;
 
         if(packet.carID)
         {
@@ -91,7 +92,7 @@ void DataStreamReader::parseStreamBlock()
             parseSystemPacket(packet);
 
         }
-        emit packetParsed(packet);
+        emit packetParsed(copyPacket);
         packet.longData.clear();
     }
     parsing = false;
@@ -808,7 +809,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
         qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.constData();
 
     unsigned int number, i;
-    unsigned char packetLongData[129];
+//    unsigned char packetLongData[129];
+    unsigned char uc;
     QString s, format;
     QTime time;
     int ibuf;
@@ -818,7 +820,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
     int j = 0;
     int cnt;
     Packet copyPacket = packet;
-    memcpy(packetLongData, packet.longData.constData(), 128);
+//    memcpy(packetLongData, packet.longData.constData(), 128);
 
     if (packet.type != LTData::SYS_COMMENTARY && packet.type != LTData::SYS_KEY_FRAME && !checkDecryption(packet.longData))
     {
@@ -859,7 +861,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             while(i)
             {
                 number <<= 8;
-                number |= packetLongData[--i];
+                uc = packet.longData[--i];
+                number |= uc;
             }            
              resetDecryption();
 
@@ -962,11 +965,12 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             }
             break;
         case LTData::SYS_TRACK_STATUS:
-        qDebug() << "SYS_TRACK_STATUS=" << packetLongData[0] << ", " << packet.data;
+//        qDebug() << "SYS_TRACK_STATUS=" << packetLongData[0] << ", " << packet.data;
             switch (packet.data)
             {
                 case 1:
-                    eventData.flagStatus = LTData::FlagStatus(packetLongData[0] - '0');
+                    uc = packet.longData[0];
+                    eventData.flagStatus = LTData::FlagStatus(uc - '0');
                     break;
             }
             break;
@@ -1154,7 +1158,7 @@ void DataStreamReader::onStreamBlockObtained(const QByteArray &buf)
 
 void DataStreamReader::onKeyFrameObtained(QByteArray keyFrame)
 {
-    std::cout<<"tu powinienem byc tylko raz!! parsing="<<parsing<<", size="<<keyFrame.size()<<std::endl;
+//    std::cout<<"tu powinienem byc tylko raz!! parsing="<<parsing<<", size="<<keyFrame.size()<<std::endl;
     //streamData = keyFrame;
     savePacket(keyFrame);
 //    resetDecryption();
