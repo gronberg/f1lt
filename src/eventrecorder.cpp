@@ -593,6 +593,9 @@ void EventRecorder::saveToFile(QString)
             if (QFile::exists(fName))
                 fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp3");
         }
+        QDir dir(F1LTCore::ltDataHomeDir());
+        if (!dir.exists())
+            dir.mkpath(F1LTCore::ltDataHomeDir());
 
         QFile f(fName);
         if (f.open(QIODevice::WriteOnly))

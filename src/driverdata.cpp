@@ -176,6 +176,7 @@ void DriverData::addLap(const EventData &ed)
     //- finally - check if we don't try to add the same lap again, we use the gap, interval and lap time info for this
     if (ed.eventType == LTData::RACE_EVENT)
     {
+
         if (!retired && ed.lapsCompleted > 0 && (lastLap.lapTime.toString() != "" || lastLap.numLap == 1) &&
     //        ((lastLap.lapTime.toString() != "IN PIT" && lastLap.sector3.toString() != "") || lastLap.lapTime.toString() == "IN PIT") &&
              ((lastLap.numLap > 0 && lapData.isEmpty()) ||

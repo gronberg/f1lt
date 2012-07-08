@@ -45,6 +45,9 @@ public:
     void setAutoRecord(bool);
     bool isAutoRecord();
 
+    void setAutoStopRecord(int);
+    int getAutoStopRecord();
+
 public slots:
     int exec(QSettings *);
     
@@ -54,6 +57,8 @@ private slots:
     void on_mainFontButton_clicked();
 
     void on_commentaryFontButton_clicked();
+
+    void on_autoStopRecordBox_toggled(bool checked);
 
 private:
     Ui::PreferencesDialog *ui;

@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'connectiondialog.ui'
 **
-** Created: Sat May 26 00:14:17 2012
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Sun Jul 8 21:29:49 2012
+**      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/

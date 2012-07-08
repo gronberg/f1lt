@@ -55,6 +55,11 @@ int PreferencesDialog::exec(QSettings *set)
     setReverseOrderHeadToHead(settings->value("ui/reversed_head_to_head").toBool());
     setReverseOrderLapTimeComparison(settings->value("ui/reversed_lap_time_comparison").toBool());
 
+    if (!settings->contains("ui/auto_stop_record"))
+        setAutoStopRecord(-1);
+    else
+        setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
+
     return QDialog::exec();
 }
 
@@ -77,7 +82,8 @@ void PreferencesDialog::on_buttonBox_accepted()
     settings->setValue("ui/reversed_lap_history", isReverseOrderLapHistory());
     settings->setValue("ui/reversed_head_to_head", isReverseOrderHeadToHead());
     settings->setValue("ui/reversed_lap_time_comparison", isReverseOrderLapTimeComparison());
-    settings->setValue("ui/auto_record", isAutoRecord());
+    settings->setValue("ui/auto_record", isAutoRecord());    
+    settings->setValue("ui/auto_stop_record", getAutoStopRecord());
 }
 
 void PreferencesDialog::setFonts(const QFont &f1, const QFont &f2)
@@ -187,4 +193,33 @@ void PreferencesDialog::setAutoRecord(bool val)
 bool PreferencesDialog::isAutoRecord()
 {
     return ui->autoRecordBox->isChecked();
+}
+
+void PreferencesDialog::setAutoStopRecord(int val)
+{
+    if (val >= 0)
+    {
+        ui->autoStopRecordSpinBox->setEnabled(true);
+        ui->autoStopRecordBox->setChecked(true);
+        ui->autoStopRecordSpinBox->setValue(val);
+    }
+    else
+    {
+        ui->autoStopRecordSpinBox->setEnabled(false);
+        ui->autoStopRecordBox->setChecked(false);
+    }
+}
+
+int PreferencesDialog::getAutoStopRecord()
+{
+    if (!ui->autoStopRecordBox->isChecked())
+        return -1;
+
+    else
+        return ui->autoStopRecordSpinBox->value();
+}
+
+void PreferencesDialog::on_autoStopRecordBox_toggled(bool checked)
+{
+    ui->autoStopRecordSpinBox->setEnabled(checked);
 }

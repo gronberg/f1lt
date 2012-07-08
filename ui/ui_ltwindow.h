@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Sat May 26 19:11:27 2012
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Sun Jul 8 22:16:43 2012
+**      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -26,9 +26,9 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 #include "driverdatawidget.h"
+#include "eventstatuswidget.h"
 #include "lttablewidget.h"
 #include "sessiondatawidget.h"
-#include "trackstatuswidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -47,7 +47,7 @@ public:
     QAction *actionStop_recording;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_4;
-    TrackStatusWidget *trackStatusWidget;
+    EventStatusWidget *eventStatusWidget;
     QSplitter *splitter;
     LTTableWidget *tableWidget;
     QWidget *verticalLayoutWidget;
@@ -131,61 +131,11 @@ public:
         verticalLayout_4->setSpacing(0);
         verticalLayout_4->setContentsMargins(5, 5, 5, 5);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        trackStatusWidget = new TrackStatusWidget(centralWidget);
-        if (trackStatusWidget->columnCount() < 14)
-            trackStatusWidget->setColumnCount(14);
-        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
-        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(1, __qtablewidgetitem1);
-        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(2, __qtablewidgetitem2);
-        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
-        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(5, __qtablewidgetitem5);
-        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(6, __qtablewidgetitem6);
-        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(7, __qtablewidgetitem7);
-        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(8, __qtablewidgetitem8);
-        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(9, __qtablewidgetitem9);
-        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(10, __qtablewidgetitem10);
-        QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(11, __qtablewidgetitem11);
-        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(12, __qtablewidgetitem12);
-        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
-        trackStatusWidget->setHorizontalHeaderItem(13, __qtablewidgetitem13);
-        trackStatusWidget->setObjectName(QString::fromUtf8("trackStatusWidget"));
-        trackStatusWidget->setMinimumSize(QSize(0, 35));
-        trackStatusWidget->setMaximumSize(QSize(16777215, 35));
-        QPalette palette;
-        QBrush brush(QColor(20, 20, 20, 255));
-        brush.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Base, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        QBrush brush1(QColor(240, 240, 240, 255));
-        brush1.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        trackStatusWidget->setPalette(palette);
-        trackStatusWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        trackStatusWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        trackStatusWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        trackStatusWidget->setTabKeyNavigation(false);
-        trackStatusWidget->setProperty("showDropIndicator", QVariant(false));
-        trackStatusWidget->setDragDropOverwriteMode(false);
-        trackStatusWidget->setSelectionMode(QAbstractItemView::NoSelection);
-        trackStatusWidget->setShowGrid(false);
-        trackStatusWidget->horizontalHeader()->setVisible(false);
-        trackStatusWidget->verticalHeader()->setVisible(false);
+        eventStatusWidget = new EventStatusWidget(centralWidget);
+        eventStatusWidget->setObjectName(QString::fromUtf8("eventStatusWidget"));
+        eventStatusWidget->setAutoFillBackground(true);
 
-        verticalLayout_4->addWidget(trackStatusWidget);
+        verticalLayout_4->addWidget(eventStatusWidget);
 
         splitter = new QSplitter(centralWidget);
         splitter->setObjectName(QString::fromUtf8("splitter"));
@@ -199,56 +149,60 @@ public:
         tableWidget = new LTTableWidget(splitter);
         if (tableWidget->columnCount() < 11)
             tableWidget->setColumnCount(11);
-        QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem14);
-        QTableWidgetItem *__qtablewidgetitem15 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem15);
-        QTableWidgetItem *__qtablewidgetitem16 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem16);
-        QTableWidgetItem *__qtablewidgetitem17 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem17);
-        QTableWidgetItem *__qtablewidgetitem18 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem18);
-        QTableWidgetItem *__qtablewidgetitem19 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(5, __qtablewidgetitem19);
-        QTableWidgetItem *__qtablewidgetitem20 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(6, __qtablewidgetitem20);
-        QTableWidgetItem *__qtablewidgetitem21 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(7, __qtablewidgetitem21);
-        QTableWidgetItem *__qtablewidgetitem22 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(8, __qtablewidgetitem22);
-        QTableWidgetItem *__qtablewidgetitem23 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(9, __qtablewidgetitem23);
-        QTableWidgetItem *__qtablewidgetitem24 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(10, __qtablewidgetitem24);
+        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
+        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem1);
+        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem2);
+        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
+        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(5, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(6, __qtablewidgetitem6);
+        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(7, __qtablewidgetitem7);
+        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(8, __qtablewidgetitem8);
+        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(9, __qtablewidgetitem9);
+        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(10, __qtablewidgetitem10);
         tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        QPalette palette1;
-        QBrush brush2(QColor(255, 255, 255, 255));
+        QPalette palette;
+        QBrush brush(QColor(255, 255, 255, 255));
+        brush.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::WindowText, brush);
+        palette.setBrush(QPalette::Active, QPalette::Text, brush);
+        QBrush brush1(QColor(20, 20, 20, 255));
+        brush1.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Base, brush1);
+        QBrush brush2(QColor(73, 73, 73, 255));
         brush2.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette1.setBrush(QPalette::Active, QPalette::Text, brush2);
-        palette1.setBrush(QPalette::Active, QPalette::Base, brush);
-        QBrush brush3(QColor(73, 73, 73, 255));
+        palette.setBrush(QPalette::Active, QPalette::Highlight, brush2);
+        QBrush brush3(QColor(27, 27, 27, 255));
         brush3.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Highlight, brush3);
-        QBrush brush4(QColor(27, 27, 27, 255));
+        palette.setBrush(QPalette::Active, QPalette::AlternateBase, brush3);
+        palette.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
+        palette.setBrush(QPalette::Inactive, QPalette::Text, brush);
+        palette.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette.setBrush(QPalette::Inactive, QPalette::Highlight, brush2);
+        palette.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush3);
+        QBrush brush4(QColor(130, 130, 130, 255));
         brush4.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::AlternateBase, brush4);
-        palette1.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush2);
-        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette1.setBrush(QPalette::Inactive, QPalette::Highlight, brush3);
-        palette1.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush4);
-        QBrush brush5(QColor(130, 130, 130, 255));
+        palette.setBrush(QPalette::Disabled, QPalette::WindowText, brush4);
+        palette.setBrush(QPalette::Disabled, QPalette::Text, brush4);
+        QBrush brush5(QColor(240, 240, 240, 255));
         brush5.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Disabled, QPalette::WindowText, brush5);
-        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush5);
-        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette.setBrush(QPalette::Disabled, QPalette::Base, brush5);
         QBrush brush6(QColor(175, 175, 175, 255));
         brush6.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
-        palette1.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush4);
-        tableWidget->setPalette(palette1);
+        palette.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        palette.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush3);
+        tableWidget->setPalette(palette);
         QFont font;
         font.setFamily(QString::fromUtf8("Arial"));
         font.setPointSize(10);
@@ -314,21 +268,21 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         textEdit = new QTextEdit(tab_4);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
-        QPalette palette2;
+        QPalette palette1;
         QBrush brush7(QColor(220, 220, 220, 255));
         brush7.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette2.setBrush(QPalette::Active, QPalette::Base, brush);
+        palette1.setBrush(QPalette::Active, QPalette::Text, brush7);
+        palette1.setBrush(QPalette::Active, QPalette::Base, brush1);
         QBrush brush8(QColor(159, 159, 159, 255));
         brush8.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Active, QPalette::Highlight, brush8);
-        palette2.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette2.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette2.setBrush(QPalette::Inactive, QPalette::Highlight, brush8);
-        palette2.setBrush(QPalette::Disabled, QPalette::Text, brush5);
-        palette2.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        palette2.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
-        textEdit->setPalette(palette2);
+        palette1.setBrush(QPalette::Active, QPalette::Highlight, brush8);
+        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush7);
+        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette1.setBrush(QPalette::Inactive, QPalette::Highlight, brush8);
+        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush4);
+        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush5);
+        palette1.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        textEdit->setPalette(palette1);
         textEdit->setLineWrapMode(QTextEdit::WidgetWidth);
         textEdit->setTextInteractionFlags(Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse);
 
@@ -420,24 +374,22 @@ public:
         actionOpen->setText(QApplication::translate("LTWindow", "Open", 0, QApplication::UnicodeUTF8));
         actionLap_time_comparison->setText(QApplication::translate("LTWindow", "Lap time comparison", 0, QApplication::UnicodeUTF8));
         actionStop_recording->setText(QApplication::translate("LTWindow", "Stop recording", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem = trackStatusWidget->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("LTWindow", "New Column", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(0);
-        ___qtablewidgetitem1->setText(QApplication::translate("LTWindow", "P", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(3);
-        ___qtablewidgetitem2->setText(QApplication::translate("LTWindow", "Name", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(4);
-        ___qtablewidgetitem3->setText(QApplication::translate("LTWindow", "Gap", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem4 = tableWidget->horizontalHeaderItem(5);
-        ___qtablewidgetitem4->setText(QApplication::translate("LTWindow", "Interval", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem5 = tableWidget->horizontalHeaderItem(7);
-        ___qtablewidgetitem5->setText(QApplication::translate("LTWindow", "Sector 1", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem6 = tableWidget->horizontalHeaderItem(8);
-        ___qtablewidgetitem6->setText(QApplication::translate("LTWindow", "Sector 2", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem7 = tableWidget->horizontalHeaderItem(9);
-        ___qtablewidgetitem7->setText(QApplication::translate("LTWindow", "Sector 3", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem8 = tableWidget->horizontalHeaderItem(10);
-        ___qtablewidgetitem8->setText(QApplication::translate("LTWindow", "Pit", 0, QApplication::UnicodeUTF8));
+        QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
+        ___qtablewidgetitem->setText(QApplication::translate("LTWindow", "P", 0, QApplication::UnicodeUTF8));
+        QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(3);
+        ___qtablewidgetitem1->setText(QApplication::translate("LTWindow", "Name", 0, QApplication::UnicodeUTF8));
+        QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(4);
+        ___qtablewidgetitem2->setText(QApplication::translate("LTWindow", "Gap", 0, QApplication::UnicodeUTF8));
+        QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(5);
+        ___qtablewidgetitem3->setText(QApplication::translate("LTWindow", "Interval", 0, QApplication::UnicodeUTF8));
+        QTableWidgetItem *___qtablewidgetitem4 = tableWidget->horizontalHeaderItem(7);
+        ___qtablewidgetitem4->setText(QApplication::translate("LTWindow", "Sector 1", 0, QApplication::UnicodeUTF8));
+        QTableWidgetItem *___qtablewidgetitem5 = tableWidget->horizontalHeaderItem(8);
+        ___qtablewidgetitem5->setText(QApplication::translate("LTWindow", "Sector 2", 0, QApplication::UnicodeUTF8));
+        QTableWidgetItem *___qtablewidgetitem6 = tableWidget->horizontalHeaderItem(9);
+        ___qtablewidgetitem6->setText(QApplication::translate("LTWindow", "Sector 3", 0, QApplication::UnicodeUTF8));
+        QTableWidgetItem *___qtablewidgetitem7 = tableWidget->horizontalHeaderItem(10);
+        ___qtablewidgetitem7->setText(QApplication::translate("LTWindow", "Pit", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("LTWindow", "Driver data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("LTWindow", "Session data", 0, QApplication::UnicodeUTF8));
         textEdit->setHtml(QApplication::translate("LTWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

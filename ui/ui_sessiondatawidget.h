@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Sat May 26 00:14:17 2012
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Sun Jul 8 21:46:14 2012
+**      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -182,17 +182,23 @@ public:
         palette3.setBrush(QPalette::Active, QPalette::Text, brush2);
         palette3.setBrush(QPalette::Active, QPalette::Base, brush);
         palette3.setBrush(QPalette::Active, QPalette::Highlight, brush4);
+        QBrush brush6(QColor(27, 27, 27, 255));
+        brush6.setStyle(Qt::SolidPattern);
+        palette3.setBrush(QPalette::Active, QPalette::AlternateBase, brush6);
         palette3.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
         palette3.setBrush(QPalette::Inactive, QPalette::Text, brush2);
         palette3.setBrush(QPalette::Inactive, QPalette::Base, brush);
         palette3.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
+        palette3.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush6);
         palette3.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
         palette3.setBrush(QPalette::Disabled, QPalette::Text, brush3);
         palette3.setBrush(QPalette::Disabled, QPalette::Base, brush1);
         palette3.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        palette3.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush6);
         tableWidget_2->setPalette(palette3);
         tableWidget_2->setFont(font);
         tableWidget_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        tableWidget_2->setAlternatingRowColors(true);
         tableWidget_2->setSelectionMode(QAbstractItemView::ExtendedSelection);
         tableWidget_2->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
         tableWidget_2->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -253,7 +259,7 @@ public:
 
         retranslateUi(SessionDataWidget);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(SessionDataWidget);

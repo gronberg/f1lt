@@ -57,7 +57,7 @@
       </palette>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -445,6 +445,15 @@
               </color>
              </brush>
             </colorrole>
+            <colorrole role="AlternateBase">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>27</red>
+               <green>27</green>
+               <blue>27</blue>
+              </color>
+             </brush>
+            </colorrole>
            </active>
            <inactive>
             <colorrole role="WindowText">
@@ -480,6 +489,15 @@
                <red>73</red>
                <green>73</green>
                <blue>73</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="AlternateBase">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>27</red>
+               <green>27</green>
+               <blue>27</blue>
               </color>
              </brush>
             </colorrole>
@@ -521,6 +539,15 @@
               </color>
              </brush>
             </colorrole>
+            <colorrole role="AlternateBase">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>27</red>
+               <green>27</green>
+               <blue>27</blue>
+              </color>
+             </brush>
+            </colorrole>
            </disabled>
           </palette>
          </property>
@@ -534,6 +561,9 @@
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
          </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::ExtendedSelection</enum>

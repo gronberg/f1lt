@@ -25,7 +25,7 @@ LT_FILES.path = ~/.f1lt/ltdata/
 DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/$$TARGET/
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+#DEFINES += QT_NO_DEBUG_OUTPUT
 
 SOURCES += src/main.cpp\
         src/ltwindow.cpp \
@@ -46,7 +46,8 @@ SOURCES += src/main.cpp\
     src/logindialog.cpp \
     src/eventplayer.cpp \
     src/laptimecomparisondialog.cpp \
-    src/f1ltcore.cpp
+    src/f1ltcore.cpp \
+    src/eventstatuswidget.cpp
 
 HEADERS  += src/ltwindow.h \
     src/datastreamreader.h \
@@ -66,7 +67,8 @@ HEADERS  += src/ltwindow.h \
     src/logindialog.h \
     src/eventplayer.h \
     src/laptimecomparisondialog.h \
-    src/f1ltcore.h
+    src/f1ltcore.h \
+    src/eventstatuswidget.h
 
 FORMS    += ui/ltwindow.ui \
     ui/driverdatawidget.ui \
@@ -77,7 +79,8 @@ FORMS    += ui/ltwindow.ui \
     ui/connectiondialog.ui \
     ui/logindialog.ui \
     ui/eventplayer.ui \
-    ui/laptimecomparisondialog.ui
+    ui/laptimecomparisondialog.ui \
+    ui/eventstatuswidget.ui
 
 INCLUDEPATH += src/
 

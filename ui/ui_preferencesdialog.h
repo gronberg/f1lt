@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Sat May 26 00:14:17 2012
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Sun Jul 8 22:16:43 2012
+**      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -19,9 +19,11 @@
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
+#include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <QtGui/QSpinBox>
 #include <QtGui/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
@@ -39,6 +41,10 @@ public:
     QCheckBox *ltCheckBox;
     QCheckBox *altCheckBox;
     QCheckBox *autoRecordBox;
+    QHBoxLayout *horizontalLayout;
+    QCheckBox *autoStopRecordBox;
+    QSpinBox *autoStopRecordSpinBox;
+    QLabel *label_3;
     QCheckBox *thumbnailsCheckBox;
     QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout_2;
@@ -51,7 +57,7 @@ public:
     {
         if (PreferencesDialog->objectName().isEmpty())
             PreferencesDialog->setObjectName(QString::fromUtf8("PreferencesDialog"));
-        PreferencesDialog->resize(447, 339);
+        PreferencesDialog->resize(447, 365);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PreferencesDialog->setWindowIcon(icon);
@@ -100,6 +106,35 @@ public:
         autoRecordBox->setObjectName(QString::fromUtf8("autoRecordBox"));
 
         verticalLayout->addWidget(autoRecordBox);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        horizontalLayout->setContentsMargins(-1, -1, -1, 0);
+        autoStopRecordBox = new QCheckBox(PreferencesDialog);
+        autoStopRecordBox->setObjectName(QString::fromUtf8("autoStopRecordBox"));
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(autoStopRecordBox->sizePolicy().hasHeightForWidth());
+        autoStopRecordBox->setSizePolicy(sizePolicy);
+
+        horizontalLayout->addWidget(autoStopRecordBox);
+
+        autoStopRecordSpinBox = new QSpinBox(PreferencesDialog);
+        autoStopRecordSpinBox->setObjectName(QString::fromUtf8("autoStopRecordSpinBox"));
+        autoStopRecordSpinBox->setEnabled(false);
+        autoStopRecordSpinBox->setMaximumSize(QSize(50, 16777215));
+
+        horizontalLayout->addWidget(autoStopRecordSpinBox);
+
+        label_3 = new QLabel(PreferencesDialog);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        horizontalLayout->addWidget(label_3);
+
+
+        verticalLayout->addLayout(horizontalLayout);
 
         thumbnailsCheckBox = new QCheckBox(PreferencesDialog);
         thumbnailsCheckBox->setObjectName(QString::fromUtf8("thumbnailsCheckBox"));
@@ -154,6 +189,8 @@ public:
         ltCheckBox->setText(QApplication::translate("PreferencesDialog", "Show contents during LT window resize", 0, QApplication::UnicodeUTF8));
         altCheckBox->setText(QApplication::translate("PreferencesDialog", "Alternate row colors in LT window", 0, QApplication::UnicodeUTF8));
         autoRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically start recording when session starts", 0, QApplication::UnicodeUTF8));
+        autoStopRecordBox->setText(QApplication::translate("PreferencesDialog", "Auto stop recording ", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("PreferencesDialog", "minutes after session ends", 0, QApplication::UnicodeUTF8));
         thumbnailsCheckBox->setText(QApplication::translate("PreferencesDialog", "Draw car thumbnails", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("PreferencesDialog", "Print laps in reverse order", 0, QApplication::UnicodeUTF8));
         revLHBox->setText(QApplication::translate("PreferencesDialog", "In lap history", 0, QApplication::UnicodeUTF8));

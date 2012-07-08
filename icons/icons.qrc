@@ -27,5 +27,12 @@
         <file>document-open.png</file>
         <file>ltc-s.png</file>
         <file>icon.png</file>
+        <file>weather_air_temp.png</file>
+        <file>weather_dry.png</file>
+        <file>weather_humidity.png</file>
+        <file>weather_pressure.png</file>
+        <file>weather_track_temp.png</file>
+        <file>weather_wet.png</file>
+        <file>weather_wind.png</file>
     </qresource>
 </RCC>

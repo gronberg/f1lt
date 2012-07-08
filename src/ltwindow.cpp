@@ -21,7 +21,7 @@ LTWindow::LTWindow(QWidget *parent) :
     settings = new QSettings(F1LTCore::iniFile(), QSettings::IniFormat, this);
     loginDialog = new LoginDialog(this);
 
-    ui->trackStatusWidget->setupItems();
+//    ui->trackStatusWidget->setupItems();
 
     connect(streamReader, SIGNAL(authorized(QString)), this, SLOT(on_authorized(QString)));
     connect(streamReader, SIGNAL(eventDataChanged()), this, SLOT(on_eventDataChanged()));
@@ -104,7 +104,8 @@ void LTWindow::on_eventDataChanged()
     if (eventData.commentary.size() == 0 && ui->textEdit->toPlainText().size() > 0)
         ui->textEdit->clear();
 
-    ui->trackStatusWidget->updateTrackStatus(eventData);
+//    ui->trackStatusWidget->updateTrackStatus(eventData);
+    ui->eventStatusWidget->updateEventStatus();
     ui->sessionDataWidget->updateData();
 
 //    if (recording)
@@ -176,7 +177,8 @@ void LTWindow::on_dataChanged()
         ui->textEdit->setTextCursor(c);
     }
 
-    ui->trackStatusWidget->updateTrackStatus(eventData);
+//    ui->trackStatusWidget->updateTrackStatus(eventData);
+    ui->eventStatusWidget->updateEventStatus();
 
     if (!eventPlayer->isPlaying())
         ui->sessionDataWidget->updateEventInfo();
@@ -348,7 +350,8 @@ void LTWindow::timeout()
                 }
             }
             eventData.remainingTime = QTime(hours, mins, secs);
-            ui->trackStatusWidget->updateTrackStatus(eventData);
+//            ui->trackStatusWidget->updateTrackStatus(eventData);
+            ui->eventStatusWidget->updateEventStatus();
         }
     }
 }
@@ -495,7 +498,8 @@ void LTWindow::setFonts(const QFont &mainFont, const QFont &commentaryFont)
         ltcDialog[i]->setFont(mainFont);
 
     ui->textEdit->setFont(commentaryFont);
-    ui->trackStatusWidget->setFont(mainFont);
+//    ui->trackStatusWidget->setFont(mainFont);
+    ui->eventStatusWidget->setFont(mainFont);
     prefs->setFonts(mainFont, commentaryFont);
 }
 

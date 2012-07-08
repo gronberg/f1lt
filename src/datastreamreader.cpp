@@ -101,7 +101,7 @@ void DataStreamReader::parseStreamBlock()
 }
 
 bool DataStreamReader::parsePacket(const QByteArray &buf, Packet &packet, int &pos)
-{
+{    
     static QByteArray pbuf;
     static int pbuf_length = 0;    
 
@@ -117,6 +117,8 @@ bool DataStreamReader::parsePacket(const QByteArray &buf, Packet &packet, int &p
         if (pbuf_length < 2)
             return 0;        
     }
+
+    qDebug() << "pos=" << pos << ", pbuf_length=" << pbuf_length << ", " << pbuf.size();
 
     if (pos == buf.size())
         return false;
@@ -759,7 +761,7 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
                 }
 
                 eventData.driversData[packet.carID-1].bestSectors[2].first = QString(packet.longData);
-                eventData.driversData[packet.carID-1].bestSectors[2].second = eventData.driversData[packet.carID-1].lapData.last().numLap;
+//                eventData.driversData[packet.carID-1].bestSectors[2].second = eventData.driversData[packet.carID-1].lapData.last().numLap;
             }            
 
             if (eventData.driversData[packet.carID-1].lastLap.sector3.toString() == "STOP" && eventData.flagStatus != LTData::RED_FLAG)
@@ -787,7 +789,7 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
             if (eventData.driversData[packet.carID-1].lapData.isEmpty())
                 eventData.driversData[packet.carID-1].lastLap.numLap = copyPacket.length - 1;
 
-//            eventData.driversData[packet.carID-1].posHistory.clear();
+            eventData.driversData[packet.carID-1].posHistory.clear();
             for (int i = eventData.driversData[packet.carID-1].posHistory.size(); i < copyPacket.longData.size(); ++i)
                 eventData.driversData[packet.carID-1].posHistory.append((int)copyPacket.longData[i]);
 
@@ -805,8 +807,8 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
 
 void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 {
-    if (packet.type != LTData::SYS_COMMENTARY )//&& packet.type != LTData::SYS_TIMESTAMP)
-        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.constData();
+//    if (packet.type != LTData::SYS_COMMENTARY )//&& packet.type != LTData::SYS_TIMESTAMP)
+        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTData::SYS_COMMENTARY) ? packet.longData.constData() : "");
 
     unsigned int number, i;
 //    unsigned char packetLongData[129];
@@ -872,6 +874,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                 httpReader.obtainKeyFrame(number);
 
 
+                 /*onDecryptionKeyObtained(2841044872);*/   //valencia race
+//                  onDecryptionKeyObtained(2971732062);      //valencia qual
 //                onDecryptionKeyObtained(3585657959);  //?
 //                onDecryptionKeyObtained(2488580439);  //qual
 //                 onDecryptionKeyObtained(2438680630);  //race
@@ -1161,9 +1165,8 @@ void DataStreamReader::onKeyFrameObtained(QByteArray keyFrame)
 //    std::cout<<"tu powinienem byc tylko raz!! parsing="<<parsing<<", size="<<keyFrame.size()<<std::endl;
     //streamData = keyFrame;
     savePacket(keyFrame);
-//    resetDecryption();
 
-//    resetDecryption();
+    resetDecryption();
     if (parsing)
     {
         streamData.append(keyFrame);
