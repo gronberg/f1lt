@@ -764,19 +764,15 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
             eventData.driversData[packet.carID-1].updateLastLap();
             eventData.driversData[packet.carID-1].colorData[LTData::RACE_SECTOR_3] = (LTData::Colors)packet.data;
 
-            if (((LTData::Colors)packet.data == LTData::VIOLET) || ((LTData::Colors)packet.data == LTData::GREEN))
-            {
-                if ((LTData::Colors)packet.data == LTData::VIOLET && eventData.driversData[packet.carID-1].lastLap.sector3.toString() != "")
-                {
-                    eventData.sec3Record[0] = eventData.driversData[packet.carID-1].driver;
-                    eventData.sec3Record[1] = eventData.driversData[packet.carID-1].lastLap.sector3.toString();
+            if ((LTData::Colors)packet.data == LTData::VIOLET && eventData.driversData[packet.carID-1].lastLap.sector3.toString() != "")
+			{
+				eventData.sec3Record[0] = eventData.driversData[packet.carID-1].driver;
+				eventData.sec3Record[1] = eventData.driversData[packet.carID-1].lastLap.sector3.toString();
 
-                    eventData.sec3Record[2] = QString("%1").arg(eventData.driversData[packet.carID-1].lastLap.numLap);//.driversData[packet.carID-1].lastLap.numLap);
-                }
-
-                eventData.driversData[packet.carID-1].bestSectors[2].first = QString(packet.longData);
+				eventData.sec3Record[2] = QString("%1").arg(eventData.driversData[packet.carID-1].lastLap.numLap);//.driversData[packet.carID-1].lastLap.numLap);
+			}
 //                eventData.driversData[packet.carID-1].bestSectors[2].second = eventData.driversData[packet.carID-1].lapData.last().numLap;
-            }            
+
 
             if (eventData.driversData[packet.carID-1].lastLap.sector3.toString() == "STOP" && eventData.flagStatus != LTData::RED_FLAG)
                 eventData.driversData[packet.carID-1].retired = true;
@@ -856,13 +852,14 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 
             //just before the start of the session server sends a strange packet with the current data instead of the number of decryption key that we have to obtain
             number = copyPacket.longData.right(copyPacket.longData.size()-1).toInt(&ok);
+            s = copyPacket.longData.right(copyPacket.longData.size()-1);
 
-            eventData.key = 0;
+//            eventData.key = 0;
 
-            if (ok)
-                httpReader.obtainDecryptionKey(number);
-            else
-                eventData.frame = 0;
+//            if (ok)
+//                httpReader.obtainDecryptionKey(number);
+//            else
+//                eventData.frame = 0;
 
             if (eventData.eventType != 0 && eventData.eventType != (LTData::EventType)packet.data)
                 eventData.clear();
@@ -895,8 +892,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 
              if (!eventData.frame) // || decryption_failure
              {
-                eventData.frame = number;
-                httpReader.obtainKeyFrame(number);
+//                eventData.frame = number;
+//                httpReader.obtainKeyFrame(number);
 
 
                  /*onDecryptionKeyObtained(2841044872);*/   //valencia race
@@ -914,6 +911,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 //                 onDecryptionKeyObtained(3710001497);       //malaysia race
 //                onDecryptionKeyObtained(2922444379);      //spain race
 //                httpReader.obtainKeyFrame(53);
+                onDecryptionKeyObtained(4246644581);      //gbr race
+//                onDecryptionKeyObtained(3195846070);	//gbr quali
 
 //                resetDecryption();
 
@@ -1160,9 +1159,9 @@ void DataStreamReader::onDecryptionKeyObtained(unsigned int key)
 
 void DataStreamReader::onCookieReceived(QString cookie)
 {
-    socketReader.openStream(host, port);
+//    socketReader.openStream(host, port);
 //    socketReader.openStream("localhost", 6666);
-//    socketReader.openStream("192.168.1.2", 6666);
+    socketReader.openStream("192.168.1.2", 6666);
 //    eventData.key = 2976363859;
 //    eventData.key = 2462388168;     //bahrain quali
 //    eventData.key = 3875488254; //fp1

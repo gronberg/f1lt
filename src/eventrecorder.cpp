@@ -16,6 +16,7 @@ void EventRecorder::startRecording()
 
     packets.clear();
     elapsedSeconds = 0;
+    elapsedTimeToStop = -1;
 
     gatherInitialData();    
 
@@ -553,6 +554,31 @@ void EventRecorder::timeout()
     packet.length = packet.longData.size();
 
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
+
+
+//    DriverData dd;
+//    int qPeriod = 0;
+//
+//    if (eventData.eventType == LTData::QUALI_EVENT)
+//    {
+//    	dd = eventData.getDriverDataFromPos(1);
+//    	qPeriod = (!dd.lapData.isEmpty() ? dd.lapData.last().qualiPeriod : 0);
+//    	qDebug() << "quali=" << qPeriod << ", driver=" << dd.driver << ", " << elapsedTimeToStop << ", " << autoStopRecord;
+//    }
+    if (autoStopRecord >= 0)
+    {
+    	if((eventData.remainingTime.toString("h:mm:ss") == "0:00:00" && eventData.eventType == LTData::PRACTICE_EVENT) ||
+			(eventData.remainingTime.toString("h:mm:ss") == "0:00:00" && eventData.eventType == LTData::QUALI_EVENT && eventData.qualiPeriod == 3) ||
+			(eventData.lapsCompleted == eventData.eventInfo.laps && eventData.eventType == LTData::RACE_EVENT))
+    		++elapsedTimeToStop;
+
+		if (elapsedTimeToStop >= (autoStopRecord * 60))
+		{
+			emit recordingStopped();
+			stopRecording();
+		}
+    }
+
 
     //on every timeout the eventData object is appended into eventDataList and the driverData list is cleared
 //    eventDataList.append(eventData);

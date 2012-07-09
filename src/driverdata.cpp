@@ -241,20 +241,23 @@ void DriverData::addLap(const EventData &ed)
 //                bestSectors[1].second = lapData.last().numLap;
 //            }
 
-            if ((lapData.last().sector1 <= bestSectors[0].first &&
-				 bestSectors[0].second != 0) || bestSectors[0].second == 0)
+            if (((driver != ed.sec1Record[0]) || (ed.sec1Record[1] == lapData.last().sector1 && lapData.last().numLap == ed.sec1Record[2].toInt())) &&
+				((lapData.last().sector1 <= bestSectors[0].first &&
+				  bestSectors[0].second != 0) || bestSectors[0].second == 0))
 			{
 				bestSectors[0] = QPair<LapTime, int>(LapTime(lapData.last().sector1), lapData.last().numLap);
 			}
 
-			if ((lapData.last().sector2 <= bestSectors[1].first &&
-				 bestSectors[1].second != 0) || bestSectors[1].second == 0)
+			if (((driver != ed.sec2Record[0]) || (ed.sec2Record[1] == lapData.last().sector2 && lapData.last().numLap == ed.sec2Record[2].toInt())) &&
+				((lapData.last().sector2 <= bestSectors[1].first &&
+				 bestSectors[1].second != 0) || bestSectors[1].second == 0))
 			{
 				bestSectors[1] = QPair<LapTime, int>(LapTime(lapData.last().sector2), lapData.last().numLap);
 			}
 
-			if ((lapData.last().sector3 <= bestSectors[2].first &&
-				 bestSectors[2].second != 0) || bestSectors[0].second == 0)
+			if (((driver != ed.sec3Record[0]) || (ed.sec3Record[1] == lapData.last().sector3 && lapData.last().numLap == ed.sec3Record[2].toInt())) &&
+				((lapData.last().sector3 <= bestSectors[2].first &&
+				 bestSectors[2].second != 0) || bestSectors[2].second == 0))
 			{
 				bestSectors[2] = QPair<LapTime, int>(LapTime(lapData.last().sector3), lapData.last().numLap);
 			}

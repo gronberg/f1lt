@@ -21,8 +21,11 @@ public:
     void clear();
 
     int getDriverId(QString);
-    int getDriverId(int);
-    DriverData getDriverData(int);
+    int getDriverId(int no);
+    DriverData getDriverData(int no);
+    DriverData getDriverDataFromPos(int pos);
+    QString calculateInterval(DriverData d1, DriverData d2, int lap);
+
     unsigned int key;    
     QString cookie;
 

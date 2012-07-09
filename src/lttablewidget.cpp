@@ -36,6 +36,9 @@ QTableWidgetItem* LTTableWidget::setItem(int row, int col, QString text, Qt::Ite
 
 void LTTableWidget::loadCarImages()
 {
+	showDiff = 0;
+	currCar = 0;
+
     smallCarImg.clear();
     for (int i = 0; i < LTData::ltTeams.size(); ++i)
         smallCarImg.append(LTData::ltTeams[i].carImg.scaledToWidth(75, Qt::SmoothTransformation));
@@ -171,6 +174,7 @@ void LTTableWidget::updateRaceEvent(int ddIdx)
         }
 
         tmp = QString("%1").arg(driverList[i].driver);
+
         setItem(i+1, 3, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[driverList[i].colorData[LTData::RACE_DRIVER]]);
 
 
@@ -180,9 +184,28 @@ void LTTableWidget::updateRaceEvent(int ddIdx)
 
         tmp = driverList[i].lastLap.interval;
 
+        if (showDiff == 4 && driverList[i].carID != currCar && currCar > 0)
+        	tmp = EventData::getInstance().calculateInterval(driverList[i], EventData::getInstance().driversData[currCar-1], -1);//EventData.getInstance().lapsCompleted);//.driversData.get(currentCar-1).lastLap.numLap);
+
+        else if (showDiff == 4 && driverList[i].carID == currCar && currCar > 0)
+        {
+        	tmp = "";
+        }
+
         setItem(i+1, 5, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[driverList[i].colorData[LTData::RACE_INTERVAL]]);
 
         tmp = QString("%1").arg(driverList[i].lastLap.lapTime);
+
+        if (showDiff == 1 && driverList[i].carID != currCar && currCar > 0 &&
+        		driverList[i].lastLap.lapTime.isValid() && EventData::getInstance().driversData[currCar-1].lastLap.lapTime.isValid())
+		{
+			tmp = DriverData::calculateGap(driverList[i].lastLap.lapTime,
+					EventData::getInstance().driversData[currCar-1].lastLap.lapTime);
+
+			if (tmp != "" && tmp[0] != '-')
+				tmp = "+"+tmp;
+		}
+
         setItem(i+1, 6, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[driverList[i].colorData[LTData::RACE_LAP_TIME]]);
 
 
@@ -335,6 +358,15 @@ void LTTableWidget::updatePracticeEvent(int ddIdx)
         setItem(i+1, 3, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[driverList[i].colorData[LTData::PRACTICE_DRIVER]]);
 
         tmp = driverList[i].lastLap.lapTime.toString();
+        if (showDiff == 1 && driverList[i].carID != currCar && currCar > 0 &&
+				driverList[i].lastLap.lapTime.isValid() && EventData::getInstance().driversData[currCar-1].lastLap.lapTime.isValid())
+		{
+			tmp = DriverData::calculateGap(driverList[i].lastLap.lapTime,
+					EventData::getInstance().driversData[currCar-1].lastLap.lapTime);
+
+			if (tmp != "" && tmp[0] != '-')
+				tmp = "+"+tmp;
+		}
         setItem(i+1, 4, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[driverList[i].colorData[LTData::PRACTICE_BEST]]);
 
         tmp = QString("%1").arg(driverList[i].lastLap.gap);
@@ -504,12 +536,40 @@ void LTTableWidget::updateQualiEvent(int ddIdx)
         setItem(i+1, 3, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[driverList[i].colorData[LTData::QUALI_DRIVER]]);
 
         tmp = driverList[i].q1;
+
+        if (showDiff == 1 && driverList[i].carID != currCar && currCar > 0 &&
+				LapTime(driverList[i].q1).isValid() && LapTime(EventData::getInstance().driversData[currCar-1].q1).isValid())
+		{
+			tmp = DriverData::calculateGap(LapTime(driverList[i].q1),
+					LapTime(EventData::getInstance().driversData[currCar-1].q1));
+
+			if (tmp != "" && tmp[0] != '-')
+				tmp = "+"+tmp;
+		}
         setItem(i+1, 4, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[driverList[i].colorData[LTData::QUALI_PERIOD_1]]);
 
         tmp = driverList[i].q2;
+        if (showDiff == 2 && driverList[i].carID != currCar && currCar > 0 &&
+				LapTime(driverList[i].q2).isValid() && LapTime(EventData::getInstance().driversData[currCar-1].q2).isValid())
+		{
+			tmp = DriverData::calculateGap(LapTime(driverList[i].q2),
+					LapTime(EventData::getInstance().driversData[currCar-1].q2));
+
+			if (tmp != "" && tmp[0] != '-')
+				tmp = "+"+tmp;
+		}
         setItem(i+1, 5, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[driverList[i].colorData[LTData::QUALI_PERIOD_2]]);
 
         tmp = driverList[i].q3;
+        if (showDiff == 3 && driverList[i].carID != currCar && currCar > 0 &&
+				LapTime(driverList[i].q3).isValid() && LapTime(EventData::getInstance().driversData[currCar-1].q3).isValid())
+		{
+			tmp = DriverData::calculateGap(LapTime(driverList[i].q3),
+					LapTime(EventData::getInstance().driversData[currCar-1].q3));
+
+			if (tmp != "" && tmp[0] != '-')
+				tmp = "+"+tmp;
+		}
         setItem(i+1, 6, tmp, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[driverList[i].colorData[LTData::QUALI_PERIOD_3]]);
 
         tmp = driverList[i].lastLap.sector1;
@@ -735,7 +795,7 @@ void LTTableWidget::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void LTTableWidget::resizeEvent(QResizeEvent *)
+void LTTableWidget::resizeEvent(QResizeEvent *e)
 {
     int w = viewport()->width()/*-viewport()->width()*0.0115*/;//event->size().width()-event->size().width()*0.0115;
 
@@ -834,6 +894,92 @@ void LTTableWidget::resizeEvent(QResizeEvent *)
             }
             break;
     }
+    QTableWidget::resizeEvent(e);
+}
+
+bool LTTableWidget::printDiff(int row, int col, int id)
+{
+	if (col == 4 && EventData::getInstance().eventType != LTData::RACE_EVENT)
+	{
+		if (showDiff == 1 && id == currCar)
+		{
+			showDiff = 0;
+			currCar = 0;
+		}
+		else
+		{
+			showDiff = 1;
+			currCar = id;
+		}
+		updateLT();
+		return true;
+	}
+
+	if (col == 5 && EventData::getInstance().eventType == LTData::RACE_EVENT)
+	{
+		if (showDiff == 4 && id == currCar)
+		{
+			showDiff = 0;
+			currCar = 0;
+		}
+		else
+		{
+			showDiff = 4;
+			currCar = id;
+		}
+		updateLT();
+		return true;
+	}
+
+	if (col == 5 && EventData::getInstance().eventType == LTData::QUALI_EVENT)
+	{
+		if (showDiff == 2 && id == currCar)
+		{
+			showDiff = 0;
+			currCar = 0;
+		}
+		else
+		{
+			showDiff = 2;
+			currCar = id;
+		}
+		updateLT();
+		return true;
+	}
+
+	if (col == 6 && EventData::getInstance().eventType == LTData::QUALI_EVENT)
+	{
+		if (showDiff == 3 && id == currCar)
+		{
+			showDiff = 0;
+			currCar = 0;
+		}
+		else
+		{
+			showDiff = 3;
+			currCar = id;
+		}
+		updateLT();
+		return true;
+	}
+
+	if (col == 6 && EventData::getInstance().eventType == LTData::RACE_EVENT)
+	{
+		if (showDiff == 1 && id == currCar)
+		{
+			showDiff = 0;
+			currCar = 0;
+		}
+		else
+		{
+			showDiff = 1;
+			currCar = id;
+		}
+		updateLT();
+		return true;
+	}
+
+	return false;
 }
 
 void LTTableWidget::wheelEvent(QWheelEvent *event)

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Mon Jul 9 12:30:53 2012
+** Created: Mon Jul 9 18:18:38 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -57,7 +57,7 @@ public:
     {
         if (PreferencesDialog->objectName().isEmpty())
             PreferencesDialog->setObjectName(QString::fromUtf8("PreferencesDialog"));
-        PreferencesDialog->resize(447, 365);
+        PreferencesDialog->resize(447, 397);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PreferencesDialog->setWindowIcon(icon);
@@ -189,7 +189,7 @@ public:
         ltCheckBox->setText(QApplication::translate("PreferencesDialog", "Show contents during LT window resize", 0, QApplication::UnicodeUTF8));
         altCheckBox->setText(QApplication::translate("PreferencesDialog", "Alternate row colors in LT window", 0, QApplication::UnicodeUTF8));
         autoRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically start recording when session starts", 0, QApplication::UnicodeUTF8));
-        autoStopRecordBox->setText(QApplication::translate("PreferencesDialog", "Auto stop recording ", 0, QApplication::UnicodeUTF8));
+        autoStopRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically stop recording ", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("PreferencesDialog", "minutes after session ends", 0, QApplication::UnicodeUTF8));
         thumbnailsCheckBox->setText(QApplication::translate("PreferencesDialog", "Draw car thumbnails", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("PreferencesDialog", "Print laps in reverse order", 0, QApplication::UnicodeUTF8));

@@ -588,4 +588,6 @@ void DriverDataWidget::clearData()
 {
     for (int i = ui->tableWidget_4->rowCount()-1; i >= 9; --i)
         ui->tableWidget_4->removeRow(i);
+
+    ui->tableWidget_4->clear();
 }

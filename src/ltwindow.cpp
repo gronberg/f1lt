@@ -33,11 +33,11 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
     connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(on_showNoSessionBoard(bool, QString)));
 
-    loadSettings();    
-
     eventTimer = new QTimer(this);
     eventRecorder = new EventRecorder(this);
     eventPlayer = new EventPlayer(this);
+
+    loadSettings();
 
     eventPlayerAction = ui->mainToolBar->addWidget(eventPlayer);
     eventPlayerAction->setVisible(false);
@@ -45,6 +45,7 @@ LTWindow::LTWindow(QWidget *parent) :
     playing = false;
 
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timeout()));
+    connect(eventRecorder, SIGNAL(recordingStopped()), this, SLOT(on_autoStopRecording()));
     connect(eventPlayer, SIGNAL(playClicked(int)), this, SLOT(eventPlayerPlayClicked(int)));
     connect(eventPlayer, SIGNAL(pauseClicked()), this, SLOT(eventPlayerPauseClicked()));
     connect(eventPlayer, SIGNAL(rewindToStartClicked()), this, SLOT(eventPlayerRewindToStartClicked()));
@@ -233,7 +234,7 @@ void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
     }
 }
 
-void LTWindow::on_tableWidget_cellClicked(int row, int)
+void LTWindow::on_tableWidget_cellClicked(int row, int col)
 {
     QList<DriverData> driverList = eventData.driversData;
     qSort(driverList);
@@ -243,6 +244,7 @@ void LTWindow::on_tableWidget_cellClicked(int row, int)
         DriverData dd = driverList[row-1];
         currDriver = dd.carID - 1;
 
+        ui->tableWidget->printDiff(row, col, dd.carID);
         ui->driverDataWidget->printDriverData(currDriver);
     }
 }
@@ -320,17 +322,24 @@ void LTWindow::on_showNoSessionBoard(bool show, QString msg)
 		ui->splitter->setVisible(false);
 
 		ui->actionRecord->setEnabled(false);
+		qDebug() << "no session board msg=" << msg;
 
-		int year = 2000 + msg.left(2).toInt();
-		int month = msg.mid(2, 2).toInt();
-		int day = msg.mid(4, 2).toInt();
-		int hour = msg.mid(6, 2).toInt() + 1;
+//		int year = 2000 + msg.left(2).toInt();
+//		int month = msg.mid(2, 2).toInt();
+//		int day = msg.mid(4, 2).toInt();
+//		int hour = msg.mid(6, 2).toInt() + 1;
 
-		QString str = LTData::getEvent(QDate::currentDate()).eventName +
-			"\n" + QString::number(year) + "." + (month < 10 ? "0" + QString::number(month) : QString::number(month)) + "." +
-			(day < 10 ? "0" + QString::number(day) : QString::number(day)) + " - " + QString::number(hour) + ":00 GMT";
+//		QString str = LTData::getEvent(QDate::currentDate()).eventName +
+//			"\n" + QString::number(year) + "." + (month < 10 ? "0" + QString::number(month) : QString::number(month)) + "." +
+//			(day < 10 ? "0" + QString::number(day) : QString::number(day)) + " - " + QString::number(hour) + ":00 GMT";
 
-		ui->sessionLabel->setText(str);
+//		ui->sessionLabel->setText(str);
+		ui->tableWidget->clear();
+		ui->textEdit->clear();
+		ui->driverDataWidget->clearData();
+		ui->sessionDataWidget->clearData();
+
+		ui->messageBoardWidget->showSessionBoard(msg);
 		ui->messageBoardWidget->setVisible(true);
 	}
 	else
@@ -339,6 +348,7 @@ void LTWindow::on_showNoSessionBoard(bool show, QString msg)
 		ui->splitter->setVisible(true);
 		ui->messageBoardWidget->setVisible(false);
 
+		ui->tableWidget->updateLT();
 		ui->actionRecord->setEnabled(true);
 	}
 }
@@ -447,6 +457,8 @@ void LTWindow::loadSettings()
 
     ui->driverDataWidget->setReversedOrder(settings->value("ui/reversed_lap_history").toBool());
     ui->tableWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
+
+    eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
 }
 
 void LTWindow::saveSettings()
@@ -478,6 +490,8 @@ void LTWindow::on_actionPreferences_triggered()
 
         ui->splitter->setOpaqueResize(prefs->isSplitterOpaqueResize());
         ui->tableWidget->setAlternatingRowColors(prefs->isAlternatingRowColors());
+
+        eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
 
 //        settings->setValue("fonts/main_family", prefs->getMainFont().family());
 //        settings->setValue("fonts/main_size", QString::number(prefs->getMainFont().pointSize()));
@@ -670,6 +684,15 @@ void LTWindow::on_actionStop_recording_triggered()
     ui->actionStop_recording->setEnabled(false);
     eventRecorder->stopRecording();
     disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+}
+
+void LTWindow::on_autoStopRecording()
+{
+	recording = false;
+	ui->actionOpen->setEnabled(true);
+	ui->actionRecord->setEnabled(true);
+	ui->actionStop_recording->setEnabled(false);
+	disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
 }
 
 //-------------------- event player ----------------------------

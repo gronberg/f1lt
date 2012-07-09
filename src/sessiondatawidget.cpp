@@ -163,8 +163,19 @@ void SessionDataWidget::updateEventInfo()
         QPixmap trackImg = eventData.eventInfo.trackImg;
         if (!trackImg.isNull())
         {
-            lab->setPixmap(trackImg);
-            lab->resize(trackImg.size());
+        	QPixmap pix = trackImg;
+        	int w = width() - 20;
+        	int h = height() - 20;
+
+        	if (pix.width() > w)
+        		pix = trackImg.scaledToWidth(w, Qt::SmoothTransformation);
+
+        	if (pix.height() > h)
+                pix = trackImg.scaledToHeight(h, Qt::SmoothTransformation);
+
+        	lab->setPixmap(pix);
+
+//            lab->resize(trackImg.size());
             lab->setAlignment(Qt::AlignCenter);
             if (ui->tableWidget_5->rowHeight(4) < trackImg.height())
                 ui->tableWidget_5->setRowHeight(4,trackImg.height());

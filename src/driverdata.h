@@ -203,10 +203,10 @@ struct DriverData
     {
         if (lap1.isValid() && lap2.isValid())
         {
-            double d = (lap1-lap2).toDouble();
+            double d = lap1.toDouble()-lap2.toDouble();
 
-            if (d != 0)
-                return QString::number(d, 'f', 3);
+//            if (d != 0)
+            return QString::number(d, 'f', 3);
         }
         return "";
     }

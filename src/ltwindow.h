@@ -71,6 +71,7 @@ private slots:
 
     void on_actionRecord_triggered();
     void on_actionStop_recording_triggered();
+    void on_autoStopRecording();
 
     void on_actionPreferences_triggered();
 

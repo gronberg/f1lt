@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Mon Jul 9 14:04:57 2012
+** Created: Mon Jul 9 18:18:38 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -15,7 +15,6 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
@@ -29,6 +28,7 @@
 #include "driverdatawidget.h"
 #include "eventstatuswidget.h"
 #include "lttablewidget.h"
+#include "nosessionboardwidget.h"
 #include "sessiondatawidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -48,11 +48,7 @@ public:
     QAction *actionStop_recording;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_4;
-    QWidget *messageBoardWidget;
-    QVBoxLayout *verticalLayout_6;
-    QLabel *label;
-    QLabel *label_2;
-    QLabel *sessionLabel;
+    NoSessionBoardWidget *messageBoardWidget;
     EventStatusWidget *eventStatusWidget;
     QSplitter *splitter;
     LTTableWidget *tableWidget;
@@ -137,125 +133,13 @@ public:
         verticalLayout_4->setSpacing(0);
         verticalLayout_4->setContentsMargins(5, 5, 5, 5);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        messageBoardWidget = new QWidget(centralWidget);
+        messageBoardWidget = new NoSessionBoardWidget(centralWidget);
         messageBoardWidget->setObjectName(QString::fromUtf8("messageBoardWidget"));
-        QPalette palette;
-        QBrush brush(QColor(255, 255, 255, 255));
-        brush.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::WindowText, brush);
-        QBrush brush1(QColor(20, 20, 20, 255));
-        brush1.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Button, brush1);
-        QBrush brush2(QColor(30, 30, 30, 255));
-        brush2.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Light, brush2);
-        QBrush brush3(QColor(25, 25, 25, 255));
-        brush3.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Midlight, brush3);
-        QBrush brush4(QColor(10, 10, 10, 255));
-        brush4.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Dark, brush4);
-        QBrush brush5(QColor(13, 13, 13, 255));
-        brush5.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Mid, brush5);
-        palette.setBrush(QPalette::Active, QPalette::Text, brush);
-        palette.setBrush(QPalette::Active, QPalette::BrightText, brush);
-        palette.setBrush(QPalette::Active, QPalette::ButtonText, brush);
-        QBrush brush6(QColor(0, 0, 0, 255));
-        brush6.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Base, brush6);
-        palette.setBrush(QPalette::Active, QPalette::Window, brush1);
-        palette.setBrush(QPalette::Active, QPalette::Shadow, brush6);
-        palette.setBrush(QPalette::Active, QPalette::AlternateBase, brush4);
-        QBrush brush7(QColor(255, 255, 220, 255));
-        brush7.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::ToolTipBase, brush7);
-        palette.setBrush(QPalette::Active, QPalette::ToolTipText, brush6);
-        palette.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::Button, brush1);
-        palette.setBrush(QPalette::Inactive, QPalette::Light, brush2);
-        palette.setBrush(QPalette::Inactive, QPalette::Midlight, brush3);
-        palette.setBrush(QPalette::Inactive, QPalette::Dark, brush4);
-        palette.setBrush(QPalette::Inactive, QPalette::Mid, brush5);
-        palette.setBrush(QPalette::Inactive, QPalette::Text, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::BrightText, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::ButtonText, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::Base, brush6);
-        palette.setBrush(QPalette::Inactive, QPalette::Window, brush1);
-        palette.setBrush(QPalette::Inactive, QPalette::Shadow, brush6);
-        palette.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush4);
-        palette.setBrush(QPalette::Inactive, QPalette::ToolTipBase, brush7);
-        palette.setBrush(QPalette::Inactive, QPalette::ToolTipText, brush6);
-        palette.setBrush(QPalette::Disabled, QPalette::WindowText, brush4);
-        palette.setBrush(QPalette::Disabled, QPalette::Button, brush1);
-        palette.setBrush(QPalette::Disabled, QPalette::Light, brush2);
-        palette.setBrush(QPalette::Disabled, QPalette::Midlight, brush3);
-        palette.setBrush(QPalette::Disabled, QPalette::Dark, brush4);
-        palette.setBrush(QPalette::Disabled, QPalette::Mid, brush5);
-        palette.setBrush(QPalette::Disabled, QPalette::Text, brush4);
-        palette.setBrush(QPalette::Disabled, QPalette::BrightText, brush);
-        palette.setBrush(QPalette::Disabled, QPalette::ButtonText, brush4);
-        palette.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        palette.setBrush(QPalette::Disabled, QPalette::Window, brush1);
-        palette.setBrush(QPalette::Disabled, QPalette::Shadow, brush6);
-        palette.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush1);
-        palette.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush7);
-        palette.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush6);
-        messageBoardWidget->setPalette(palette);
-        messageBoardWidget->setAutoFillBackground(true);
-        verticalLayout_6 = new QVBoxLayout(messageBoardWidget);
-        verticalLayout_6->setSpacing(6);
-        verticalLayout_6->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
-        label = new QLabel(messageBoardWidget);
-        label->setObjectName(QString::fromUtf8("label"));
-        QPalette palette1;
-        QBrush brush8(QColor(231, 31, 31, 255));
-        brush8.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::WindowText, brush8);
-        QBrush brush9(QColor(255, 255, 0, 255));
-        brush9.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Text, brush9);
-        palette1.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
-        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush9);
-        palette1.setBrush(QPalette::Disabled, QPalette::WindowText, brush4);
-        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush4);
-        label->setPalette(palette1);
-        QFont font;
-        font.setPointSize(16);
-        font.setBold(true);
-        font.setWeight(75);
-        label->setFont(font);
-        label->setAlignment(Qt::AlignCenter);
-
-        verticalLayout_6->addWidget(label);
-
-        label_2 = new QLabel(messageBoardWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        QPalette palette2;
-        palette2.setBrush(QPalette::Active, QPalette::WindowText, brush9);
-        palette2.setBrush(QPalette::Inactive, QPalette::WindowText, brush9);
-        palette2.setBrush(QPalette::Disabled, QPalette::WindowText, brush4);
-        label_2->setPalette(palette2);
-        label_2->setFont(font);
-        label_2->setAlignment(Qt::AlignCenter);
-
-        verticalLayout_6->addWidget(label_2);
-
-        sessionLabel = new QLabel(messageBoardWidget);
-        sessionLabel->setObjectName(QString::fromUtf8("sessionLabel"));
-        QPalette palette3;
-        QBrush brush10(QColor(0, 255, 0, 255));
-        brush10.setStyle(Qt::SolidPattern);
-        palette3.setBrush(QPalette::Active, QPalette::WindowText, brush10);
-        palette3.setBrush(QPalette::Inactive, QPalette::WindowText, brush10);
-        palette3.setBrush(QPalette::Disabled, QPalette::WindowText, brush4);
-        sessionLabel->setPalette(palette3);
-        sessionLabel->setFont(font);
-        sessionLabel->setAlignment(Qt::AlignCenter);
-
-        verticalLayout_6->addWidget(sessionLabel);
-
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(messageBoardWidget->sizePolicy().hasHeightForWidth());
+        messageBoardWidget->setSizePolicy(sizePolicy);
 
         verticalLayout_4->addWidget(messageBoardWidget);
 
@@ -302,39 +186,43 @@ public:
         QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(10, __qtablewidgetitem10);
         tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        QPalette palette4;
-        palette4.setBrush(QPalette::Active, QPalette::WindowText, brush);
-        palette4.setBrush(QPalette::Active, QPalette::Text, brush);
-        palette4.setBrush(QPalette::Active, QPalette::Base, brush1);
-        QBrush brush11(QColor(73, 73, 73, 255));
-        brush11.setStyle(Qt::SolidPattern);
-        palette4.setBrush(QPalette::Active, QPalette::Highlight, brush11);
-        QBrush brush12(QColor(27, 27, 27, 255));
-        brush12.setStyle(Qt::SolidPattern);
-        palette4.setBrush(QPalette::Active, QPalette::AlternateBase, brush12);
-        palette4.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
-        palette4.setBrush(QPalette::Inactive, QPalette::Text, brush);
-        palette4.setBrush(QPalette::Inactive, QPalette::Base, brush1);
-        palette4.setBrush(QPalette::Inactive, QPalette::Highlight, brush11);
-        palette4.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush12);
-        QBrush brush13(QColor(130, 130, 130, 255));
-        brush13.setStyle(Qt::SolidPattern);
-        palette4.setBrush(QPalette::Disabled, QPalette::WindowText, brush13);
-        palette4.setBrush(QPalette::Disabled, QPalette::Text, brush13);
-        QBrush brush14(QColor(240, 240, 240, 255));
-        brush14.setStyle(Qt::SolidPattern);
-        palette4.setBrush(QPalette::Disabled, QPalette::Base, brush14);
-        QBrush brush15(QColor(175, 175, 175, 255));
-        brush15.setStyle(Qt::SolidPattern);
-        palette4.setBrush(QPalette::Disabled, QPalette::Highlight, brush15);
-        palette4.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush12);
-        tableWidget->setPalette(palette4);
-        QFont font1;
-        font1.setFamily(QString::fromUtf8("Arial"));
-        font1.setPointSize(10);
-        font1.setBold(true);
-        font1.setWeight(75);
-        tableWidget->setFont(font1);
+        QPalette palette;
+        QBrush brush(QColor(255, 255, 255, 255));
+        brush.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::WindowText, brush);
+        palette.setBrush(QPalette::Active, QPalette::Text, brush);
+        QBrush brush1(QColor(20, 20, 20, 255));
+        brush1.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Base, brush1);
+        QBrush brush2(QColor(73, 73, 73, 255));
+        brush2.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Highlight, brush2);
+        QBrush brush3(QColor(27, 27, 27, 255));
+        brush3.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::AlternateBase, brush3);
+        palette.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
+        palette.setBrush(QPalette::Inactive, QPalette::Text, brush);
+        palette.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette.setBrush(QPalette::Inactive, QPalette::Highlight, brush2);
+        palette.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush3);
+        QBrush brush4(QColor(130, 130, 130, 255));
+        brush4.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::WindowText, brush4);
+        palette.setBrush(QPalette::Disabled, QPalette::Text, brush4);
+        QBrush brush5(QColor(240, 240, 240, 255));
+        brush5.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::Base, brush5);
+        QBrush brush6(QColor(175, 175, 175, 255));
+        brush6.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        palette.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush3);
+        tableWidget->setPalette(palette);
+        QFont font;
+        font.setFamily(QString::fromUtf8("Arial"));
+        font.setPointSize(10);
+        font.setBold(true);
+        font.setWeight(75);
+        tableWidget->setFont(font);
         tableWidget->setFrameShape(QFrame::StyledPanel);
         tableWidget->setFrameShadow(QFrame::Plain);
         tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -394,21 +282,21 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         textEdit = new QTextEdit(tab_4);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
-        QPalette palette5;
-        QBrush brush16(QColor(220, 220, 220, 255));
-        brush16.setStyle(Qt::SolidPattern);
-        palette5.setBrush(QPalette::Active, QPalette::Text, brush16);
-        palette5.setBrush(QPalette::Active, QPalette::Base, brush1);
-        QBrush brush17(QColor(159, 159, 159, 255));
-        brush17.setStyle(Qt::SolidPattern);
-        palette5.setBrush(QPalette::Active, QPalette::Highlight, brush17);
-        palette5.setBrush(QPalette::Inactive, QPalette::Text, brush16);
-        palette5.setBrush(QPalette::Inactive, QPalette::Base, brush1);
-        palette5.setBrush(QPalette::Inactive, QPalette::Highlight, brush17);
-        palette5.setBrush(QPalette::Disabled, QPalette::Text, brush13);
-        palette5.setBrush(QPalette::Disabled, QPalette::Base, brush14);
-        palette5.setBrush(QPalette::Disabled, QPalette::Highlight, brush15);
-        textEdit->setPalette(palette5);
+        QPalette palette1;
+        QBrush brush7(QColor(220, 220, 220, 255));
+        brush7.setStyle(Qt::SolidPattern);
+        palette1.setBrush(QPalette::Active, QPalette::Text, brush7);
+        palette1.setBrush(QPalette::Active, QPalette::Base, brush1);
+        QBrush brush8(QColor(159, 159, 159, 255));
+        brush8.setStyle(Qt::SolidPattern);
+        palette1.setBrush(QPalette::Active, QPalette::Highlight, brush8);
+        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush7);
+        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette1.setBrush(QPalette::Inactive, QPalette::Highlight, brush8);
+        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush4);
+        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush5);
+        palette1.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        textEdit->setPalette(palette1);
         textEdit->setLineWrapMode(QTextEdit::WidgetWidth);
         textEdit->setTextInteractionFlags(Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse);
 
@@ -426,7 +314,7 @@ public:
         LTWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(LTWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1249, 22));
+        menuBar->setGeometry(QRect(0, 0, 1249, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuEdit = new QMenu(menuBar);
@@ -500,9 +388,6 @@ public:
         actionOpen->setText(QApplication::translate("LTWindow", "Open", 0, QApplication::UnicodeUTF8));
         actionLap_time_comparison->setText(QApplication::translate("LTWindow", "Lap time comparison", 0, QApplication::UnicodeUTF8));
         actionStop_recording->setText(QApplication::translate("LTWindow", "Stop recording", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("LTWindow", "Currently no live session", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("LTWindow", "Next timed session will be", 0, QApplication::UnicodeUTF8));
-        sessionLabel->setText(QApplication::translate("LTWindow", "TextLabel", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("LTWindow", "P", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(3);
@@ -524,11 +409,11 @@ public:
         textEdit->setHtml(QApplication::translate("LTWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Arial'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<table style=\"-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;\">\n"
+"</style></head><body style=\" font-family:'Tahoma'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
+"<table border=\"0\" style=\"-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;\">\n"
 "<tr>\n"
 "<td style=\"border: none;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'Tahoma'; font-size:8pt;\"><br /></span></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("LTWindow", "Commentary", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("LTWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("LTWindow", "Tools", 0, QApplication::UnicodeUTF8));

@@ -52,6 +52,8 @@ public:
         updateLT();
     }
 
+    bool printDiff(int row, int col, int id);
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void resizeEvent(QResizeEvent *event);
@@ -74,6 +76,8 @@ private:
     LTData::EventType eventType;
 
     bool drawCarThumbnails;
+    int showDiff;	//1 - time (best, q1), 2 - q2, 3 - q3, 4 - interval
+    int currCar;
 };
 
 #endif // LTTABLEWIDGET_H

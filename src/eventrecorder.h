@@ -18,12 +18,18 @@ public:
     void gatherDriverData();
 
     bool isEmpty() { return packets.isEmpty(); }
+
+    void setAutoStopRecord(int x)
+    {
+    	autoStopRecord = x;
+    }
 //    void saveEventData(QDataStream &);
 //    void saveLapData(QDataStream &);
 
 //    void storeLapData(const DriverData &);
     
 signals:
+	void recordingStopped();
     
 public slots:
     void startRecording();
@@ -46,6 +52,8 @@ private:
     EventData &eventData;
     
     int elapsedSeconds;
+    int autoStopRecord;
+    int elapsedTimeToStop;
 };
 
 #endif // EVENTRECORDER_H
