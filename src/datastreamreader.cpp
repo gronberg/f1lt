@@ -118,8 +118,6 @@ bool DataStreamReader::parsePacket(const QByteArray &buf, Packet &packet, int &p
             return 0;        
     }
 
-    qDebug() << "pos=" << pos << ", pbuf_length=" << pbuf_length << ", " << pbuf.size();
-
     if (pos == buf.size())
         return false;
 
@@ -792,6 +790,10 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
             eventData.driversData[packet.carID-1].posHistory.clear();
             for (int i = eventData.driversData[packet.carID-1].posHistory.size(); i < copyPacket.longData.size(); ++i)
                 eventData.driversData[packet.carID-1].posHistory.append((int)copyPacket.longData[i]);
+
+            //during the race carID is always equal to grid position
+            if (eventData.eventType == LTData::RACE_EVENT)
+            	eventData.driversData[packet.carID-1].posHistory[0] = packet.carID;
 
             break;
 

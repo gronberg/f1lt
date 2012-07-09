@@ -70,7 +70,15 @@ void EventStatusWidget::updateEventStatus()
     }
     else
     {
-        ui->timerLabel->setText(QString("%1 / %2").arg(eventData.lapsCompleted).arg(eventData.eventInfo.laps));
+    	int lapsCompleted = eventData.lapsCompleted+1;
+
+    	if (eventData.lapsCompleted == 0 && !eventData.sessionStarted)
+    		lapsCompleted = 0;
+
+    	if (lapsCompleted > eventData.eventInfo.laps)
+    		lapsCompleted = eventData.eventInfo.laps;
+
+        ui->timerLabel->setText(QString("%1 / %2").arg(lapsCompleted).arg(eventData.eventInfo.laps));
 
         ui->infoLabel->setText(eventData.remainingTime.toString("h:mm:ss"));
         if (eventData.lapsCompleted >= eventData.eventInfo.laps)
