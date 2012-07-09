@@ -107,6 +107,7 @@ void SessionDataWidget::setupContents()
     setItem(ui->tableWidget_4, 0, 1, "Lap", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
     setItem(ui->tableWidget_4, 0, 3, "Name", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::DEFAULT]);
     setItem(ui->tableWidget_4, 0, 4, "Time", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui->tableWidget_4, 0, 5, "Pos change", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
 
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
 }
@@ -380,15 +381,27 @@ void SessionDataWidget::updateFastestLaps()
     }
 }
 
-QList< QPair< QPair<double, int>, QString > > SessionDataWidget::getPitstops(const QList<DriverData> &driversData)
+QList< SessionDataWidget::PitStopAtom > SessionDataWidget::getPitstops(const QList<DriverData> &driversData)
 {
-    QList< QPair< QPair<double, int>, QString > > pitData;
+    QList< SessionDataWidget::PitStopAtom > pitData;
 
     for (int i = 0; i < driversData.size(); ++i)
     {
         for (int j = 0; j < driversData[i].pitData.size(); ++j)
         {
-            QPair< QPair<double, int>, QString > pitAtom(QPair<double, int>(driversData[i].pitData[j].pitTime.toDouble(), driversData[i].pitData[j].pitLap), driversData[i].driver);
+        	PitStopAtom pitAtom;
+        	pitAtom.driver = driversData[i].driver;
+        	pitAtom.lap = driversData[i].pitData[j].pitLap;
+        	pitAtom.time = driversData[i].pitData[j].pitTime.toDouble();
+
+        	LapData ld1 = driversData[i].getLapData(driversData[i].pitData[j].pitLap);
+			LapData ld2 = driversData[i].getLapData(driversData[i].pitData[j].pitLap+1);
+
+			pitAtom.pos = 0;
+			if (ld1.carID != -1 && ld2.carID != -1)
+				pitAtom.pos = ld1.pos - ld2.pos;
+
+//            QPair< QPair<double, int>, QString > pitAtom(QPair<double, int>(driversData[i].pitData[j].pitTime.toDouble(), driversData[i].pitData[j].pitLap), driversData[i].driver);
             pitData.append(pitAtom);
         }
     }
@@ -404,7 +417,7 @@ void SessionDataWidget::updatePitStops(bool clear)
         for (int i = ui->tableWidget_4->rowCount()-1; i > 0; --i)
             ui->tableWidget_4->removeRow(i);
     }
-    QList< QPair< QPair<double, int>, QString > > pitData = getPitstops(eventData.driversData);
+    QList< PitStopAtom > pitData = getPitstops(eventData.driversData);
     QTableWidgetItem *item;
 
     for (int i = 0; i < pitData.size(); ++i)
@@ -415,17 +428,29 @@ void SessionDataWidget::updatePitStops(bool clear)
         setItem(ui->tableWidget_4, i+1, 0, QString("%1.").arg(i+1), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
                        LTData::colors[LTData::DEFAULT], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        setItem(ui->tableWidget_4, i+1, 1, QString("%1").arg(pitData[i].first.second), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
+        setItem(ui->tableWidget_4, i+1, 1, QString("%1").arg(pitData[i].lap), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
                        LTData::colors[LTData::YELLOW], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        setItem(ui->tableWidget_4, i+1, 2, QString("%1").arg(LTData::getDriverNo(pitData[i].second)), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
+        setItem(ui->tableWidget_4, i+1, 2, QString("%1").arg(LTData::getDriverNo(pitData[i].driver)), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight,
                        LTData::colors[LTData::WHITE], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        setItem(ui->tableWidget_4, i+1, 3, QString("%1").arg(pitData[i].second), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft,
+        setItem(ui->tableWidget_4, i+1, 3, QString("%1").arg(pitData[i].driver), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft,
                        LTData::colors[LTData::WHITE], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
-        setItem(ui->tableWidget_4, i+1, 4, QString("%1").arg(pitData[i].first.first, 0, 'f', 1), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
+        setItem(ui->tableWidget_4, i+1, 4, QString("%1").arg(pitData[i].time, 0, 'f', 1), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
                        LTData::colors[LTData::YELLOW], LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
+
+        QColor color = LTData::colors[LTData::WHITE];
+        QString str = QString("%1").arg(pitData[i].pos);
+        if (pitData[i].pos > 0)
+        {
+        	str = "+" + str;
+        	color = LTData::colors[LTData::GREEN];
+        }
+        else if (pitData[i].pos < 0)
+        	color = LTData::colors[LTData::RED];
+        setItem(ui->tableWidget_4, i+1, 5, str, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
+                               color, LTData::colors[i % 2 == 0 ? LTData::BACKGROUND : LTData::BACKGROUND2]);
 
         ui->tableWidget_4->setRowHeight(i+1, 20);
     }
@@ -473,8 +498,9 @@ void SessionDataWidget::on_tabWidget_currentChanged(int index)
             ui->tableWidget_4->setColumnWidth(0, 0.1 * w);
             ui->tableWidget_4->setColumnWidth(1, 0.1 * w);
             ui->tableWidget_4->setColumnWidth(2, 0.1 * w);
-            ui->tableWidget_4->setColumnWidth(3, 0.4 * w);
-            ui->tableWidget_4->setColumnWidth(4, 0.3 * w);
+            ui->tableWidget_4->setColumnWidth(3, 0.3 * w);
+            ui->tableWidget_4->setColumnWidth(4, 0.2 * w);
+            ui->tableWidget_4->setColumnWidth(5, 0.2 * w);
         default:
             break;
     }

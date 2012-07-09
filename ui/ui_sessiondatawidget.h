@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Mon Jul 9 18:18:38 2012
+** Created: Mon Jul 9 22:36:31 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -214,8 +214,8 @@ public:
         verticalLayout_4 = new QVBoxLayout(tab_3);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         tableWidget_4 = new QTableWidget(tab_3);
-        if (tableWidget_4->columnCount() < 5)
-            tableWidget_4->setColumnCount(5);
+        if (tableWidget_4->columnCount() < 6)
+            tableWidget_4->setColumnCount(6);
         QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
         tableWidget_4->setHorizontalHeaderItem(0, __qtablewidgetitem14);
         QTableWidgetItem *__qtablewidgetitem15 = new QTableWidgetItem();
@@ -226,6 +226,8 @@ public:
         tableWidget_4->setHorizontalHeaderItem(3, __qtablewidgetitem17);
         QTableWidgetItem *__qtablewidgetitem18 = new QTableWidgetItem();
         tableWidget_4->setHorizontalHeaderItem(4, __qtablewidgetitem18);
+        QTableWidgetItem *__qtablewidgetitem19 = new QTableWidgetItem();
+        tableWidget_4->setHorizontalHeaderItem(5, __qtablewidgetitem19);
         tableWidget_4->setObjectName(QString::fromUtf8("tableWidget_4"));
         QPalette palette4;
         palette4.setBrush(QPalette::Active, QPalette::WindowText, brush2);
@@ -259,7 +261,7 @@ public:
 
         retranslateUi(SessionDataWidget);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(SessionDataWidget);

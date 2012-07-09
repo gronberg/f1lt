@@ -52,7 +52,7 @@ public:
         updateLT();
     }
 
-    bool printDiff(int row, int col, int id);
+    bool printDiff(int row, int col);
 
 protected:
     void keyPressEvent(QKeyEvent *event);

@@ -264,7 +264,7 @@ struct DriverData
         qSort(pitData);
     }
 
-    LapData getLapData(int lap)
+    LapData getLapData(int lap) const
     {
         for (int i = 0; i < lapData.size(); ++i)
         {

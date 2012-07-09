@@ -36,8 +36,6 @@ public:
     void clearData();
     void clearFastestLaps();
 
-    QList< QPair< QPair<double, int>, QString > > getPitstops(const QList<DriverData> &driversData);
-
 protected:
     void resizeEvent(QResizeEvent *);
     void keyPressEvent(QKeyEvent *);
@@ -54,6 +52,21 @@ private:
     QList<LapData> bestLaps;
 
     EventData &eventData;
+
+    struct PitStopAtom
+    {
+    	double time;
+    	int lap;
+    	QString driver;
+    	int pos;
+
+    	bool operator <(const PitStopAtom &psa) const
+    	{
+    		return time < psa.time;
+    	}
+    };
+
+    QList< PitStopAtom > getPitstops(const QList<DriverData> &driversData);
 };
 
 #endif // SESSIONDATAWIDGET_H

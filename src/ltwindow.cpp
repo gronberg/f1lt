@@ -244,7 +244,6 @@ void LTWindow::on_tableWidget_cellClicked(int row, int col)
         DriverData dd = driverList[row-1];
         currDriver = dd.carID - 1;
 
-        ui->tableWidget->printDiff(row, col, dd.carID);
         ui->driverDataWidget->printDriverData(currDriver);
     }
 }

@@ -745,7 +745,6 @@ void LTTableWidget::setHeader()
 
 void LTTableWidget::keyPressEvent(QKeyEvent *event)
 {
-
     if ((event->key() == Qt::Key_Up && currentRow() > 1) ||
         (event->key() == Qt::Key_Down && currentRow() < eventData.driversData.size()))
     {
@@ -897,8 +896,17 @@ void LTTableWidget::resizeEvent(QResizeEvent *e)
     QTableWidget::resizeEvent(e);
 }
 
-bool LTTableWidget::printDiff(int row, int col, int id)
+bool LTTableWidget::printDiff(int row, int col)
 {
+	if (col < 4 || col > 6)
+		return false;
+
+	QList<DriverData> driverList = eventData.driversData;
+	qSort(driverList);
+
+	DriverData dd = driverList[row-1];
+	int id = dd.carID;
+
 	if (col == 4 && EventData::getInstance().eventType != LTData::RACE_EVENT)
 	{
 		if (showDiff == 1 && id == currCar)
@@ -1005,6 +1013,12 @@ void LTTableWidget::mousePressEvent(QMouseEvent *event)
         int row = index.row();
 
         if (row > 0 && row <= eventData.driversData.size())
+        {
+        	int col = index.column();
+
+			printDiff(row, col);
+
             QTableWidget::mousePressEvent(event);
+        }
     }
 }
