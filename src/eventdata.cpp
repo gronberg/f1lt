@@ -89,6 +89,16 @@ int EventData::getDriverId(int no)
     return -1;
 }
 
+DriverData EventData::getDriverData(int no)
+{
+	int id = getDriverId(no);
+	if (id > 0 && id <= driversData.size())
+		return driversData[id-1];
+
+
+    return DriverData();
+}
+
 /*
 
 EventData eventData;*/

@@ -212,8 +212,8 @@ void HeadToHeadDialog::loadCarImages()
     comboBox[0]->clear();
     comboBox[1]->clear();
 
-    comboBox[0]->addItems(LTData::getDriversList());
-    comboBox[1]->addItems(LTData::getDriversList());
+//    comboBox[0]->addItems(LTData::getDriversList());
+//    comboBox[1]->addItems(LTData::getDriversList());
 }
 
 QString HeadToHeadDialog::calculateInterval(int driver1Idx, int driver2Idx, int lap)
@@ -302,21 +302,33 @@ void HeadToHeadDialog::updateData()
     {
         index[i] = 0;
         int idx = eventData.getDriverId(getNumber(i));
-        if (idx > 0 && !eventData.driversData[idx-1].lapData.isEmpty())
+        if (idx > 0)
         {
-            if (eventData.driversData[idx-1].lapData[0].numLap < firstLap)
-                firstLap = eventData.driversData[idx-1].lapData[0].numLap;
+        	if (!eventData.driversData[idx-1].lapData.isEmpty())
+        	{
+				if (eventData.driversData[idx-1].lapData[0].numLap < firstLap)
+					firstLap = eventData.driversData[idx-1].lapData[0].numLap;
 
-            if (eventData.driversData[idx-1].lapData.last().numLap >= lastLap)
-            {
-                lastLap = eventData.driversData[idx-1].lapData.last().numLap;
+				if (eventData.driversData[idx-1].lapData.last().numLap >= lastLap)
+				{
+					lastLap = eventData.driversData[idx-1].lapData.last().numLap;
 
-                if (lastLap < eventData.eventInfo.laps &&
-                    !eventData.driversData[idx-1].retired &&
-                    eventData.driversData[idx-1].lastLap.sector3.toString() == "" &&
-                    eventData.driversData[idx-1].lastLap.lapTime.toString() != "IN PIT")
-                    lastLap++;
-            }
+					if (lastLap < eventData.eventInfo.laps &&
+						!eventData.driversData[idx-1].retired &&
+						eventData.driversData[idx-1].lastLap.sector3.toString() == "" &&
+						eventData.driversData[idx-1].lastLap.lapTime.toString() != "IN PIT")
+						lastLap++;
+				}
+        	}
+            DriverData &dd = eventData.driversData[idx-1];
+            int idx = (dd.number > 13 ? dd.number-2 : dd.number-1) / 2;
+			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
+			lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+        }
+        else
+        {
+        	QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
+			lab->clear();
         }
     }
 
@@ -370,12 +382,12 @@ void HeadToHeadDialog::updateData()
                     ld.numLap += 1;
                 }
 
-                if (j == 0)
-                {
-                    int idx = (dd.number > 13 ? dd.number-2 : dd.number-1) / 2;
-                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
-                    lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
-                }
+//                if (j == 0)
+//                {
+//                    int idx = (dd.number > 13 ? dd.number-2 : dd.number-1) / 2;
+//                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
+//                    lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+//                }
                 if (dd.lapData.size() >= index[i] && ld.numLap == lapNo)
                 {                    
                     item = ui->tableWidget->item(j+2, 1+i*6);
@@ -484,11 +496,11 @@ void HeadToHeadDialog::updateData()
             }
             else
             {
-                if (j == 0)
-                {
-                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
-                    lab->clear();
-                }
+//                if (j == 0)
+//                {
+//                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
+//                    lab->clear();
+//                }
                 for (int w = i*6+1; w <= i*6+5; ++w)
                 {
                     item = ui->tableWidget->item(j+2, w);
@@ -540,7 +552,14 @@ void HeadToHeadDialog::updateData()
         {
             if (newLap[0] || newLap[1])
             {
-                sInterval = calculateInterval(driversIdx[0], driversIdx[1], lapNo-1);
+            	if (eventData.eventType == LTData::RACE_EVENT)
+            		sInterval = calculateInterval(driversIdx[0], driversIdx[1], lapNo-1);
+            	else
+            	{
+            		if (std::abs(eventData.driversData[driversIdx[0]].lastLap.numLap -
+            				eventData.driversData[driversIdx[1]].lastLap.numLap) <= 1)
+            			sInterval = "0.0";
+            	}
 
                 double sumS[2] = {0.0, 0.0};
 

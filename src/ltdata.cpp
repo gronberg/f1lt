@@ -256,9 +256,13 @@ QStringList LTData::getDriversList()
     QStringList list;
     list.append("");
 
-    for (int i = 0; i < EventData::getInstance().driversData.size(); ++i)
+    for (int i = 0; i < 30; ++i)
     {
-    	list.append(QString::number(EventData::getInstance().driversData[i].number) + " " + EventData::getInstance().driversData[i].driver);
+    	DriverData dd = EventData::getInstance().getDriverData(i);
+    	if (dd.carID != -1)
+    	{
+    		list.append(QString::number(dd.number) + " " + dd.driver);
+    	}
     }
     if (list.isEmpty())
     {

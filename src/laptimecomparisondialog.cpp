@@ -105,10 +105,10 @@ void LapTimeComparisonDialog::loadCarImages()
     comboBox[2]->clear();
     comboBox[3]->clear();
 
-    comboBox[0]->addItems(LTData::getDriversList());
-    comboBox[1]->addItems(LTData::getDriversList());
-    comboBox[2]->addItems(LTData::getDriversList());
-    comboBox[3]->addItems(LTData::getDriversList());
+//    comboBox[0]->addItems(LTData::getDriversList());
+//    comboBox[1]->addItems(LTData::getDriversList());
+//    comboBox[2]->addItems(LTData::getDriversList());
+//    comboBox[3]->addItems(LTData::getDriversList());
 
     smallCarImg.clear();
     for (int i = 0; i < LTData::ltTeams.size(); ++i)
@@ -146,6 +146,16 @@ void LapTimeComparisonDialog::updateData()
                 if (eventData.driversData[idx-1].lapData.last().numLap > lastLap)
                     lastLap = eventData.driversData[idx-1].lapData.last().numLap;
             }
+
+            DriverData &dd = eventData.driversData[idx-1];
+            int idx = (dd.number > 13 ? dd.number-2 : dd.number-1) / 2;
+			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
+			lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+        }
+        else
+        {
+        	QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
+        	lab->clear();
         }
     }
     setWindowTitle(wTitle);
@@ -185,12 +195,12 @@ void LapTimeComparisonDialog::updateData()
                 DriverData dd = eventData.driversData[idx-1];
                 LapData ld = dd.getLapData(lapNo);
 
-                if (j == 0)
-                {
-                    int idx = (dd.number > 13 ? dd.number-2 : dd.number-1) / 2;
-                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
-                    lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
-                }
+//                if (j == 0)
+//                {
+//                    int idx = (dd.number > 13 ? dd.number-2 : dd.number-1) / 2;
+//                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
+//                    lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+//                }
 
                 if (dd.lapData.size() > index[i] && ld.numLap == lapNo && ld.carID != -1)
                 {
@@ -222,9 +232,9 @@ void LapTimeComparisonDialog::updateData()
             {
                 if (j == 0)
                 {
-                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
-                    if (lab)
-                        lab->clear();
+//                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
+//                    if (lab)
+//                        lab->clear();
                 }
                 item = ui->tableWidget->item(j+1, i+1);
                 if (item)
