@@ -31,6 +31,7 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(authorizationError()), this, SLOT(on_authorizationError()));
     connect(streamReader, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
     connect(streamReader, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
+    connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(on_showNoSessionBoard(bool, QString)));
 
     loadSettings();    
 
@@ -51,6 +52,8 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(eventPlayer, SIGNAL(rewindClicked()), this, SLOT(eventPlayerRewindClicked()));
     connect(eventPlayer, SIGNAL(stopClicked()), this, SLOT(eventPlayerStopClicked()));
     connect(eventPlayer, SIGNAL(nextPackets(QList<Packet>)), streamReader, SLOT(parseEPPackets(QList<Packet>)));
+
+    ui->messageBoardWidget->setVisible(false);
 
     QStringList args = qApp->arguments();
     if (args.size() > 1)
@@ -307,6 +310,37 @@ void LTWindow::on_sessionStarted()
 {
     if (!eventTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))
         eventTimer->start(1000);
+}
+
+void LTWindow::on_showNoSessionBoard(bool show, QString msg)
+{
+	if (show)
+	{
+		ui->eventStatusWidget->setVisible(false);
+		ui->splitter->setVisible(false);
+
+		ui->actionRecord->setEnabled(false);
+
+		int year = 2000 + msg.left(2).toInt();
+		int month = msg.mid(2, 2).toInt();
+		int day = msg.mid(4, 2).toInt();
+		int hour = msg.mid(6, 2).toInt() + 1;
+
+		QString str = LTData::getEvent(QDate::currentDate()).eventName +
+			"\n" + QString::number(year) + "." + (month < 10 ? "0" + QString::number(month) : QString::number(month)) + "." +
+			(day < 10 ? "0" + QString::number(day) : QString::number(day)) + " - " + QString::number(hour) + ":00 GMT";
+
+		ui->sessionLabel->setText(str);
+		ui->messageBoardWidget->setVisible(true);
+	}
+	else
+	{
+		ui->eventStatusWidget->setVisible(true);
+		ui->splitter->setVisible(true);
+		ui->messageBoardWidget->setVisible(false);
+
+		ui->actionRecord->setEnabled(true);
+	}
 }
 
 void LTWindow::timeout()

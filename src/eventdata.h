@@ -63,7 +63,8 @@ public:
     QString sec2Record[4];
     QString sec3Record[4];
 
-    QList<DriverData> driversData;    
+    QList<DriverData> driversData;
+    int qualiPeriod;
 };
 
 //extern EventData eventData;

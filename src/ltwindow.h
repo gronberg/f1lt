@@ -58,6 +58,7 @@ private slots:
     void on_driverDataChanged(int);
     void on_dataChanged();
     void on_sessionStarted();
+    void on_showNoSessionBoard(bool, QString);
 
     void timeout();
     void on_tableWidget_cellDoubleClicked(int row, int column);

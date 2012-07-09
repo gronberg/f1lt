@@ -18,6 +18,8 @@ EventData::EventData()
     pressure = 0;
     windDirection = 0;    
 
+    qualiPeriod = 0;
+
     sessionStarted = false;
 }
 
@@ -39,6 +41,7 @@ void EventData::clear()
     pressure = 0;
     windDirection = 0;
     sessionStarted = false;
+    qualiPeriod = 0;
 
     commentary = "";
     driversData.clear();

@@ -70,6 +70,7 @@ signals:
     void error(QAbstractSocket::SocketError);
     void error(QNetworkReply::NetworkError);
     void packetParsed(const Packet&);
+    void noLiveSession(bool, QString);
     
 public slots:
     //void connected();
@@ -100,6 +101,8 @@ private:
 
     void savePacket(const QByteArray &buf);
     EventData &eventData;
+
+    bool noSession;
 };
 
 #endif // DATASTREAMREADER_H

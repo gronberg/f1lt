@@ -53,9 +53,9 @@ void EventStatusWidget::updateEventStatus()
                 ui->statusLabelIcon->setPixmap(icons[2]);
                 break;
 
-        case LTData::SAFETY_CAR_DEPLOYED:
-            ui->statusLabelIcon->setPixmap(icons[3]);
-            break;
+			case LTData::SAFETY_CAR_DEPLOYED:
+				ui->statusLabelIcon->setPixmap(icons[3]);
+				break;
         }
     }
     else
@@ -67,6 +67,11 @@ void EventStatusWidget::updateEventStatus()
 
         if (eventData.remainingTime.toString("hh:mm:ss") == "00:00:00")
             ui->statusLabelIcon->setPixmap(icons[4]);
+
+        if (eventData.eventType == LTData::QUALI_EVENT)
+        	ui->infoLabel->setText("Q" + (eventData.qualiPeriod > 0 ? QString::number(eventData.qualiPeriod) : ""));
+        else
+        	ui->infoLabel->setText("FP");
     }
     else
     {

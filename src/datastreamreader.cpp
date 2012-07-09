@@ -252,6 +252,13 @@ bool DataStreamReader::checkDecryption(QString stream)
 
 void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
 {    
+	if (noSession)
+	{
+		eventData.frame = 0;
+		noSession = false;
+		emit noLiveSession(false, "");
+	}
+
     qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
 
     if (packet.carID > eventData.driversData.size() || packet.carID < 1)
@@ -346,7 +353,6 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
             if (packet.longData != "" /*&& packet.length > 0*/ && QString(packet.longData).indexOf(QRegExp("[A-Z]")) != -1)//eventData.driversData[packet.carID-1].driver == "")
             {
                 s = packet.longData;
-                qDebug() << "IMIE=" << s << ", " << LTData::getDriverName(s);
                 eventData.driversData[packet.carID-1].driver = LTData::getDriverName(s);
             }
             eventData.driversData[packet.carID-1].colorData[LTData::RACE_DRIVER] = (LTData::Colors)packet.data;
@@ -396,12 +402,16 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
                     eventData.driversData[packet.carID-1].q1 = LapTime(packet.longData.constData());
                     eventData.driversData[packet.carID-1].lastLap.lapTime = LapTime(packet.longData.constData());
 
-                    if (eventData.driversData[packet.carID-1].pos == 1 && eventData.driversData[packet.carID-1].q1.isValid() &&
-                            eventData.driversData[packet.carID-1].q1 < eventData.FLTime)
+                    if (eventData.driversData[packet.carID-1].pos == 1 && eventData.driversData[packet.carID-1].q1.isValid())
                     {
-                        eventData.FLTime = eventData.driversData[packet.carID-1].q1;
-                        for (int i = 0; i < eventData.driversData.size(); ++i)
-                            eventData.driversData[i].updateGaps(eventData);
+                    	if (eventData.driversData[packet.carID-1].q1 < eventData.FLTime)
+                    	{
+							eventData.FLTime = eventData.driversData[packet.carID-1].q1;
+							for (int i = 0; i < eventData.driversData.size(); ++i)
+								eventData.driversData[i].updateGaps(eventData);
+
+                    	}
+                        eventData.qualiPeriod = 1;
                     }
 
 
@@ -452,12 +462,15 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
                     eventData.driversData[packet.carID-1].q2 = LapTime(packet.longData.constData());
                     eventData.driversData[packet.carID-1].colorData[LTData::QUALI_PERIOD_2] = (LTData::Colors)packet.data;
 
-                    if (eventData.driversData[packet.carID-1].pos == 1 && eventData.driversData[packet.carID-1].q2.isValid() &&
-                            eventData.driversData[packet.carID-1].q2 < eventData.FLTime)
+                    if (eventData.driversData[packet.carID-1].pos == 1 && eventData.driversData[packet.carID-1].q2.isValid())
                     {
-                        eventData.FLTime = eventData.driversData[packet.carID-1].q2;
-                        for (int i = 0; i < eventData.driversData.size(); ++i)
-                            eventData.driversData[i].updateGaps(eventData);
+                    	if (eventData.driversData[packet.carID-1].q2 < eventData.FLTime)
+                    	{
+							eventData.FLTime = eventData.driversData[packet.carID-1].q2;
+							for (int i = 0; i < eventData.driversData.size(); ++i)
+								eventData.driversData[i].updateGaps(eventData);
+                    	}
+                        eventData.qualiPeriod = 2;
                     }
                     break;
             }
@@ -522,12 +535,15 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
                     eventData.driversData[packet.carID-1].q3 = LapTime(packet.longData.constData());
                     eventData.driversData[packet.carID-1].colorData[LTData::QUALI_PERIOD_3] = (LTData::Colors)packet.data;
 
-                    if (eventData.driversData[packet.carID-1].pos == 1 && eventData.driversData[packet.carID-1].q3.isValid() &&
-                            eventData.driversData[packet.carID-1].q3 < eventData.FLTime)
+                    if (eventData.driversData[packet.carID-1].pos == 1 && eventData.driversData[packet.carID-1].q3.isValid())
                     {
-                        eventData.FLTime = eventData.driversData[packet.carID-1].q3;
-                        for (int i = 0; i < eventData.driversData.size(); ++i)
-                            eventData.driversData[i].updateGaps(eventData);
+                    	if (eventData.driversData[packet.carID-1].q3 < eventData.FLTime)
+                    	{
+							eventData.FLTime = eventData.driversData[packet.carID-1].q3;
+							for (int i = 0; i < eventData.driversData.size(); ++i)
+								eventData.driversData[i].updateGaps(eventData);
+                    	}
+                        eventData.qualiPeriod = 3;
                     }
                     break;
             }
@@ -851,6 +867,13 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             if (eventData.eventType != 0 && eventData.eventType != (LTData::EventType)packet.data)
                 eventData.clear();
 
+            if (s.size() > 0 && s[0] == '_')
+			{
+				eventData.clear();
+				noSession = true;
+				emit noLiveSession(true, s.right(s.size()-1));
+			}
+
             eventData.eventInfo = LTData::getEvent(/*QDate::fromString("12.06.2011", "dd.MM.yyyy"));//*/QDate::currentDate());//(int)(packet.longData[0]);
             eventData.eventType = (LTData::EventType)copyPacket.data;
             eventData.lapsCompleted = 0;
@@ -914,9 +937,13 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     //session actually starts when we get the 59 seconds mark (i.e. Q1 starts when the time is 19:59)
                     j = eventData.remainingTime.second();
 
-                    if (j != 0 && (eventData.eventType != LTData::RACE_EVENT ||
+                    if (!eventData.sessionStarted && j != 0 && (eventData.eventType != LTData::RACE_EVENT ||
                         (eventData.eventType == LTData::RACE_EVENT && eventData.lapsCompleted < eventData.eventInfo.laps)))
+                    {
                         eventData.sessionStarted = true;
+                        if (eventData.eventType == LTData::QUALI_EVENT)
+                        	++eventData.qualiPeriod;
+                    }
 
                     emit sessionStarted();
 
