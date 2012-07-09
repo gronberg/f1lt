@@ -27,6 +27,8 @@ public:
 
     void loadCarImages();
 
+    int getNumber(int);
+
 public slots:
     int exec();
     void show();

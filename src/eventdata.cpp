@@ -77,7 +77,19 @@ int EventData::getDriverId(QString name)
             return driversData[i].carID;
     }
     return -1;
-}/*
+}
+
+int EventData::getDriverId(int no)
+{
+    for (int i = 0; i < driversData.size(); ++i)
+    {
+        if (driversData[i].number == no)
+            return driversData[i].carID;
+    }
+    return -1;
+}
+
+/*
 
 EventData eventData;*/
 

@@ -999,23 +999,29 @@ void LapCompChartWidget::drawChart(QPainter *p)
     {
         for (int k = 0; k < 4; ++k)
         {
-            if (!driverData[k].lapData.empty() && index[k] < driverData[k].lapData.size() && driverData[k].lapData[index[k]].numLap == i)
+        	LapData ld = driverData[k].getLapData(i);
+//            if (!driverData[k].lapData.empty() && index[k] < driverData[k].lapData.size() && driverData[k].lapData[index[k]].numLap == i)
+        	if (ld.carID == driverData[k].carID && ld.numLap == i)
             {
                 QPen pen;
                 pen.setWidth(2);
                 pen.setColor(colors[k]);
                 p->setPen(pen);
 
-                LapTime lapTime = driverData[k].lapData[index[k]].lapTime;
+                LapTime lapTime = ld.lapTime;//driverData[k].lapData[index[k]].lapTime;
 
                 if (lapTime.toString() == "IN PIT")
                 {
                     if (index[k] > 0)
-                        lapTime = driverData[k].lapData[index[k]-1].lapTime;
+                    {
+                    	lapTime = driverData[k].getLapData(i-1).lapTime;
+//                        lapTime = driverData[k].lapData[index[k]-1].lapTime;
+                    }
 
                     else if (index[k] < driverData[k].lapData.size()-1)
                     {
-                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
+                    	lapTime = driverData[k].getLapData(i+1).lapTime;
+//                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
                         LapTime pl(driverData[k].getPitTime(driverData[k].lapData[index[k]].numLap));
 
                         lapTime = lapTime - pl + LapTime(5000);
@@ -1023,7 +1029,8 @@ void LapCompChartWidget::drawChart(QPainter *p)
 
                     if  (lapTime.toString() == "IN PIT" && index[k] < driverData[k].lapData.size()-1)
                     {
-                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
+                    	lapTime = driverData[k].getLapData(i+1).lapTime;
+//                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
                         LapTime pl(driverData[k].getPitTime(driverData[k].lapData[index[k]].numLap));
 
                         lapTime = lapTime - pl + LapTime(5000);
@@ -1385,7 +1392,9 @@ void GapCompChartWidget::drawChart(QPainter *p)
         for (int k = 0; k < 2; ++k)
         {
             DriverData dd = (driverIdx[k] >= 0) ? eventData.driversData[driverIdx[k]] : DriverData();
-            if (!dd.lapData.empty() && index[k] < dd.lapData.size() && dd.lapData[index[k]].numLap == i)
+            LapData ld = dd.getLapData(i);
+//            if (!dd.lapData.empty() && index[k] < dd.lapData.size() && dd.lapData[index[k]].numLap == i)
+            if (ld.carID == dd.carID && ld.numLap == i)
             {
                 QPen pen;
                 pen.setWidth(2);
@@ -1439,7 +1448,7 @@ void GapCompChartWidget::drawChart(QPainter *p)
 
                 p->drawLine(x[k], y1[k], j[k], y2[k]);
 
-                if (dd.lapData[index[k]].lapTime.toString() == "IN PIT")
+                if (ld.lapTime.toString() == "IN PIT")
                 {
                     QPainterPath path;
                     path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
@@ -1650,14 +1659,16 @@ void PosCompChartWidget::drawChart(QPainter *p)
     {
         for (int k = 0; k < 2; ++k)
         {
-            if (!driverData[k].lapData.empty() && index[k] < driverData[k].lapData.size() && driverData[k].lapData[index[k]].numLap == i)
+        	LapData ld = driverData[k].getLapData(i);
+//            if (!driverData[k].lapData.empty() && index[k] < driverData[k].lapData.size() && driverData[k].lapData[index[k]].numLap == i)
+        	if (ld.carID == driverData[k].carID && ld.numLap == i)
             {
                 QPen pen;
                 pen.setWidth(2);
                 pen.setColor(colors[k]);
                 p->setPen(pen);
 
-                int pos = driverData[k].lapData[index[k]].pos;
+                int pos = ld.pos;//driverData[k].lapData[index[k]].pos;
 
                 y2[k] = (double)(height()-25.0 - (double)(pos-min) * yFactor);
 

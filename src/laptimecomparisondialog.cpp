@@ -132,7 +132,7 @@ void LapTimeComparisonDialog::updateData()
     for (int i = 0; i < 4; ++i)
     {
         index[i] = 0;
-        int idx = eventData.getDriverId(comboBox[i]->currentText());
+        int idx = eventData.getDriverId(getNumber(i));
         if (idx > 0)
         {
             if (i > 0)
@@ -177,12 +177,13 @@ void LapTimeComparisonDialog::updateData()
 
         for (int i = 0; i < 4; ++i)
         {
-            int idx = eventData.getDriverId(comboBox[i]->currentText());
+            int idx = eventData.getDriverId(getNumber(i));
 
             if (idx > 0 && !eventData.driversData[idx-1].lapData.isEmpty())
             {
-                int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
+                //int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
                 DriverData dd = eventData.driversData[idx-1];
+                LapData ld = dd.getLapData(lapNo);
 
                 if (j == 0)
                 {
@@ -191,22 +192,22 @@ void LapTimeComparisonDialog::updateData()
                     lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
                 }
 
-                if (dd.lapData.size() > index[i] && dd.lapData[lapIndex].numLap == lapNo)
+                if (dd.lapData.size() > index[i] && ld.numLap == lapNo && ld.carID != -1)
                 {
-                    laps[i] = dd.lapData[lapIndex].lapTime;
+                    laps[i] = ld.lapTime;
 
                     item = ui->tableWidget->item(j+1, i+1);
                     if (!item)
                     {
-                        item = new QTableWidgetItem(dd.lapData[lapIndex].lapTime);
+                        item = new QTableWidgetItem(ld.lapTime);
                         item->setTextAlignment(Qt::AlignCenter);
                         ui->tableWidget->setItem(j+1, i+1, item);
                     }
                     else
-                        item->setText(dd.lapData[lapIndex].lapTime);
+                        item->setText(ld.lapTime);
 
-                    if (dd.lapData[lapIndex].lapTime.toString() == "IN PIT")
-                        item->setText(item->text() + " (" + dd.getPitTime(dd.lapData[lapIndex].numLap) + ")");                    
+                    if (ld.lapTime.toString() == "IN PIT")
+                        item->setText(item->text() + " (" + dd.getPitTime(ld.numLap) + ")");
 
                     ++index[i];
                 }
@@ -296,7 +297,7 @@ void LapTimeComparisonDialog::updateCharts()
     int carIdx;
     for (int i = 0; i < 4; ++i)
     {
-        int idx = eventData.getDriverId(comboBox[i]->currentText());
+        int idx = eventData.getDriverId(getNumber(i));
         if (idx > 0)
         {
             driver = eventData.driversData[idx-1].driver;
@@ -445,5 +446,22 @@ void LapTimeComparisonDialog::keyPressEvent(QKeyEvent *event)
 void LapTimeComparisonDialog::setFont(const QFont &font)
 {
     ui->tableWidget->setFont(font);
+}
+
+int LapTimeComparisonDialog::getNumber(int i)
+{
+	QString text = comboBox[i]->currentText();
+
+	int no = -1;
+	int idx = text.indexOf(" ");
+	if (idx != 0)
+	{
+		bool ok;
+		no = text.left(idx).toInt(&ok);
+
+		if (!ok)
+			no = -1;
+	}
+	return no;
 }
 

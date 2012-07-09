@@ -301,7 +301,7 @@ void HeadToHeadDialog::updateData()
     for (int i = 0; i < 2; ++i)
     {
         index[i] = 0;
-        int idx = eventData.getDriverId(comboBox[i]->currentText());
+        int idx = eventData.getDriverId(getNumber(i));
         if (idx > 0 && !eventData.driversData[idx-1].lapData.isEmpty())
         {
             if (eventData.driversData[idx-1].lapData[0].numLap < firstLap)
@@ -348,18 +348,20 @@ void HeadToHeadDialog::updateData()
         scLap = false;
         for (int i = 0; i < 2; ++i)
         {
-            int idx = eventData.getDriverId(comboBox[i]->currentText());
+            int idx = eventData.getDriverId(getNumber(i));
             driversIdx[i] = idx-1;            
 
             if (idx > 0 && !eventData.driversData[idx-1].lapData.isEmpty())
             {
-                int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
+//                int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
                 DriverData dd = eventData.driversData[idx-1];
-                LapData ld;
-                if (lapIndex >= 0 && lapIndex < dd.lapData.size())
-                    ld = dd.lapData[lapIndex];
-                else
-                    ld = dd.lapData.last();
+                LapData ld = dd.getLapData(lapNo);
+                if (ld.carID == -1)
+                	ld = dd.lapData.last();
+//                if (ld.carIDlapIndex >= 0 && lapIndex < dd.lapData.size())
+//                    ld = dd.lapData[lapIndex];
+//                else
+//                    ld = dd.lapData.last();
 
                 if (lapNo == (ld.numLap+1) && !dd.retired && dd.lastLap.sector3.toString() == "" && dd.lastLap.lapTime.toString() != "IN PIT")
                 {
@@ -586,207 +588,15 @@ void HeadToHeadDialog::updateData()
         else
             item->setTextColor(LTData::colors[LTData::RED]);
 
-//        double gap1, gap2;
-//        if (ui->tableWidget->item(j+2, 2) && ui->tableWidget->item(j+2, 9))
-////            (!ui->tableWidget->item(j+2, 2)->text().isNull() && !ui->tableWidget->item(j+2, 9)->text().isNull()))
-//        {
-//            gap1 = ui->tableWidget->item(j+2, 2)->text().toDouble();
-//            gap2 = ui->tableWidget->item(j+2, 9)->text().toDouble();
-
-//            double interval = gap1 - gap2;
-//            item = new QTableWidgetItem(QString::number(interval, 'f', 1));
-//            item->setTextAlignment(Qt::AlignCenter);
-//            if (interval < 0)
-//                item->setTextColor(LTData::colors[LTData::VIOLET]);
-//            else
-//            {
-//                item->setText("+" + item->text());
-//                item->setTextColor(LTData::colors[LTData::YELLOW]);
-//            }
-//            ui->tableWidget->setItem(j+2, 7, item);
-//        }
         ui->tableWidget->setRowHeight(j+2, 20);
     }
 
-    //append the lap that drivers are currently on
-//    if (lastLap < eventData.eventInfo.laps)
-//    {
-//        if (ui->tableWidget->rowCount() <= j+2)
-//            ui->tableWidget->insertRow(j+2);
-
-//        item = ui->tableWidget->item(j+2, 0);
-//        if (!item)
-//        {
-//            item = new QTableWidgetItem(QString("%1.").arg(lastLap+1));
-//            item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-//            item->setTextColor(LTData::colors[LTData::DEFAULT]);
-//            ui->tableWidget->setItem(j+2, 0, item);
-//        }
-//        else
-//            item->setText(QString("%1.").arg(lastLap+1));
-
-//        scLap = false;
-//        for (int i = 0; i < 2; ++i)
-//        {
-//            int idx = eventData.getDriverId(comboBox[i]->currentText());
-
-//            if (idx > 0 && !eventData.driversData[idx-1].retired)
-//            {
-////                int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
-//                DriverData dd = eventData.driversData[idx-1];
-
-//                scLap = dd.lastLap.scLap;
-//                if (dd.lastLap.sector3.toString() == "")
-//                {
-
-//                    item = ui->tableWidget->item(j+2, 1+i*7);
-//                    if (!item)
-//                    {
-//                        item = new QTableWidgetItem(QString::number(dd.lastLap.pos));
-//                        item->setTextColor(LTData::colors[LTData::CYAN]);
-//                        item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-//                        ui->tableWidget->setItem(j+2, 1 + i*7, item);
-//                    }
-//                    else
-//                        item->setText(QString::number(dd.lastLap.pos));
-
-//                    QString gap = dd.lastLap.pos == 1 ? "" : dd.lastLap.gap;
-//                    item = new QTableWidgetItem(gap);
-//                    item->setTextColor(LTData::colors[LTData::YELLOW]);
-//                    item->setTextAlignment(Qt::AlignCenter);
-//                    ui->tableWidget->setItem(j+2, 2 + i*7, item);
-
-//                    item = ui->tableWidget->item(j+2, 3+i*7);
-//                    if (!item)
-//                    {
-//                        item = new QTableWidgetItem("");//dd.lapData[lapIndex].lapTime.toString());
-//                        item->setTextAlignment(Qt::AlignCenter);
-//                        ui->tableWidget->setItem(j+2, 3 + i*7, item);
-//                    }
-//                    else
-//                        item->setText("");//dd.lapData[lapIndex].lapTime.toString());
-
-////                    if (dd.lapData[lapIndex].lapTime.toString() == "IN PIT")
-////                    {
-////                        QString pitTime = dd.getPitTime(dd.lapData[lapIndex].numLap);
-////                        item->setText(item->text() + " (" + pitTime + ")");
-////                        item->setTextColor(LTData::colors[LTData::RED]);
-////                    }
-////                    else if (dd.lapData[lapIndex].lapTime.toString() == "RETIRED")
-////                        item->setTextColor(LTData::colors[LTData::RED]);
-
-////                    else if (dd.lapData[lapIndex].scLap)
-////                    {
-////                        item->setTextColor(LTData::colors[LTData::YELLOW]);
-////                        scLap = true;
-////                    }
-////                    else
-////                        item->setTextColor(LTData::colors[LTData::GREEN]);
-
-
-//                    item = ui->tableWidget->item(j+2, 4+i*7);
-//                    if (!item)
-//                    {
-//                        item = new QTableWidgetItem(dd.lastLap.sector1.toString());
-//                        item->setTextAlignment(Qt::AlignCenter);
-//                        ui->tableWidget->setItem(j+2, 4 + i*7, item);
-//                    }
-//                    else
-//                        item->setText(dd.lastLap.sector1.toString());
-
-//                    sumS[i] += dd.lastLap.sector1.toDouble();
-//                    if (scLap)
-//                        item->setTextColor(LTData::colors[LTData::YELLOW]);
-//                    else
-//                        item->setTextColor(LTData::colors[LTData::WHITE]);
-
-
-//                    item = ui->tableWidget->item(j+2, 5+i*7);
-//                    if (!item)
-//                    {
-//                        item = new QTableWidgetItem(dd.lastLap.sector2.toString());
-//                        item->setTextAlignment(Qt::AlignCenter);
-//                        ui->tableWidget->setItem(j+2, 5 + i*7, item);
-//                    }
-//                    else
-//                        item->setText(dd.lastLap.sector2.toString());
-
-//                    sumS[i] += dd.lastLap.sector2.toDouble();
-//                    if (scLap)
-//                        item->setTextColor(LTData::colors[LTData::YELLOW]);
-//                    else
-//                        item->setTextColor(LTData::colors[LTData::WHITE]);
-
-//                    item = ui->tableWidget->item(j+2, 6+i*7);
-//                    if (!item)
-//                    {
-//                        item = new QTableWidgetItem(dd.lastLap.sector3.toString());
-//                        item->setTextAlignment(Qt::AlignCenter);
-//                        ui->tableWidget->setItem(j+2, 6 + i*7, item);
-//                    }
-//                    else
-//                        item->setText(dd.lastLap.sector3.toString());
-
-//                    if (scLap)
-//                        item->setTextColor(LTData::colors[LTData::YELLOW]);
-//                    else
-//                        item->setTextColor(LTData::colors[LTData::WHITE]);
-
-
-//                    ++index[i];
-//                }
-//                else
-//                {
-//                    for (int w = i*7+1; w <= i*7+6; ++w)
-//                    {
-//                        item = ui->tableWidget->item(j+2, w);
-//                        if (item)
-//                            item->setText("");
-//                    }
-//                }
-//            }
-//        }
-
-//        //sectors
-//        if (!scLap)
-//        {
-//            double s1, s2;
-//            for (int i = 0; i < 3; ++i)
-//            {
-//                if (ui->tableWidget->item(j+2, 4+i) && ui->tableWidget->item(j+2, 11+i) &&
-//                    (!ui->tableWidget->item(j+2, 4+i)->text().isNull() && !ui->tableWidget->item(j+2, 11+i)->text().isNull()))
-//                {
-//                    s1 = ui->tableWidget->item(j+2, 4+i)->text().toDouble();
-//                    s2 = ui->tableWidget->item(j+2, 11+i)->text().toDouble();
-
-//                    int greenIdx = (s1 <= s2) ? 4+i : 11+i;
-
-//                    ui->tableWidget->item(j+2, greenIdx)->setTextColor(LTData::colors[LTData::GREEN]);
-//                }
-//            }
-//        }
-
-//        //interval
-//        interval += sumS[0] - sumS[1];
-//        QString sInterval = QString::number(interval);
-
-//        item = new QTableWidgetItem(sInterval);
-//        item->setTextAlignment(Qt::AlignCenter);
-//        if (sInterval[0] == '-')
-//            item->setTextColor(LTData::colors[LTData::VIOLET]);
-//        else
-//            item->setTextColor(LTData::colors[LTData::RED]);
-
-//        ui->tableWidget->setItem(j+2, 7, item);
-//        ++j;
-//    }
 
     for (int i = ui->tableWidget->rowCount()-1; i >= j+2; --i)
         ui->tableWidget->removeRow(i);
 
     ui->tableWidget->setSelectionModel(selection);
     ui->tableWidget->verticalScrollBar()->setSliderPosition(scrollBarPosition);
-//    ui->tableWidget->scrollToBottom();
 }
 
 void HeadToHeadDialog::updateCharts()
@@ -796,7 +606,7 @@ void HeadToHeadDialog::updateCharts()
     int carIdx;
     for (int i = 0; i < 2; ++i)
     {
-        int idx = eventData.getDriverId(comboBox[i]->currentText());
+        int idx = eventData.getDriverId(getNumber(i));
         if (idx > 0)
         {
             driver = eventData.driversData[idx-1].driver;
@@ -1035,4 +845,21 @@ void HeadToHeadDialog::keyPressEvent(QKeyEvent *event)
 void HeadToHeadDialog::setFont(const QFont &font)
 {
     ui->tableWidget->setFont(font);
+}
+
+int HeadToHeadDialog::getNumber(int i)
+{
+	QString text = comboBox[i]->currentText();
+
+	int no = -1;
+	int idx = text.indexOf(" ");
+	if (idx != 0)
+	{
+		bool ok;
+		no = text.left(idx).toInt(&ok);
+
+		if (!ok)
+			no = -1;
+	}
+	return no;
 }

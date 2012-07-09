@@ -4,6 +4,8 @@
 
 #include <QDebug>
 
+#include "eventdata.h"
+
 LTData::LTData()
 {
 }
@@ -254,10 +256,17 @@ QStringList LTData::getDriversList()
     QStringList list;
     list.append("");
 
-    for (int i = 0; i < ltTeams.size(); ++i)
+    for (int i = 0; i < EventData::getInstance().driversData.size(); ++i)
     {
-        list.append(ltTeams[i].driver1Name);
-        list.append(ltTeams[i].driver2Name);
+    	list.append(QString::number(EventData::getInstance().driversData[i].number) + " " + EventData::getInstance().driversData[i].driver);
+    }
+    if (list.isEmpty())
+    {
+		for (int i = 0; i < ltTeams.size(); ++i)
+		{
+			list.append(ltTeams[i].driver1Name);
+			list.append(ltTeams[i].driver2Name);
+		}
     }
 
     return list;

@@ -230,16 +230,34 @@ void DriverData::addLap(const EventData &ed)
                 bestLap = lastLap;
 
             //best sectors
-            if (colorData[LTData::RACE_SECTOR_1] == LTData::GREEN || colorData[LTData::RACE_SECTOR_1] == LTData::VIOLET)
-            {
-                bestSectors[0].first = lapData.last().sector1;
-                bestSectors[0].second = lapData.last().numLap;
-            }
-            if (colorData[LTData::RACE_SECTOR_2] == LTData::GREEN || colorData[LTData::RACE_SECTOR_2] == LTData::VIOLET)
-            {
-                bestSectors[1].first = lapData.last().sector2;
-                bestSectors[1].second = lapData.last().numLap;
-            }
+//            if (colorData[LTData::RACE_SECTOR_1] == LTData::GREEN || colorData[LTData::RACE_SECTOR_1] == LTData::VIOLET)
+//            {
+//                bestSectors[0].first = lapData.last().sector1;
+//                bestSectors[0].second = lapData.last().numLap;
+//            }
+//            if (colorData[LTData::RACE_SECTOR_2] == LTData::GREEN || colorData[LTData::RACE_SECTOR_2] == LTData::VIOLET)
+//            {
+//                bestSectors[1].first = lapData.last().sector2;
+//                bestSectors[1].second = lapData.last().numLap;
+//            }
+
+            if ((lapData.last().sector1 <= bestSectors[0].first &&
+				 bestSectors[0].second != 0) || bestSectors[0].second == 0)
+			{
+				bestSectors[0] = QPair<LapTime, int>(LapTime(lapData.last().sector1), lapData.last().numLap);
+			}
+
+			if ((lapData.last().sector2 <= bestSectors[1].first &&
+				 bestSectors[1].second != 0) || bestSectors[1].second == 0)
+			{
+				bestSectors[1] = QPair<LapTime, int>(LapTime(lapData.last().sector2), lapData.last().numLap);
+			}
+
+			if ((lapData.last().sector3 <= bestSectors[2].first &&
+				 bestSectors[2].second != 0) || bestSectors[0].second == 0)
+			{
+				bestSectors[2] = QPair<LapTime, int>(LapTime(lapData.last().sector3), lapData.last().numLap);
+			}
 
 //            if (lastLap.lapTime == bestLap.lapTime && lastLap.numLap == bestLap.numLap && bestLap.sector1.toString() == "")
 //            {
@@ -268,77 +286,121 @@ void DriverData::addLap(const EventData &ed)
         {            
 //            std::cout<<"LASTLAP="<<lastLap.lapTime.toString().toStdString()<<std::endl;
 
-            //if decryption fails, replace the garbage we obtained with the best lap time
-            if (lastLap.lapTime.toString() != "" && !lastLap.lapTime.isValid())
-                lastLap.lapTime = bestLap.lapTime;
+        	bool correction = false;
+			//sometimes servers messes up with lap numbers, we catch this if the numlap is <= than the last one
+			if (!lapData.isEmpty() && lastLap.numLap <= lapData.last().numLap)
+			{
+				correction = true;
+				bool approx = lapData.last().approxLap;
+				int numlap = lapData.last().numLap;
+				lapData.last() = LapData(lastLap);
+				lapData.last().approxLap = approx;
 
-            lastLap.sessionTime = ed.remainingTime;
-            lapData.append(lastLap);
-
-            if (ed.eventType == LTData::QUALI_EVENT)
-            {
-                if (q1.toString() != "")
-                    lapData.last().qualiPeriod = 1;
-
-                if (q2.toString() != "")
-                    lapData.last().qualiPeriod = 2;
-
-                if (q3.toString() != "")
-                    lapData.last().qualiPeriod = 3;
-
-                //best sectors
-                if ((colorData[LTData::QUALI_SECTOR_1] == LTData::GREEN || colorData[LTData::QUALI_SECTOR_1] == LTData::VIOLET) &&
-                    ((lapData.last().sector1 <= bestSectors[0].first && bestSectors[0].second != 0) || bestSectors[0].second == 0))
-                {
-                    bestSectors[0].first = lapData.last().sector1;
-                    bestSectors[0].second = lapData.last().numLap;
-                }
-                if ((colorData[LTData::QUALI_SECTOR_2] == LTData::GREEN || colorData[LTData::QUALI_SECTOR_2] == LTData::VIOLET) &&
-                    ((lapData.last().sector2 <= bestSectors[1].first && bestSectors[1].second != 0) || bestSectors[1].second == 0))
-                {
-                    bestSectors[1].first = lapData.last().sector2;
-                    bestSectors[1].second = lapData.last().numLap;
-                }
-                if ((colorData[LTData::QUALI_SECTOR_3] == LTData::GREEN || colorData[LTData::QUALI_SECTOR_3] == LTData::VIOLET) &&
-                    ((lapData.last().sector3 <= bestSectors[2].first && bestSectors[2].second != 0) || bestSectors[2].second == 0))
-                {
-                    bestSectors[2].first = lapData.last().sector3;
-                    bestSectors[2].second = lapData.last().numLap;
-                }
-            }
-            else
-            {
-                if (colorData[LTData::PRACTICE_SECTOR_1] == LTData::GREEN || colorData[LTData::PRACTICE_SECTOR_1] == LTData::VIOLET)
-                {
-                    bestSectors[0].first = lapData.last().sector1;
-                    bestSectors[0].second = lapData.last().numLap;
-                }
-                if (colorData[LTData::PRACTICE_SECTOR_2] == LTData::GREEN || colorData[LTData::PRACTICE_SECTOR_2] == LTData::VIOLET)
-                {
-                    bestSectors[1].first = lapData.last().sector2;
-                    bestSectors[1].second = lapData.last().numLap;
-                }
-                if (colorData[LTData::PRACTICE_SECTOR_3] == LTData::GREEN || colorData[LTData::PRACTICE_SECTOR_3] == LTData::VIOLET)
-                {
-                    bestSectors[2].first = lapData.last().sector3;
-                    bestSectors[2].second = lapData.last().numLap;
-                }
-            }
-
-            if (lastLap < bestLap)
-                bestLap = lapData.last();            
+				if (lapData.size() > 1)
+					lapData.last().numLap = numlap;
 
 
+				if (bestLap.numLap == numlap)
+					bestLap.numLap = lapData.last().numLap;
+			}
+			else
+			{
 
-            //if the current lap time is the same as the best lap, probably the driver hasn't improved so we have to calculate the real lap time from the sectors time
-             else if (lastLap.lapTime == bestLap.lapTime)
-            {
-                lapData.last().lapTime = LapData::sumSectors(lapData.last().sector1.toString(), lapData.last().sector2.toString(), lapData.last().sector3.toString());
-                lapData.last().approxLap = true;
-            }
-            else
-                lapData.last().approxLap = false;
+				//if decryption fails, replace the garbage we obtained with the best lap time
+				if (lastLap.lapTime.toString() != "" && !lastLap.lapTime.isValid())
+					lastLap.lapTime = bestLap.lapTime;
 
+				lastLap.sessionTime = ed.remainingTime;
+				lapData.append(lastLap);
+
+				if (ed.eventType == LTData::QUALI_EVENT)
+				{
+					if (q1.toString() != "")
+						lapData.last().qualiPeriod = 1;
+
+					if (q2.toString() != "")
+						lapData.last().qualiPeriod = 2;
+
+					if (q3.toString() != "")
+						lapData.last().qualiPeriod = 3;
+
+					//best sectors
+//					if ((colorData[LTData::QUALI_SECTOR_1] == LTData::GREEN || colorData[LTData::QUALI_SECTOR_1] == LTData::VIOLET) &&
+//						((lapData.last().sector1 <= bestSectors[0].first && bestSectors[0].second != 0) || bestSectors[0].second == 0))
+//					{
+//						bestSectors[0].first = lapData.last().sector1;
+//						bestSectors[0].second = lapData.last().numLap;
+//					}
+//					if ((colorData[LTData::QUALI_SECTOR_2] == LTData::GREEN || colorData[LTData::QUALI_SECTOR_2] == LTData::VIOLET) &&
+//						((lapData.last().sector2 <= bestSectors[1].first && bestSectors[1].second != 0) || bestSectors[1].second == 0))
+//					{
+//						bestSectors[1].first = lapData.last().sector2;
+//						bestSectors[1].second = lapData.last().numLap;
+//					}
+//					if ((colorData[LTData::QUALI_SECTOR_3] == LTData::GREEN || colorData[LTData::QUALI_SECTOR_3] == LTData::VIOLET) &&
+//						((lapData.last().sector3 <= bestSectors[2].first && bestSectors[2].second != 0) || bestSectors[2].second == 0))
+//					{
+//						bestSectors[2].first = lapData.last().sector3;
+//						bestSectors[2].second = lapData.last().numLap;
+//					}
+				}
+				if (((driver != ed.sec1Record[0]) || (ed.sec1Record[1] == lapData.last().sector1 && lapData.last().numLap == ed.sec1Record[2].toInt())) &&
+					((lapData.last().sector1 <= bestSectors[0].first &&
+					  bestSectors[0].second != 0) || bestSectors[0].second == 0))
+				{
+					bestSectors[0] = QPair<LapTime, int>(LapTime(lapData.last().sector1), lapData.last().numLap);
+				}
+
+				if (((driver != ed.sec2Record[0]) || (ed.sec2Record[1] == lapData.last().sector2 && lapData.last().numLap == ed.sec2Record[2].toInt())) &&
+					((lapData.last().sector2 <= bestSectors[1].first &&
+					 bestSectors[1].second != 0) || bestSectors[1].second == 0))
+				{
+					bestSectors[1] = QPair<LapTime, int>(LapTime(lapData.last().sector2), lapData.last().numLap);
+				}
+
+				if (((driver != ed.sec3Record[0]) || (ed.sec3Record[1] == lapData.last().sector3 && lapData.last().numLap == ed.sec3Record[2].toInt())) &&
+					((lapData.last().sector3 <= bestSectors[2].first &&
+					 bestSectors[2].second != 0) || bestSectors[2].second == 0))
+				{
+					bestSectors[2] = QPair<LapTime, int>(LapTime(lapData.last().sector3), lapData.last().numLap);
+				}
+//				else
+//				{
+//					if (colorData[LTData::PRACTICE_SECTOR_1] == LTData::GREEN || colorData[LTData::PRACTICE_SECTOR_1] == LTData::VIOLET)
+//					{
+//						bestSectors[0].first = lapData.last().sector1;
+//						bestSectors[0].second = lapData.last().numLap;
+//					}
+//					if (colorData[LTData::PRACTICE_SECTOR_2] == LTData::GREEN || colorData[LTData::PRACTICE_SECTOR_2] == LTData::VIOLET)
+//					{
+//						bestSectors[1].first = lapData.last().sector2;
+//						bestSectors[1].second = lapData.last().numLap;
+//					}
+//					if (colorData[LTData::PRACTICE_SECTOR_3] == LTData::GREEN || colorData[LTData::PRACTICE_SECTOR_3] == LTData::VIOLET)
+//					{
+//						bestSectors[2].first = lapData.last().sector3;
+//						bestSectors[2].second = lapData.last().numLap;
+//					}
+//				}
+			}
+
+			if (!correction)
+			{
+				if (lastLap < bestLap)
+					bestLap = lapData.last();
+
+
+
+				//if the current lap time is the same as the best lap, probably the driver hasn't improved so we have to calculate the real lap time from the sectors time
+				 else if (lastLap.lapTime == bestLap.lapTime)
+				{
+					lapData.last().lapTime = LapData::sumSectors(lapData.last().sector1.toString(), lapData.last().sector2.toString(), lapData.last().sector3.toString());
+					lapData.last().approxLap = true;
+				}
+				else
+					lapData.last().approxLap = false;
+
+			}
             lapData.last().gap = QString::number((lapData.last().lapTime - ed.FLTime).toDouble());
 
             posHistory.append(lastLap.pos);
@@ -359,6 +421,12 @@ void DriverData::updateLastLap()
                 lapData.last().sector2 = lastLap.sector2;
 
             lapData.last().sector3 = lastLap.sector3;
+
+            if ((lapData.last().sector3 <= bestSectors[2].first &&
+				 bestSectors[2].second != 0) || bestSectors[0].second == 0)
+			{
+				bestSectors[2] = QPair<LapTime, int>(LapTime(lapData.last().sector3), lapData.last().numLap);
+			}
 
             if (lapData.last().numLap == bestLap.numLap)
             {

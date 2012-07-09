@@ -21,6 +21,7 @@ public:
     void clear();
 
     int getDriverId(QString);
+    int getDriverId(int);
     unsigned int key;    
     QString cookie;
 

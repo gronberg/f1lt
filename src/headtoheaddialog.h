@@ -28,6 +28,8 @@ public:
     QString calculateInterval(int driver1Idx, int driver2Idx, int lap);
     void loadCarImages();
 
+    int getNumber(int);
+
 public slots:
     int exec();
     void show();
