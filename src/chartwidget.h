@@ -185,25 +185,55 @@ class WeatherChartWidget : public ChartWidget
     Q_OBJECT
 
 public:
-    explicit WeatherChartWidget(QColor col, int id, QWidget *parent = 0) : ChartWidget(0, 180, col, parent)
+    explicit WeatherChartWidget(QColor col, int id, int id2, QWidget *parent = 0) : ChartWidget(0, 180, col, parent)
     {
     	weatherId = id;
+    	wetDryId = id2;
     }
 
     void drawAxes(QPainter *p);
     void drawChart(QPainter *p);
-    void setMinMax(double &min, double &max);
+    void setMinMax();
 //    void drawLegend(QPainter *p, int, int);
 
-public slots:
-    void onCopy();
-    void onSave();
+//public slots:
+//    void onCopy();
+//    void onSave();
+
+protected:
+    void paintEvent(QPaintEvent *);
+
+    int weatherId;
+    int wetDryId;
+};
+
+class TempChartWidget : public WeatherChartWidget
+{
+    Q_OBJECT
+
+public:
+    explicit TempChartWidget(QColor col, QColor col2, int id, int tempId, int id2, QWidget *parent = 0) : WeatherChartWidget(col, id, id2, parent)
+    {
+    	trackTempId = tempId;
+    	trackTempCol = col2;
+    }
+
+    void drawAxes(QPainter *p);
+    void drawChart(QPainter *p);
+    void drawLegend(QPainter *p);
+    void setMinMax();
+
+//public slots:
+//    void onCopy();
+//    void onSave();
 
 protected:
     void paintEvent(QPaintEvent *);
 
 private:
     int weatherId;
+    int trackTempId;
+    QColor trackTempCol;
 };
 
 #endif // CHARTWIDGET_H

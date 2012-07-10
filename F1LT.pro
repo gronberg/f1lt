@@ -21,7 +21,8 @@ DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/$$TARGET/
 
 # DEFINES += QT_NO_DEBUG_OUTPUT
-SOURCES += src/nosessionboardwidget.cpp \
+SOURCES += src/weatherchartswidget.cpp \
+    src/nosessionboardwidget.cpp \
     src/main.cpp \
     src/ltwindow.cpp \
     src/datastreamreader.cpp \
@@ -43,7 +44,8 @@ SOURCES += src/nosessionboardwidget.cpp \
     src/laptimecomparisondialog.cpp \
     src/f1ltcore.cpp \
     src/eventstatuswidget.cpp
-HEADERS += src/nosessionboardwidget.h \
+HEADERS += src/weatherchartswidget.h \
+    src/nosessionboardwidget.h \
     src/ltwindow.h \
     src/datastreamreader.h \
     src/ltdata.h \
@@ -64,7 +66,8 @@ HEADERS += src/nosessionboardwidget.h \
     src/laptimecomparisondialog.h \
     src/f1ltcore.h \
     src/eventstatuswidget.h
-FORMS += ui/nosessionboardwidget.ui \
+FORMS += ui/weatherchartswidget.ui \
+    ui/nosessionboardwidget.ui \
     ui/ltwindow.ui \
     ui/driverdatawidget.ui \
     ui/chartwidget.ui \

@@ -121,6 +121,9 @@ void LTWindow::on_eventDataChanged()
     ui->eventStatusWidget->updateEventStatus();
     ui->sessionDataWidget->updateData();
 
+    if (ui->tabWidget->currentIndex() == 2)
+    	ui->weatherChartsWidget->updateCharts();
+
 //    if (recording)
 //        eventRecorder->updateEventData(eventData);
 
@@ -226,6 +229,9 @@ void LTWindow::on_dataChanged()
             break;
         }
     }
+
+    if (ui->tabWidget->currentIndex() == 2)
+		ui->weatherChartsWidget->updateCharts();
 }
 
 void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)

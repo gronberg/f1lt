@@ -1,39 +1,38 @@
 <RCC>
-  <qresource prefix="/track">
-    <file>green-light.png</file>
-    <file>red-light.png</file>
-    <file>sc.png</file>
-    <file>yellow-light.png</file>
-    <file>down-arrow.png</file>
-    <file>up-arrow.png</file>
-    <file>flag.png</file>
-    <file>red-lights.png</file>
-  </qresource>
-  <qresource prefix="/ui_icons">
-    <file>carbon.png</file>
-    <file>exit.png</file>
-    <file>login.png</file>
-    <file>preferences.png</file>
-    <file>head2head-s.png</file>
-    <file>media-playback-stop.png</file>
-    <file>media-record.png</file>
-    <file>rewind.png</file>
-    <file>forward.png</file>
-    <file>skip-forward.png</file>
-    <file>skip-backward.png</file>
-    <file>stop.png</file>
-    <file>record.png</file>
-    <file>play.png</file>
-    <file>pause.png</file>
-    <file>document-open.png</file>
-    <file>ltc-s.png</file>
-    <file>icon.png</file>
-    <file>weather_air_temp.png</file>
-    <file>weather_dry.png</file>
-    <file>weather_humidity.png</file>
-    <file>weather_pressure.png</file>
-    <file>weather_track_temp.png</file>
-    <file>weather_wind.png</file>
-    <file>weather_wet.png</file>
-  </qresource>
+    <qresource prefix="/track">
+        <file>green-light.png</file>
+        <file>red-light.png</file>
+        <file>sc.png</file>
+        <file>yellow-light.png</file>
+        <file>down-arrow.png</file>
+        <file>up-arrow.png</file>
+        <file>flag.png</file>
+        <file>red-lights.png</file>
+    </qresource>
+    <qresource prefix="/ui_icons">
+        <file>exit.png</file>
+        <file>login.png</file>
+        <file>preferences.png</file>
+        <file>head2head-s.png</file>
+        <file>media-playback-stop.png</file>
+        <file>media-record.png</file>
+        <file>rewind.png</file>
+        <file>forward.png</file>
+        <file>skip-forward.png</file>
+        <file>skip-backward.png</file>
+        <file>stop.png</file>
+        <file>record.png</file>
+        <file>play.png</file>
+        <file>pause.png</file>
+        <file>document-open.png</file>
+        <file>ltc-s.png</file>
+        <file>icon.png</file>
+        <file>weather_air_temp.png</file>
+        <file>weather_dry.png</file>
+        <file>weather_humidity.png</file>
+        <file>weather_pressure.png</file>
+        <file>weather_track_temp.png</file>
+        <file>weather_wind.png</file>
+        <file>weather_wet.png</file>
+    </qresource>
 </RCC>

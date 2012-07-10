@@ -46,6 +46,7 @@ public:
     double pressure, trackTemp;
 
     QList<double> weatherData[6];	//0 air temp, 1 track temp, 2 wind speed, 3 pressure, 4 humidity, 5 wet-dry
+    int timeStamp;
 
     bool sessionStarted;
 

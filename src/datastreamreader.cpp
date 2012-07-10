@@ -47,8 +47,8 @@ void DataStreamReader::connectToLTServer(QString email, QString passwd)
 {
     eventData.frame = 0;
 //    httpReader.authorize("http://"+host, email, passwd);
-//    httpReader.authorize("http://"+host, "http://formula1.com", email, passwd);
-    onCookieReceived("cookie");
+    httpReader.authorize("http://"+host, "http://formula1.com", email, passwd);
+//    onCookieReceived("cookie");
 
 //    start();
 }
@@ -854,12 +854,12 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             number = copyPacket.longData.right(copyPacket.longData.size()-1).toInt(&ok);
             s = copyPacket.longData.right(copyPacket.longData.size()-1);
 
-//            eventData.key = 0;
+            eventData.key = 0;
 
-//            if (ok)
-//                httpReader.obtainDecryptionKey(number);
-//            else
-//                eventData.frame = 0;
+            if (ok)
+                httpReader.obtainDecryptionKey(number);
+            else
+                eventData.frame = 0;
 
             if (eventData.eventType != 0 && eventData.eventType != (LTData::EventType)packet.data)
                 eventData.clear();
@@ -892,8 +892,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 
              if (!eventData.frame) // || decryption_failure
              {
-//                eventData.frame = number;
-//                httpReader.obtainKeyFrame(number);
+                eventData.frame = number;
+                httpReader.obtainKeyFrame(number);
 
 
                  /*onDecryptionKeyObtained(2841044872);*/   //valencia race
@@ -911,7 +911,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 //                 onDecryptionKeyObtained(3710001497);       //malaysia race
 //                onDecryptionKeyObtained(2922444379);      //spain race
 //                httpReader.obtainKeyFrame(53);
-                onDecryptionKeyObtained(4246644581);      //gbr race
+//                onDecryptionKeyObtained(4246644581);      //gbr race
 //                onDecryptionKeyObtained(3195846070);	//gbr quali
 
 //                resetDecryption();
@@ -953,7 +953,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.trackTemp = dbuf;
-                        eventData.weatherData[1].append(dbuf);
+						eventData.weatherData[1].append(dbuf);
                     }
                     break;
 
@@ -962,7 +962,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.airTemp = dbuf;
-                        eventData.weatherData[0].append(dbuf);
+						eventData.weatherData[0].append(dbuf);
                     }
                     break;
 
@@ -971,7 +971,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.windSpeed = dbuf;
-                        eventData.weatherData[2].append(dbuf);
+						eventData.weatherData[2].append(dbuf);
                     }
                     break;
 
@@ -980,7 +980,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.humidity = dbuf;
-                        eventData.weatherData[4].append(dbuf);
+						eventData.weatherData[4].append(dbuf);
                     }
                     break;
 
@@ -990,7 +990,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.pressure = dbuf;
-                        eventData.weatherData[3].append(dbuf);
+						eventData.weatherData[3].append(dbuf);
                     }
 
                     break;
@@ -1006,7 +1006,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.wetdry = ibuf;
-                        eventData.weatherData[5].append((double)ibuf);
+						eventData.weatherData[5].append((double)ibuf);
                     }
                     break;
 
@@ -1140,15 +1140,42 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 
 
         case LTData::SYS_TIMESTAMP:
-//        {
-//        	uc = copyPacket.longData[1];
-//        	int ts = uc << 8;
-//        	uc = copyPacket.longData[0];
-//        	ts |= uc;// | copyPacket.length << 16;
-////        	uc = copyPacket.length;
-////        	ts |= uc << 16;
+        {
+    	   uc = copyPacket.longData[1];
+    	   int ts = uc << 8;
+    	   uc = copyPacket.longData[0];
+    	   ts |= uc | 0 << 16;// & 0xff0000;
+    	   qDebug() << "timestamp " << ts<< ", " << eventData.timeStamp << ", " << eventData.weatherData[0].size();
+     	   if ((eventData.timeStamp==0 && ts <= 1000) ||
+     		   (ts >= eventData.timeStamp+75 && ts < eventData.timeStamp+1000))
+    	   {
+//				if (!eventData.weatherData[0].isEmpty())
+					eventData.weatherData[0].append(eventData.airTemp);
+
+//				if (!eventData.weatherData[1].isEmpty())
+					eventData.weatherData[1].append(eventData.trackTemp);
+
+//				if (!eventData.weatherData[2].isEmpty())
+					eventData.weatherData[2].append(eventData.windSpeed);
+
+//				if (!eventData.weatherData[3].isEmpty())
+					eventData.weatherData[3].append(eventData.pressure);
+
+//				if (!eventData.weatherData[4].isEmpty())
+					eventData.weatherData[4].append(eventData.humidity);
+
+//				if (!eventData.weatherData[5].isEmpty())
+					eventData.weatherData[5].append(eventData.wetdry);
+
+				eventData.timeStamp = ts;
+
+				qDebug() << "weter " << eventData.weatherData[4].size();
+    	   }
+
+//        	uc = copyPacket.length;
+//        	ts |= uc << 16;
 //        	qDebug() << "timestamp=" << ts << ", " << (int)((unsigned char)copyPacket.longData[0]) << " " << (int)((unsigned char)copyPacket.longData[1]);
-//        }
+        }
             break;
         default:
             //dd = packet.longData.toDouble();
@@ -1186,9 +1213,9 @@ void DataStreamReader::onDecryptionKeyObtained(unsigned int key)
 
 void DataStreamReader::onCookieReceived(QString cookie)
 {
-//    socketReader.openStream(host, port);
+    socketReader.openStream(host, port);
 //    socketReader.openStream("localhost", 6666);
-    socketReader.openStream("192.168.1.101", 6666);
+//    socketReader.openStream("192.168.1.101", 6666);
 //    eventData.key = 2976363859;
 //    eventData.key = 2462388168;     //bahrain quali
 //    eventData.key = 3875488254; //fp1

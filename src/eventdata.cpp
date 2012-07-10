@@ -1,6 +1,8 @@
 #include "eventdata.h"
 #include "ltdata.h"
 
+#include <QDebug>
+
 EventData::EventData()
 {
     FLLap = -1;
@@ -10,6 +12,8 @@ EventData::EventData()
 
     eventInfo.laps = 0;
     eventInfo.eventNo = 0;
+
+    timeStamp = 0;
 
     trackTemp = 0;
     airTemp = 0;
@@ -34,6 +38,8 @@ void EventData::clear()
 
     flagStatus = LTData::GREEN_FLAG;
 
+    timeStamp = 0;
+
     trackTemp = 0;
     airTemp = 0;
     windSpeed = 0;
@@ -49,7 +55,11 @@ void EventData::clear()
     {
         driversData.append(DriverData());
         driversData.append(DriverData());
+
+        if (i < 6)
+        	weatherData[i].clear();
     }
+    qDebug() << "CLEAR";
 
     FLNumber = 0;
     FLDriver.clear();
