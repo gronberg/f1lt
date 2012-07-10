@@ -47,8 +47,8 @@ void DataStreamReader::connectToLTServer(QString email, QString passwd)
 {
     eventData.frame = 0;
 //    httpReader.authorize("http://"+host, email, passwd);
-    httpReader.authorize("http://"+host, "http://formula1.com", email, passwd);
-//    onCookieReceived("cookie");
+//    httpReader.authorize("http://"+host, "http://formula1.com", email, passwd);
+    onCookieReceived("cookie");
 
 //    start();
 }
@@ -951,32 +951,47 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     number = 0;
                     dbuf = packet.longData.toDouble(&ok);
                     if (ok)
+                    {
                         eventData.trackTemp = dbuf;
+                        eventData.weatherData[1].append(dbuf);
+                    }
                     break;
 
                 case LTData::WEATHER_AIR_TEMP:
                     dbuf = packet.longData.toDouble(&ok);
                     if (ok)
+                    {
                         eventData.airTemp = dbuf;
+                        eventData.weatherData[0].append(dbuf);
+                    }
                     break;
 
                 case LTData::WEATHER_WIND_SPEED:
                     dbuf = packet.longData.toDouble(&ok);
                     if (ok)
+                    {
                         eventData.windSpeed = dbuf;
+                        eventData.weatherData[2].append(dbuf);
+                    }
                     break;
 
                 case LTData::WEATHER_HUMIDITY:
                     dbuf = packet.longData.toDouble(&ok);
                     if (ok)
+                    {
                         eventData.humidity = dbuf;
+                        eventData.weatherData[4].append(dbuf);
+                    }
                     break;
 
                 case LTData::WEATHER_PRESSURE:
                     number = 0;
                     dbuf = packet.longData.toDouble(&ok);
                     if (ok)
+                    {
                         eventData.pressure = dbuf;
+                        eventData.weatherData[3].append(dbuf);
+                    }
 
                     break;
 
@@ -989,7 +1004,10 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                 case LTData::WEATHER_WET_TRACK:
                     ibuf = packet.longData.toInt(&ok);
                     if (ok)
+                    {
                         eventData.wetdry = ibuf;
+                        eventData.weatherData[5].append((double)ibuf);
+                    }
                     break;
 
                 default:
@@ -1122,6 +1140,15 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 
 
         case LTData::SYS_TIMESTAMP:
+//        {
+//        	uc = copyPacket.longData[1];
+//        	int ts = uc << 8;
+//        	uc = copyPacket.longData[0];
+//        	ts |= uc;// | copyPacket.length << 16;
+////        	uc = copyPacket.length;
+////        	ts |= uc << 16;
+//        	qDebug() << "timestamp=" << ts << ", " << (int)((unsigned char)copyPacket.longData[0]) << " " << (int)((unsigned char)copyPacket.longData[1]);
+//        }
             break;
         default:
             //dd = packet.longData.toDouble();
@@ -1161,7 +1188,7 @@ void DataStreamReader::onCookieReceived(QString cookie)
 {
 //    socketReader.openStream(host, port);
 //    socketReader.openStream("localhost", 6666);
-    socketReader.openStream("192.168.1.2", 6666);
+    socketReader.openStream("192.168.1.101", 6666);
 //    eventData.key = 2976363859;
 //    eventData.key = 2462388168;     //bahrain quali
 //    eventData.key = 3875488254; //fp1

@@ -4,9 +4,11 @@
 #include <QFileDialog>
 #include <QImage>
 #include <QPainter>
-#include "ltdata.h"
 #include <cmath>
 #include <QDebug>
+
+#include "eventdata.h"
+#include "ltdata.h"
 
 ChartWidget::ChartWidget(double n, double x, QColor col, QWidget *parent) :
     QWidget(parent), min(n), max(x), color(col)
@@ -1793,4 +1795,185 @@ void PosCompChartWidget::onSave()
 
         img.save(fName, "PNG");
     }
+}
+
+
+void WeatherChartWidget::drawAxes(QPainter *p)
+{
+    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+
+    //x axe
+    p->drawLine(27, height()-25, width()-5, height()-25);
+
+    //y axe
+    p->drawLine(27, height()-25, 27, 10);
+
+    p->setFont(QFont("Arial", 10));
+    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+
+    double yFactor = (double)((height()-35.0)/4.0);
+    double yFactor2 = (double)((max-min)/4.0);
+    double j = min;
+    for (int i = height()-25; i >= 10; i-= yFactor, j += yFactor2)
+    {
+        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->drawText(5, i+5, QString("%1").arg(round(j)));
+
+        if (i != height()-25)
+        {
+            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            pen.setStyle(Qt::DashLine);
+            p->setPen(pen);
+            p->drawLine(27, i, width()-5, i);
+        }
+    }
+
+    if (driverData.posHistory.size()>1)
+    {
+        int sz = (driverData.posHistory.size() > driverData.lapData.size() ? driverData.posHistory.size()-1 : driverData.posHistory.size());
+        double xFactor = (width()-32) / /*((lapData.size() < 5) ?*/ (sz) /*: 5)*/;
+        double j = 1.0;
+        double i = 27.0;
+        int prevJ = 1;
+
+        double jFactor = driverData.posHistory.size() < 5 ? 1.0 : (double)((driverData.posHistory.size()-1)/6.0);
+
+        if (driverData.posHistory.size() > driverData.lapData.size())
+        {
+//            jFactor = driverData.posHistory.size() < 5 ? 1.0 : (double)((driverData.posHistory.size()-1)/5.0);
+            j = 1.0;
+        }
+        else
+        {
+//            jFactor = driverData.posHistory.size() < 5 ? 1.0 : (double)((driverData.posHistory.size())/5.0);
+            j = 0.0;
+            prevJ = 0;
+        }
+
+        for (; i < width()-15.0 && round(j) < driverData.posHistory.size(); /*i += xFactor,*/ j += jFactor)
+        {
+//            std::cout<<"POSHISTORY="<<driverData.posHistory.size()<<", "<<round(j)<<std::endl;
+            i += (double)(round(j) - prevJ) * xFactor;
+            prevJ = round(j);
+            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+
+            if (driverData.posHistory.size() > driverData.lapData.size())
+                p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
+            else
+                p->drawText(round(i)-5, height()-10, QString("L%1").arg(driverData.lapData[round(j)].numLap));
+
+            if (i > 27)
+            {
+                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+                pen.setStyle(Qt::DashLine);
+                p->setPen(pen);
+                p->drawLine(round(i), height()-25, round(i), 10);
+            }
+        }
+    }
+
+//    if (!data.isEmpty())
+//    {
+//        double xFactor = (width()-32) / 5;
+//        double j = 1.0;
+//        for (int i = 27; i < width()-15; i += xFactor, j += (double)(data.size()/5.0))
+//        {
+//            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+//            p->drawText(i-5, height()-10, QString("L%1").arg(round(j)));
+
+//            if (i > 27)
+//            {
+//                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+//                pen.setStyle(Qt::DashLine);
+//                p->setPen(pen);
+//                p->drawLine(i, height()-25, i, 10);
+//            }
+//        }
+//    }
+
+}
+
+void WeatherChartWidget::drawChart(QPainter *p)
+{
+	EventData &ed = EventData::getInstance();
+    if (ed.weatherData[weatherId].size()>1)
+    {
+        p->setBrush(QBrush(color));
+        QPen pen(color);
+        pen.setWidth(2);
+        p->setPen(pen);
+        p->setRenderHint(QPainter::Antialiasing);
+
+        int sz = (driverData.posHistory.size() > driverData.lapData.size() ? driverData.posHistory.size()-1 : driverData.posHistory.size());
+        double xFactor = (width()-32) / (sz);
+        double yFactor = ((height()-35) / (max-min));
+
+        double x = 27, j = x + xFactor;
+        double y = (double)(height())-25.0 - (double)(driverData.posHistory[1]-min) * yFactor;
+
+        int i = (driverData.posHistory.size() > driverData.lapData.size() ? 2 : 1);
+        for (; i < driverData.posHistory.size(); ++i, j += xFactor)
+        {
+            double y2 = (double)(height())-25.0 - (double)(driverData.posHistory[i]-min) * yFactor;
+            if (driverData.posHistory[i] <= 0)
+            {
+                y2 = y;
+            }
+            p->drawLine(x, y, j, y2);
+            x = j;
+            y = y2;
+
+            if (i >= 0 && i < driverData.lapData.size() && driverData.lapData[i-1].lapTime.toString() == "IN PIT")
+            {
+                QPainterPath path;
+                path.addEllipse(QPoint(j, y2), 6, 6);
+                p->setBrush(QBrush(color));
+                p->setPen(color);
+
+                p->drawPath(path);
+            }
+            pen.setWidth(2);
+            p->setPen(pen);
+        }
+    }
+}
+
+void WeatherChartWidget::paintEvent(QPaintEvent *)
+{
+    QPainter p;
+    p.begin(this);
+
+    p.setBrush(QColor(20,20,20));
+    p.setPen(QColor(20,20,20));
+    p.drawRect(0, 0, width(), height());
+    drawAxes(&p);
+    drawChart(&p);
+
+    p.end();
+}
+
+void WeatherChartWidget::setMinMax(double &min, double &max)
+{
+	EventData &ed = EventData::getInstance();
+	for (int i = 0; i < ed.weatherData[weatherId].size(); ++i)
+	{
+		if (i == 0)
+		{
+			min = ed[weatherId][i];
+			max = ed[weatherId][i];
+		}
+		else
+		{
+			if (ed[weatherId][i] < min)
+				min = ed[weatherId][i];
+
+			if (ed[weatherId][i] > max)
+				max = ed[weatherId][i];
+		}
+	}
+	min -= min * 0.05;
+	max += max * 0.05;
+
+	if (min < 0.0)
+		min = 0.0;
 }

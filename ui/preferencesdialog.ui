@@ -59,6 +59,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="autoConnectBox">
+     <property name="text">
+      <string>Connect to LT serwer automatically after application start</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QCheckBox" name="ltCheckBox">
      <property name="text">
       <string>Show contents during LT window resize</string>

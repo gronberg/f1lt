@@ -30,7 +30,8 @@ public slots:
     void connected();    
     void readyRead();
     void timeout();
-
+    void connectionError(QAbstractSocket::SocketError);
+    void reconnect();
 
 private:
     QTcpSocket *socket;
@@ -39,8 +40,11 @@ private:
     int port;
 
     QTimer *timer;
+    QTimer *reconnectTimer;
 
     bool connectionOpened;
+
+    int tryReconnect;
 
     long bytes;
 };

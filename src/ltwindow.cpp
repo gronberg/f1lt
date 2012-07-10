@@ -75,7 +75,16 @@ LTWindow::LTWindow(QWidget *parent) :
         eventPlayer->startPlaying();
     }
     else
-        connectToServer();
+    {
+    	if (settings->value("ui/auto_connect").toBool())
+    		connectToServer();
+    	else
+    	{
+    		ui->messageBoardWidget->showStartupBoard();
+    		showSessionBoard(true);
+    	}
+    }
+
 }
 
 LTWindow::~LTWindow()
@@ -317,38 +326,18 @@ void LTWindow::on_showNoSessionBoard(bool show, QString msg)
 {
 	if (show)
 	{
-		ui->eventStatusWidget->setVisible(false);
-		ui->splitter->setVisible(false);
-
-		ui->actionRecord->setEnabled(false);
-		qDebug() << "no session board msg=" << msg;
-
-//		int year = 2000 + msg.left(2).toInt();
-//		int month = msg.mid(2, 2).toInt();
-//		int day = msg.mid(4, 2).toInt();
-//		int hour = msg.mid(6, 2).toInt() + 1;
-
-//		QString str = LTData::getEvent(QDate::currentDate()).eventName +
-//			"\n" + QString::number(year) + "." + (month < 10 ? "0" + QString::number(month) : QString::number(month)) + "." +
-//			(day < 10 ? "0" + QString::number(day) : QString::number(day)) + " - " + QString::number(hour) + ":00 GMT";
-
-//		ui->sessionLabel->setText(str);
 		ui->tableWidget->clear();
 		ui->textEdit->clear();
 		ui->driverDataWidget->clearData();
 		ui->sessionDataWidget->clearData();
 
 		ui->messageBoardWidget->showSessionBoard(msg);
-		ui->messageBoardWidget->setVisible(true);
+		showSessionBoard(true);
 	}
 	else
 	{
-		ui->eventStatusWidget->setVisible(true);
-		ui->splitter->setVisible(true);
-		ui->messageBoardWidget->setVisible(false);
-
+		showSessionBoard(false);
 		ui->tableWidget->updateLT();
-		ui->actionRecord->setEnabled(true);
 	}
 }
 
@@ -595,6 +584,8 @@ void LTWindow::on_actionConnect_triggered()
 
         QString encPasswd = encodePasswd(passwd);
         settings->setValue("login/passwd", encPasswd);
+
+        showSessionBoard(false);
     }
 }
 
@@ -632,6 +623,11 @@ void LTWindow::error(QAbstractSocket::SocketError er)
             streamReader->disconnectFromLTServer();
             connectToServer();
         }
+//        else
+//        {
+//        	ui->messageBoardWidget->showStartupBoard();
+//			showSessionBoard(true);
+//        }
     }
 }
 
@@ -647,6 +643,11 @@ void LTWindow::error(QNetworkReply::NetworkError er)
             streamReader->disconnectFromLTServer();
             connectToServer();
         }
+//        else
+//		{
+//			ui->messageBoardWidget->showStartupBoard();
+//			showSessionBoard(true);
+//		}
     }
 }
 
@@ -720,6 +721,8 @@ void LTWindow::on_actionOpen_triggered()
 
         QFileInfo fInfo(fName);
         QString name = fInfo.fileName();
+
+        showSessionBoard(false);
 
         ui->tableWidget->clear();
         ui->textEdit->clear();
@@ -799,5 +802,21 @@ void LTWindow::eventPlayerStopClicked(bool connect)
         ltcDialog[i]->loadCarImages();
 
     if (connect)
-        connectToServer();
+    {
+    	if (settings->value("ui/auto_connect").toBool())
+    		connectToServer();
+    	else
+    	{
+    		ui->messageBoardWidget->showStartupBoard();
+			showSessionBoard(true);
+    	}
+    }
+}
+
+void LTWindow::showSessionBoard(bool show)
+{
+	ui->eventStatusWidget->setVisible(!show);
+	ui->splitter->setVisible(!show);
+	ui->actionRecord->setEnabled(!show);
+	ui->messageBoardWidget->setVisible(show);
 }

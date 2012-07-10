@@ -13,6 +13,7 @@ public:
     ~NoSessionBoardWidget();
 
     void showSessionBoard(QString msg);
+    void showStartupBoard();
 
 private:
     Ui::NoSessionBoardWidgetClass ui;

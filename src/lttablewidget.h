@@ -54,6 +54,7 @@ public:
 
     bool printDiff(int row, int col);
 
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void resizeEvent(QResizeEvent *event);

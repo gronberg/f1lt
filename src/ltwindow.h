@@ -82,6 +82,7 @@ private slots:
     void on_actionOpen_triggered();
 
 
+    void showSessionBoard(bool show);
 
 private:
     Ui::LTWindow *ui;

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Mon Jul 9 18:18:38 2012
+** Created: Tue Jul 10 11:15:04 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -38,6 +38,7 @@ public:
     QPushButton *mainFontButton;
     QLabel *label;
     QLabel *label_2;
+    QCheckBox *autoConnectBox;
     QCheckBox *ltCheckBox;
     QCheckBox *altCheckBox;
     QCheckBox *autoRecordBox;
@@ -90,6 +91,11 @@ public:
 
 
         verticalLayout->addWidget(groupBox);
+
+        autoConnectBox = new QCheckBox(PreferencesDialog);
+        autoConnectBox->setObjectName(QString::fromUtf8("autoConnectBox"));
+
+        verticalLayout->addWidget(autoConnectBox);
 
         ltCheckBox = new QCheckBox(PreferencesDialog);
         ltCheckBox->setObjectName(QString::fromUtf8("ltCheckBox"));
@@ -186,6 +192,7 @@ public:
         mainFontButton->setText(QApplication::translate("PreferencesDialog", "Arial", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("PreferencesDialog", "Main font:", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("PreferencesDialog", "Commentary font:", 0, QApplication::UnicodeUTF8));
+        autoConnectBox->setText(QApplication::translate("PreferencesDialog", "Connect to LT serwer automatically after application start", 0, QApplication::UnicodeUTF8));
         ltCheckBox->setText(QApplication::translate("PreferencesDialog", "Show contents during LT window resize", 0, QApplication::UnicodeUTF8));
         altCheckBox->setText(QApplication::translate("PreferencesDialog", "Alternate row colors in LT window", 0, QApplication::UnicodeUTF8));
         autoRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically start recording when session starts", 0, QApplication::UnicodeUTF8));

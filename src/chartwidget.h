@@ -180,4 +180,30 @@ private:
     QColor colors[2];
 };
 
+class WeatherChartWidget : public ChartWidget
+{
+    Q_OBJECT
+
+public:
+    explicit WeatherChartWidget(QColor col, int id, QWidget *parent = 0) : ChartWidget(0, 180, col, parent)
+    {
+    	weatherId = id;
+    }
+
+    void drawAxes(QPainter *p);
+    void drawChart(QPainter *p);
+    void setMinMax(double &min, double &max);
+//    void drawLegend(QPainter *p, int, int);
+
+public slots:
+    void onCopy();
+    void onSave();
+
+protected:
+    void paintEvent(QPaintEvent *);
+
+private:
+    int weatherId;
+};
+
 #endif // CHARTWIDGET_H

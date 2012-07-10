@@ -5,6 +5,7 @@ SocketDataReader::SocketDataReader(QObject *parent) :
     QObject(parent), connectionOpened(false)
 {
     timer = new QTimer(this);
+    reconnectTimer = new QTimer(this);
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
     bytes = 0;
     socket = NULL;
@@ -19,6 +20,8 @@ void SocketDataReader::openStream(QString host, int port)
 {
     if (host == this->host && connectionOpened)
         return;
+
+    tryReconnect = 5;
 
     this->host = host;
     this->port = port;
@@ -35,8 +38,6 @@ void SocketDataReader::connectToHost()
 {
     socket->connectToHost(host, port, QIODevice::ReadWrite);
     socket->waitForReadyRead();
-
-    timer->start(1000);
 }
 
 void SocketDataReader::disconnectFromHost()
@@ -48,8 +49,9 @@ void SocketDataReader::disconnectFromHost()
     connectionOpened = false;
 
     QObject::disconnect(socket, SIGNAL(connected()), this, SLOT(connected()));
-    QObject::disconnect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(error(QAbstractSocket::SocketError)));
+    QObject::disconnect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectionError(QAbstractSocket::SocketError)));
     QObject::disconnect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    QObject::disconnect(reconnectTimer, SIGNAL(timeout()), this, SLOT(reconnect()));
 }
 
 void SocketDataReader::wakeUpServer()
@@ -65,8 +67,9 @@ void SocketDataReader::runS()
 
     //socket->moveToThread(this->thread());
     QObject::connect(socket, SIGNAL(connected()), this, SLOT(connected()));
-    QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(error(QAbstractSocket::SocketError)));
+    QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectionError(QAbstractSocket::SocketError)));
     QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    QObject::connect(reconnectTimer, SIGNAL(timeout()), this, SLOT(reconnect()));
 
     connectionOpened = false;
 
@@ -82,6 +85,16 @@ void SocketDataReader::runS()
 void SocketDataReader::connected()
 {
     connectionOpened = true;
+
+    if (reconnectTimer->isActive())
+	{
+		reconnectTimer->stop();
+	}
+
+    timer->start(1000);
+
+    tryReconnect = 5;
+
     emit streamOpened();
 }
 
@@ -99,6 +112,44 @@ void SocketDataReader::timeout()
 {
     wakeUpServer();
 //    timer->start(900);
+}
+
+void SocketDataReader::connectionError(QAbstractSocket::SocketError err)
+{
+    timer->stop();
+    if (tryReconnect == 5)
+    {
+    	reconnect();
+    }
+
+    else if (tryReconnect == 0)
+    {
+    	if (reconnectTimer->isActive())
+			reconnectTimer->stop();
+
+        emit error(err);
+    }
+}
+
+void SocketDataReader::reconnect()
+{
+	if (tryReconnect == 5)
+	{
+		--tryReconnect;
+		reconnectTimer->start(500);
+	}
+	else if (tryReconnect > 0)
+	{
+		if (socket && socket->isOpen())
+			socket->disconnectFromHost();
+
+		connectionOpened = false;
+		--tryReconnect;
+
+		connectToHost();
+	}
+	else if (reconnectTimer->isActive())
+		reconnectTimer->stop();
 }
 
 

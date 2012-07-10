@@ -48,6 +48,9 @@ public:
     void setAutoStopRecord(int);
     int getAutoStopRecord();
 
+    void setAutoConnect(bool);
+    bool isAutoConnect();
+
 public slots:
     int exec(QSettings *);
     

@@ -54,6 +54,7 @@ int PreferencesDialog::exec(QSettings *set)
     setReverseOrderLapHistory(settings->value("ui/reversed_lap_history").toBool());
     setReverseOrderHeadToHead(settings->value("ui/reversed_head_to_head").toBool());
     setReverseOrderLapTimeComparison(settings->value("ui/reversed_lap_time_comparison").toBool());
+    setAutoConnect(settings->value("ui/auto_connect").toBool());
 
     if (!settings->contains("ui/auto_stop_record"))
         setAutoStopRecord(-1);
@@ -84,6 +85,7 @@ void PreferencesDialog::on_buttonBox_accepted()
     settings->setValue("ui/reversed_lap_time_comparison", isReverseOrderLapTimeComparison());
     settings->setValue("ui/auto_record", isAutoRecord());    
     settings->setValue("ui/auto_stop_record", getAutoStopRecord());
+    settings->setValue("ui/auto_connect", isAutoConnect());
 }
 
 void PreferencesDialog::setFonts(const QFont &f1, const QFont &f2)
@@ -222,4 +224,13 @@ int PreferencesDialog::getAutoStopRecord()
 void PreferencesDialog::on_autoStopRecordBox_toggled(bool checked)
 {
     ui->autoStopRecordSpinBox->setEnabled(checked);
+}
+
+void PreferencesDialog::setAutoConnect(bool val)
+{
+	ui->autoConnectBox->setChecked(val);
+}
+bool PreferencesDialog::isAutoConnect()
+{
+	return ui->autoConnectBox->isChecked();
 }

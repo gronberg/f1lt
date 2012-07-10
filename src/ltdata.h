@@ -233,6 +233,8 @@ public:
     static QStringList getDriversList();
     static LTEvent getEvent(int);
     static LTEvent getEvent(QDate);
+    static LTEvent getCurrentEvent();
+    static LTEvent getNextEvent();
     static int getEventNo(QDate);
     static int getDriverNo(QString);
 

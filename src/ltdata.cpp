@@ -238,6 +238,23 @@ LTEvent LTData::getEvent(QDate date)
     return ltEvents[0];
 }
 
+LTEvent LTData::getCurrentEvent()
+{
+	return getEvent(QDate::currentDate());
+}
+
+LTEvent LTData::getNextEvent()
+{
+	QDate date = QDate::currentDate();
+	for (int i = 1; i < ltEvents.size(); ++i)
+	{
+		if (date > ltEvents[i-1].raceDate && date <= ltEvents[i].raceDate)
+			return ltEvents[i];
+	}
+
+	return ltEvents[0];
+}
+
 int LTData::getDriverNo(QString name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
