@@ -6,6 +6,7 @@
 #include <QList>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QStack>
 #include <QWidget>
 
 
@@ -27,17 +28,26 @@ public:
     virtual void drawChart(QPainter *p);
     virtual void drawScaleRect(QPainter *p);
 
-    bool transform();
+    virtual void transform();
+    virtual void resetZoom();
+
+    void pushScaleRect();
+
+
+    void checkX1(double &x1, double &y1, double x2, double y2);
+    void checkX2(double x1, double y1, double &x2, double &y2);
 
 public slots:
     virtual void onCopy();
     virtual void onSave();
+    virtual void onZoomOut();
 
 protected:
     void paintEvent(QPaintEvent *);   
     virtual void mousePressEvent(QMouseEvent *);
     virtual void mouseMoveEvent(QMouseEvent *);
     virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mouseDoubleClickEvent (QMouseEvent *);
 
     DriverData driverData;
     double min, max;
@@ -48,10 +58,19 @@ protected:
     QMenu *menu;
     QAction *copyAction;
     QAction *saveAction;
+    QAction *zoomOutAction;
+
+    struct ScaleAtom
+    {
+    	double min, max;
+    	int first, last;
+    };
 
     QRect scaleRect;
+    QStack<ScaleAtom> scaleRectsStack;
     QRect paintRect;
     bool scaling;
+    int lastOp;		//0 - zoom out, 1 - zoom in
 
 };
 
@@ -70,6 +89,9 @@ public:
     void drawChart(QPainter *p);
     void drawLegend(QPainter *p, int, int);
     void setData(const DriverData &dd);
+
+    void transform();
+	void resetZoom();
 
 public slots:
     void onCopy();
@@ -91,6 +113,10 @@ public:
 
     void drawAxes(QPainter *p);
     void drawChart(QPainter *p);
+
+    void transform();
+    void resetZoom();
+
 
 public slots:
     void onCopy();
@@ -115,6 +141,11 @@ public:
     void drawAxes(QPainter *p, int, int);
     void drawChart(QPainter *p);
     void drawLegend(QPainter *p);
+
+    void findFirstAndLastLap(int &firstLap, int &lastLap);
+
+    void transform();
+	void resetZoom();
 
 public slots:
     void onCopy();
@@ -145,6 +176,11 @@ public:
     void drawLegend(QPainter *p);
 
     double calculateInterval(int lap);
+
+    void findFirstAndLastLap(int &firstLap, int &lastLap);
+
+	void transform();
+	void resetZoom();
 
 public slots:
     void onCopy();
@@ -179,6 +215,11 @@ public:
     void drawAxes(QPainter *p, int, int);
     void drawChart(QPainter *p);
     void drawLegend(QPainter *p);
+
+    void findFirstAndLastLap(int &firstLap, int &lastLap);
+
+	void transform();
+	void resetZoom();
 
 public slots:
     void onCopy();
