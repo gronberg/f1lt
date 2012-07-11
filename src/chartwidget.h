@@ -25,6 +25,9 @@ public:
 
     virtual void drawAxes(QPainter *p);
     virtual void drawChart(QPainter *p);
+    virtual void drawScaleRect(QPainter *p);
+
+    bool transform();
 
 public slots:
     virtual void onCopy();
@@ -33,14 +36,22 @@ public slots:
 protected:
     void paintEvent(QPaintEvent *);   
     virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
 
     DriverData driverData;
     double min, max;
+    double tMin, tMax;
+    int first, last;
     QColor color;
 
     QMenu *menu;
     QAction *copyAction;
     QAction *saveAction;
+
+    QRect scaleRect;
+    QRect paintRect;
+    bool scaling;
 
 };
 
