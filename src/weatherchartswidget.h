@@ -23,6 +23,7 @@ private:
     WeatherChartWidget *windWidget;
     WeatherChartWidget *pressureWidget;
     WeatherChartWidget *humidityWidget;
+    WetDryChartWidget *wetDryWidget;
 
 };
 

@@ -1145,7 +1145,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
     	   int ts = uc << 8;
     	   uc = copyPacket.longData[0];
     	   ts |= uc | 0 << 16;// & 0xff0000;
-    	   qDebug() << "timestamp " << ts<< ", " << eventData.timeStamp << ", " << eventData.weatherData[0].size();
+    	   qDebug() << "timestamp " << ts<< ", " << eventData.timeStamp << ", " << eventData.weatherData[0].size() << ", " << eventData.weatherData[1].size();
      	   if ((eventData.timeStamp==0 && ts <= 1000) ||
      		   (ts >= eventData.timeStamp+75 && ts < eventData.timeStamp+1000))
     	   {

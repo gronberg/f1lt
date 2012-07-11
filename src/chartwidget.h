@@ -2,6 +2,7 @@
 #define CHARTWIDGET_H
 
 #include <QAction>
+#include <QDebug>
 #include <QList>
 #include <QMenu>
 #include <QMouseEvent>
@@ -185,15 +186,15 @@ class WeatherChartWidget : public ChartWidget
     Q_OBJECT
 
 public:
-    explicit WeatherChartWidget(QColor col, int id, int id2, QWidget *parent = 0) : ChartWidget(0, 180, col, parent)
+    WeatherChartWidget(QColor col, int id, int id2, QWidget *parent = 0) : ChartWidget(0, 180, col, parent)
     {
     	weatherId = id;
-    	wetDryId = id2;
+        wetDryId = id2;
     }
 
-    void drawAxes(QPainter *p);
-    void drawChart(QPainter *p);
-    void setMinMax();
+    virtual void drawAxes(QPainter *p);
+    virtual void drawChart(QPainter *p);
+    virtual void setMinMax();
 //    void drawLegend(QPainter *p, int, int);
 
 //public slots:
@@ -212,10 +213,10 @@ class TempChartWidget : public WeatherChartWidget
     Q_OBJECT
 
 public:
-    explicit TempChartWidget(QColor col, QColor col2, int id, int tempId, int id2, QWidget *parent = 0) : WeatherChartWidget(col, id, id2, parent)
-    {
+    TempChartWidget(QColor col, QColor col2, int id, int tempId, int id2, QWidget *parent = 0) : WeatherChartWidget(col, id, id2, parent)
+    {                
     	trackTempId = tempId;
-    	trackTempCol = col2;
+        trackTempCol = col2;
     }
 
     void drawAxes(QPainter *p);
@@ -231,9 +232,34 @@ protected:
     void paintEvent(QPaintEvent *);
 
 private:
-    int weatherId;
     int trackTempId;
     QColor trackTempCol;
+};
+
+
+class WetDryChartWidget : public WeatherChartWidget
+{
+    Q_OBJECT
+
+public:
+    WetDryChartWidget(QColor col, int id, int id2, QWidget *parent = 0) : WeatherChartWidget(col, id, id2, parent)
+    {
+    	min = 0.0;
+    	max = 1.0;
+    }
+
+    void drawAxes(QPainter *p);
+    void drawChart(QPainter *p);
+    void setMinMax() {}
+//    void drawLegend(QPainter *p, int, int);
+
+//public slots:
+//    void onCopy();
+//    void onSave();
+
+//protected:
+//    void paintEvent(QPaintEvent *);
+
 };
 
 #endif // CHARTWIDGET_H
