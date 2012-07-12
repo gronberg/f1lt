@@ -17,7 +17,7 @@
    <string>F1LT</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="../icons/icons.qrc">
     <normaloff>:/ui_icons/icon.png</normaloff>:/ui_icons/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -280,12 +280,6 @@
         <bool>false</bool>
        </attribute>
        <attribute name="verticalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="verticalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="horizontalHeaderVisible">
         <bool>false</bool>
        </attribute>
        <column>
@@ -553,6 +547,7 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Tools</string>
     </property>
+    <addaction name="actionSession_analysis"/>
     <addaction name="actionHead_to_head"/>
     <addaction name="actionLap_time_comparison"/>
     <addaction name="separator"/>
@@ -613,7 +608,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <action name="actionHead_to_head">
    <property name="icon">
-    <iconset>
+    <iconset resource="../icons/icons.qrc">
      <normaloff>:/ui_icons/head2head-s.png</normaloff>:/ui_icons/head2head-s.png</iconset>
    </property>
    <property name="text">
@@ -622,7 +617,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionConnect">
    <property name="icon">
-    <iconset>
+    <iconset resource="../icons/icons.qrc">
      <normaloff>:/ui_icons/login.png</normaloff>:/ui_icons/login.png</iconset>
    </property>
    <property name="text">
@@ -637,7 +632,7 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../icons/icons.qrc">
      <normaloff>:/ui_icons/record.png</normaloff>:/ui_icons/record.png</iconset>
    </property>
    <property name="text">
@@ -646,7 +641,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionPreferences">
    <property name="icon">
-    <iconset>
+    <iconset resource="../icons/icons.qrc">
      <normaloff>:/ui_icons/preferences.png</normaloff>
      <normalon>:/ui_icons/preferences.png</normalon>:/ui_icons/preferences.png</iconset>
    </property>
@@ -656,7 +651,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset>
+    <iconset resource="../icons/icons.qrc">
      <normaloff>:/ui_icons/exit.png</normaloff>:/ui_icons/exit.png</iconset>
    </property>
    <property name="text">
@@ -678,7 +673,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset>
+    <iconset resource="../icons/icons.qrc">
      <normaloff>:/ui_icons/document-open.png</normaloff>:/ui_icons/document-open.png</iconset>
    </property>
    <property name="text">
@@ -687,7 +682,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionLap_time_comparison">
    <property name="icon">
-    <iconset>
+    <iconset resource="../icons/icons.qrc">
      <normaloff>:/ui_icons/ltc-s.png</normaloff>:/ui_icons/ltc-s.png</iconset>
    </property>
    <property name="text">
@@ -699,11 +694,16 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../icons/icons.qrc">
      <normaloff>:/ui_icons/stop.png</normaloff>:/ui_icons/stop.png</iconset>
    </property>
    <property name="text">
     <string>Stop recording</string>
+   </property>
+  </action>
+  <action name="actionSession_analysis">
+   <property name="text">
+    <string>Session analysis</string>
    </property>
   </action>
  </widget>

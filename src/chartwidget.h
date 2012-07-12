@@ -164,7 +164,7 @@ class GapCompChartWidget : public ChartWidget
     Q_OBJECT
 
 public:
-    explicit GapCompChartWidget(QColor *col, QWidget *parent = 0) : ChartWidget(0, 180, col[0], parent), eventData(EventData::getInstance())
+    explicit GapCompChartWidget(QColor *col, QWidget *parent = 0) : ChartWidget(0, 0, col[0], parent), eventData(EventData::getInstance())
     {
         for (int i = 0; i < 2; ++i)
             colors[i] = col[i];
@@ -242,11 +242,19 @@ public:
     {
     	weatherId = id;
         wetDryId = id2;
+        menu->removeAction(zoomOutAction);
     }
 
     virtual void drawAxes(QPainter *p);
     virtual void drawChart(QPainter *p);
     virtual void setMinMax();
+
+    virtual void mouseMoveEvent(QMouseEvent *) {}
+	virtual void mouseReleaseEvent(QMouseEvent *) {}
+	virtual void mouseDoubleClickEvent (QMouseEvent *) {}
+
+    void transform();
+	void resetZoom();
 //    void drawLegend(QPainter *p, int, int);
 
 //public slots:

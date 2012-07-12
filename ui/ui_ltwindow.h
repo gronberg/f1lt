@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Wed Jul 11 16:02:22 2012
+** Created: Thu Jul 12 22:42:04 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -47,6 +47,7 @@ public:
     QAction *actionOpen;
     QAction *actionLap_time_comparison;
     QAction *actionStop_recording;
+    QAction *actionSession_analysis;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_4;
     NoSessionBoardWidget *messageBoardWidget;
@@ -131,6 +132,8 @@ public:
         QIcon icon8;
         icon8.addFile(QString::fromUtf8(":/ui_icons/stop.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionStop_recording->setIcon(icon8);
+        actionSession_analysis = new QAction(LTWindow);
+        actionSession_analysis->setObjectName(QString::fromUtf8("actionSession_analysis"));
         centralWidget = new QWidget(LTWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
@@ -358,6 +361,7 @@ public:
         menuFile->addAction(actionOpen);
         menuFile->addSeparator();
         menuFile->addAction(actionExit);
+        menuEdit->addAction(actionSession_analysis);
         menuEdit->addAction(actionHead_to_head);
         menuEdit->addAction(actionLap_time_comparison);
         menuEdit->addSeparator();
@@ -405,6 +409,7 @@ public:
         actionOpen->setText(QApplication::translate("LTWindow", "Open", 0, QApplication::UnicodeUTF8));
         actionLap_time_comparison->setText(QApplication::translate("LTWindow", "Lap time comparison", 0, QApplication::UnicodeUTF8));
         actionStop_recording->setText(QApplication::translate("LTWindow", "Stop recording", 0, QApplication::UnicodeUTF8));
+        actionSession_analysis->setText(QApplication::translate("LTWindow", "Session analysis", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("LTWindow", "P", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(3);

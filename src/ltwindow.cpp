@@ -20,6 +20,7 @@ LTWindow::LTWindow(QWidget *parent) :
     prefs = new PreferencesDialog(this);
     settings = new QSettings(F1LTCore::iniFile(), QSettings::IniFormat, this);
     loginDialog = new LoginDialog(this);
+    saw = new SessionAnalysisWidget();
 
 //    ui->trackStatusWidget->setupItems();
 
@@ -176,6 +177,8 @@ void LTWindow::on_driverDataChanged(int carID)
         for (int i = 0; i < h2hDialog.size(); ++i)
             h2hDialog[i]->driverUpdated(eventData.driversData[carID-1]);
 
+        if (saw->isVisible())
+            saw->update();
 //        if (recording)
 //            eventRecorder->updateDriverData(eventData.driversData[carID-1]);
     }
@@ -232,6 +235,9 @@ void LTWindow::on_dataChanged()
 
     if (ui->tabWidget->currentIndex() == 2)
 		ui->weatherChartsWidget->updateCharts();
+
+    if (saw->isVisible())
+        saw->update();
 }
 
 void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
@@ -825,4 +831,9 @@ void LTWindow::showSessionBoard(bool show)
 	ui->splitter->setVisible(!show);
 	ui->actionRecord->setEnabled(!show);
 	ui->messageBoardWidget->setVisible(show);
+}
+
+void LTWindow::on_actionSession_analysis_triggered()
+{
+    saw->exec();
 }

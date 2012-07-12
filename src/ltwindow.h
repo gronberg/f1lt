@@ -17,6 +17,7 @@
 #include "logindialog.h"
 #include "lttablewidget.h"
 #include "preferencesdialog.h"
+#include "sessionanalysiswidget.h"
 
 
 namespace Ui {
@@ -84,6 +85,8 @@ private slots:
 
     void showSessionBoard(bool show);
 
+    void on_actionSession_analysis_triggered();
+
 private:
     Ui::LTWindow *ui;
     DataStreamReader *streamReader;
@@ -123,6 +126,7 @@ private:
     LoginDialog *loginDialog;
 
     EventData &eventData;
+    SessionAnalysisWidget *saw;
 };
 
 #endif // LTWINDOW_H

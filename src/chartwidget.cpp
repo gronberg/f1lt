@@ -1424,29 +1424,47 @@ void LapCompChartWidget::drawChart(QPainter *p)
 
                 if (lapTime.toString() == "IN PIT")
                 {
-                    if (index[k] > 0)
-                    {
-                    	lapTime = driverData[k].getLapData(i-1).lapTime;
-//                        lapTime = driverData[k].lapData[index[k]-1].lapTime;
-                    }
+                	LapData ldtmp = driverData[k].getLapData(i-1);
+                	if (ldtmp.carID == driverData[k].carID)
+                		lapTime = ldtmp.lapTime;
 
-                    else if (index[k] < driverData[k].lapData.size()-1)
-                    {
-                    	lapTime = driverData[k].getLapData(i+1).lapTime;
-//                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
-                        LapTime pl(driverData[k].getPitTime(ld.numLap));
+                	else
+                	{
+                		ldtmp = driverData[k].getLapData(i+1);
+                		if (ldtmp.carID == driverData[k].carID)
+                		{
+                			LapTime pl(driverData[k].getPitTime(ld.numLap));
+                			lapTime = lapTime - pl + LapTime(5000);
+                		}
 
-                        lapTime = lapTime - pl + LapTime(5000);
-                    }
+                		if (lapTime.toString() == "IN PIT")
+                		{
+                			ldtmp = driverData[k].getLapData(i+2);
+							if (ldtmp.carID == driverData[k].carID)
+							{
+								LapTime pl(driverData[k].getPitTime(ld.numLap+1));
+								lapTime = lapTime - pl + LapTime(5000);
+							}
+                		}
+                	}
 
-                    if  (lapTime.toString() == "IN PIT" && index[k] < driverData[k].lapData.size()-1)
-                    {
-                    	lapTime = driverData[k].getLapData(i+1).lapTime;
-//                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
-                        LapTime pl(driverData[k].getPitTime(ld.numLap));
-
-                        lapTime = lapTime - pl + LapTime(5000);
-                    }
+//                    else if (index[k] < driverData[k].lapData.size()-1)
+//                    {
+//                    	lapTime = driverData[k].getLapData(i+1).lapTime;
+////                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
+//                        LapTime pl(driverData[k].getPitTime(ld.numLap));
+//
+//                        lapTime = lapTime - pl + LapTime(5000);
+//                    }
+//
+//                    if  (lapTime.toString() == "IN PIT" && index[k] < driverData[k].lapData.size()-1)
+//                    {
+//                    	lapTime = driverData[k].getLapData(i+1).lapTime;
+////                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
+//                        LapTime pl(driverData[k].getPitTime(ld.numLap));
+//
+//                        lapTime = lapTime - pl + LapTime(5000);
+//                    }
                 }
                 msecs = -QTime::fromString(lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
                 secs = (double)(msecs / 1000.0);
@@ -1729,7 +1747,7 @@ void GapCompChartWidget::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->setFont(QFont("Arial", 10));
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
-    if (max >= 60)
+    if (tMax == max && max >= 60)
     {
         max = 60;
         tMax = 60;
@@ -1812,8 +1830,6 @@ void GapCompChartWidget::drawAxes(QPainter *p, int firstLap, int lastLap)
 void GapCompChartWidget::findFirstAndLastLap(int &firstLap, int &lastLap)
 {
 	firstLap = 99, lastLap = 0;
-	int msecs;
-	double secs;
 	for (int i = 0; i < 4; ++i)
 	{
 		DriverData dd = driverIdx[i] >= 0 ? eventData.driversData[driverIdx[i]] : DriverData();
@@ -1828,11 +1844,6 @@ void GapCompChartWidget::findFirstAndLastLap(int &firstLap, int &lastLap)
 					lastLap = dd.lapData[j].numLap;
 
 			}
-//			msecs = -QTime::fromString(driverData[i].lapData[0].lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-//			secs = (double)(msecs / 1000.0);
-//
-//			if (secs > max) secs = max;
-//			if (secs < min) secs = min;
 		}
 	}
 }
@@ -1844,32 +1855,12 @@ void GapCompChartWidget::drawChart(QPainter *p)
     double x[2] = {paintRect.left(), paintRect.left()};
     double y1[2];
     double y2[2];
-//    int msecs;
-//    double secs;
 
-//    for (int i = 0; i < 2; ++i)
-//    {
-//        DriverData dd = driverIdx[i] >= 0 ? eventData.driversData[driverIdx[i]] : DriverData();
-//        if (!dd.lapData.isEmpty())
-//        {
-//            if (dd.lapData[0].numLap < firstLap)
-//                firstLap = dd.lapData[0].numLap;
-//
-//            if (dd.lapData.last().numLap > lastLap)
-//                lastLap = dd.lapData.last().numLap;
-//
-////            msecs = -QTime::fromString(eventData.driversData[driverIdx[i]].lapData[0].lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-////            secs = (double)(msecs / 1000.0);
-//
-////            if (secs > max) secs = max;
-////            if (secs < min) secs = min;
-////            y1[i] = (double)(height()-25.0 - (double)(secs-min) * yFactor);
-//        }
-//    }
     findFirstAndLastLap(firstLap, lastLap);
     int index[2] = {0,0};
     min = 0.0; max = 0.0;
     QList<double> intervals;
+
     for (int i = firstLap; i <= lastLap; ++i)
     {
         intervals.append(calculateInterval(i));
@@ -1877,19 +1868,11 @@ void GapCompChartWidget::drawChart(QPainter *p)
 
         if (interval > max)
         {
-        	tMax = interval;
         	max = interval;
+        	tMax = max;
         }
-
-//        for (int k = 0; k < 2; ++k)
-//        {
-//            if (!eventData.driversData[driverIdx[k]].lapData.empty() && index[k] < eventData.driversData[driverIdx[k]].lapData.size() &&
-//                    eventData.driversData[driverIdx[k]].lapData[index[k]].numLap == i)
-//            {
-
-//            }
-//        }
     }
+
     if (max != 1000)
     {
         max += max * 0.05;
@@ -2479,41 +2462,42 @@ void WeatherChartWidget::drawAxes(QPainter *p)
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
     //x axe
-    p->drawLine(40, height()-25, width()-5, height()-25);
+    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
 
     //y axe
-    p->drawLine(40, height()-25, 40, 10);
+    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
     double yFactor = (double)((height()-75.0)/4.0);
-    double yFactor2 = (double)((max-min)/4.0);
-    double j = min;
+    double yFactor2 = (double)((tMax-tMin)/4.0);
+    double j = tMin;
 
-    for (int i = height()-25; i >= 50; i-= yFactor, j += yFactor2)
+    for (int i = paintRect.bottom(); i >= 50; i-= yFactor, j += yFactor2)
     {
         p->setPen(QColor(LTData::colors[LTData::WHITE]));
         p->drawText(5, i+5, QString::number(j, 'f', 1));
 
-        if (i != height()-25)
+        if (i != paintRect.bottom())
         {
             QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
-            p->drawLine(40, i, width()-5, i);
+            p->drawLine(paintRect.left(), i, paintRect.right(), i);
         }
     }
 
     EventData &ed = EventData::getInstance();
 	if (ed.weatherData[weatherId].size()>1)
     {
-        double xFactor = ((double)width()-45.0) / (double)ed.weatherData[weatherId].size();
-        double j = 1.0, jWD = 0.0;
-        double i = 40.0;
-        int prevJ = 1;
+		int sz = last - first + 1;
+        double xFactor = ((double)paintRect.width()) / (double)sz;
+        double j = first, jWD = first-1;
+        double i = paintRect.left();
+        int prevJ = first;
 
-        double jFactor = ed.weatherData[weatherId].size() < 5 ? 1.0 : (double)((ed.weatherData[weatherId].size()-1)/6.0);
+        double jFactor = sz < 5 ? 1.0 : (double)((sz-1)/6.0);
         double jWDFactor = (double)((ed.weatherData[wetDryId].size()-1)/6.0);
 
         QPixmap dryPix;
@@ -2533,7 +2517,7 @@ void WeatherChartWidget::drawAxes(QPainter *p)
 		prevJ = 0;
 
 
-        for (; i < width()-15.0 && round(j) < ed.weatherData[weatherId].size(); /*i += xFactor,*/ j += jFactor, jWD += jWDFactor)
+        for (; i < width()-15.0 && round(j) < last + 1 && round(j) < ed.weatherData[weatherId].size(); /*i += xFactor,*/ j += jFactor, jWD += jWDFactor)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
@@ -2546,9 +2530,9 @@ void WeatherChartWidget::drawAxes(QPainter *p)
                 QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
-                p->drawLine(round(i), height()-25, round(i), 10);
+                p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
             }
-            if (round(jWD) < ed.weatherData[wetDryId].size() && round(j) < ed.weatherData[weatherId].size()-1)
+            if (/*round(jWD) < last && */round(jWD) < ed.weatherData[wetDryId].size() && /*round(j) < last-1 &&*/ round(j) < ed.weatherData[weatherId].size()-1)
 			{
             	int nextI = i + xFactor*jFactor;
             	int cnt = 0;
@@ -2569,7 +2553,8 @@ void WeatherChartWidget::drawAxes(QPainter *p)
 void WeatherChartWidget::drawChart(QPainter *p)
 {
 	EventData &ed = EventData::getInstance();
-    if (ed.weatherData[weatherId].size()>1)
+	int sz = last - first + 1;
+    if (sz > 1 && first < ed.weatherData[weatherId].size())
     {
         p->setBrush(QBrush(color));
         QPen pen(color);
@@ -2577,16 +2562,16 @@ void WeatherChartWidget::drawChart(QPainter *p)
         p->setPen(pen);
         p->setRenderHint(QPainter::Antialiasing);
 
-        double xFactor = ((double)width()-45.0) / ((double)ed.weatherData[weatherId].size());
-        double yFactor = (((double)height()-75.0) / (max-min));
+        double xFactor = ((double)paintRect.width()) / ((double)sz);
+        double yFactor = (((double)height()-75.0) / (tMax - tMin));
 
-        double x = 40.0, j = x + xFactor;
-        double y = (double)(height())-25.0 - (double)(ed.weatherData[weatherId][0]-min) * yFactor;
+        double x = paintRect.left(), j = x + xFactor;
+        double y = (double)paintRect.height() - (double)(ed.weatherData[weatherId][first-1]-tMin) * yFactor;
 
-        int i = 1;
-        for (; i < ed.weatherData[weatherId].size(); ++i, j += xFactor)
+        int i = first;
+        for (; i < last + 1 && i < ed.weatherData[weatherId].size(); ++i, j += xFactor)
         {
-            double y2 = (double)(height())-25.0 - (double)(ed.weatherData[weatherId][i]-min) * yFactor;
+            double y2 = (double)(height())-25.0 - (double)(ed.weatherData[weatherId][i]-tMin) * yFactor;
             if (ed.weatherData[weatherId][i] <= 0)
             {
                 y2 = y;
@@ -2607,6 +2592,12 @@ void WeatherChartWidget::drawChart(QPainter *p)
 
 void WeatherChartWidget::paintEvent(QPaintEvent *)
 {
+	paintRect = QRect(40, 10, width()-45, height()-35);
+
+//	if (scaleRect.width() == 0 && scaleRect.height() == 0)
+//	{
+//		resetZoom();
+//	}
     QPainter p;
     p.begin(this);
 
@@ -2614,8 +2605,12 @@ void WeatherChartWidget::paintEvent(QPaintEvent *)
     p.setPen(QColor(20,20,20));
     p.drawRect(0, 0, width(), height());
     setMinMax();
+    resetZoom();
     drawAxes(&p);
     drawChart(&p);
+
+//    if (scaling)
+//		drawScaleRect(&p);
 
     p.end();
 }
@@ -2644,6 +2639,57 @@ void WeatherChartWidget::setMinMax()
 
 	if (min < 0.0)
 		min = 0.0;
+}
+
+void WeatherChartWidget::resetZoom()
+{
+	setMinMax();
+	first = 1;
+	last = EventData::getInstance().weatherData[weatherId].size();
+	tMin = min;
+	tMax = max;
+}
+
+void WeatherChartWidget::transform()
+{
+	if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
+		return;
+
+	if (scaleRect == QRect())
+	{
+		first = 1;
+		last = driverData.lapData.size();
+		tMin = min;
+		tMax = max;
+		return;
+	}
+
+	if (scaleRect.left() > scaleRect.right())
+		scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
+
+	if (scaleRect.top() > scaleRect.bottom())
+		scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
+
+	int sz = last-first+1;
+	double xFactor = ((double)paintRect.width()) / ((double)sz);
+	double yFactor = (((double)paintRect.height()) / (double)(tMax - tMin));
+
+	first = first + ceil((scaleRect.left() - paintRect.left()) / xFactor);
+	if (first < 1)
+		first = 1;
+
+	if (first >= EventData::getInstance().weatherData[weatherId].size())
+		first = EventData::getInstance().weatherData[weatherId].size() - 1;
+
+	last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
+	if (last >= EventData::getInstance().weatherData[weatherId].size())
+		last = EventData::getInstance().weatherData[weatherId].size() - 1;
+
+	tMin = tMin + ceil((paintRect.bottom() - scaleRect.bottom()) / yFactor)-1;
+	if (tMin < min)
+		tMin = min;
+	tMax = tMin + ceil((scaleRect.bottom() - scaleRect.top()) / yFactor);
+
 }
 
 

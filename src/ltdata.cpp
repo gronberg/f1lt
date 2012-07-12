@@ -162,13 +162,13 @@ QString LTData::getDriverShortName(QString name)
         QString buf1 = ltTeams[i].driver1Name.toUpper();
         QString buf2 = ltTeams[i].driver2Name.toUpper();
 
-        if (buf1 == name)
+        if (buf1 == name.toUpper())
             return ltTeams[i].driver1ShortName;
 
-        if (buf2 == name)
+        if (buf2 == name.toUpper())
             return ltTeams[i].driver2ShortName;
     }
-    return name.mid(4, 3);
+    return name.toUpper().mid(4, 3);
 //    name = name.left(4) + name.right(name.size()-4).toLower();
 //    int idx = name.indexOf(" ");
 //    while (idx != -1)
