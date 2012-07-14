@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'logindialog.ui'
 **
-** Created: Sat Jul 14 22:48:27 2012
+** Created: Sun Jul 15 00:11:39 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

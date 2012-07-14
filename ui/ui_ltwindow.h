@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Sat Jul 14 23:02:28 2012
+** Created: Sun Jul 15 00:11:39 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -25,12 +25,12 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
-#include "charts/weatherchartswidget.h"
 #include "main_gui/driverdatawidget.h"
 #include "main_gui/eventstatuswidget.h"
 #include "main_gui/lttablewidget.h"
 #include "main_gui/nosessionboardwidget.h"
 #include "main_gui/sessiondatawidget.h"
+#include "main_gui/weatherchartswidget.h"
 
 QT_BEGIN_NAMESPACE
 

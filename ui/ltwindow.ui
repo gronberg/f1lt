@@ -741,7 +741,7 @@ p, li { white-space: pre-wrap; }
   <customwidget>
    <class>WeatherChartsWidget</class>
    <extends>QWidget</extends>
-   <header>charts/weatherchartswidget.h</header>
+   <header>main_gui/weatherchartswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

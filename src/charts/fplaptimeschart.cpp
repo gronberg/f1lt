@@ -133,23 +133,9 @@ void FPLapTimesChart::drawChart(QPainter *p)
         if (minute >= first && minute <= last)// && lapDataArray[i].lapTime.isValid())
         {
             secs = lapDataArray[i].lapTime.toDouble();
-//            if (!lapDataArray[i].lapTime.isValid() && lapDataArray[i].numLap-1 >= firstMin && i > 0)// && i < lapDataArray.size()-1)
-//            {
-//                secs = lapDataArray[i-1].lapTime.toDouble();
-
-//                if (!lapDataArray[i-1].lapTime.isValid() && lapDataArray[i].numLap+1 <= lastLap && i < lapDataArray.size()-1)
-//                {
-//                    QString pl =  EventData::getInstance().driversData[lapDataArray[i].carID-1].getPitTime(lapDataArray[i].numLap);
-//                    secs = LapTime(lapDataArray[i+1].lapTime + LapTime(pl) + LapTime(5000)).toDouble();
-//                }
-//            }
-
 
             if (secs > tMax && tMax == max)
                 secs = tMax;
-
-//            if (secs < tMin)
-//                secs = tMin;
 
             y = (double)(paintRect.bottom() - (double)(secs-tMin) * yFactor);
             x = (double)(second - first*60) * xFactor + (double)paintRect.left();
@@ -166,7 +152,6 @@ void FPLapTimesChart::drawChart(QPainter *p)
             p->setPen(pen);
 
             QPainterPath path;
-//            p->setBrush(QBrush(LTData::colors[LTData::BACKGROUND]));
             p->setBrush(QBrush(color));
             if (y < paintRect.bottom())
             {
@@ -331,23 +316,9 @@ void QualiLapTimesChart::drawChart(QPainter *p)
         if (minute >= first && minute <= last && lapDataArray[i].qualiPeriod == qualiPeriod)// && lapDataArray[i].lapTime.isValid())
         {
             secs = lapDataArray[i].lapTime.toDouble();
-//            if (!lapDataArray[i].lapTime.isValid() && lapDataArray[i].numLap-1 >= firstMin && i > 0)// && i < lapDataArray.size()-1)
-//            {
-//                secs = lapDataArray[i-1].lapTime.toDouble();
-
-//                if (!lapDataArray[i-1].lapTime.isValid() && lapDataArray[i].numLap+1 <= lastLap && i < lapDataArray.size()-1)
-//                {
-//                    QString pl =  EventData::getInstance().driversData[lapDataArray[i].carID-1].getPitTime(lapDataArray[i].numLap);
-//                    secs = LapTime(lapDataArray[i+1].lapTime + LapTime(pl) + LapTime(5000)).toDouble();
-//                }
-//            }
-
 
             if (secs > tMax && tMax == max)
                 secs = tMax;
-
-//            if (secs < tMin)
-//                secs = tMin;
 
             y = (double)(paintRect.bottom() - (double)(secs-tMin) * yFactor);
             x = (double)(second - first*60) * xFactor + (double)paintRect.left();

@@ -71,15 +71,8 @@ public:
 
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
-//    virtual void drawScaleRect(QPainter *p);
-
-    virtual void transform();
-    virtual void resetZoom();
 
     void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
-
-//protected:
-//    virtual void mouseDoubleClickEvent (QMouseEvent *);
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -97,15 +90,9 @@ public:
 
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
-//    virtual void drawScaleRect(QPainter *p);
-
-    virtual void transform();
-    virtual void resetZoom();
 
     void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
 
-//protected:
-//    virtual void mouseDoubleClickEvent (QMouseEvent *);
 
 protected:
     void paintEvent(QPaintEvent *);

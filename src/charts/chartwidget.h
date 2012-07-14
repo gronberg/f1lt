@@ -54,6 +54,11 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent *);
     virtual void mouseDoubleClickEvent (QMouseEvent *);
 
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(27, 10, width()-32, height()-35);
+    }
+
     DriverData driverData;
     double min, max;
     double tMin, tMax;
@@ -105,6 +110,11 @@ public slots:
 protected:
     void paintEvent(QPaintEvent *);
 
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(28, 10, width()-33, height()-35);
+    }
+
 private:
 //    DriverData driverData;
     QColor colors[5];
@@ -122,13 +132,11 @@ public:
     void transform();
     void resetZoom();
 
-
-public slots:
-    void onCopy();
-    void onSave();
-
 protected:
-    void paintEvent(QPaintEvent *);
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(28, 10, width()-33, height()-35);
+    }
 };
 
 class LapCompChartWidget : public ChartWidget
@@ -158,6 +166,11 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *);
+
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(37, 10, width()-42, height()-35);
+    }
 
 private:
     DriverData driverData[4];
@@ -193,6 +206,11 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *);
+
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(37, 10, width()-42, height()-35);
+    }
 
 private:
     EventData &eventData;
@@ -231,6 +249,11 @@ public slots:
     void onSave();
 
 protected:
+
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(37, 10, width()-42, height()-35);
+    }
     void paintEvent(QPaintEvent *);
 
 private:
@@ -238,93 +261,6 @@ private:
     QColor colors[2];
 };
 
-class WeatherChartWidget : public ChartWidget
-{
-    Q_OBJECT
 
-public:
-    WeatherChartWidget(QColor col, int id, int id2, QWidget *parent = 0) : ChartWidget(0, 180, col, parent)
-    {
-    	weatherId = id;
-        wetDryId = id2;
-        menu->removeAction(zoomOutAction);
-    }
-
-    virtual void drawAxes(QPainter *p);
-    virtual void drawChart(QPainter *p);
-    virtual void setMinMax();
-
-    virtual void mouseMoveEvent(QMouseEvent *) {}
-	virtual void mouseReleaseEvent(QMouseEvent *) {}
-	virtual void mouseDoubleClickEvent (QMouseEvent *) {}
-
-    void transform();
-	void resetZoom();
-//    void drawLegend(QPainter *p, int, int);
-
-//public slots:
-//    void onCopy();
-//    void onSave();
-
-protected:
-    void paintEvent(QPaintEvent *);
-
-    int weatherId;
-    int wetDryId;
-};
-
-class TempChartWidget : public WeatherChartWidget
-{
-    Q_OBJECT
-
-public:
-    TempChartWidget(QColor col, QColor col2, int id, int tempId, int id2, QWidget *parent = 0) : WeatherChartWidget(col, id, id2, parent)
-    {                
-    	trackTempId = tempId;
-        trackTempCol = col2;
-    }
-
-    void drawAxes(QPainter *p);
-    void drawChart(QPainter *p);
-    void drawLegend(QPainter *p);
-    void setMinMax();
-
-//public slots:
-//    void onCopy();
-//    void onSave();
-
-protected:
-    void paintEvent(QPaintEvent *);
-
-private:
-    int trackTempId;
-    QColor trackTempCol;
-};
-
-
-class WetDryChartWidget : public WeatherChartWidget
-{
-    Q_OBJECT
-
-public:
-    WetDryChartWidget(QColor col, int id, int id2, QWidget *parent = 0) : WeatherChartWidget(col, id, id2, parent)
-    {
-    	min = 0.0;
-    	max = 1.0;
-    }
-
-    void drawAxes(QPainter *p);
-    void drawChart(QPainter *p);
-    void setMinMax() {}
-//    void drawLegend(QPainter *p, int, int);
-
-//public slots:
-//    void onCopy();
-//    void onSave();
-
-//protected:
-//    void paintEvent(QPaintEvent *);
-
-};
 
 #endif // CHARTWIDGET_H

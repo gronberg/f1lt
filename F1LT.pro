@@ -22,7 +22,7 @@ DATA_FILES.path = $$PREFIX/share/$$TARGET/
 
 # DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
-    src/charts/weatherchartswidget.cpp \
+    src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
     src/main.cpp \
     src/main_gui/ltwindow.cpp \
@@ -46,9 +46,10 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/core/f1ltcore.cpp \
     src/main_gui/eventstatuswidget.cpp \
     src/charts/sessionlaptimeschart.cpp \
-    src/charts/fplaptimeschart.cpp
+    src/charts/fplaptimeschart.cpp \
+    src/charts/weatherchartwidget.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
-    src/charts/weatherchartswidget.h \
+    src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
     src/main_gui/ltwindow.h \
     src/core/datastreamreader.h \
@@ -71,7 +72,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/core/f1ltcore.h \
     src/main_gui/eventstatuswidget.h \
     src/charts/sessionlaptimeschart.h \
-    src/charts/fplaptimeschart.h
+    src/charts/fplaptimeschart.h \
+    src/charts/weatherchartwidget.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

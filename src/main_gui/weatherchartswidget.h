@@ -4,7 +4,7 @@
 #include <QtGui/QWidget>
 #include "ui_weatherchartswidget.h"
 
-#include "chartwidget.h"
+#include "../charts/weatherchartwidget.h"
 
 class WeatherChartsWidget : public QWidget
 {
