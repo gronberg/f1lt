@@ -7,7 +7,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 
-#include "eventdata.h"
+#include "../core/eventdata.h"
 
 class TrackStatusWidget : public QTableWidget
 {

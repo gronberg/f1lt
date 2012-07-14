@@ -2,12 +2,14 @@
 #define DRIVERDATAWIDGET_H
 
 #include <QWidget>
-#include "ltdata.h"
-#include "chartwidget.h"
 #include <QKeyEvent>
 #include <QPixmap>
 #include <QLabel>
 #include <QTableWidgetItem>
+
+
+#include "../core/ltdata.h"
+#include "../charts/chartwidget.h"
 
 namespace Ui {
 class DriverDataWidget;

@@ -1,6 +1,6 @@
 #include <QtGui/QApplication>
 #include <QMessageBox>
-#include "ltwindow.h"
+#include "main_gui/ltwindow.h"
 
 int main(int argc, char *argv[])
 {

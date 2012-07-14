@@ -21,57 +21,57 @@ DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/$$TARGET/
 
 # DEFINES += QT_NO_DEBUG_OUTPUT
-SOURCES += src/sessionanalysiswidget.cpp \
-    src/weatherchartswidget.cpp \
-    src/nosessionboardwidget.cpp \
+SOURCES += src/tools/sessionanalysiswidget.cpp \
+    src/charts/weatherchartswidget.cpp \
+    src/main_gui/nosessionboardwidget.cpp \
     src/main.cpp \
-    src/ltwindow.cpp \
-    src/datastreamreader.cpp \
-    src/ltdata.cpp \
-    src/httpdatareader.cpp \
-    src/socketdatareader.cpp \
-    src/lttablewidget.cpp \
-    src/driverdatawidget.cpp \
-    src/chartwidget.cpp \
-    src/trackstatuswidget.cpp \
-    src/sessiondatawidget.cpp \
-    src/headtoheaddialog.cpp \
-    src/driverdata.cpp \
-    src/eventdata.cpp \
-    src/eventrecorder.cpp \
-    src/preferencesdialog.cpp \
-    src/logindialog.cpp \
-    src/eventplayer.cpp \
-    src/laptimecomparisondialog.cpp \
-    src/f1ltcore.cpp \
-    src/eventstatuswidget.cpp \
-    src/sessionlaptimeschart.cpp \
-    src/fplaptimeschart.cpp
-HEADERS += src/sessionanalysiswidget.h \
-    src/weatherchartswidget.h \
-    src/nosessionboardwidget.h \
-    src/ltwindow.h \
-    src/datastreamreader.h \
-    src/ltdata.h \
-    src/httpdatareader.h \
-    src/socketdatareader.h \
-    src/lttablewidget.h \
-    src/driverdatawidget.h \
-    src/chartwidget.h \
-    src/trackstatuswidget.h \
-    src/sessiondatawidget.h \
-    src/headtoheaddialog.h \
-    src/driverdata.h \
-    src/eventdata.h \
-    src/eventrecorder.h \
-    src/preferencesdialog.h \
-    src/logindialog.h \
-    src/eventplayer.h \
-    src/laptimecomparisondialog.h \
-    src/f1ltcore.h \
-    src/eventstatuswidget.h \
-    src/sessionlaptimeschart.h \
-    src/fplaptimeschart.h
+    src/main_gui/ltwindow.cpp \
+    src/core/datastreamreader.cpp \
+    src/core/ltdata.cpp \
+    src/net/httpdatareader.cpp \
+    src/net/socketdatareader.cpp \
+    src/main_gui/lttablewidget.cpp \
+    src/main_gui/driverdatawidget.cpp \
+    src/charts/chartwidget.cpp \
+    src/main_gui/trackstatuswidget.cpp \
+    src/main_gui/sessiondatawidget.cpp \
+    src/tools/headtoheaddialog.cpp \
+    src/core/driverdata.cpp \
+    src/core/eventdata.cpp \
+    src/player/eventrecorder.cpp \
+    src/main_gui/preferencesdialog.cpp \
+    src/main_gui/logindialog.cpp \
+    src/player/eventplayer.cpp \
+    src/tools/laptimecomparisondialog.cpp \
+    src/core/f1ltcore.cpp \
+    src/main_gui/eventstatuswidget.cpp \
+    src/charts/sessionlaptimeschart.cpp \
+    src/charts/fplaptimeschart.cpp
+HEADERS += src/tools/sessionanalysiswidget.h \
+    src/charts/weatherchartswidget.h \
+    src/main_gui/nosessionboardwidget.h \
+    src/main_gui/ltwindow.h \
+    src/core/datastreamreader.h \
+    src/core/ltdata.h \
+    src/net/httpdatareader.h \
+    src/net/socketdatareader.h \
+    src/main_gui/lttablewidget.h \
+    src/main_gui/driverdatawidget.h \
+    src/charts/chartwidget.h \
+    src/main_gui/trackstatuswidget.h \
+    src/main_gui/sessiondatawidget.h \
+    src/tools/headtoheaddialog.h \
+    src/core/driverdata.h \
+    src/core/eventdata.h \
+    src/player/eventrecorder.h \
+    src/main_gui/preferencesdialog.h \
+    src/main_gui/logindialog.h \
+    src/player/eventplayer.h \
+    src/tools/laptimecomparisondialog.h \
+    src/core/f1ltcore.h \
+    src/main_gui/eventstatuswidget.h \
+    src/charts/sessionlaptimeschart.h \
+    src/charts/fplaptimeschart.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

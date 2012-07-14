@@ -9,15 +9,15 @@
 #include <QSettings>
 #include <QTimer>
 
-#include "datastreamreader.h"
-#include "eventplayer.h"
-#include "eventrecorder.h"
-#include "headtoheaddialog.h"
-#include "laptimecomparisondialog.h"
+#include "../core/datastreamreader.h"
+#include "../player/eventplayer.h"
+#include "../player/eventrecorder.h"
+#include "../tools/headtoheaddialog.h"
+#include "../tools/laptimecomparisondialog.h"
 #include "logindialog.h"
 #include "lttablewidget.h"
 #include "preferencesdialog.h"
-#include "sessionanalysiswidget.h"
+#include "../tools/sessionanalysiswidget.h"
 
 
 namespace Ui {

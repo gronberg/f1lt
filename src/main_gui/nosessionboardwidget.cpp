@@ -1,5 +1,5 @@
 #include "nosessionboardwidget.h"
-#include "ltdata.h"
+#include "../core/ltdata.h"
 
 NoSessionBoardWidget::NoSessionBoardWidget(QWidget *parent)
     : QWidget(parent)

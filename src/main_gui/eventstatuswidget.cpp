@@ -1,9 +1,9 @@
-#include "src/eventstatuswidget.h"
+#include "eventstatuswidget.h"
 #include "ui_eventstatuswidget.h"
 #include <QDebug>
 #include <QMatrix>
 
-#include "eventdata.h"
+#include "../core/eventdata.h"
 
 EventStatusWidget::EventStatusWidget(QWidget *parent) :
     QWidget(parent),

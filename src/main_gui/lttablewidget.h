@@ -5,7 +5,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 
-#include "eventdata.h"
+#include "../core/eventdata.h"
 
 class LTTableItemDelegate: public QItemDelegate
 {

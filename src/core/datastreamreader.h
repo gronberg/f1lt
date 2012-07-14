@@ -8,8 +8,8 @@
 #include <iostream>
 
 #include "eventdata.h"
-#include "httpdatareader.h"
-#include "socketdatareader.h"
+#include "../net/httpdatareader.h"
+#include "../net/socketdatareader.h"
 
 //#include <httpconnection.h>
 

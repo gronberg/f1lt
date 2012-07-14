@@ -5,8 +5,8 @@
 #include <QDialog>
 
 #include <QList>
-#include "ltdata.h"
-#include "chartwidget.h"
+#include "../core/ltdata.h"
+#include "../charts/chartwidget.h"
 
 namespace Ui {
 class LapTimeComparisonDialog;

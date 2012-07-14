@@ -7,7 +7,7 @@
 #include <QWidget>
 #include <QTableWidgetItem>
 
-#include "eventdata.h"
+#include "../core/eventdata.h"
 
 namespace Ui {
 class SessionDataWidget;

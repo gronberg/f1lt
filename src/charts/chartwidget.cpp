@@ -7,8 +7,8 @@
 #include <cmath>
 #include <QDebug>
 
-#include "eventdata.h"
-#include "ltdata.h"
+#include "../core/eventdata.h"
+#include "../core/ltdata.h"
 
 ChartWidget::ChartWidget(double n, double x, QColor col, QWidget *parent) :
     QWidget(parent), min(n), max(x), color(col)

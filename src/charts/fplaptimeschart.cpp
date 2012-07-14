@@ -1,5 +1,5 @@
 #include "fplaptimeschart.h"
-#include "ltdata.h"
+#include "../core/ltdata.h"
 
 #include <QPainter>
 

@@ -5,7 +5,7 @@
 #include <QList>
 
 #include "chartwidget.h"
-#include "driverdata.h"
+#include "../core/driverdata.h"
 
 
 extern bool lessThan(LapData ld1, LapData ld2);

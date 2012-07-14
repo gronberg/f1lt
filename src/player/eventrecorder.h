@@ -2,7 +2,7 @@
 #define EVENTRECORDER_H
 
 #include <QObject>
-#include "datastreamreader.h"
+#include "../core/datastreamreader.h"
 
 class EventRecorder : public QObject
 {

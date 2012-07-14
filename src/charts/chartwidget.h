@@ -10,7 +10,7 @@
 #include <QWidget>
 
 
-#include "eventdata.h"
+#include "../core/eventdata.h"
 
 
 class ChartWidget : public QWidget
