@@ -231,12 +231,18 @@ public:
     static QString getDriverNameFromShort(QString);
     static QString getTeamName(int);
     static QStringList getDriversList();
+    static QStringList getDriversListShort();
     static LTEvent getEvent(int);
     static LTEvent getEvent(QDate);
     static LTEvent getCurrentEvent();
     static LTEvent getNextEvent();
     static int getEventNo(QDate);
     static int getDriverNo(QString);
+    static int timeToMins(QTime);
+    static int timeToSecs(QTime);
+    static int currentEventFPLength();
+    static QTime correctFPTime(QTime time);
+    static QTime correctQualiTime(QTime time, int qualiPeriod);
 
     static QList<LTTeam> ltTeams;
     static QList<LTEvent> ltEvents;

@@ -459,6 +459,8 @@ void LTWindow::loadSettings()
     ui->tableWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
 
     eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
+
+    saw->loadSettings(*settings);
 }
 
 void LTWindow::saveSettings()
@@ -472,6 +474,8 @@ void LTWindow::saveSettings()
         settings->setValue("ui/current_tab2", ui->driverDataWidget->currentIndex());
     else if (ui->tabWidget->currentIndex() == 1)
         settings->setValue("ui/current_tab2", ui->sessionDataWidget->currentIndex());
+
+    saw->saveSettings(*settings);
 
 //    settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
 //    settings->setValue("ui/alt_colors", prefs->isAlternatingRowColors());
@@ -558,6 +562,9 @@ bool LTWindow::close()
 
     for (int i = 0; i < ltcDialog.size(); ++i)
         ltcDialog[i]->close();
+
+    if (saw->isVisible())
+        saw->close();
 
     return QMainWindow::close();
 }
@@ -739,7 +746,7 @@ void LTWindow::on_actionOpen_triggered()
         ui->tableWidget->clear();
         ui->textEdit->clear();
         ui->driverDataWidget->clearData();
-        ui->sessionDataWidget->clearData();
+        ui->sessionDataWidget->clearData();        
 
         ui->tableWidget->loadCarImages();
         for (int i = 0; i < h2hDialog.size(); ++i)
@@ -758,6 +765,7 @@ void LTWindow::on_actionOpen_triggered()
         playing = true;
 
         eventPlayer->startPlaying();
+        saw->resetView();
     }
 }
 
@@ -801,7 +809,8 @@ void LTWindow::eventPlayerStopClicked(bool connect)
     ui->tableWidget->clear();
     ui->driverDataWidget->clearData();
     ui->sessionDataWidget->clearData();
-    ui->textEdit->clear();   
+    ui->textEdit->clear();
+    saw->resetView();
 
     playing = false;
     LTData::loadLTData();

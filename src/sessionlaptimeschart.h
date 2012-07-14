@@ -23,9 +23,9 @@ public:
     }
 
     virtual void setData(const QList<LapData> ld) { lapDataArray = ld; qSort(lapDataArray.begin(), lapDataArray.end(), lessThan);}
-    void setColors(const QList<QColor> cl) { colors = cl; }
+    virtual void setColors(const QList<QColor> cl) { colors = cl; }
 
-    void setMinMax(double min, double max) { this->min = min, this->max = max; }
+    virtual void setMinMax(double min, double max) { this->min = min, this->max = max; }
 
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
@@ -37,7 +37,7 @@ public:
     void checkX1(double &x1, double &y1, double x2, double y2);
     void checkX2(double x1, double y1, double &x2, double &y2);
 
-    void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
+    virtual void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
     QColor getCarColor(const LapData &ld);
 
 protected:
@@ -58,6 +58,57 @@ protected:
     QList<QColor> colors;
 
 
+};
+
+class SessionPositionsChart : public SessionLapTimesChart
+{
+public:
+    SessionPositionsChart(QWidget *parent) : SessionLapTimesChart(parent)
+    {
+        min = 1;
+        max = 24;
+    }
+
+    virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
+    virtual void drawChart(QPainter *p);
+//    virtual void drawScaleRect(QPainter *p);
+
+    virtual void transform();
+    virtual void resetZoom();
+
+    void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
+
+//protected:
+//    virtual void mouseDoubleClickEvent (QMouseEvent *);
+
+protected:
+    void paintEvent(QPaintEvent *);
+};
+
+
+class SessionGapsChart : public SessionLapTimesChart
+{
+public:
+    SessionGapsChart(QWidget *parent) : SessionLapTimesChart(parent)
+    {
+        min = 0;
+        max = 100;
+    }
+
+    virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
+    virtual void drawChart(QPainter *p);
+//    virtual void drawScaleRect(QPainter *p);
+
+    virtual void transform();
+    virtual void resetZoom();
+
+    void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
+
+//protected:
+//    virtual void mouseDoubleClickEvent (QMouseEvent *);
+
+protected:
+    void paintEvent(QPaintEvent *);
 };
 
 #endif // SESSIONLAPTIMESCHART_H

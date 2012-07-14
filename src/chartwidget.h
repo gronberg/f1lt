@@ -37,6 +37,11 @@ public:
     void checkX1(double &x1, double &y1, double x2, double y2);
     void checkX2(double x1, double y1, double &x2, double &y2);
 
+    int getMin() { return min; }
+    int getMax() { return max; }
+    int getFirst() { return first; }
+    int getLast() { return last; }
+
 public slots:
     virtual void onCopy();
     virtual void onSave();

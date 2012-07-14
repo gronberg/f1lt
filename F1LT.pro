@@ -45,7 +45,8 @@ SOURCES += src/sessionanalysiswidget.cpp \
     src/laptimecomparisondialog.cpp \
     src/f1ltcore.cpp \
     src/eventstatuswidget.cpp \
-    src/sessionlaptimeschart.cpp
+    src/sessionlaptimeschart.cpp \
+    src/fplaptimeschart.cpp
 HEADERS += src/sessionanalysiswidget.h \
     src/weatherchartswidget.h \
     src/nosessionboardwidget.h \
@@ -69,7 +70,8 @@ HEADERS += src/sessionanalysiswidget.h \
     src/laptimecomparisondialog.h \
     src/f1ltcore.h \
     src/eventstatuswidget.h \
-    src/sessionlaptimeschart.h
+    src/sessionlaptimeschart.h \
+    src/fplaptimeschart.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

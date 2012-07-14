@@ -682,7 +682,7 @@ void LapTimeChartWidget::drawChart(QPainter *p)
 				p->setPen(pen);
 				checkX1(dx1, dy1, dx2, dy2);
 				checkX2(dx1, dy1, dx2, dy2);
-				p->drawLine(dx1, dy1, dx2, dy2);
+                p->drawLine(dx1, dy1, dx2, dy2);
             }
 
             if (sec2y <= paintRect.bottom() || sec2y2 <= paintRect.bottom())
@@ -692,7 +692,7 @@ void LapTimeChartWidget::drawChart(QPainter *p)
 				p->setPen(pen);
 				checkX1(dx1, dy1, dx2, dy2);
 				checkX2(dx1, dy1, dx2, dy2);
-				p->drawLine(dx1, dy1, dx2, dy2);
+                p->drawLine(dx1, dy1, dx2, dy2);
             }
 
             if (sec3y <= paintRect.bottom() || sec3y2 <= paintRect.bottom())
@@ -702,7 +702,7 @@ void LapTimeChartWidget::drawChart(QPainter *p)
 				p->setPen(pen);
 				checkX1(dx1, dy1, dx2, dy2);
 				checkX2(dx1, dy1, dx2, dy2);
-				p->drawLine(dx1, dy1, dx2, dy2);
+				p->drawLine(dx1, dy1, dx2, dy2);                
 			}
 
             if (lapy <= paintRect.bottom() || lapy2 <= paintRect.bottom())
@@ -717,12 +717,12 @@ void LapTimeChartWidget::drawChart(QPainter *p)
 				checkX2(dx1, dy1, dx2, dy2);
 				p->drawLine(dx1, dy1, dx2, dy2);
 
+                p->setBrush(QBrush(colors[3]));
 				if (driverData.lapData[i].lapTime.toString() == "IN PIT")
 				{
 					QPainterPath path;
-					path.addEllipse(QPoint(round(x2), lapy2), 6, 6);
-					p->setBrush(QBrush(colors[3]));
-					p->setPen(colors[3]);
+					path.addEllipse(QPoint(round(x2), lapy2), 6, 6);					
+//					p->setPen(colors[3]);
 
 					if (driverData.lapData[i].scLap)
 					{
@@ -735,6 +735,16 @@ void LapTimeChartWidget::drawChart(QPainter *p)
 	//                p.drawPoint(x2, lapy2);
 	//                pen.setWidth(2);
 				}
+//                else
+//                {
+//                    QPainterPath path;
+//                    path.addEllipse(QPoint(round(x2), lapy2), 2, 2);
+////                    p->setPen(colors[3]);
+//                    if (driverData.lapData[i].scLap)
+//                        p->setBrush(colors[4]);
+
+//                    p->drawPath(path);
+//                }
             }
 
             x = x2;

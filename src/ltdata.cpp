@@ -168,7 +168,7 @@ QString LTData::getDriverShortName(QString name)
         if (buf2 == name.toUpper())
             return ltTeams[i].driver2ShortName;
     }
-    return name.toUpper().mid(4, 3);
+    return name.toUpper().mid(3, 3);
 //    name = name.left(4) + name.right(name.size()-4).toLower();
 //    int idx = name.indexOf(" ");
 //    while (idx != -1)
@@ -285,13 +285,96 @@ QStringList LTData::getDriversList()
     {
 		for (int i = 0; i < ltTeams.size(); ++i)
 		{
-			list.append(ltTeams[i].driver1Name);
-			list.append(ltTeams[i].driver2Name);
+            list.append(QString::number(ltTeams[i].driver1No) + " " + ltTeams[i].driver1Name);
+            list.append(QString::number(ltTeams[i].driver2No) + " " + ltTeams[i].driver2Name);
 		}
     }
 
     return list;
 }
+
+QStringList LTData::getDriversListShort()
+{
+    QStringList list;
+
+    for (int i = 0; i < 30; ++i)
+    {
+        DriverData dd = EventData::getInstance().getDriverData(i);
+        qDebug() << "driver=" << dd.number <<" " << dd.driver;
+        if (dd.carID != -1)
+        {
+            list.append(QString::number(dd.number) + " " + LTData::getDriverShortName(dd.driver));
+        }
+    }
+    if (list.isEmpty())
+    {
+        for (int i = 0; i < ltTeams.size(); ++i)
+        {
+            list.append(QString::number(ltTeams[i].driver1No) + " " + ltTeams[i].driver1ShortName);
+            list.append(QString::number(ltTeams[i].driver2No) + " " + ltTeams[i].driver2ShortName);
+        }
+    }
+
+    return list;
+}
+
+int LTData::timeToMins(QTime time)
+{
+    int hour = time.hour();
+    int min = time.minute();
+
+    return hour * 60 + min;
+}
+
+int LTData::timeToSecs(QTime time)
+{
+    int hour = time.hour();
+    int min = time.minute();
+    int sec = time.second();
+
+    return hour * 3600 + min * 60 + sec;
+}
+
+int LTData::currentEventFPLength()
+{
+//    LTEvent event = getCurrentEvent();
+    return 90;
+
+}
+
+QTime LTData::correctFPTime(QTime time)
+{
+    int hour = time.hour();
+    int min = time.minute();
+    int sec = time.second();
+
+    int t = currentEventFPLength() * 60 - hour * 3600 - min * 60 - sec;
+    hour = t/3600;
+    min = (t%3600)/60;
+    sec = (t%3600)%60;
+    QTime newTime(hour, min, sec);
+
+    return newTime;
+}
+
+QTime LTData::correctQualiTime(QTime time, int qualiPeriod)
+{
+    int hour = time.hour();
+    int min = time.minute();
+    int sec = time.second();
+
+    int sLength = 10 + (3-qualiPeriod)*5;
+
+    int t = sLength * 60 - hour * 3600 - min * 60 - sec;
+
+    hour = t/3600;
+    min = (t%3600)/60;
+    sec = (t%3600)%60;
+    QTime newTime(hour, min, sec);
+
+    return newTime;
+}
+
 
 QList<QColor> LTData::colors;
 int LTData::season;
