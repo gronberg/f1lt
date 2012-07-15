@@ -28,6 +28,20 @@ bool lessThan(LapData ld1, LapData ld2)
     return false;
 }
 
+bool PredXY::operator ()(int item1, int item2)
+{
+    LapData ld1 = chart.lapDataArray[item1];
+    LapData ld2 = chart.lapDataArray[item2];
+
+    if (ld1.lapTime.isValid() && ld2.lapTime.isValid())
+        return ld1 < ld2;
+
+    if (ld1.lapTime.isValid() && !ld2.lapTime.isValid())
+        return true;
+
+    return false;
+}
+
 void SessionLapTimesChart::findFirstAndLastLap(int &firstLap, int &lastLap, int &size)
 {
     firstLap = 99, lastLap = 0, size = 0;
@@ -152,6 +166,9 @@ void SessionLapTimesChart::drawChart(QPainter *p)
 
     int lastPaintedSCPixel = -1;
     int lastPaintedSC = -1;
+
+//    lapDataXYArray.clear();
+    int lapsInWindow = 0;
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
         if (lapDataArray[i].numLap >= firstLap && lapDataArray[i].numLap <= lastLap)// && lapDataArray[i].lapTime.isValid())
@@ -211,6 +228,11 @@ void SessionLapTimesChart::drawChart(QPainter *p)
             p->setPen(pen);
 
             QPainterPath path;
+
+            if (lapsInWindow >= lapDataXYArray.size())
+                lapDataXYArray.append(LapDataXY(i, (int)x, (int)y));
+            else
+                lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
 //            p->setBrush(QBrush(LTData::colors[LTData::BACKGROUND]));
             p->setBrush(QBrush(color));
             if (y < paintRect.bottom())
@@ -234,7 +256,6 @@ void SessionLapTimesChart::drawChart(QPainter *p)
 
                 if (!lapDataArray[i-1].lapTime.isValid() && i-2 >= firstLap)
                 {
-                    LapTime lt;
                     secs = lapDataArray[i-2].lapTime.toDouble();
 
                     if (!lapDataArray[i-2].lapTime.isValid())// && i < lapDataArray.size()-1)
@@ -259,10 +280,59 @@ void SessionLapTimesChart::drawChart(QPainter *p)
                 ChartWidget::checkX1(x1, y1, x, y);
                 ChartWidget::checkX2(x1, y1, x, y);
 
-                p->drawLine(x1, y1, x, y);
+                p->drawLine(x1, y1, x, y);                               
             }
+            ++lapsInWindow;
         }
     }   
+    clearXYList(lapsInWindow);
+}
+
+int SessionLapTimesChart::findLapDataXY(int x, int y)
+{
+    itemsInXY.clear();
+    for (int i = 0; i < lapDataXYArray.size(); ++i)
+    {
+        if (std::abs(lapDataXYArray[i].x - x) <= 3 && std::abs(lapDataXYArray[i].y - y) <= 3)
+            itemsInXY.append(lapDataXYArray[i].idx);
+    }
+    qSort(itemsInXY.begin(), itemsInXY.end(), getPredXY());
+    return itemsInXY.size();
+}
+
+void SessionLapTimesChart::drawLapDataXY(QPainter *p)
+{
+    if (itemsInXY.isEmpty())
+        return;
+
+    p->setFont(QFont("Arial", 10, QFont::Bold, false));
+//    p.setPen(QColor(232, 227, 185, 200));
+//    p.setBrush(QColor(232, 227, 185, 200));
+    p->setPen(QColor(50, 50, 50));
+    p->setBrush(QColor(50, 50, 50));
+
+    int x = mousePosX;
+    int y = mousePosY;
+
+    int height = 20 * (itemsInXY.size()+1);
+    int bottom = y + height;
+    int width = 220;
+    int right = x + width;
+
+    if (bottom > paintRect.bottom())
+        y = paintRect.bottom() - height;
+
+    if (right > paintRect.right())
+        x = paintRect.right() - width;
+
+    p->drawRect(x+20, y, 200, 20 * (itemsInXY.size()+1));
+
+    p->setPen(LTData::colors[LTData::WHITE]);
+    p->drawText(x+25, y+15, getLapInfoXY(lapDataArray[itemsInXY[0]]));
+    for (int i = 0; i < itemsInXY.size(); ++i)
+    {
+        p->drawText(x+25, y+(i+1)*20+15, getDriverInfoXY(lapDataArray[itemsInXY[i]]));
+    }
 }
 
 QColor SessionLapTimesChart::getCarColor(const LapData &ld)
@@ -291,16 +361,21 @@ void SessionLapTimesChart::paintEvent(QPaintEvent *)
     QPainter p;
     p.begin(this);
 
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    drawChart(&p);
 
-    if (scaling)
-        drawScaleRect(&p);
+    {
+        p.setBrush(QColor(20,20,20));
+        p.setPen(QColor(20,20,20));
+        p.drawRect(0, 0, width(), height());
+        drawChart(&p);
 
-//    drawLegend(&p, 35, 5);
+        if (scaling)
+            drawScaleRect(&p);
 
+        if (!paintPopupOnly)
+            findLapDataXY(mousePosX, mousePosY);
+
+        drawLapDataXY(&p);
+    }
     p.end();
 }
 
@@ -372,6 +447,33 @@ void SessionLapTimesChart::mouseDoubleClickEvent(QMouseEvent *ev)
     ChartWidget::mouseDoubleClickEvent(ev);
     if (!scaling)    
         emit zoomChanged(first, last, -1, -1);    
+}
+
+void SessionLapTimesChart::mouseMoveEvent(QMouseEvent *ev)
+{
+    if (scaling)
+        ChartWidget::mouseMoveEvent(ev);
+
+    else
+    {
+        mousePosX = ev->pos().x();
+        mousePosY = ev->pos().y();
+
+        int items = itemsInXY.size();
+        if (findLapDataXY(mousePosX, mousePosY))
+        {
+            paintPopupOnly = true;
+            update();
+
+//            setAttribute(Qt::WA_OpaquePaintEvent, true);
+//            repaint();
+//            setAttribute(Qt::WA_OpaquePaintEvent, false);
+            paintPopupOnly = false;
+        }
+
+        else if (items != 0)  //if the cursor has moved and a popup was displayed previously, it has to be cleared
+            update();
+    }
 }
 
 //=========================================================================

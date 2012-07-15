@@ -10,6 +10,26 @@
 
 extern bool lessThan(LapData ld1, LapData ld2);
 
+struct LapDataXY
+{
+    int idx;
+    int x, y;
+
+    LapDataXY() : idx(0), x(0), y(0) { }
+    LapDataXY(int a, int b, int c) : idx(a), x(b), y(c) { }
+};
+
+class SessionLapTimesChart;
+
+class PredXY
+{
+public:
+    PredXY (SessionLapTimesChart &sltc) : chart(sltc) { }
+    bool operator()(int item1, int item2);
+
+protected:
+    SessionLapTimesChart &chart;
+};
 
 class SessionLapTimesChart : public ChartWidget
 {
@@ -19,7 +39,10 @@ class SessionLapTimesChart : public ChartWidget
 public:
     SessionLapTimesChart(QWidget *parent) : ChartWidget(0, 180, QColor(), parent)
     {
-
+        setMouseTracking(true);
+        mousePosX = 0;
+        mousePosY = 0;
+        paintPopupOnly = false;
     }
 
     virtual void setData(const QList<LapData> ld) { lapDataArray = ld; qSort(lapDataArray.begin(), lapDataArray.end(), lessThan);}
@@ -40,8 +63,37 @@ public:
     virtual void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
     QColor getCarColor(const LapData &ld);
 
+    virtual int findLapDataXY(int x, int y);
+    virtual void drawLapDataXY(QPainter *p);
+    virtual PredXY getPredXY()      //used for sort XY items
+    {
+        return PredXY(*this);
+    }
+
+    virtual QString getLapInfoXY(const LapData &ld)
+    {
+        return "LAP " + QString::number(ld.numLap);
+    }
+    virtual QString getDriverInfoXY(const LapData &ld)
+    {
+        if (ld.carID > 0)
+        {
+            DriverData dd = EventData::getInstance().driversData[ld.carID-1];
+            return dd.driver + " - " + ld.lapTime.toString();
+        }
+        return "";
+    }
+    void clearXYList(int to)
+    {
+        for (int i = lapDataXYArray.size()-1; i >= to; --i)
+            lapDataXYArray.removeAt(i);
+    }
+
+    friend class PredXY;
+
 protected:
     virtual void mouseDoubleClickEvent (QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
 
 signals:
     void zoomChanged(int, int, double, double);
@@ -55,10 +107,16 @@ protected:
     void paintEvent(QPaintEvent *);
 
     QList<LapData> lapDataArray;
+    QList<LapDataXY> lapDataXYArray;
+    QList<int> itemsInXY;
     QList<QColor> colors;
 
+    int mousePosX, mousePosY;
+    bool paintPopupOnly;
 
 };
+
+
 
 class SessionPositionsChart : public SessionLapTimesChart
 {
@@ -97,5 +155,6 @@ public:
 protected:
     void paintEvent(QPaintEvent *);
 };
+
 
 #endif // SESSIONLAPTIMESCHART_H

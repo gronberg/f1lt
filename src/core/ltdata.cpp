@@ -335,7 +335,7 @@ int LTData::timeToSecs(QTime time)
     return hour * 3600 + min * 60 + sec;
 }
 
-int LTData::currentEventFPLength()
+int LTData::getFPLength()
 {
 //    LTEvent event = getCurrentEvent();
     return 90;
@@ -348,7 +348,7 @@ QTime LTData::correctFPTime(QTime time)
     int min = time.minute();
     int sec = time.second();
 
-    int t = currentEventFPLength() * 60 - hour * 3600 - min * 60 - sec;
+    int t = getFPLength() * 60 - hour * 3600 - min * 60 - sec;
     hour = t/3600;
     min = (t%3600)/60;
     sec = (t%3600)%60;
@@ -373,6 +373,16 @@ QTime LTData::correctQualiTime(QTime time, int qualiPeriod)
     QTime newTime(hour, min, sec);
 
     return newTime;
+}
+
+int LTData::getQualiLength(int q)
+{
+    switch (q)
+    {
+        case 1: return 20; break;
+        case 2: return 15; break;
+        case 3: return 10; break;
+    }
 }
 
 

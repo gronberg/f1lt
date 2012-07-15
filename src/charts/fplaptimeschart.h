@@ -51,8 +51,36 @@ public:
     void setQualiPeriod(int q) { qualiPeriod = q; }
      virtual void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
 
-private:
+protected:
     int qualiPeriod;
 };
 
+
+class AllQualiLapTimesChart : public QualiLapTimesChart
+{
+public:
+    AllQualiLapTimesChart(QWidget *parent) : QualiLapTimesChart(parent)
+    {
+        sessionLength = 0;
+        for (int i = 0; i < 3; ++i)
+            sessionLength += LTData::getQualiLength(i+1);
+
+        first = 0;
+        last = sessionLength;
+        tMin = min;
+        tMax = max;
+        qualiPeriod = 1;
+    }
+
+    int getMin() { return tMin == min ? -1 : tMin; }
+    int getMax() { return tMax == max ? -1 : tMax; }
+
+
+    virtual void drawAxes(QPainter *p, int firstMin, int lastMin);
+    virtual void drawChart(QPainter *p);
+    virtual void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
+
+protected:
+
+};
 #endif // FPLAPTIMESCHART_H

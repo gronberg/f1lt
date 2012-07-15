@@ -318,14 +318,15 @@ void DriverData::addLap(const EventData &ed)
 
 				if (ed.eventType == LTData::QUALI_EVENT)
 				{
-					if (q1.toString() != "")
-						lapData.last().qualiPeriod = 1;
+                    lapData.last().qualiPeriod = ed.qualiPeriod;
+//					if (q1.toString() != "")
+//						lapData.last().qualiPeriod = 1;
 
-					if (q2.toString() != "")
-						lapData.last().qualiPeriod = 2;
+//					if (q2.toString() != "")
+//						lapData.last().qualiPeriod = 2;
 
-					if (q3.toString() != "")
-						lapData.last().qualiPeriod = 3;
+//					if (q3.toString() != "")
+//						lapData.last().qualiPeriod = 3;
 
 					//best sectors
 //					if ((colorData[LTData::QUALI_SECTOR_1] == LTData::GREEN || colorData[LTData::QUALI_SECTOR_1] == LTData::VIOLET) &&

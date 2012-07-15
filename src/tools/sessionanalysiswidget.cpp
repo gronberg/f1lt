@@ -62,6 +62,7 @@ SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
 
     connect(ui.sessionLapTimesChart, SIGNAL(zoomChanged(int,int,double,double)), this, SLOT(onZoomChanged(int,int,double,double)));
     connect(ui.sessionLapTimesChartFP, SIGNAL(zoomChanged(int,int,double,double)), this, SLOT(onZoomChanged(int,int,double,double)));
+    connect(ui.sessionLapTimesChartQuali, SIGNAL(zoomChanged(int,int,double,double)), this, SLOT(onZoomChanged(int,int,double,double)));
     connect(ui.sessionLapTimesChartQ1, SIGNAL(zoomChanged(int,int,double,double)), this, SLOT(onZoomChanged(int,int,double,double)));
     connect(ui.sessionLapTimesChartQ2, SIGNAL(zoomChanged(int,int,double,double)), this, SLOT(onZoomChanged(int,int,double,double)));
     connect(ui.sessionLapTimesChartQ3, SIGNAL(zoomChanged(int,int,double,double)), this, SLOT(onZoomChanged(int,int,double,double)));
@@ -101,6 +102,13 @@ void SessionAnalysisWidget::resetView()
             ui.fpTabWidget->setVisible(false);
             ui.qualiTabWidget->setVisible(true);
             break;
+
+        default:
+            ui.raceTabWidget->setVisible(true);
+            ui.fpTabWidget->setVisible(false);
+            ui.qualiTabWidget->setVisible(false);
+            break;
+
     }
     ui.sessionLapTimesChart->resetZoom();
     ui.sessionPositionsChart->resetZoom();
@@ -176,7 +184,7 @@ void SessionAnalysisWidget::setupTables()
     setItem(ui.lapTimeTableWidgetFP, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetFP, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetFP, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetFP, 0, 4, "Sess. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetFP, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
 
     ui.lapTimeTableWidgetQuali->setRowHeight(0, 22);
 
@@ -187,7 +195,7 @@ void SessionAnalysisWidget::setupTables()
     setItem(ui.lapTimeTableWidgetQuali, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQuali, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQuali, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQuali, 0, 4, "Sess. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetQuali, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQuali, 0, 5, "Period", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
 
     ui.lapTimeTableWidgetQuali->setRowHeight(0, 22);
@@ -199,7 +207,7 @@ void SessionAnalysisWidget::setupTables()
     setItem(ui.lapTimeTableWidgetQ1, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQ1, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQ1, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ1, 0, 4, "Sess. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetQ1, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
 
     ui.lapTimeTableWidgetQ1->setRowHeight(0, 22);
 
@@ -210,7 +218,7 @@ void SessionAnalysisWidget::setupTables()
     setItem(ui.lapTimeTableWidgetQ2, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQ2, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQ2, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ2, 0, 4, "Sess. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetQ2, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
 
     ui.lapTimeTableWidgetQ2->setRowHeight(0, 22);
 
@@ -377,15 +385,29 @@ bool SessionAnalysisWidget::lapInWindow(int j)
 
     else if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
     {
-        int minute = LTData::currentEventFPLength() - LTData::timeToMins(lapDataArray[j].sessionTime);
+        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[j].sessionTime);
         inTimeWindow = minute >= first && minute <= last;
     }
     else if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
     {
         int qPeriod = ui.qualiTabWidget->currentIndex();
-        int sessLength = 10 + (3-qPeriod)*5;
-        int minute = sessLength - LTData::timeToMins(lapDataArray[j].sessionTime);
-        inTimeWindow = (minute >= first && minute <= last) && lapDataArray[j].qualiPeriod == qPeriod;
+        if (qPeriod == 0)
+        {
+            int minute = LTData::getQualiLength(lapDataArray[j].qualiPeriod) - LTData::timeToMins(lapDataArray[j].sessionTime);
+
+            for (int k = 0; k < lapDataArray[j].qualiPeriod-1; ++k)
+                minute += LTData::getQualiLength(k+1);
+
+            inTimeWindow = (minute >= first && minute <= last);
+        }
+        else
+        {
+            int sessLength = LTData::getQualiLength(qPeriod);
+            int minute = sessLength - LTData::timeToMins(lapDataArray[j].sessionTime);
+            inTimeWindow = (minute >= first && minute <= last) && lapDataArray[j].qualiPeriod == qPeriod;
+        }
+
+
         qDebug() <<"window: "<<first << " "<<last<<" "<<min <<" "<<max<< " " << inTimeWindow;
     }
     if (inTimeWindow)// &&
@@ -469,10 +491,14 @@ void SessionAnalysisWidget::update(bool repaintCharts)
             s = QString::number(lapDataArray[i].numLap);
             if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
                 s = LTData::correctFPTime(lapDataArray[i].sessionTime).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTData::currentEventFPLength()-LTData::timeToMins(lapDataArray[i].sessionTime))+")";
+
             else if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
-                s = LTData::correctQualiTime(lapDataArray[i].sessionTime, lapDataArray[i].qualiPeriod).toString("h:mm:ss");
+                s = LTData::correctQualiTime(lapDataArray[i].sessionTime, lapDataArray[i].qualiPeriod).toString("mm:ss");
 
             setItem(table, rows+1, 4, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
+
+            if (ui.qualiTabWidget->currentIndex() == 0)
+                setItem(table, rows+1, 5, QString::number(lapDataArray[i].qualiPeriod), Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
 
             ++rows;
         }
@@ -488,38 +514,41 @@ void SessionAnalysisWidget::update(bool repaintCharts)
         if (EventData::getInstance().eventType == LTData::RACE_EVENT)
         {
             ui.sessionLapTimesChart->setData(lapDataArray);
-            ui.sessionLapTimesChart->repaint();
+            ui.sessionLapTimesChart->update();
 
             ui.sessionPositionsChart->setData(lapDataArray);
-            ui.sessionPositionsChart->repaint();
+            ui.sessionPositionsChart->update();
 
             ui.sessionGapsChart->setData(lapDataArray);
-            ui.sessionGapsChart->repaint();
+            ui.sessionGapsChart->update();
         }
         if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
         {
             ui.sessionLapTimesChartFP->setData(lapDataArray);
-            ui.sessionLapTimesChartFP->repaint();
+            ui.sessionLapTimesChartFP->update();
         }
         if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
         {
             switch (ui.qualiTabWidget->currentIndex())
             {
-                case 0: break;
+                case 0:
+                    ui.sessionLapTimesChartQuali->setData(lapDataArray);
+                    ui.sessionLapTimesChartQuali->update();
+                break;
 
                 case 1:
                     ui.sessionLapTimesChartQ1->setData(lapDataArray);
-                    ui.sessionLapTimesChartQ1->repaint();
+                    ui.sessionLapTimesChartQ1->update();
                     break;
 
                 case 2:
                     ui.sessionLapTimesChartQ2->setData(lapDataArray);
-                    ui.sessionLapTimesChartQ2->repaint();
+                    ui.sessionLapTimesChartQ2->update();
                     break;
 
                 case 3:
                     ui.sessionLapTimesChartQ3->setData(lapDataArray);
-                    ui.sessionLapTimesChartQ3->repaint();
+                    ui.sessionLapTimesChartQ3->update();
                     break;
             }
         }
@@ -663,9 +692,12 @@ void SessionAnalysisWidget::onSplitterMoved(int pos, int index)
 
 void SessionAnalysisWidget::on_qualiTabWidget_currentChanged(int index)
 {
-    QualiLapTimesChart *chart = ui.sessionLapTimesChartQ1;
+    QualiLapTimesChart *chart = ui.sessionLapTimesChartQuali;
 
-    if (index == 2)
+    if (index == 1)
+        chart = ui.sessionLapTimesChartQ1;
+
+    else if (index == 2)
         chart = ui.sessionLapTimesChartQ2;
 
     else if (index == 3)

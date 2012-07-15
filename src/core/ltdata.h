@@ -240,7 +240,8 @@ public:
     static int getDriverNo(QString);
     static int timeToMins(QTime);
     static int timeToSecs(QTime);
-    static int currentEventFPLength();
+    static int getFPLength();
+    static int getQualiLength(int q);
     static QTime correctFPTime(QTime time);
     static QTime correctQualiTime(QTime time, int qualiPeriod);
 
