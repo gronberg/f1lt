@@ -31,6 +31,14 @@ protected:
     SessionLapTimesChart &chart;
 };
 
+class PredXYGap : public PredXY
+{
+public:
+    PredXYGap (SessionLapTimesChart &sltc) : PredXY(sltc) { }
+    bool operator()(int item1, int item2);
+
+};
+
 class SessionLapTimesChart : public ChartWidget
 {
 
@@ -42,7 +50,7 @@ public:
         setMouseTracking(true);
         mousePosX = 0;
         mousePosY = 0;
-        paintPopupOnly = false;
+        repaintPopup = false;
     }
 
     virtual void setData(const QList<LapData> ld) { lapDataArray = ld; qSort(lapDataArray.begin(), lapDataArray.end(), lessThan);}
@@ -52,6 +60,8 @@ public:
 
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
+    virtual void drawIntoImage(QImage &img);
+    virtual void drawLegend(QPainter *) { }
 //    virtual void drawScaleRect(QPainter *p);
 
     virtual void transform();
@@ -65,10 +75,6 @@ public:
 
     virtual int findLapDataXY(int x, int y);
     virtual void drawLapDataXY(QPainter *p);
-    virtual PredXY getPredXY()      //used for sort XY items
-    {
-        return PredXY(*this);
-    }
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
@@ -90,6 +96,7 @@ public:
     }
 
     friend class PredXY;
+    friend class PredXYGap;
 
 protected:
     virtual void mouseDoubleClickEvent (QMouseEvent *);
@@ -112,7 +119,7 @@ protected:
     QList<QColor> colors;
 
     int mousePosX, mousePosY;
-    bool paintPopupOnly;
+    bool repaintPopup;
 
 };
 
@@ -151,6 +158,20 @@ public:
 
     void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
 
+    virtual QString getDriverInfoXY(const LapData &ld)
+    {
+        if (ld.carID > 0)
+        {
+            DriverData dd = EventData::getInstance().driversData[ld.carID-1];
+            if (ld.pos == 1)
+                return dd.driver;
+
+            return dd.driver + " +" + ld.gap;
+        }
+        return "";
+    }
+
+    virtual int findLapDataXY(int x, int y);
 
 protected:
     void paintEvent(QPaintEvent *);

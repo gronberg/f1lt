@@ -30,7 +30,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../icons/icons.qrc">
-    <normaloff>:/ui_icons/head2head-s.png</normaloff>:/ui_icons/head2head-s.png</iconset>
+    <normaloff>:/ui_icons/icon.png</normaloff>:/ui_icons/icon.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

@@ -126,6 +126,7 @@ void FPLapTimesChart::drawChart(QPainter *p)
     p->setRenderHint(QPainter::Antialiasing);
 
 
+    int lapsInWindow = 0;
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
         int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[i].sessionTime);
@@ -151,6 +152,11 @@ void FPLapTimesChart::drawChart(QPainter *p)
             pen.setColor(color);
             p->setPen(pen);
 
+            if (lapsInWindow >= lapDataXYArray.size())
+                lapDataXYArray.append(LapDataXY(i, (int)x, (int)y));
+            else
+                lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
+
             QPainterPath path;
             p->setBrush(QBrush(color));
             if (y < paintRect.bottom())
@@ -160,8 +166,10 @@ void FPLapTimesChart::drawChart(QPainter *p)
                 }
                 p->drawPath(path);
             }
+            ++lapsInWindow;
         }
     }
+    clearXYList(lapsInWindow);
 }
 
 void FPLapTimesChart::paintEvent(QPaintEvent *)
@@ -184,7 +192,13 @@ void FPLapTimesChart::paintEvent(QPaintEvent *)
     if (scaling)
         drawScaleRect(&p);
 
-    drawLapDataXY(&p);
+    else
+    {
+        if (!repaintPopup)
+            findLapDataXY(mousePosX, mousePosY);
+
+        drawLapDataXY(&p);
+    }
 //    drawLegend(&p, 35, 5);
 
     p.end();
@@ -229,6 +243,9 @@ void FPLapTimesChart::transform()
     first = first + ceil((scaleRect.left() - paintRect.left()) / xFactor);
     if (first < 0)
         first = 0;
+
+    if (first >= sessionLength)
+        first = sessionLength-1;
 
 //	if (first >= driverData.lapData.size())
 //		first = driverData.lapData.size() - 1;
@@ -309,7 +326,7 @@ void QualiLapTimesChart::drawChart(QPainter *p)
 
     p->setRenderHint(QPainter::Antialiasing);
 
-    lapDataXYArray.clear();
+    int lapsInWindow = 0;
 
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
@@ -336,6 +353,12 @@ void QualiLapTimesChart::drawChart(QPainter *p)
             pen.setColor(color);
             p->setPen(pen);
 
+
+            if (lapsInWindow >= lapDataXYArray.size())
+                lapDataXYArray.append(LapDataXY(i, (int)x, (int)y));
+            else
+                lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
+
             QPainterPath path;
 //            p->setBrush(QBrush(LTData::colors[LTData::BACKGROUND]));
             p->setBrush(QBrush(color));
@@ -346,8 +369,10 @@ void QualiLapTimesChart::drawChart(QPainter *p)
                 }
                 p->drawPath(path);
             }
+            ++lapsInWindow;
         }
     }
+    clearXYList(lapsInWindow);
 }
 
 //=======================================
@@ -442,6 +467,8 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         qDebug() << "last - first" << last - first;
         double q1Line = (LTData::getQualiLength(1) - first) * xFactor + paintRect.left();
         double q2Line = (LTData::getQualiLength(1)+LTData::getQualiLength(2) - first) * xFactor + paintRect.left();
+        QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+        pen.setWidth(1);
         for (; i < width()-15.0 && round(j) < last; /*i += xFactor,*/ j += jFactor)
         {
             i += (double)(round(j) - prevJ) * xFactor;
@@ -457,44 +484,82 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
             p->setPen(QColor(LTData::colors[LTData::WHITE]));
             p->drawText(round(i)-5, height()-10, QString("%1").arg(qTime));
 
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-            pen.setWidth(1);
             if (i > paintRect.left())
             {                
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
+                p->setRenderHint(QPainter::Antialiasing);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
-            }
-            if (i > q1Line && q1Line > paintRect.left())
-            {
-                pen.setColor(QColor(LTData::colors[LTData::WHITE]));
-                pen.setWidth(4);
-                pen.setStyle(Qt::SolidLine);
-                p->setPen(pen);
-                p->drawLine(round(q1Line), paintRect.bottom(), round(q1Line), paintRect.top());
+            }            
+        }
+        int qpos[6] = {-1, -1, -1, -1, -1, -1};
+        if (i >= q1Line && q1Line > paintRect.left())
+        {
+            pen.setColor(QColor(LTData::colors[LTData::WHITE]));
+            pen.setWidth(4);
+            pen.setStyle(Qt::SolidLine);
+            p->setPen(pen);
+            p->drawLine(round(q1Line), paintRect.bottom(), round(q1Line), paintRect.top());
 
-//                p->setPen(QColor(255, 255, 255, 50));
-//                p->setFont(QFont("Arial", 50, QFont::Bold, false));
-//                QString text = "Q1";
-//                int textWidth = p->fontMetrics().width(text);
+            qpos[0] = paintRect.left();
+            qpos[1] = q1Line;
 
-//                p->drawText((q1Line)/2, paintRect.top() + 100, text);
-            }
-            if (i > q2Line && q2Line > paintRect.left())
-            {
-                pen.setWidth(4);
-                pen.setColor(QColor(LTData::colors[LTData::WHITE]));
-                pen.setStyle(Qt::SolidLine);
-                p->setPen(pen);
-                p->drawLine(round(q2Line), paintRect.bottom(), round(q2Line), paintRect.top());
+            qpos[2] = q1Line;
+            qpos[3] = paintRect.right();
+        }
+        else if (last <= LTData::getQualiLength(1))
+        {
+            qpos[0] = paintRect.left();
+            qpos[1] = paintRect.right();
+        }
+        if (i >= q2Line && q2Line > paintRect.left())
+        {
+            pen.setWidth(4);
+            pen.setColor(QColor(LTData::colors[LTData::WHITE]));
+            pen.setStyle(Qt::SolidLine);
+            p->setPen(pen);
+            p->drawLine(round(q2Line), paintRect.bottom(), round(q2Line), paintRect.top());
 
-//                p->setPen(QColor(255, 255, 255, 50));
-//                p->setFont(QFont("Arial", 50, QFont::Bold, false));
-//                QString text = "Q2";
-//                int textWidth = p->fontMetrics().width(text);
+            qpos[2] = first < LTData::getQualiLength(1) ? q1Line : paintRect.left();
+            qpos[3] = q2Line;
 
-//                p->drawText(q2Line - (q2Line - q1Line)/2, paintRect.top() + 100, text);
-            }
+            qpos[4] = q2Line;
+            qpos[5] = paintRect.right();
+        }
+        else if (first >= LTData::getQualiLength(1) && last <= (LTData::getQualiLength(1) + LTData::getQualiLength(2)))
+        {
+            qpos[2] = paintRect.left();
+            qpos[3] = paintRect.right();
+        }
+        else if (first >= (LTData::getQualiLength(1) + LTData::getQualiLength(2)))
+        {
+            qpos[4] = paintRect.left();
+            qpos[5] = paintRect.right();
+        }
+
+        p->setPen(QColor(150, 150, 150, 150));
+        p->setFont(QFont("Arial", 50, QFont::Bold, false));
+        p->setRenderHint(QPainter::Antialiasing);
+        if (qpos[0] != -1 && qpos[1] != -1)
+        {
+            QString text = "Q1";
+            int textWidth = p->fontMetrics().width(text);
+
+            p->drawText(qpos[1] - (qpos[1] - qpos[0] + textWidth)/2, paintRect.top() + 100, text);
+        }
+        if (qpos[2] != -1 && qpos[3] != -1)
+        {
+            QString text = "Q2";
+            int textWidth = p->fontMetrics().width(text);
+
+            p->drawText(qpos[3] - (qpos[3] - qpos[2] + textWidth)/2, paintRect.top() + 100, text);
+        }
+        if (qpos[4] != -1 && qpos[5] != -1)
+        {
+            QString text = "Q3";
+            int textWidth = p->fontMetrics().width(text);
+
+            p->drawText(qpos[5] - (qpos[5] - qpos[4] + textWidth)/2, paintRect.top() + 100, text);
         }
     }
 }
@@ -520,7 +585,7 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
 
     p->setRenderHint(QPainter::Antialiasing);
 
-    lapDataXYArray.clear();
+    int lapsInWindow = 0;
 
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
@@ -557,7 +622,10 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
             pen.setColor(color);
             p->setPen(pen);
 
-            lapDataXYArray.append(LapDataXY(i, (int)x, (int)y));
+            if (lapsInWindow >= lapDataXYArray.size())
+                lapDataXYArray.append(LapDataXY(i, (int)x, (int)y));
+            else
+                lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
 
             QPainterPath path;
             p->setBrush(QBrush(color));
@@ -568,6 +636,8 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
                 }
                 p->drawPath(path);
             }
+            ++lapsInWindow;
         }
     }
+    clearXYList(lapsInWindow);
 }

@@ -71,7 +71,7 @@ void ChartWidget::mouseMoveEvent(QMouseEvent *ev)
 			scaleRect.setHeight(ev->pos().y() - scaleRect.y());
     	}
 
-    	repaint();
+        update();
     }
 }
 
@@ -289,6 +289,12 @@ void ChartWidget::drawScaleRect(QPainter *p)
 	p->drawRect(scaleRect);
 }
 
+void ChartWidget::drawLegend(QPainter *p)
+{
+    p->setPen(LTData::colors[LTData::WHITE]);
+    p->drawText(40, 20, driverData.driver);
+}
+
 void ChartWidget::paintEvent(QPaintEvent *)
 {
     resetPaintRect();
@@ -372,22 +378,26 @@ void ChartWidget::pushScaleRect()
 	scaleRectsStack.push(sa);
 }
 
-void ChartWidget::onCopy()
+void ChartWidget::drawIntoImage(QImage &img)
 {
-    QImage img = QImage(width(), height(), QImage::Format_ARGB32);
     QPainter p;
     p.begin(&img);
     p.setBrush(QColor(20,20,20));
     p.setPen(QColor(20,20,20));
     p.drawRect(0, 0, width(), height());
+
     drawAxes(&p);
     drawChart(&p);
-
-    //draw driver name:
-    p.setPen(LTData::colors[LTData::WHITE]);
-    p.drawText(40, 20, driverData.driver);
+    drawLegend(&p);
 
     p.end();
+}
+
+void ChartWidget::onCopy()
+{
+    QImage img = QImage(width(), height(), QImage::Format_ARGB32);
+
+    drawIntoImage(img);
 
     qApp->clipboard()->setImage(img);
 }
@@ -398,19 +408,8 @@ void ChartWidget::onSave()
     if (!fName.isNull())
     {
         QImage img = QImage(width(), height(), QImage::Format_ARGB32);
-        QPainter p;
-        p.begin(&img);
-        p.setBrush(QColor(20,20,20));
-        p.setPen(QColor(20,20,20));
-        p.drawRect(0, 0, width(), height());
-        drawAxes(&p);
-        drawChart(&p);
 
-        //draw driver name:
-        p.setPen(LTData::colors[LTData::WHITE]);
-        p.drawText(40, 20, driverData.driver);
-
-        p.end();
+        drawIntoImage(img);
 
         img.save(fName, "PNG");
     }
@@ -756,8 +755,9 @@ void LapTimeChartWidget::drawChart(QPainter *p)
     //--------------------------------------------------------
 }
 
-void LapTimeChartWidget::drawLegend(QPainter *p, int x, int y)
+void LapTimeChartWidget::drawLegend(QPainter *p)
 {
+    int x = 35, y = 25;
     p->setRenderHint(QPainter::Antialiasing, false);
     p->setBrush(QColor(20, 20, 20));
     p->setPen(LTData::colors[LTData::DEFAULT]);
@@ -811,7 +811,7 @@ void LapTimeChartWidget::paintEvent(QPaintEvent *)
     if (scaling)
 		drawScaleRect(&p);
 
-    drawLegend(&p, 35, 5);
+    drawLegend(&p);
 
     p.end();
 }
@@ -834,52 +834,6 @@ void LapTimeChartWidget::transform()
 		tMax = max;
 		return;
 	}	
-}
-
-void LapTimeChartWidget::onCopy()
-{
-    QImage img = QImage(width(), height(), QImage::Format_ARGB32);
-    QPainter p;
-    p.begin(&img);
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    drawAxes(&p);
-    drawChart(&p);
-    drawLegend(&p, 35, 25);
-
-    //draw driver name:
-    p.setPen(LTData::colors[LTData::WHITE]);
-    p.drawText(40, 20, driverData.driver);
-
-    p.end();
-
-    qApp->clipboard()->setImage(img);
-}
-
-void LapTimeChartWidget::onSave()
-{
-    QString fName = QFileDialog::getSaveFileName(this, "Select file", "", "*.png");
-    if (!fName.isNull())
-    {
-        QImage img = QImage(width(), height(), QImage::Format_ARGB32);
-        QPainter p;
-        p.begin(&img);
-        p.setBrush(QColor(20,20,20));
-        p.setPen(QColor(20,20,20));
-        p.drawRect(0, 0, width(), height());
-        drawAxes(&p);
-        drawChart(&p);
-        drawLegend(&p, 35, 25);
-
-        //draw driver name:
-        p.setPen(LTData::colors[LTData::WHITE]);
-        p.drawText(40, 20, driverData.driver);
-
-        p.end();
-
-        img.save(fName, "PNG");
-    }
 }
 
 //========================================================================
@@ -1227,7 +1181,7 @@ void LapCompChartWidget::drawChart(QPainter *p)
 {
     int firstLap = 99, lastLap = 0;
 
-    double x[4] = {paintRect.left(), paintRect.left(), paintRect.left(), paintRect.left()};
+    double x[4] = {(int)paintRect.left(), (int)paintRect.left(), (int)paintRect.left(), (int)paintRect.left()};
     double y1[4];
     double y2[4];
     double yFactor = (((double)paintRect.height()) / (double)(tMax-tMin));
@@ -1413,9 +1367,8 @@ void LapCompChartWidget::drawLegend(QPainter *p)
     }
 }
 
-void LapCompChartWidget::onCopy()
+void LapCompChartWidget::drawIntoImage(QImage &img)
 {
-    QImage img = QImage(width(), height(), QImage::Format_ARGB32);
     QPainter p;
     p.begin(&img);
 
@@ -1427,30 +1380,6 @@ void LapCompChartWidget::onCopy()
     drawLegend(&p);
 
     p.end();
-
-    qApp->clipboard()->setImage(img);
-}
-
-void LapCompChartWidget::onSave()
-{
-    QString fName = QFileDialog::getSaveFileName(this, "Select file", "", "*.png");
-    if (!fName.isNull())
-    {
-        QImage img = QImage(width(), height(), QImage::Format_ARGB32);
-        QPainter p;
-        p.begin(&img);
-
-        p.setBrush(QColor(20,20,20));
-        p.setPen(QColor(20,20,20));
-        p.drawRect(0, 0, width(), height());
-        drawChart(&p);
-
-        drawLegend(&p);
-
-        p.end();
-
-        img.save(fName, "PNG");
-    }
 }
 
 void LapCompChartWidget::resetZoom()
@@ -1679,7 +1608,7 @@ void GapCompChartWidget::drawChart(QPainter *p)
 {
     int firstLap = 99, lastLap = 0;
 
-    double x[2] = {paintRect.left(), paintRect.left()};
+    double x[2] = {(int)paintRect.left(), (int)paintRect.left()};
     double y1[2];
     double y2[2];
 
@@ -1847,9 +1776,8 @@ void GapCompChartWidget::drawLegend(QPainter *p)
     }
 }
 
-void GapCompChartWidget::onCopy()
+void GapCompChartWidget::drawIntoImage(QImage &img)
 {
-    QImage img = QImage(width(), height(), QImage::Format_ARGB32);
     QPainter p;
     p.begin(&img);
 
@@ -1861,30 +1789,6 @@ void GapCompChartWidget::onCopy()
     drawLegend(&p);
 
     p.end();
-
-    qApp->clipboard()->setImage(img);
-}
-
-void GapCompChartWidget::onSave()
-{
-    QString fName = QFileDialog::getSaveFileName(this, "Select file", "", "*.png");
-    if (!fName.isNull())
-    {
-        QImage img = QImage(width(), height(), QImage::Format_ARGB32);
-        QPainter p;
-        p.begin(&img);
-
-        p.setBrush(QColor(20,20,20));
-        p.setPen(QColor(20,20,20));
-        p.drawRect(0, 0, width(), height());
-        drawChart(&p);
-
-        drawLegend(&p);
-
-        p.end();
-
-        img.save(fName, "PNG");
-    }
 }
 
 void GapCompChartWidget::resetZoom()
@@ -2167,9 +2071,8 @@ void PosCompChartWidget::drawLegend(QPainter *p)
     }
 }
 
-void PosCompChartWidget::onCopy()
+void PosCompChartWidget::drawIntoImage(QImage &img)
 {
-    QImage img = QImage(width(), height(), QImage::Format_ARGB32);
     QPainter p;
     p.begin(&img);
 
@@ -2181,30 +2084,6 @@ void PosCompChartWidget::onCopy()
     drawLegend(&p);
 
     p.end();
-
-    qApp->clipboard()->setImage(img);
-}
-
-void PosCompChartWidget::onSave()
-{
-    QString fName = QFileDialog::getSaveFileName(this, "Select file", "", "*.png");
-    if (!fName.isNull())
-    {
-        QImage img = QImage(width(), height(), QImage::Format_ARGB32);
-        QPainter p;
-        p.begin(&img);
-
-        p.setBrush(QColor(20,20,20));
-        p.setPen(QColor(20,20,20));
-        p.drawRect(0, 0, width(), height());
-        drawChart(&p);
-
-        drawLegend(&p);
-
-        p.end();
-
-        img.save(fName, "PNG");
-    }
 }
 
 void PosCompChartWidget::resetZoom()

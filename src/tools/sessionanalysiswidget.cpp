@@ -81,7 +81,7 @@ SessionAnalysisWidget::~SessionAnalysisWidget()
 
 void SessionAnalysisWidget::resetView()
 {
-    setWindowTitle(EventData::getInstance().eventInfo.eventName+" - session analysis");
+    setWindowTitle("Session analysis: " + EventData::getInstance().eventInfo.eventName);
     setupBoxes();
     switch(EventData::getInstance().eventType)
     {
@@ -114,6 +114,11 @@ void SessionAnalysisWidget::resetView()
     ui.sessionPositionsChart->resetZoom();
     ui.sessionGapsChart->resetZoom();
     ui.sessionLapTimesChartFP->resetZoom();
+
+    first = 0;
+    last = 99;
+    min = -1;
+    max = -1;
 }
 
 void SessionAnalysisWidget::resizeTables()
@@ -229,7 +234,7 @@ void SessionAnalysisWidget::setupTables()
     setItem(ui.lapTimeTableWidgetQ3, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQ3, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
     setItem(ui.lapTimeTableWidgetQ3, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ3, 0, 4, "Sess. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetQ3, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
 
     ui.lapTimeTableWidgetQ3->setRowHeight(0, 22);
 
@@ -255,7 +260,7 @@ void SessionAnalysisWidget::setupIcons(QList<QColor> colors)
 
 void SessionAnalysisWidget::exec()
 {    
-    setWindowTitle(EventData::getInstance().eventInfo.eventName+" - session analysis");
+    setWindowTitle("Session analysis: " + EventData::getInstance().eventInfo.eventName);
     setupBoxes();
     switch(EventData::getInstance().eventType)
     {
@@ -275,6 +280,12 @@ void SessionAnalysisWidget::exec()
         ui.raceTabWidget->setVisible(false);
         ui.fpTabWidget->setVisible(false);
         ui.qualiTabWidget->setVisible(true);
+        break;
+
+    default:
+        ui.raceTabWidget->setVisible(true);
+        ui.fpTabWidget->setVisible(false);
+        ui.qualiTabWidget->setVisible(false);
         break;
     }
 

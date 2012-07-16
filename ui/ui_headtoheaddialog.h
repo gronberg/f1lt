@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'headtoheaddialog.ui'
 **
-** Created: Sun Jul 15 23:08:02 2012
+** Created: Mon Jul 16 22:10:05 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -65,7 +65,7 @@ public:
         HeadToHeadDialog->setMinimumSize(QSize(400, 0));
         HeadToHeadDialog->setMaximumSize(QSize(16777215, 16777215));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/ui_icons/head2head-s.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         HeadToHeadDialog->setWindowIcon(icon);
         verticalLayout = new QVBoxLayout(HeadToHeadDialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));

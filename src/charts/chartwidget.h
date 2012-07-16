@@ -26,7 +26,10 @@ public:
 
     virtual void drawAxes(QPainter *p);
     virtual void drawChart(QPainter *p);
+    virtual void drawLegend(QPainter *p);
     virtual void drawScaleRect(QPainter *p);
+
+    virtual void drawIntoImage(QImage &img);
 
     virtual void transform();
     virtual void resetZoom();
@@ -97,15 +100,12 @@ public:
 
     void drawAxes(QPainter *p);
     void drawChart(QPainter *p);
-    void drawLegend(QPainter *p, int, int);
+    void drawLegend(QPainter *p);
+
     void setData(const DriverData &dd);
 
     void transform();
 	void resetZoom();
-
-public slots:
-    void onCopy();
-    void onSave();
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -127,7 +127,7 @@ public:
     explicit GapChartWidget(QColor col, QWidget *parent = 0) : ChartWidget(0, 60, col, parent) { }
 
     void drawAxes(QPainter *p);
-    void drawChart(QPainter *p);
+    void drawChart(QPainter *p);    
 
     void transform();
     void resetZoom();
@@ -154,15 +154,12 @@ public:
     void drawAxes(QPainter *p, int, int);
     void drawChart(QPainter *p);
     void drawLegend(QPainter *p);
+    void drawIntoImage(QImage &img);
 
     void findFirstAndLastLap(int &firstLap, int &lastLap);
 
     void transform();
-	void resetZoom();
-
-public slots:
-    void onCopy();
-    void onSave();
+	void resetZoom(); 
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -192,6 +189,7 @@ public:
     void drawAxes(QPainter *p, int, int);
     void drawChart(QPainter *p);
     void drawLegend(QPainter *p);
+    void drawIntoImage(QImage &img);
 
     double calculateInterval(int lap);
 
@@ -199,10 +197,6 @@ public:
 
 	void transform();
 	void resetZoom();
-
-public slots:
-    void onCopy();
-    void onSave();
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -238,15 +232,12 @@ public:
     void drawAxes(QPainter *p, int, int);
     void drawChart(QPainter *p);
     void drawLegend(QPainter *p);
+    void drawIntoImage(QImage &img);
 
     void findFirstAndLastLap(int &firstLap, int &lastLap);
 
 	void transform();
 	void resetZoom();
-
-public slots:
-    void onCopy();
-    void onSave();
 
 protected:
 

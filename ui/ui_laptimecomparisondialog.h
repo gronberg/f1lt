@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'laptimecomparisondialog.ui'
 **
-** Created: Sun Jul 15 23:08:02 2012
+** Created: Mon Jul 16 22:10:05 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -56,7 +56,7 @@ public:
         LapTimeComparisonDialog->resize(700, 484);
         LapTimeComparisonDialog->setMinimumSize(QSize(700, 0));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/ui_icons/ltc-s.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         LapTimeComparisonDialog->setWindowIcon(icon);
         verticalLayout = new QVBoxLayout(LapTimeComparisonDialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
