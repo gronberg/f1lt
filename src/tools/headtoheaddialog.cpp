@@ -34,9 +34,9 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
 
     color[0] = LTData::colors[LTData::YELLOW];
     color[1] = LTData::colors[LTData::CYAN];
-    lapCompChart = new LapCompChartWidget(color, this);
-    gapCompChart = new GapCompChartWidget(color, this);
-    posCompChart = new PosCompChartWidget(color, this);
+    lapCompChart = new LapCompChart(color, this);
+    gapCompChart = new GapCompChart(color, this);
+    posCompChart = new PosCompChart(color, this);
 
     posCompChart->setMinMax(1, LTData::ltTeams.size()*2);
 
@@ -214,72 +214,6 @@ void HeadToHeadDialog::loadCarImages()
 
 //    comboBox[0]->addItems(LTData::getDriversList());
 //    comboBox[1]->addItems(LTData::getDriversList());
-}
-
-QString HeadToHeadDialog::calculateInterval(int driver1Idx, int driver2Idx, int lap)
-{
-    LapData ld1 = eventData.driversData[driver1Idx].getLapData(lap);
-    LapData ld2 = eventData.driversData[driver2Idx].getLapData(lap);
-    QString gap1 = ld1.gap;
-    QString gap2 = ld2.gap;
-
-    if ((ld1.lapTime.toString() == "" && ld1.gap == "") || (ld2.lapTime.toString() == "" && ld2.gap == ""))
-        return "";
-
-    if ((gap1 != "" && gap2 != "" && gap1[gap1.size()-1] != 'L' && gap2[gap2.size()-1] != 'L') ||
-       ((ld1.pos == 1 && gap1 == "") || (ld2.pos == 1 && gap2 == "")))
-    {
-        double interval = gap1.toDouble() - gap2.toDouble();
-        QString sInterval = QString::number(interval, 'f', 1);
-        if (interval > 0)
-            sInterval = "+" + sInterval;
-
-        return sInterval;
-    }
-    else if ((gap1 != "" && gap1[gap1.size()-1] == 'L') || (gap2 != "" && gap2[gap2.size()-1] == 'L') ||
-             (gap1 == "" || gap2 == ""))
-    {
-        int pos1 = ld1.pos;
-        int pos2 = ld2.pos;
-
-        bool neg = true;
-        if (pos2 < pos1)
-        {
-            int tmp = pos1;
-            pos1 = pos2;
-            pos2 = tmp;
-            neg = false;
-        }
-
-        QList<QString> intervals;
-//        intervals.reserve(pos2 - pos1);
-        for (int i = 0; i < eventData.driversData.size(); ++i)
-        {
-            LapData ld = eventData.driversData[i].getLapData(lap);
-            int pos = ld.pos;
-            if (pos > pos1 && pos <= pos2)
-            {
-                if (ld.interval != "" && ld.interval[ld.interval.size()-1] == 'L')
-                    return neg ? "-1L >" : "+1L >";
-
-                intervals.append(ld.interval);
-            }
-        }
-        double interval = 0.0;
-        for (int i = 0; i < intervals.size(); ++i)
-            interval += intervals[i].toDouble();
-
-        if (neg && ld1.lapTime.isValid() && interval > ld1.lapTime.toDouble())
-            return "-1L >";
-        if (!neg && ld2.lapTime.isValid() && interval > ld2.lapTime.toDouble())
-            return "+1L >";
-
-
-        QString sInterval = (neg ? "-" : "+") + QString::number(interval, 'f', 1);
-        return sInterval;
-    }
-
-    return "";
 }
 
 void HeadToHeadDialog::updateData()
@@ -553,7 +487,7 @@ void HeadToHeadDialog::updateData()
             if (newLap[0] || newLap[1])
             {
             	if (eventData.eventType == LTData::RACE_EVENT)
-            		sInterval = calculateInterval(driversIdx[0], driversIdx[1], lapNo-1);
+                    sInterval = eventData.calculateInterval(eventData.driversData[driversIdx[0]], eventData.driversData[driversIdx[1]], lapNo-1);
             	else
             	{
             		if (std::abs(eventData.driversData[driversIdx[0]].lastLap.numLap -
@@ -590,7 +524,7 @@ void HeadToHeadDialog::updateData()
                 }
             }
             else
-                sInterval = calculateInterval(driversIdx[0], driversIdx[1], lapNo);
+                sInterval = eventData.calculateInterval(eventData.getInstance().driversData[driversIdx[0]], eventData.getInstance().driversData[driversIdx[1]], lapNo);
         }
         item = ui->tableWidget->item(j+2, 6);
         if (!item)

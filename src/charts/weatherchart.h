@@ -1,14 +1,14 @@
-#ifndef WEATHERCHARTWIDGET_H
-#define WEATHERCHARTWIDGET_H
+#ifndef WEATHERCHART_H
+#define WEATHERCHART_H
 
 #include "chartwidget.h"
 
-class WeatherChartWidget : public ChartWidget
+class WeatherChart : public ChartWidget
 {
     Q_OBJECT
 
 public:
-    WeatherChartWidget(QColor col, int id, int id2, QWidget *parent = 0) : ChartWidget(0, 180, col, parent)
+    WeatherChart(QColor col, int id, int id2, QWidget *parent = 0) : ChartWidget(0, 180, col, parent)
     {
         weatherId = id;
         wetDryId = id2;
@@ -38,12 +38,12 @@ protected:
     int wetDryId;
 };
 
-class TempChartWidget : public WeatherChartWidget
+class TempChart : public WeatherChart
 {
     Q_OBJECT
 
 public:
-    TempChartWidget(QColor col, QColor col2, int id, int tempId, int id2, QWidget *parent = 0) : WeatherChartWidget(col, id, id2, parent)
+    TempChart(QColor col, QColor col2, int id, int tempId, int id2, QWidget *parent = 0) : WeatherChart(col, id, id2, parent)
     {
         trackTempId = tempId;
         trackTempCol = col2;
@@ -64,12 +64,12 @@ private:
 };
 
 
-class WetDryChartWidget : public WeatherChartWidget
+class WetDryChart : public WeatherChart
 {
     Q_OBJECT
 
 public:
-    WetDryChartWidget(QColor col, int id, int id2, QWidget *parent = 0) : WeatherChartWidget(col, id, id2, parent)
+    WetDryChart(QColor col, int id, int id2, QWidget *parent = 0) : WeatherChart(col, id, id2, parent)
     {
         min = 0.0;
         max = 1.0;
@@ -81,4 +81,4 @@ public:
 
 };
 
-#endif // WEATHERCHARTWIDGET_H
+#endif // WEATHERCHART_H

@@ -4,7 +4,7 @@
 #include <QtGui/QWidget>
 #include "ui_weatherchartswidget.h"
 
-#include "../charts/weatherchartwidget.h"
+#include "../charts/weatherchart.h"
 
 class WeatherChartsWidget : public QWidget
 {
@@ -19,11 +19,11 @@ public:
 private:
     Ui::WeatherChartsWidgetClass ui;
 
-    TempChartWidget *tempWidget;
-    WeatherChartWidget *windWidget;
-    WeatherChartWidget *pressureWidget;
-    WeatherChartWidget *humidityWidget;
-    WetDryChartWidget *wetDryWidget;
+    TempChart *tempWidget;
+    WeatherChart *windWidget;
+    WeatherChart *pressureWidget;
+    WeatherChart *humidityWidget;
+    WetDryChart *wetDryWidget;
 
 };
 

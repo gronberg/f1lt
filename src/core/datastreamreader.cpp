@@ -1144,8 +1144,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
     	   uc = copyPacket.longData[1];
     	   int ts = uc << 8;
     	   uc = copyPacket.longData[0];
-    	   ts |= uc | 0 << 16;// & 0xff0000;
-    	   qDebug() << "timestamp " << ts<< ", " << eventData.timeStamp << ", " << eventData.weatherData[0].size() << ", " << eventData.weatherData[1].size();
+           ts |= uc | 0 << 16;// & 0xff0000;
      	   if ((eventData.timeStamp==0 && ts <= 1000) ||
      		   (ts >= eventData.timeStamp+75 && ts < eventData.timeStamp+1000))
     	   {
@@ -1167,14 +1166,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 //				if (!eventData.weatherData[5].isEmpty())
 					eventData.weatherData[5].append(eventData.wetdry);
 
-				eventData.timeStamp = ts;
-
-				qDebug() << "weter " << eventData.weatherData[4].size();
-    	   }
-
-//        	uc = copyPacket.length;
-//        	ts |= uc << 16;
-//        	qDebug() << "timestamp=" << ts << ", " << (int)((unsigned char)copyPacket.longData[0]) << " " << (int)((unsigned char)copyPacket.longData[1]);
+                eventData.timeStamp = ts;
+           }
         }
             break;
         default:

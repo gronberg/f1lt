@@ -10,33 +10,16 @@
 
 extern bool lessThan(LapData ld1, LapData ld2);
 
-struct LapDataXY
-{
-    int idx;
-    int x, y;
-
-    LapDataXY() : idx(0), x(0), y(0) { }
-    LapDataXY(int a, int b, int c) : idx(a), x(b), y(c) { }
-};
-
 class SessionLapTimesChart;
 
-class PredXY
+class PredXYPos
 {
 public:
-    PredXY (SessionLapTimesChart &sltc) : chart(sltc) { }
+    PredXYPos (SessionLapTimesChart &sltc) : chart(sltc) { }
     bool operator()(int item1, int item2);
 
 protected:
     SessionLapTimesChart &chart;
-};
-
-class PredXYGap : public PredXY
-{
-public:
-    PredXYGap (SessionLapTimesChart &sltc) : PredXY(sltc) { }
-    bool operator()(int item1, int item2);
-
 };
 
 class SessionLapTimesChart : public ChartWidget
@@ -74,7 +57,7 @@ public:
     QColor getCarColor(const LapData &ld);
 
     virtual int findLapDataXY(int x, int y);
-    virtual void drawLapDataXY(QPainter *p);
+    virtual void drawLapDataXY(QPainter *p);  
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
@@ -85,7 +68,7 @@ public:
         if (ld.carID > 0)
         {
             DriverData dd = EventData::getInstance().driversData[ld.carID-1];
-            return dd.driver + " - " + ld.lapTime.toString();
+            return QString::number(ld.pos) + ". " +  dd.driver + " - " + ld.lapTime.toString();
         }
         return "";
     }
@@ -94,13 +77,21 @@ public:
         for (int i = lapDataXYArray.size()-1; i >= to; --i)
             lapDataXYArray.removeAt(i);
     }
+    virtual int getPopupWidth()
+    {
+        return 200;
+    }
 
-    friend class PredXY;
-    friend class PredXYGap;
+    friend class PredXYPos;
 
 protected:
     virtual void mouseDoubleClickEvent (QMouseEvent *);
     virtual void mouseMoveEvent(QMouseEvent *);
+
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(42, 10, width()-47, height()-35);
+    }
 
 signals:
     void zoomChanged(int, int, double, double);
@@ -114,12 +105,7 @@ protected:
     void paintEvent(QPaintEvent *);
 
     QList<LapData> lapDataArray;
-    QList<LapDataXY> lapDataXYArray;
-    QList<int> itemsInXY;
     QList<QColor> colors;
-
-    int mousePosX, mousePosY;
-    bool repaintPopup;
 
 };
 
@@ -141,6 +127,11 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *);
+
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(30, 10, width()-35, height()-35);
+    }
 };
 
 
@@ -150,7 +141,7 @@ public:
     SessionGapsChart(QWidget *parent) : SessionLapTimesChart(parent)
     {
         min = 0;
-        max = 100;
+        max = 90;
     }
 
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
@@ -164,9 +155,12 @@ public:
         {
             DriverData dd = EventData::getInstance().driversData[ld.carID-1];
             if (ld.pos == 1)
-                return dd.driver;
+                return QString::number(ld.pos) + ". " + dd.driver + ": Leader";
 
-            return dd.driver + " +" + ld.gap;
+            QString gap = ld.gap;
+            if (gap == "")
+                gap = "1L";
+            return QString::number(ld.pos) + ". " +  dd.driver + ": +" + gap;
         }
         return "";
     }
@@ -175,6 +169,11 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *);
+
+    void resetPaintRect()
+    {
+        paintRect = QRect(30, 10, width()-35, height()-35);
+    }
 };
 
 

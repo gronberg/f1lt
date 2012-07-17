@@ -174,7 +174,7 @@ void FPLapTimesChart::drawChart(QPainter *p)
 
 void FPLapTimesChart::paintEvent(QPaintEvent *)
 {
-    paintRect = QRect(42, 10, width()-47, height()-35);
+    resetPaintRect();
 
     if (scaleRect.width() == 0 && scaleRect.height() == 0)
     {
@@ -464,7 +464,6 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         int prevJ = first;
 
         double jFactor = (last - first) < 6 ? 1.0 : (double)((last - first) / 9.0);
-        qDebug() << "last - first" << last - first;
         double q1Line = (LTData::getQualiLength(1) - first) * xFactor + paintRect.left();
         double q2Line = (LTData::getQualiLength(1)+LTData::getQualiLength(2) - first) * xFactor + paintRect.left();
         QPen pen(QColor(LTData::colors[LTData::DEFAULT]));

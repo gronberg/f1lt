@@ -52,8 +52,8 @@ private:
     Ui::DriverDataWidget *ui;
 
     ChartWidget *posChart;
-    LapTimeChartWidget *lapTimeChart;
-    GapChartWidget *gapChart;   
+    LapTimeChart *lapTimeChart;
+    GapChart *gapChart;
 
     int currentDriver;
 

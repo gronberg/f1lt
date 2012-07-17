@@ -30,6 +30,8 @@ ChartWidget::ChartWidget(double n, double x, QColor col, QWidget *parent) :
 	tMax = max;
 
 	lastOp = 0;
+
+    setMouseTracking(true);
 }
 
 ChartWidget::~ChartWidget()
@@ -72,6 +74,22 @@ void ChartWidget::mouseMoveEvent(QMouseEvent *ev)
     	}
 
         update();
+    }
+    else
+    {
+        mousePosX = ev->pos().x();
+        mousePosY = ev->pos().y();
+
+        int items = itemsInXY.size();
+        if (findLapDataXY(mousePosX, mousePosY))
+        {
+            repaintPopup = true;
+            update();
+            repaintPopup = false;
+        }
+
+        else if (items != 0)  //if the cursor has moved and a popup was displayed previously, it has to be cleared
+            update();
     }
 }
 
@@ -243,6 +261,7 @@ void ChartWidget::drawChart(QPainter *p)
         double y = (double)paintRect.bottom() - (double)(driverData.posHistory[first-1]-tMin) * yFactor;
 
         int i = first; //(driverData.posHistory.size() > driverData.lapData.size() ? 2 : 1);
+        int lastPaintedSC = 0;
         for (; i < last + 1 && i < driverData.posHistory.size(); ++i, j += xFactor)
         {
             double y2 = (double)paintRect.bottom() - (double)(driverData.posHistory[i]-tMin) * yFactor;
@@ -251,12 +270,27 @@ void ChartWidget::drawChart(QPainter *p)
             {
                 y2 = y;
             }
+
+            LapData ld = driverData.getLapData(i+1);
+//            int idx = driverData.posHistory.size() > driverData.lapData.size() ? i-5 : i-5;
+//            if (idx >= 0 && idx < driverData.lapData.size())
+            {
+                if (ld.scLap && ld.numLap > lastPaintedSC)
+                {
+                    int tmp = first;
+                    first -= 1;
+                    drawSCLap(p, ld, xFactor);
+                    lastPaintedSC = ld.numLap;
+                    first = tmp;
+                }
+            }
+
             if (y2 > paintRect.bottom() && y > paintRect.bottom())
             {
             	x = j;
 				y = y2;
 				continue;
-            }
+            }            
 
             if (i >= 0 && i < last && i < driverData.lapData.size() && driverData.lapData[i-1].lapTime.toString() == "IN PIT" && y2 <= paintRect.bottom())
 			{
@@ -295,6 +329,76 @@ void ChartWidget::drawLegend(QPainter *p)
     p->drawText(40, 20, driverData.driver);
 }
 
+int ChartWidget::findLapDataXY(int x, int y)
+{
+    itemsInXY.clear();
+    for (int i = 0; i < lapDataXYArray.size(); ++i)
+    {
+        if (std::abs(lapDataXYArray[i].x - x) <= 3 && std::abs(lapDataXYArray[i].y - y) <= 3)
+            itemsInXY.append(lapDataXYArray[i].idx);
+    }
+    qSort(itemsInXY.begin(), itemsInXY.end());
+    return itemsInXY.size();
+}
+
+void ChartWidget::drawLapDataXY(QPainter *p)
+{
+    if (itemsInXY.isEmpty())
+        return;
+
+//    p.setPen(QColor(232, 227, 185, 200));
+//    p.setBrush(QColor(232, 227, 185, 200));
+    p->setPen(QColor(50, 50, 50));
+    p->setBrush(QColor(50, 50, 50));
+
+    int x = mousePosX;
+    int y = mousePosY;
+
+    int height = 20 * (itemsInXY.size());
+    int bottom = y + height;
+    int width = getPopupWidth()+20;
+    int right = x + width;
+
+    if (bottom > paintRect.bottom())
+        y = paintRect.bottom() - height;
+
+    if (right > paintRect.right())
+        x = paintRect.right() - width;
+
+    p->drawRect(x+20, y, getPopupWidth(), 20 * (itemsInXY.size()));
+
+
+    p->setFont(QFont("Arial", 10, QFont::Bold, false));
+    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    for (int i = 0; i < itemsInXY.size(); ++i)
+    {
+        if (itemsInXY[i] < driverData.lapData.size())
+            p->drawText(x+25, y+i*20+15, getDriverInfoXY(driverData.lapData[itemsInXY[i]]));
+    }
+}
+
+void ChartWidget::drawSCLap(QPainter *p, const LapData &lapData, double xFactor)
+{
+    double sc_x1 = (double)(lapData.numLap-1 - first) * xFactor + (double)paintRect.left();
+    double sc_x2 = (double)(lapData.numLap - first) * xFactor + (double)paintRect.left();
+
+    if (sc_x1 < paintRect.left())
+        sc_x1 = paintRect.left();
+
+//    if (lastPaintedSCPixel == -1)
+//        lastPaintedSCPixel = round(sc_x2);
+
+//    else if (std::abs(round(sc_x1) - lastPaintedSCPixel) <= 5)
+//    {
+//        sc_x1 = (double)lastPaintedSCPixel;
+//        lastPaintedSCPixel = round(sc_x2);
+//    }
+    p->setPen(QColor(255, 255, 0, 0));
+    p->setBrush(QBrush(QColor(255, 255, 0, 35)));
+
+    p->drawRect(round(sc_x1), paintRect.top(), round(sc_x2-sc_x1), paintRect.height());
+}
+
 void ChartWidget::paintEvent(QPaintEvent *)
 {
     resetPaintRect();
@@ -321,7 +425,7 @@ void ChartWidget::paintEvent(QPaintEvent *)
 
 void ChartWidget::resetZoom()
 {
-	first = driverData.posHistory.size() > driverData.lapData.size() ? 2 : 1;
+    first = driverData.posHistory.size() > driverData.lapData.size() ? 2 : 1;
 	last = driverData.posHistory.size();
 	tMin = min;
 	tMax = max;
@@ -445,7 +549,7 @@ void ChartWidget::onZoomOut()
 
 //========================================================================
 
-void LapTimeChartWidget::setData(const DriverData &dd)
+void LapTimeChart::setData(const DriverData &dd)
 {
     driverData = dd;
 
@@ -464,7 +568,7 @@ void LapTimeChartWidget::setData(const DriverData &dd)
         max = max + 0.1*max;
 }
 
-void LapTimeChartWidget::drawAxes(QPainter *p)
+void LapTimeChart::drawAxes(QPainter *p)
 {
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
@@ -519,7 +623,7 @@ void LapTimeChartWidget::drawAxes(QPainter *p)
     }
 }
 
-void LapTimeChartWidget::drawChart(QPainter *p)
+void LapTimeChart::drawChart(QPainter *p)
 {
     if (!driverData.lapData.empty() && first < driverData.lapData.size())
     {
@@ -598,7 +702,8 @@ void LapTimeChartWidget::drawChart(QPainter *p)
             p->drawPath(path);
         }
 
-
+        int lapsInWindow = 0;
+        int lastPaintedSC = 0;
         for (int i = first; i < last+1 && i < driverData.lapData.size(); ++i, j += xFactor)
         {
             x2 = j;
@@ -607,6 +712,13 @@ void LapTimeChartWidget::drawChart(QPainter *p)
             sector2 = driverData.lapData[i].sector2;
             sector3 = driverData.lapData[i].sector3;
             lapTime = driverData.lapData[i].lapTime;
+
+
+            if (driverData.lapData[i].scLap && driverData.lapData[i].numLap > lastPaintedSC)
+            {
+                drawSCLap(p, driverData.lapData[i], xFactor);
+                lastPaintedSC = driverData.lapData[i].numLap;
+            }
 
 
             if (lapTime.toString() == "IN PIT" || lapTime.toString() == "RETIRED")
@@ -703,14 +815,21 @@ void LapTimeChartWidget::drawChart(QPainter *p)
             if (lapy <= paintRect.bottom() || lapy2 <= paintRect.bottom())
             {
             	dx1 = x, dx2 = x2; dy1 = lapy; dy2 = lapy2;
-				pen.setColor(colors[3]);
-				if (driverData.lapData[i].scLap)
-					pen.setColor(colors[4]);
+                pen.setColor(colors[3]);
 
 				p->setPen(pen);
 				checkX1(dx1, dy1, dx2, dy2);
 				checkX2(dx1, dy1, dx2, dy2);
 				p->drawLine(dx1, dy1, dx2, dy2);
+
+                if (!scaling)
+                {
+                    if (lapsInWindow >= lapDataXYArray.size())
+                        lapDataXYArray.append(LapDataXY(i, (int)dx2, (int)dy2));
+                    else
+                        lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)dx2, (int)dy2);
+                }
+                ++lapsInWindow;
 
                 p->setBrush(QBrush(colors[3]));
 				if (driverData.lapData[i].lapTime.toString() == "IN PIT")
@@ -719,27 +838,20 @@ void LapTimeChartWidget::drawChart(QPainter *p)
 					path.addEllipse(QPoint(round(x2), lapy2), 6, 6);					
 //					p->setPen(colors[3]);
 
-					if (driverData.lapData[i].scLap)
-					{
-						pen.setColor(colors[4]);
-						p->setBrush(QBrush(colors[4]));
-					}
 					p->drawPath(path);
 	//                pen.setWidth(4);
 	//                p.setPen(pen);
 	//                p.drawPoint(x2, lapy2);
 	//                pen.setWidth(2);
 				}
-//                else
-//                {
-//                    QPainterPath path;
-//                    path.addEllipse(QPoint(round(x2), lapy2), 2, 2);
-////                    p->setPen(colors[3]);
-//                    if (driverData.lapData[i].scLap)
-//                        p->setBrush(colors[4]);
+                else
+                {
+                    QPainterPath path;
+                    path.addEllipse(QPoint(round(x2), lapy2), 2, 2);
+//                    p->setPen(colors[3]);
 
-//                    p->drawPath(path);
-//                }
+                    p->drawPath(path);
+                }
             }
 
             x = x2;
@@ -748,14 +860,11 @@ void LapTimeChartWidget::drawChart(QPainter *p)
             sec3y = sec3y2;
             lapy = lapy2;
         }
+        clearXYList(lapsInWindow);
     }
-    //------------------------------------draw chart legend--------------
-
-
-    //--------------------------------------------------------
 }
 
-void LapTimeChartWidget::drawLegend(QPainter *p)
+void LapTimeChart::drawLegend(QPainter *p)
 {
     int x = 35, y = 25;
     p->setRenderHint(QPainter::Antialiasing, false);
@@ -790,7 +899,7 @@ void LapTimeChartWidget::drawLegend(QPainter *p)
     p->setBrush(QBrush());
 }
 
-void LapTimeChartWidget::paintEvent(QPaintEvent *)
+void LapTimeChart::paintEvent(QPaintEvent *)
 {
     resetPaintRect();
 
@@ -811,19 +920,27 @@ void LapTimeChartWidget::paintEvent(QPaintEvent *)
     if (scaling)
 		drawScaleRect(&p);
 
+    else
+    {
+        if (!repaintPopup)
+            findLapDataXY(mousePosX, mousePosY);
+
+        drawLapDataXY(&p);
+    }
+
     drawLegend(&p);
 
     p.end();
 }
 
-void LapTimeChartWidget::resetZoom()
+void LapTimeChart::resetZoom()
 {
     ChartWidget::resetZoom();
     first = 1;
     last = driverData.lapData.size();
 }
 
-void LapTimeChartWidget::transform()
+void LapTimeChart::transform()
 {
     ChartWidget::transform();
 	if (scaleRect == QRect())
@@ -838,7 +955,7 @@ void LapTimeChartWidget::transform()
 
 //========================================================================
 
-void GapChartWidget::drawAxes(QPainter *p)
+void GapChart::drawAxes(QPainter *p)
 {
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
@@ -879,19 +996,23 @@ void GapChartWidget::drawAxes(QPainter *p)
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
         }
     }
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
-    p->drawText(5, 15, ">1L");
-    QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-    pen.setStyle(Qt::DashLine);
-    p->setPen(pen);
-    p->drawLine(paintRect.left(), paintRect.top(), paintRect.right(), paintRect.top());
 
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
-    p->drawText(5, 35, QString(">%1").arg(max));
-    pen.setColor(QColor(LTData::colors[LTData::DEFAULT]));
-    pen.setStyle(Qt::DashLine);
-    p->setPen(pen);
-    p->drawLine(paintRect.left(), 30, paintRect.right(), 30);
+    if (tMax >= max)
+    {
+        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->drawText(5, 15, ">1L");
+        QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+        pen.setStyle(Qt::DashLine);
+        p->setPen(pen);
+        p->drawLine(paintRect.left(), paintRect.top(), paintRect.right(), paintRect.top());
+
+        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->drawText(5, 35, QString(">%1").arg(max));
+        pen.setColor(QColor(LTData::colors[LTData::DEFAULT]));
+        pen.setStyle(Qt::DashLine);
+        p->setPen(pen);
+        p->drawLine(paintRect.left(), 30, paintRect.right(), 30);
+    }
 
     if (!driverData.lapData.isEmpty())
     {
@@ -921,7 +1042,7 @@ void GapChartWidget::drawAxes(QPainter *p)
 
 }
 
-void GapChartWidget::drawChart(QPainter *p)
+void GapChart::drawChart(QPainter *p)
 {
     if (!driverData.lapData.empty() && first < driverData.lapData.size() && last <= driverData.lapData.size())
     {
@@ -942,13 +1063,15 @@ void GapChartWidget::drawChart(QPainter *p)
 
         double x = paintRect.left(), y = paintRect.bottom() - (gap - tMin) * yFactor, y2;
 
-        if (gap == -1.0)
+        if (gap == -1.0 && tMax >= max)
             y = 10;
 
-        else if (gap > tMax)
+        else if (gap > tMax && tMax >= max)
             y = 30;
 
         double j = x + xFactor;
+        int lapsInWindow = 0;
+        int lastPaintedSC = 0;
         for (int i = first; i < last+1 && i < driverData.lapData.size(); ++i, j += xFactor)
         {
             bool ok;
@@ -956,7 +1079,7 @@ void GapChartWidget::drawChart(QPainter *p)
             y2 = paintRect.bottom() - (gap - tMin) * yFactor;
             double x2 = j;
 
-            if (gap > tMax)
+            if (gap > tMax && tMax >= max)
                 y2 = 30;
 
             if (EventData::getInstance().eventType == LTData::RACE_EVENT)
@@ -971,50 +1094,105 @@ void GapChartWidget::drawChart(QPainter *p)
                     y2 = 10;
                     gap = -1.0;
                 }
-                else if (gap <= 0 || !ok || gap > tMax)
+                else if ((gap <= 0 || !ok || gap > tMax)  && tMax >= max)
                     y2 = 30;
 
 //                else
 //                    y2 = height()-25 - gap * yFactor;
             }
+
+            if (driverData.lapData[i].scLap && driverData.lapData[i].numLap > lastPaintedSC)
+            {
+                drawSCLap(p, driverData.lapData[i], xFactor);
+                lastPaintedSC = driverData.lapData[i].numLap;
+            }
+
             if (y2 > paintRect.bottom() && y > paintRect.bottom())
 			{
 				x = j;
 				y = y2;
 				continue;
-			}
+			}            
 
-            if (driverData.lapData[i].lapTime.toString() == "IN PIT" && y2 < paintRect.bottom())
-			{
-				QPainterPath path;
-				path.addEllipse(QPoint(j, y2), 6, 6);
-				p->setBrush(QBrush(color));
-				p->setPen(color);
+            pen.setWidth(2);
+            p->setPen(pen);
+            QPainterPath path;
+            p->setBrush(QBrush(color));
+            if (y2 <= paintRect.bottom())
+            {
+                if (driverData.lapData[i].lapTime.toString() == "IN PIT")
+                {
+                    path.addEllipse(QPoint(x2, y2), 6, 6);
+                }
+                else
+                {
+                    path.addEllipse(QPoint(x2, y2), 2, 2);
+                }
+                p->drawPath(path);
+                if (!scaling)
+                {
+                    if (lapsInWindow >= lapDataXYArray.size())
+                        lapDataXYArray.append(LapDataXY(i, (int)x2, (int)y2));
+                    else
+                        lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x2, (int)y2);
+                }
+                ++lapsInWindow;
+            }
 
-				p->drawPath(path);
-			}
-			pen.setWidth(2);
-			p->setPen(pen);
 
-			checkX1(x, y, x2, y2);
-			checkX2(x, y, x2, y2);
+            double tmpY2 = y2;
+            checkX1(x, y, x2, tmpY2);
+            checkX2(x, y, x2, tmpY2);
 
-            p->drawLine(x, y, x2, y2);
+            p->drawLine(x, y, x2, tmpY2);
             x = j;
             y = y2;
         }
+        clearXYList(lapsInWindow);
     }
 }
 
+void GapChart::paintEvent(QPaintEvent *)
+{
+    resetPaintRect();
 
-void GapChartWidget::resetZoom()
+    if (scaleRect.width() == 0 && scaleRect.height() == 0)
+    {
+        resetZoom();
+    }
+
+    QPainter p;
+    p.begin(this);
+
+    p.setBrush(QColor(20,20,20));
+    p.setPen(QColor(20,20,20));
+    p.drawRect(0, 0, width(), height());
+    drawAxes(&p);
+    drawChart(&p);
+
+    if (scaling)
+        drawScaleRect(&p);
+
+    else
+    {
+        if (!repaintPopup)
+            findLapDataXY(mousePosX, mousePosY);
+
+        drawLapDataXY(&p);
+    }
+
+    p.end();
+}
+
+
+void GapChart::resetZoom()
 {
     ChartWidget::resetZoom();
     first = 1;
     last = driverData.lapData.size();
 }
 
-void GapChartWidget::transform()
+void GapChart::transform()
 {
     ChartWidget::transform();
 	if (scaleRect == QRect())
@@ -1028,1106 +1206,4 @@ void GapChartWidget::transform()
 }
 
 //========================================================================
-
-void LapCompChartWidget::setData(DriverData *dd)
-{
-    double lMin = 99999999.0, lMax = 0.0;
-    for (int i = 0; i < 4; ++i)
-    {
-        driverData[i] = dd[i];
-
-        for (int j = 0; j < driverData[i].lapData.size(); ++j)
-        {
-            double secs = driverData[i].lapData[j].lapTime.toDouble();//-QTime::fromString(driverData[i].lapData[j].lapTime, "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-
-            if (secs == 0 && j > 0)
-                secs = driverData[i].lapData[j-1].lapTime.toDouble();//-QTime::fromString(driverData[i].lapData[j-1].lapTime, "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-
-            if (secs == 0 && j < driverData[i].lapData.size()-1)
-            {
-                secs = driverData[i].lapData[j+1].lapTime.toDouble();//-QTime::fromString(driverData[i].lapData[j+1].lapTime, "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-                if (driverData[i].lapData[j].lapTime.toString() == "IN PIT")
-                {
-                    LapTime pl(driverData[i].getPitTime(driverData[i].lapData[j].numLap));
-                    secs = (driverData[i].lapData[j+1].lapTime - pl + LapTime(5000)).toDouble();
-                }
-            }
-
-            if (secs < lMin)
-                lMin = secs;
-
-            if (secs > lMax)
-                lMax = secs;
-        }
-    }
-    if (lMax != 0)
-    {
-        max = (double)(lMax + lMax * 0.01);
-        min = (double)(lMin - lMin * 0.01);
-
-        if (max > 180)
-            max = 180;
-
-        if (min < 0)
-           min = 0;
-    }
-}
-
-void LapCompChartWidget::drawAxes(QPainter *p, int firstLap, int lastLap)
-{
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
-
-    //x axe
-    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
-
-    //y axe
-    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
-
-    p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
-
-    double yFactor = (double)((paintRect.height())/6.0);
-    double yFactor2 = (double)((tMax-tMin)/6.0);
-    double j = tMin;
-    for (int i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
-    {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
-        p->drawText(5, i+5, QString("%1").arg(j, 0, 'f', 1));
-
-        if (i != paintRect.bottom())
-        {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-            pen.setStyle(Qt::DashLine);
-            p->setPen(pen);
-            p->drawLine(paintRect.left(), i, paintRect.right(), i);
-        }
-    }
-
-    if (lastLap - firstLap > 0)
-    {
-        double xFactor = ((double)paintRect.width()) / /*((lapData.size() < 5) ?*/ (double)(lastLap - firstLap) /*: 5)*/;
-        double j = firstLap;
-        double i = paintRect.left();
-        int prevJ = firstLap;
-
-        double jFactor = (lastLap - firstLap) < 6 ? 1.0 : (double)((lastLap - firstLap)/6.0);
-        for (; i < width()-15.0 && round(j) < lastLap; /*i += xFactor,*/ j += jFactor)
-        {
-            i += (double)(round(j) - prevJ) * xFactor;
-            prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
-            p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
-
-            if (i > paintRect.left())
-            {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-                pen.setStyle(Qt::DashLine);
-                p->setPen(pen);
-                p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
-            }
-        }
-    }
-
-//    if (lastLap - firstLap > 0)
-//    {
-//        double xFactor = (width()-42) / ((lastLap - firstLap < 5) ? lastLap - firstLap : 5);
-//        double j = firstLap;
-
-//        double jFactor = lastLap - firstLap < 5 ? 1.0 : (double)((lastLap - firstLap)/5.0);
-//        for (int i = 37; i < width()-15 && round(j) < lastLap; i += xFactor, j += jFactor)
-//        {
-//            p->setPen(QColor(LTData::colors[LTData::WHITE]));
-//            p->drawText(i-5, height()-10, QString("L%1").arg(round(j)));
-
-//            if (i > 37)
-//            {
-//                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-//                pen.setStyle(Qt::DashLine);
-//                p->setPen(pen);
-//                p->drawLine(i, height()-25, i, 10);
-//            }
-//        }
-//    }
-}
-
-void LapCompChartWidget::findFirstAndLastLap(int &firstLap, int &lastLap)
-{
-	firstLap = 99, lastLap = 0;
-	int msecs;
-	double secs;
-	for (int i = 0; i < 4; ++i)
-	{
-		if (!driverData[i].lapData.isEmpty())
-		{
-			for (int j = 0; j < driverData[i].lapData.size(); ++j)
-			{
-				if (driverData[i].lapData[j].numLap < firstLap && driverData[i].lapData[j].numLap >= first)
-					firstLap = driverData[i].lapData[j].numLap;
-
-				if (driverData[i].lapData[j].numLap > lastLap && driverData[i].lapData[j].numLap <= last)
-					lastLap = driverData[i].lapData[j].numLap;
-
-			}
-//			msecs = -QTime::fromString(driverData[i].lapData[0].lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-//			secs = (double)(msecs / 1000.0);
-//
-//			if (secs > max) secs = max;
-//			if (secs < min) secs = min;
-		}
-	}
-}
-
-void LapCompChartWidget::drawChart(QPainter *p)
-{
-    int firstLap = 99, lastLap = 0;
-
-    double x[4] = {(int)paintRect.left(), (int)paintRect.left(), (int)paintRect.left(), (int)paintRect.left()};
-    double y1[4];
-    double y2[4];
-    double yFactor = (((double)paintRect.height()) / (double)(tMax-tMin));
-    int msecs;
-    double secs;
-
-    for (int i = 0; i < 4; ++i)
-    {
-        if (!driverData[i].lapData.isEmpty())
-        {
-//            if (driverData[i].lapData[0].numLap < firstLap)
-//                firstLap = driverData[i].lapData[0].numLap;
-//
-//            if (driverData[i].lapData.last().numLap > lastLap)
-//                lastLap = driverData[i].lapData.last().numLap;
-//
-            msecs = -QTime::fromString(driverData[i].lapData[0].lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-            secs = (double)(msecs / 1000.0);
-
-            if (secs > max) secs = max;
-            if (secs < min) secs = min;
-            y1[i] = (double)(paintRect.bottom() - (double)(secs-tMin) * yFactor);
-        }
-    }
-    findFirstAndLastLap(firstLap, lastLap);
-//    firstLap = first; lastLap = last;
-    drawAxes(p, firstLap, lastLap);
-    if (lastLap - firstLap == 0)
-        return;
-
-
-    double xFactor = ((double)paintRect.width()) / (double)(lastLap - firstLap);
-
-    p->setRenderHint(QPainter::Antialiasing);
-    int index[4] = {0,0,0,0};
-    double j[4] = {(x[0]), (x[0]), (x[0]), (x[0])};
-    for (int i = firstLap; i <= lastLap; ++i)
-    {
-        for (int k = 0; k < 4; ++k)
-        {
-        	LapData ld = driverData[k].getLapData(i);
-//            if (!driverData[k].lapData.empty() && index[k] < driverData[k].lapData.size() && driverData[k].lapData[index[k]].numLap == i)
-        	if (ld.carID == driverData[k].carID && ld.numLap == i)
-            {
-                QPen pen;
-                pen.setWidth(2);
-                pen.setColor(colors[k]);
-                p->setPen(pen);
-
-                LapTime lapTime = ld.lapTime;//driverData[k].lapData[index[k]].lapTime;
-
-                if (lapTime.toString() == "IN PIT")
-                {
-                	LapData ldtmp = driverData[k].getLapData(i-1);
-                	if (ldtmp.carID == driverData[k].carID)
-                		lapTime = ldtmp.lapTime;
-
-                	else
-                	{
-                		ldtmp = driverData[k].getLapData(i+1);
-                		if (ldtmp.carID == driverData[k].carID)
-                		{
-                			LapTime pl(driverData[k].getPitTime(ld.numLap));
-                			lapTime = lapTime - pl + LapTime(5000);
-                		}
-
-                		if (lapTime.toString() == "IN PIT")
-                		{
-                			ldtmp = driverData[k].getLapData(i+2);
-							if (ldtmp.carID == driverData[k].carID)
-							{
-								LapTime pl(driverData[k].getPitTime(ld.numLap+1));
-								lapTime = lapTime - pl + LapTime(5000);
-							}
-                		}
-                	}
-
-//                    else if (index[k] < driverData[k].lapData.size()-1)
-//                    {
-//                    	lapTime = driverData[k].getLapData(i+1).lapTime;
-////                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
-//                        LapTime pl(driverData[k].getPitTime(ld.numLap));
-//
-//                        lapTime = lapTime - pl + LapTime(5000);
-//                    }
-//
-//                    if  (lapTime.toString() == "IN PIT" && index[k] < driverData[k].lapData.size()-1)
-//                    {
-//                    	lapTime = driverData[k].getLapData(i+1).lapTime;
-////                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
-//                        LapTime pl(driverData[k].getPitTime(ld.numLap));
-//
-//                        lapTime = lapTime - pl + LapTime(5000);
-//                    }
-                }
-                msecs = -QTime::fromString(lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-                secs = (double)(msecs / 1000.0);
-
-                if (secs > max) secs = max;
-                if (secs < min) secs = min;
-                y2[k] = (double)(paintRect.bottom() - (double)(secs-tMin) * yFactor);
-
-                if (index[k] == 0)
-                    y1[k] = y2[k];
-
-                double dx1 = x[k], dx2 = j[k], dy1 = y1[k], dy2 = y2[k];
-
-                if (dy1 <= paintRect.bottom() || dy2 <= paintRect.bottom())
-                {
-					checkX1(dx1, dy1, dx2, dy2);
-					checkX2(dx1, dy1, dx2, dy2);
-
-					p->drawLine(dx1, dy1, dx2, dy2);
-
-					if (ld.lapTime.toString() == "IN PIT" && y2[k] <= paintRect.bottom())
-					{
-						QPainterPath path;
-						path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
-						p->setBrush(QBrush(colors[k]));
-						p->drawPath(path);
-					}
-                }
-
-                y1[k] = y2[k];
-                x[k] = j[k];
-
-                j[k] += xFactor;
-
-                ++index[k];
-            }
-            else
-            {
-                x[k] += xFactor;
-                j[k] = x[k];
-            }
-        }
-    }
-
-}
-
-void LapCompChartWidget::paintEvent(QPaintEvent *)
-{
-    resetPaintRect();
-
-	if (scaleRect.width() == 0 && scaleRect.height() == 0)
-	{
-		resetZoom();
-	}
-
-    QPainter p;
-    p.begin(this);   
-
-    drawChart(&p);
-    if (scaling)
-		drawScaleRect(&p);
-
-    p.end();
-}
-
-void LapCompChartWidget::drawLegend(QPainter *p)
-{
-    p->setRenderHint(QPainter::Antialiasing, false);
-    p->setBrush(QColor(20, 20, 20));
-
-    int yy = 0;
-    for (int i = 0; i < 4; ++i)
-    {
-        if (driverData[i].carID > 0)
-        {
-            p->setPen(QColor(20, 20, 20));
-            p->drawRect(40, yy, 115, 20);
-
-            p->setPen(colors[i]);
-            p->drawText(45, yy+20, driverData[i].driver);
-            yy += 20;
-        }
-    }
-    if (yy > 5)
-    {
-        p->setBrush(QBrush());
-        p->setPen(LTData::colors[LTData::DEFAULT]);
-        p->drawRect(40, 5, 115, yy);
-    }
-}
-
-void LapCompChartWidget::drawIntoImage(QImage &img)
-{
-    QPainter p;
-    p.begin(&img);
-
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    drawChart(&p);
-
-    drawLegend(&p);
-
-    p.end();
-}
-
-void LapCompChartWidget::resetZoom()
-{
-    ChartWidget::resetZoom();
-    first = 1; last = 99;
-}
-
-void LapCompChartWidget::transform()
-{
-	if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-		return;
-
-	if (scaleRect == QRect())
-	{
-		first = 1;
-		last = 99;
-		tMin = min;
-		tMax = max;
-		return;
-	}
-
-	if (scaleRect.left() > scaleRect.right())
-		scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-	if (scaleRect.top() > scaleRect.bottom())
-		scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
-	int firstLap, lastLap;
-	findFirstAndLastLap(firstLap, lastLap);
-	int sz = lastLap-firstLap+1;
-	double xFactor = ((double)paintRect.width()) / ((double)sz);
-	double yFactor = (((double)paintRect.height()) / (double)(tMax - tMin));
-
-	first = firstLap + ceil((scaleRect.left() - paintRect.left()) / xFactor);
-	if (first < 1)
-		first = 1;
-
-    last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
-
-	tMin = tMin + ceil((paintRect.bottom() - scaleRect.bottom()) / yFactor)-1;
-	if (tMin < min)
-		tMin = min;
-	tMax = tMin + ceil((scaleRect.bottom() - scaleRect.top()) / yFactor);
-
-}
-
-//========================================================================
-
-double GapCompChartWidget::calculateInterval(int lap)
-{
-    LapData ld1 = (driverIdx[0] >= 0) ? eventData.driversData[driverIdx[0]].getLapData(lap) : LapData();
-    LapData ld2 = (driverIdx[1] >= 0) ? eventData.driversData[driverIdx[1]].getLapData(lap) : LapData();
-    QString gap1 = ld1.gap;
-    QString gap2 = ld2.gap;
-
-    if ((ld1.lapTime.toString() == "" && ld1.gap == "") || (ld2.lapTime.toString() == "" && ld2.gap == ""))
-        return 0.0;
-
-    if ((gap1 != "" && gap2 != "" && gap1[gap1.size()-1] != 'L' && gap2[gap2.size()-1] != 'L') ||
-        ((ld1.pos == 1 && gap1.isNull()) || (ld2.pos == 1 && gap2.isNull())))
-    {
-        double interval = gap1.toDouble() - gap2.toDouble();
-        return interval;
-    }
-    else if ((gap1 != "" && gap1[gap1.size()-1] == 'L') || (gap2 != "" && gap2[gap2.size()-1] == 'L'))
-    {
-        int pos1 = ld1.pos;
-        int pos2 = ld2.pos;
-
-        bool neg = true;
-        if (pos2 < pos1)
-        {
-            int tmp = pos1;
-            pos1 = pos2;
-            pos2 = tmp;
-            neg = false;
-        }
-
-        QList<QString> intervals;
-//        intervals.reserve(pos2 - pos1);
-        for (int i = 0; i < eventData.driversData.size(); ++i)
-        {
-            LapData ld = eventData.driversData[i].getLapData(lap);
-            int pos = ld.pos;
-            if (pos > pos1 && pos <= pos2)
-            {
-                if (ld.interval != "" && ld.interval[ld.interval.size()-1] == 'L')
-                    return neg ? -1000.0 : 1000.0;
-
-                intervals.append(ld.interval);
-            }
-        }
-        double interval = 0.0;
-        for (int i = 0; i < intervals.size(); ++i)
-            interval += intervals[i].toDouble();
-
-        if (neg && ld1.lapTime.isValid() && interval > ld1.lapTime.toDouble())
-            return -1000.0;
-        if (!neg && ld2.lapTime.isValid() && interval > ld2.lapTime.toDouble())
-            return 1000.0;
-
-
-        return neg ? -interval : interval;
-    }
-
-    return 0.0;
-}
-
-
-void GapCompChartWidget::drawAxes(QPainter *p, int firstLap, int lastLap)
-{
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
-
-    //x axe
-    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
-
-    //y axe
-    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
-
-    p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
-
-    if (tMax == max && max >= 60)
-    {
-        max = 60;
-        tMax = 60;
-    }
-
-    double yFactor = (double)(paintRect.height()/6.0);
-    double yFactor2 = (double)((tMax-tMin)/6.0);
-    double j = tMin;
-    for (int i = paintRect.bottom(); i > 10; i-= yFactor, j += yFactor2)
-    {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
-        p->drawText(5, i+5, QString("%1").arg(j, 0, 'f', 1));
-
-        if (i != paintRect.bottom())
-        {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-            pen.setStyle(Qt::DashLine);
-            p->setPen(pen);
-            p->drawLine(paintRect.left(), i, paintRect.right(), i);
-        }
-    }
-
-    if (max == 60)
-    {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
-        p->drawText(5, 15, ">60");
-        QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-        pen.setStyle(Qt::DashLine);
-        p->setPen(pen);
-        p->drawLine(paintRect.left(), 10, paintRect.right(), 10);
-    }
-
-    if (lastLap - firstLap > 0)
-    {
-        double xFactor = ((double)paintRect.width()) / /*((lapData.size() < 5) ?*/ (double)(lastLap - firstLap) /*: 5)*/;
-        double j = firstLap;
-        double i = paintRect.left();
-        int prevJ = firstLap;
-
-        double jFactor = (lastLap - firstLap) < 6 ? 1.0 : (double)((lastLap - firstLap)/6.0);
-        for (; i < width()-15.0 && round(j) < lastLap; /*i += xFactor,*/ j += jFactor)
-        {
-            i += (double)(round(j) - prevJ) * xFactor;
-            prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
-            p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
-
-            if (i > paintRect.left())
-            {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-                pen.setStyle(Qt::DashLine);
-                p->setPen(pen);
-                p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
-            }
-        }
-    }
-
-//    if (lastLap - firstLap > 0)
-//    {
-//        double xFactor = (width()-42) / ((lastLap - firstLap < 5) ? lastLap - firstLap : 5);
-//        double j = firstLap;
-
-//        double jFactor = lastLap - firstLap < 5 ? 1.0 : (double)((lastLap - firstLap)/5.0);
-//        for (int i = 37; i < width()-15 && round(j) < lastLap; i += xFactor, j += jFactor)
-//        {
-//            p->setPen(QColor(LTData::colors[LTData::WHITE]));
-//            p->drawText(i-5, height()-10, QString("L%1").arg(round(j)));
-
-//            if (i > 37)
-//            {
-//                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-//                pen.setStyle(Qt::DashLine);
-//                p->setPen(pen);
-//                p->drawLine(i, height()-25, i, 10);
-//            }
-//        }
-//    }
-}
-
-void GapCompChartWidget::findFirstAndLastLap(int &firstLap, int &lastLap)
-{
-	firstLap = 99, lastLap = 0;
-	for (int i = 0; i < 4; ++i)
-	{
-		DriverData dd = driverIdx[i] >= 0 ? eventData.driversData[driverIdx[i]] : DriverData();
-		if (!dd.lapData.isEmpty())
-		{
-			for (int j = 0; j < dd.lapData.size(); ++j)
-			{
-				if (dd.lapData[j].numLap < firstLap && dd.lapData[j].numLap >= first)
-					firstLap = dd.lapData[j].numLap;
-
-				if (dd.lapData[j].numLap > lastLap && dd.lapData[j].numLap <= last)
-					lastLap = dd.lapData[j].numLap;
-
-			}
-		}
-	}
-}
-
-void GapCompChartWidget::drawChart(QPainter *p)
-{
-    int firstLap = 99, lastLap = 0;
-
-    double x[2] = {(int)paintRect.left(), (int)paintRect.left()};
-    double y1[2];
-    double y2[2];
-
-    findFirstAndLastLap(firstLap, lastLap);
-    int index[2] = {0,0};
-    min = 0.0; max = 0.0;
-    QList<double> intervals;
-
-    for (int i = firstLap; i <= lastLap; ++i)
-    {
-        intervals.append(calculateInterval(i));
-        double interval = fabs(intervals.last());
-
-        if (interval > max)
-        {
-        	max = interval;
-        	tMax = max;
-        }
-    }
-
-    if (max != 1000)
-    {
-        max += max * 0.05;
-        tMax = max;
-    }
-
-    drawAxes(p, firstLap, lastLap);
-    if (lastLap - firstLap == 0)
-        return;
-
-
-    double xFactor = ((double)paintRect.width()) / (double)(lastLap - firstLap);
-    double yFactor = (((double)paintRect.height()) / (double)(tMax-tMin));
-
-    p->setRenderHint(QPainter::Antialiasing);
-    double j[2] = {(x[0]), (x[0])};
-    for (int i = firstLap; i <= lastLap; ++i)
-    {
-        for (int k = 0; k < 2; ++k)
-        {
-            DriverData dd = (driverIdx[k] >= 0) ? eventData.driversData[driverIdx[k]] : DriverData();
-            LapData ld = dd.getLapData(i);
-//            if (!dd.lapData.empty() && index[k] < dd.lapData.size() && dd.lapData[index[k]].numLap == i)
-            if (ld.carID == dd.carID && ld.numLap == i)
-            {
-                QPen pen;
-                pen.setWidth(2);
-                pen.setColor(colors[k]);
-                p->setPen(pen);
-
-                double driverY = fabs(intervals[i-firstLap]);
-
-                int idx = i - firstLap;
-                if (driverY == 0 && (i+1-firstLap) < intervals.size())
-                {
-                    idx = i + 1 - firstLap;
-                    driverY = fabs(intervals[idx]);
-                }
-
-
-                if ((k == 0 && intervals[idx] < 0) || (k == 1 && intervals[idx] > 0))
-                    driverY = 0;
-
-
-//                if (dd.lapTime.toString() == "IN PIT")
-//                {
-//                    if (index[k] > 0)
-//                        lapTime = driverData[k].lapData[index[k]-1].lapTime;
-
-//                    else if (index[k] < driverData[k].lapData.size()-1)
-//                    {
-//                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
-//                        LapTime pl(driverData[k].getPitTime(driverData[k].lapData[index[k]].numLap));
-
-//                        lapTime = lapTime - pl + LapTime(5000);
-//                    }
-
-//                    if  (lapTime.toString() == "IN PIT" && index[k] < driverData[k].lapData.size()-1)
-//                    {
-//                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
-//                        LapTime pl(driverData[k].getPitTime(driverData[k].lapData[index[k]].numLap));
-
-//                        lapTime = lapTime - pl + LapTime(5000);
-//                    }
-//                }
-//                msecs = -QTime::fromString(lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-//                secs = (double)(msecs / 1000.0);
-
-                if (driverY > max) driverY = max;
-
-                y2[k] = (double)(paintRect.bottom() - (driverY - tMin) * yFactor);
-
-                if (index[k] == 0)
-                    y1[k] = y2[k];
-
-                double dx1 = x[k], dx2 = j[k], dy1 = y1[k], dy2 = y2[k];
-                checkX1(dx1, dy1, dx2, dy2);
-                checkX2(dx1, dy1, dx2, dy2);
-
-                p->drawLine(dx1, dy1, dx2, dy2);
-
-                if (ld.lapTime.toString() == "IN PIT" && y2[k] <= paintRect.bottom())
-                {
-                    QPainterPath path;
-                    path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
-                    p->setBrush(QBrush(colors[k]));
-                    p->drawPath(path);
-                }
-
-                y1[k] = y2[k];
-                x[k] = j[k];
-
-                j[k] += xFactor;
-
-                ++index[k];
-            }
-            else
-            {
-                x[k] += xFactor;
-                j[k] = x[k];
-            }
-        }
-    }
-
-}
-
-void GapCompChartWidget::paintEvent(QPaintEvent *)
-{
-    resetPaintRect();
-
-	if (scaleRect.width() == 0 && scaleRect.height() == 0)
-	{
-		resetZoom();
-	}
-
-    QPainter p;
-    p.begin(this);
-
-    drawChart(&p);
-
-    if (scaling)
-		drawScaleRect(&p);
-
-    p.end();
-}
-
-void GapCompChartWidget::drawLegend(QPainter *p)
-{
-    p->setRenderHint(QPainter::Antialiasing, false);
-    p->setBrush(QColor(20, 20, 20));
-
-    p->setPen(LTData::colors[LTData::DEFAULT]);
-    p->drawRect(40, 5, 115, 45);
-
-    double yy = 0.0;
-    for (int i = 0; i < 2; ++i)
-    {
-        DriverData dd = driverIdx[i] >= 0 ? eventData.driversData[driverIdx[i]] : DriverData();
-        if (dd.carID > 0)
-        {
-            p->setPen(colors[i]);
-            p->drawText(45, yy+20, dd.driver);
-            yy += 20;
-        }
-    }
-}
-
-void GapCompChartWidget::drawIntoImage(QImage &img)
-{
-    QPainter p;
-    p.begin(&img);
-
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    drawChart(&p);
-
-    drawLegend(&p);
-
-    p.end();
-}
-
-void GapCompChartWidget::resetZoom()
-{
-    ChartWidget::resetZoom();
-    first = 1; last = 99;
-}
-
-void GapCompChartWidget::transform()
-{
-	if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-		return;
-
-	if (scaleRect == QRect())
-	{
-		first = 1;
-		last = 99;
-		tMin = min;
-		tMax = max;
-		return;
-	}
-
-	if (scaleRect.left() > scaleRect.right())
-		scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-	if (scaleRect.top() > scaleRect.bottom())
-		scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
-	int firstLap, lastLap;
-	findFirstAndLastLap(firstLap, lastLap);
-	int sz = lastLap-firstLap+1;
-	double xFactor = ((double)paintRect.width()) / ((double)sz);
-	double yFactor = (((double)paintRect.height()) / (double)(tMax - tMin));
-
-	first = firstLap + ceil((scaleRect.left() - paintRect.left()) / xFactor);
-	if (first < 1)
-		first = 1;
-
-//	if (first >= driverData.lapData.size())
-//		first = driverData.lapData.size() - 1;
-
-	last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
-//	if (last >= driverData.lapData.size())
-//		last = driverData.lapData.size() - 1;
-
-	tMin = tMin + ceil((paintRect.bottom() - scaleRect.bottom()) / yFactor)-1;
-	if (tMin < min)
-		tMin = min;
-	tMax = tMin + ceil((scaleRect.bottom() - scaleRect.top()) / yFactor);
-
-}
-
-//=========================================================
-
-void PosCompChartWidget::drawAxes(QPainter *p, int firstLap, int lastLap)
-{
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
-
-    //x axe
-    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
-
-    //y axe
-    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
-
-    p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
-
-
-    double yFactor = (double)(paintRect.height()/6.0);
-    double yFactor2 = (double)((tMax-tMin)/6.0);
-    double j = tMin;
-
-    for (int i = paintRect.bottom(); i >= paintRect.top(); i-= yFactor, j += yFactor2)
-    {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
-        p->drawText(5, i+5, QString("%1").arg(round(j)));
-
-        if (i != paintRect.bottom())
-        {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-            pen.setStyle(Qt::DashLine);
-            p->setPen(pen);
-            p->drawLine(paintRect.left(), i, paintRect.right(), i);
-        }
-    }
-
-    if (lastLap - firstLap > 0)
-    {
-        double xFactor = ((double)paintRect.width()) / /*((lapData.size() < 5) ?*/ (double)(lastLap - firstLap) /*: 5)*/;
-        double j = firstLap;
-        double i = paintRect.left();
-        int prevJ = firstLap;
-
-        double jFactor = (lastLap - firstLap) < 6 ? 1.0 : (double)((lastLap - firstLap)/6.0);
-        for (; i < width()-15.0 && round(j) < lastLap; /*i += xFactor,*/ j += jFactor)
-        {
-            i += (double)(round(j) - prevJ) * xFactor;
-            prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
-            p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
-
-            if (i > paintRect.left())
-            {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-                pen.setStyle(Qt::DashLine);
-                p->setPen(pen);
-                p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
-            }
-        }
-    }
-
-//    if (lastLap - firstLap > 0)
-//    {
-//        double xFactor = (width()-42) / ((lastLap - firstLap < 5) ? lastLap - firstLap : 5);
-//        double j = firstLap;
-
-//        double jFactor = lastLap - firstLap < 5 ? 1.0 : (double)((lastLap - firstLap)/5.0);
-//        for (int i = 37; i < width()-15 && round(j) < lastLap; i += xFactor, j += jFactor)
-//        {
-//            p->setPen(QColor(LTData::colors[LTData::WHITE]));
-//            p->drawText(i-5, height()-10, QString("L%1").arg(round(j)));
-
-//            if (i > 37)
-//            {
-//                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-//                pen.setStyle(Qt::DashLine);
-//                p->setPen(pen);
-//                p->drawLine(i, height()-25, i, 10);
-//            }
-//        }
-//    }
-}
-
-
-void PosCompChartWidget::findFirstAndLastLap(int &firstLap, int &lastLap)
-{
-	firstLap = 99, lastLap = 0;
-	int msecs;
-	double secs;
-	for (int i = 0; i < 2; ++i)
-	{
-		if (!driverData[i].lapData.isEmpty())
-		{
-			for (int j = 0; j < driverData[i].lapData.size(); ++j)
-			{
-				if (driverData[i].lapData[j].numLap < firstLap && driverData[i].lapData[j].numLap >= first)
-					firstLap = driverData[i].lapData[j].numLap;
-
-				if (driverData[i].lapData[j].numLap > lastLap && driverData[i].lapData[j].numLap <= last)
-					lastLap = driverData[i].lapData[j].numLap;
-
-			}
-//			msecs = -QTime::fromString(driverData[i].lapData[0].lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-//			secs = (double)(msecs / 1000.0);
-//
-//			if (secs > max) secs = max;
-//			if (secs < min) secs = min;
-		}
-	}
-}
-
-void PosCompChartWidget::drawChart(QPainter *p)
-{
-    int firstLap = 99, lastLap = 0;
-
-    double x[2] = {paintRect.left(), paintRect.left()};
-    double y1[2];
-    double y2[2];
-    double yFactor = ((double)paintRect.height() / (double)(tMax-tMin));
-
-//    for (int i = 0; i < 2; ++i)
-//    {
-//        if (!driverData[i].lapData.isEmpty())
-//        {
-//            if (driverData[i].lapData[0].numLap < firstLap)
-//                firstLap = driverData[i].lapData[0].numLap;
-//
-//            if (driverData[i].lapData.last().numLap > lastLap)
-//                lastLap = driverData[i].lapData.last().numLap;
-//        }
-//    }
-    findFirstAndLastLap(firstLap, lastLap);
-    drawAxes(p, firstLap, lastLap);
-    if (lastLap - firstLap == 0)
-        return;
-
-
-    double xFactor = ((double)paintRect.width()) / (double)(lastLap - firstLap);
-
-    p->setRenderHint(QPainter::Antialiasing);
-    int index[2] = {0,0};
-    double j[2] = {(x[0]), (x[0])};
-    for (int i = firstLap; i <= lastLap; ++i)
-    {
-        for (int k = 0; k < 2; ++k)
-        {
-        	LapData ld = driverData[k].getLapData(i);
-//            if (!driverData[k].lapData.empty() && index[k] < driverData[k].lapData.size() && driverData[k].lapData[index[k]].numLap == i)
-        	if (ld.carID == driverData[k].carID && ld.numLap == i)
-            {
-                QPen pen;
-                pen.setWidth(2);
-                pen.setColor(colors[k]);
-                p->setPen(pen);
-
-                int pos = ld.pos;//driverData[k].lapData[index[k]].pos;
-
-                y2[k] = (double)(paintRect.bottom() - (double)(pos-tMin) * yFactor);
-
-                if (index[k] == 0)
-                    y1[k] = y2[k];
-
-                double dx1 = x[k], dx2 = j[k], dy1 = y1[k], dy2 = y2[k];
-				checkX1(dx1, dy1, dx2, dy2);
-				checkX2(dx1, dy1, dx2, dy2);
-
-				p->drawLine(dx1, dy1, dx2, dy2);
-
-				if (ld.lapTime.toString() == "IN PIT" && y2[k] <= paintRect.bottom())
-                {
-                    QPainterPath path;
-                    path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
-                    p->setBrush(QBrush(colors[k]));
-                    p->drawPath(path);
-                }
-
-                y1[k] = y2[k];
-                x[k] = j[k];
-
-                j[k] += xFactor;
-
-                ++index[k];
-            }
-            else
-            {
-                x[k] += xFactor;
-                j[k] = x[k];
-            }
-        }
-    }
-}
-
-void PosCompChartWidget::paintEvent(QPaintEvent *)
-{
-    resetPaintRect();
-
-	if (scaleRect.width() == 0 && scaleRect.height() == 0)
-	{
-		resetZoom();
-	}
-
-    QPainter p;
-    p.begin(this);
-
-    drawChart(&p);
-
-    if (scaling)
-        drawScaleRect(&p);
-
-    p.end();
-}
-
-void PosCompChartWidget::drawLegend(QPainter *p)
-{
-    p->setRenderHint(QPainter::Antialiasing, false);
-    p->setBrush(QColor(20, 20, 20));
-
-    p->setPen(LTData::colors[LTData::DEFAULT]);
-    p->drawRect(40, 5, 115, 45);
-
-    double yy = 0.0;
-    for (int i = 0; i < 2; ++i)
-    {
-        if (driverData[i].carID > 0)
-        {
-            p->setPen(colors[i]);
-            p->drawText(45, yy+20, driverData[i].driver);
-            yy += 20;
-        }
-    }
-}
-
-void PosCompChartWidget::drawIntoImage(QImage &img)
-{
-    QPainter p;
-    p.begin(&img);
-
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    drawChart(&p);
-
-    drawLegend(&p);
-
-    p.end();
-}
-
-void PosCompChartWidget::resetZoom()
-{
-    ChartWidget::resetZoom();
-    first = 1; last = 99;
-}
-
-void PosCompChartWidget::transform()
-{
-	if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-		return;
-
-	if (scaleRect == QRect())
-	{
-		first = 1;
-		last = 99;
-		tMin = min;
-		tMax = max;
-		return;
-	}
-
-	if (scaleRect.left() > scaleRect.right())
-		scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-	if (scaleRect.top() > scaleRect.bottom())
-		scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
-	int firstLap, lastLap;
-	findFirstAndLastLap(firstLap, lastLap);
-	int sz = lastLap-firstLap+1;
-	double xFactor = ((double)paintRect.width()) / ((double)sz);
-	double yFactor = (((double)paintRect.height()) / (double)(tMax - tMin));
-
-	first = firstLap + ceil((scaleRect.left() - paintRect.left()) / xFactor);
-	if (first < 1)
-		first = 1;
-
-    last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
-
-	tMin = tMin + ceil((paintRect.bottom() - scaleRect.bottom()) / yFactor)-1;
-	if (tMin < min)
-		tMin = min;
-	tMax = tMin + ceil((scaleRect.bottom() - scaleRect.top()) / yFactor);
-
-}
 

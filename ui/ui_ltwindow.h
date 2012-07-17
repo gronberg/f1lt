@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Mon Jul 16 22:10:05 2012
+** Created: Tue Jul 17 21:55:45 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -134,6 +134,9 @@ public:
         actionStop_recording->setIcon(icon8);
         actionSession_analysis = new QAction(LTWindow);
         actionSession_analysis->setObjectName(QString::fromUtf8("actionSession_analysis"));
+        QIcon icon9;
+        icon9.addFile(QString::fromUtf8(":/ui_icons/sa.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSession_analysis->setIcon(icon9);
         centralWidget = new QWidget(LTWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
@@ -376,6 +379,7 @@ public:
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionHead_to_head);
         mainToolBar->addAction(actionLap_time_comparison);
+        mainToolBar->addAction(actionSession_analysis);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionPreferences);
         mainToolBar->addAction(actionExit);

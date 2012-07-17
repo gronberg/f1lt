@@ -1,8 +1,8 @@
-#include "weatherchartwidget.h"
+#include "weatherchart.h"
 #include <QPainter>
 
 
-void WeatherChartWidget::drawAxes(QPainter *p)
+void WeatherChart::drawAxes(QPainter *p)
 {
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
@@ -95,7 +95,7 @@ void WeatherChartWidget::drawAxes(QPainter *p)
 
 }
 
-void WeatherChartWidget::drawChart(QPainter *p)
+void WeatherChart::drawChart(QPainter *p)
 {
     EventData &ed = EventData::getInstance();
     int sz = last - first + 1;
@@ -135,7 +135,7 @@ void WeatherChartWidget::drawChart(QPainter *p)
     }
 }
 
-void WeatherChartWidget::paintEvent(QPaintEvent *)
+void WeatherChart::paintEvent(QPaintEvent *)
 {
     resetPaintRect();
 
@@ -153,7 +153,7 @@ void WeatherChartWidget::paintEvent(QPaintEvent *)
     p.end();
 }
 
-void WeatherChartWidget::setMinMax()
+void WeatherChart::setMinMax()
 {
     EventData &ed = EventData::getInstance();
     for (int i = 0; i < ed.weatherData[weatherId].size(); ++i)
@@ -179,7 +179,7 @@ void WeatherChartWidget::setMinMax()
         min = 0.0;
 }
 
-void WeatherChartWidget::resetZoom()
+void WeatherChart::resetZoom()
 {
     setMinMax();
     first = 1;
@@ -188,7 +188,7 @@ void WeatherChartWidget::resetZoom()
     tMax = max;
 }
 
-void WeatherChartWidget::transform()
+void WeatherChart::transform()
 {
     if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
         return;
@@ -231,7 +231,7 @@ void WeatherChartWidget::transform()
 }
 
 
-void TempChartWidget::drawAxes(QPainter *p)
+void TempChart::drawAxes(QPainter *p)
 {
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
@@ -324,7 +324,7 @@ void TempChartWidget::drawAxes(QPainter *p)
 
 }
 
-void TempChartWidget::drawChart(QPainter *p)
+void TempChart::drawChart(QPainter *p)
 {
     EventData &ed = EventData::getInstance();
     if (ed.weatherData[weatherId].size()>1)
@@ -378,7 +378,7 @@ void TempChartWidget::drawChart(QPainter *p)
     }
 }
 
-void TempChartWidget::drawLegend(QPainter *p)
+void TempChart::drawLegend(QPainter *p)
 {
     p->setRenderHint(QPainter::Antialiasing, false);
     p->setBrush(QColor(20, 20, 20));
@@ -393,7 +393,7 @@ void TempChartWidget::drawLegend(QPainter *p)
     p->drawText(width()-80, height()-40, "Track temp");
 }
 
-void TempChartWidget::paintEvent(QPaintEvent *)
+void TempChart::paintEvent(QPaintEvent *)
 {
     QPainter p;
     p.begin(this);
@@ -409,7 +409,7 @@ void TempChartWidget::paintEvent(QPaintEvent *)
     p.end();
 }
 
-void TempChartWidget::setMinMax()
+void TempChart::setMinMax()
 {
     EventData &ed = EventData::getInstance();
     int end = std::max(ed.weatherData[weatherId].size(), ed.weatherData[trackTempId].size());
@@ -432,7 +432,7 @@ void TempChartWidget::setMinMax()
 }
 
 
-void WetDryChartWidget::drawAxes(QPainter *p)
+void WetDryChart::drawAxes(QPainter *p)
 {
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
@@ -520,7 +520,7 @@ void WetDryChartWidget::drawAxes(QPainter *p)
 
 }
 
-void WetDryChartWidget::drawChart(QPainter *p)
+void WetDryChart::drawChart(QPainter *p)
 {
     EventData &ed = EventData::getInstance();
     if (ed.weatherData[weatherId].size()>1)

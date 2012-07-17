@@ -28,63 +28,59 @@ bool lessThan(LapData ld1, LapData ld2)
     return false;
 }
 
-bool PredXY::operator ()(int item1, int item2)
+bool PredXYPos::operator ()(int item1, int item2)
 {
     LapData ld1 = chart.lapDataArray[item1];
     LapData ld2 = chart.lapDataArray[item2];
 
-    if (ld1.lapTime.isValid() && ld2.lapTime.isValid())
-        return ld1 < ld2;
-
-    if (ld1.lapTime.isValid() && !ld2.lapTime.isValid())
-        return true;
-
-    return false;
-}
-
-bool PredXYGap::operator ()(int item1, int item2)
-{
-    LapData ld1 = chart.lapDataArray[item1];
-    LapData ld2 = chart.lapDataArray[item2];
-
-    QString sgap1 = ld1.gap;
-    QString sgap2 = ld2.gap;
-
-    if (sgap1 == "")
-        sgap1 = "1L";
-
-    if (sgap2 == "")
-        sgap2 = "1L";
-
-    bool ok1=true, ok2=true;
-    double gap1 = sgap1.toDouble(&ok1);
-    double gap2 = sgap2.toDouble(&ok2);
-
-    if (ok1 && ok2)
-        return gap1 < gap2;
-
-    if (sgap1 == "LAP")
-        return true;
-
-    if (sgap2 == "LAP")
-        return false;
-
-    if (sgap1.size() > 1 && sgap1[sgap1.size()-1] == 'L' &&
-        sgap2.size() > 1 && sgap2[sgap2.size()-1] == 'L')
-    {
-        gap1 = sgap1.left(sgap1.size()-1).toDouble();
-        gap2 = sgap2.left(sgap2.size()-1).toDouble();
-
-        return gap1 < gap2;
-    }
 //    if (ld1.lapTime.isValid() && ld2.lapTime.isValid())
-//        return ld1 < ld2;
+        return ld1.pos < ld2.pos;
 
 //    if (ld1.lapTime.isValid() && !ld2.lapTime.isValid())
 //        return true;
 
-    return false;
+//    return false;
 }
+
+//bool PredXYGap::operator ()(int item1, int item2)
+//{
+//    return PredXY::operator ()(item1, item2);
+////    LapData ld1 = chart.lapDataArray[item1];
+////    LapData ld2 = chart.lapDataArray[item2];
+
+////    QString sgap1 = ld1.gap;
+////    QString sgap2 = ld2.gap;
+
+////    if (sgap1 == "")
+////        sgap1 = "1L";
+
+////    if (sgap2 == "")
+////        sgap2 = "1L";
+
+////    bool ok1=true, ok2=true;
+////    double gap1 = sgap1.toDouble(&ok1);
+////    double gap2 = sgap2.toDouble(&ok2);
+
+////    if (ok1 && ok2)
+////        return gap1 < gap2;
+
+////    if (sgap1 == "LAP")
+////        return true;
+
+////    if (sgap2 == "LAP")
+////        return false;
+
+////    if (sgap1.size() > 1 && sgap1[sgap1.size()-1] == 'L' &&
+////        sgap2.size() > 1 && sgap2[sgap2.size()-1] == 'L')
+////    {
+////        gap1 = sgap1.left(sgap1.size()-1).toDouble();
+////        gap2 = sgap2.left(sgap2.size()-1).toDouble();
+
+////        return gap1 < gap2;
+////    }
+
+////    return false;
+//}
 
 void SessionLapTimesChart::findFirstAndLastLap(int &firstLap, int &lastLap, int &size)
 {
@@ -344,7 +340,7 @@ int SessionLapTimesChart::findLapDataXY(int x, int y)
         if (std::abs(lapDataXYArray[i].x - x) <= 3 && std::abs(lapDataXYArray[i].y - y) <= 3)
             itemsInXY.append(lapDataXYArray[i].idx);
     }
-    qSort(itemsInXY.begin(), itemsInXY.end(), PredXY(*this));
+    qSort(itemsInXY.begin(), itemsInXY.end(), PredXYPos(*this));
     return itemsInXY.size();
 }
 
@@ -353,7 +349,6 @@ void SessionLapTimesChart::drawLapDataXY(QPainter *p)
     if (itemsInXY.isEmpty())
         return;
 
-    p->setFont(QFont("Arial", 10, QFont::Bold, false));
 //    p.setPen(QColor(232, 227, 185, 200));
 //    p.setBrush(QColor(232, 227, 185, 200));
     p->setPen(QColor(50, 50, 50));
@@ -364,7 +359,7 @@ void SessionLapTimesChart::drawLapDataXY(QPainter *p)
 
     int height = 20 * (itemsInXY.size()+1);
     int bottom = y + height;
-    int width = 220;
+    int width = getPopupWidth()+20;
     int right = x + width;
 
     if (bottom > paintRect.bottom())
@@ -373,10 +368,13 @@ void SessionLapTimesChart::drawLapDataXY(QPainter *p)
     if (right > paintRect.right())
         x = paintRect.right() - width;
 
-    p->drawRect(x+20, y, 200, 20 * (itemsInXY.size()+1));
+    p->drawRect(x+20, y, getPopupWidth(), 20 * (itemsInXY.size()+1));
 
+    p->setFont(QFont("Arial", 10, QFont::Normal, true));
     p->setPen(LTData::colors[LTData::WHITE]);
     p->drawText(x+25, y+15, getLapInfoXY(lapDataArray[itemsInXY[0]]));
+
+    p->setFont(QFont("Arial", 10, QFont::Bold, false));
     for (int i = 0; i < itemsInXY.size(); ++i)
     {
         p->drawText(x+25, y+(i+1)*20+15, getDriverInfoXY(lapDataArray[itemsInXY[i]]));
@@ -413,7 +411,7 @@ void SessionLapTimesChart::drawIntoImage(QImage &img)
 
 void SessionLapTimesChart::paintEvent(QPaintEvent *)
 {
-    paintRect = QRect(42, 10, width()-47, height()-35);
+    resetPaintRect();
 
     if (scaleRect.width() == 0 && scaleRect.height() == 0)
     {
@@ -771,7 +769,7 @@ void SessionPositionsChart::drawChart(QPainter *p)
 
 void SessionPositionsChart::paintEvent(QPaintEvent *)
 {
-    paintRect = QRect(30, 10, width()-35, height()-35);
+    resetPaintRect();
 
     if (scaleRect.width() == 0 && scaleRect.height() == 0)
     {
@@ -885,10 +883,10 @@ void SessionGapsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
-    double yFactor = (double)((paintRect.height()-40)/10.0);
-    double yFactor2 = (double)((tMax-tMin)/10.0);
+    double yFactor = (double)((paintRect.height()-40)/9.0);
+    double yFactor2 = (double)((tMax-tMin)/9.0);
     double j = tMin;
-    for (double i = paintRect.bottom(); i >= 50; i-= yFactor, j += yFactor2)
+    for (double i = paintRect.bottom(); i >= 40; i-= yFactor, j += yFactor2)
     {
         p->setPen(QColor(LTData::colors[LTData::WHITE]));
         p->drawText(5, i+5, QString::number(j, 'f', 0));
@@ -950,7 +948,7 @@ void SessionGapsChart::drawChart(QPainter *p)
     int firstLap = first, lastLap = last;
     double x = paintRect.left();
     double y;
-    double yFactor = (((double)paintRect.height()) / (double)(tMax-tMin));
+    double yFactor = (((double)paintRect.height()-40) / (double)(tMax-tMin));
 
     int size;
     findFirstAndLastLap(firstLap, lastLap, size);
@@ -1007,7 +1005,7 @@ void SessionGapsChart::drawChart(QPainter *p)
                 gap = 0.0;
 
             if (tMax >= max && lapDataArray[i].gap == "")
-                gap = max;
+                gap = -1.0;
 
             y = (double)(paintRect.bottom() - (double)(gap-tMin) * yFactor);
 
@@ -1063,7 +1061,7 @@ void SessionGapsChart::drawChart(QPainter *p)
                     gap = 0.0;
 
                 if (tMax >= max && lapDataArray[i-1].gap == "")
-                    gap = max;
+                    gap = -1.0;
 
                 double y1 = (double)(paintRect.bottom() - (double)(gap-tMin) * yFactor);
 
@@ -1095,8 +1093,7 @@ void SessionGapsChart::drawChart(QPainter *p)
 
 void SessionGapsChart::paintEvent(QPaintEvent *pe)
 {
-    SessionLapTimesChart::paintEvent(pe);
-    paintRect = QRect(30, 10, width()-35, height()-35);
+    resetPaintRect();
 
     if (scaleRect.width() == 0 && scaleRect.height() == 0)
     {
@@ -1135,6 +1132,6 @@ int SessionGapsChart::findLapDataXY(int x, int y)
         if (std::abs(lapDataXYArray[i].x - x) <= 3 && std::abs(lapDataXYArray[i].y - y) <= 3)
             itemsInXY.append(lapDataXYArray[i].idx);
     }
-    qSort(itemsInXY.begin(), itemsInXY.end(), PredXYGap(*this));
+    qSort(itemsInXY.begin(), itemsInXY.end(), PredXYPos(*this));
     return itemsInXY.size();
 }

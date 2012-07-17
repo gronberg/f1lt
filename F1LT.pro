@@ -47,7 +47,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/eventstatuswidget.cpp \
     src/charts/sessionlaptimeschart.cpp \
     src/charts/fplaptimeschart.cpp \
-    src/charts/weatherchartwidget.cpp
+    src/charts/lapcompchart.cpp \
+    src/charts/weatherchart.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -73,7 +74,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/eventstatuswidget.h \
     src/charts/sessionlaptimeschart.h \
     src/charts/fplaptimeschart.h \
-    src/charts/weatherchartwidget.h
+    src/charts/lapcompchart.h \
+    src/charts/weatherchart.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

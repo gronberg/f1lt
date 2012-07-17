@@ -6,7 +6,7 @@
 
 #include <QList>
 #include "../core/ltdata.h"
-#include "../charts/chartwidget.h"
+#include "../charts/lapcompchart.h"
 
 namespace Ui {
 class LapTimeComparisonDialog;
@@ -56,7 +56,7 @@ private:
     Ui::LapTimeComparisonDialog *ui;
 
     QComboBox *comboBox[4];
-    LapCompChartWidget *lapCompChart;
+    LapCompChart *lapCompChart;
     QColor color[4];
     QList<QPixmap> smallCarImg;
 

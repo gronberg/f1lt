@@ -34,5 +34,6 @@
         <file>weather_track_temp.png</file>
         <file>weather_wind.png</file>
         <file>weather_wet.png</file>
+        <file>sa.png</file>
     </qresource>
 </RCC>

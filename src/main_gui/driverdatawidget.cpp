@@ -34,9 +34,9 @@ DriverDataWidget::DriverDataWidget(QWidget *parent) :
     colors[3] = LTData::colors[LTData::VIOLET];
     colors[4] = LTData::colors[LTData::YELLOW];
 
-    lapTimeChart = new LapTimeChartWidget(colors, this);
+    lapTimeChart = new LapTimeChart(colors, this);
 
-    gapChart = new GapChartWidget(LTData::colors[LTData::YELLOW], this);
+    gapChart = new GapChart(LTData::colors[LTData::YELLOW], this);
 
     ui->chartsTableWidget->setColumnWidth(0, ui->chartsTableWidget->width());
     ui->lapTimeChartTableWidget->setColumnWidth(0, ui->lapTimeChartTableWidget->width());

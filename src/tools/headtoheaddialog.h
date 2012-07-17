@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QList>
 #include "../core/ltdata.h"
-#include "../charts/chartwidget.h"
+#include "../charts/lapcompchart.h"
 
 #include <QComboBox>
 
@@ -25,7 +25,6 @@ public:
     void setReversedOrder(bool rev) { reversedOrder = rev; }
     bool isReversedOrder() { return reversedOrder; }
 
-    QString calculateInterval(int driver1Idx, int driver2Idx, int lap);
     void loadCarImages();
 
     int getNumber(int);
@@ -60,9 +59,9 @@ private:
     Ui::HeadToHeadDialog *ui;
 
     QComboBox *comboBox[2];
-    LapCompChartWidget *lapCompChart;
-    GapCompChartWidget *gapCompChart;
-    PosCompChartWidget *posCompChart;
+    LapCompChart *lapCompChart;
+    GapCompChart *gapCompChart;
+    PosCompChart *posCompChart;
     QColor color[2];
     QList<QPixmap> smallCarImg;
 

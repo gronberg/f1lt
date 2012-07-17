@@ -28,7 +28,7 @@ LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
     color[1] = LTData::colors[LTData::CYAN];
     color[2] = LTData::colors[LTData::YELLOW];
     color[3] = LTData::colors[LTData::VIOLET];
-    lapCompChart = new LapCompChartWidget(color, this);
+    lapCompChart = new LapCompChart(color, this);
 
 
     connect(ui->comboBox1, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxValueChanged(int)));

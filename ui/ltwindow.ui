@@ -591,6 +591,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="separator"/>
    <addaction name="actionHead_to_head"/>
    <addaction name="actionLap_time_comparison"/>
+   <addaction name="actionSession_analysis"/>
    <addaction name="separator"/>
    <addaction name="actionPreferences"/>
    <addaction name="actionExit"/>
@@ -702,6 +703,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionSession_analysis">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/sa.png</normaloff>:/ui_icons/sa.png</iconset>
+   </property>
    <property name="text">
     <string>Session analysis</string>
    </property>

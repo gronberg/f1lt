@@ -34,6 +34,11 @@ public:
 protected:
     virtual void paintEvent(QPaintEvent *);
     int sessionLength;
+
+    void resetPaintRect()
+    {
+        paintRect = QRect(42, 10, width()-47, height()-35);
+    }
 };
 
 class QualiLapTimesChart : public FPLapTimesChart
