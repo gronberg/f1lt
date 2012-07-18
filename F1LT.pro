@@ -33,7 +33,6 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/lttablewidget.cpp \
     src/main_gui/driverdatawidget.cpp \
     src/charts/chartwidget.cpp \
-    src/main_gui/trackstatuswidget.cpp \
     src/main_gui/sessiondatawidget.cpp \
     src/tools/headtoheaddialog.cpp \
     src/core/driverdata.cpp \
@@ -60,7 +59,6 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/lttablewidget.h \
     src/main_gui/driverdatawidget.h \
     src/charts/chartwidget.h \
-    src/main_gui/trackstatuswidget.h \
     src/main_gui/sessiondatawidget.h \
     src/tools/headtoheaddialog.h \
     src/core/driverdata.h \

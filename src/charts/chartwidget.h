@@ -56,7 +56,7 @@ public:
         return 150;
     }
 
-    virtual QString getLapInfoXY(const LapData &ld)
+    virtual QString getLapInfoXY(const LapData &)
     {
         return "";
     }

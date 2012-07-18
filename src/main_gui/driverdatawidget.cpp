@@ -117,7 +117,6 @@ void DriverDataWidget::printDriverData(int driverIdx)
 
     QString s;
     QString bestL;
-    QTableWidgetItem *item;
     bool bl = false;
 
     DriverData &driverData = eventData.driversData[driverIdx];
@@ -159,7 +158,7 @@ void DriverDataWidget::printDriverData(int driverIdx)
 
     setItem(2, 3, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::YELLOW]);
     ui->tableWidget_4->setRowHeight(2, 20);
-    item = ui->tableWidget_4->item(2, 3);
+    QTableWidgetItem *item = ui->tableWidget_4->item(2, 3);
 
     setItem(3, 0, "Current position:", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_4->setSpan(3, 0, 1, 3);

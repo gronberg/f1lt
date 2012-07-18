@@ -22,7 +22,6 @@ SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
 		driverCheckBoxes.append(box);
 
         colors.append(lab->palette().window().color());
-        qDebug() << colors.last();
 
         lab = (QLabel*)ui.gridLayout->itemAtPosition(1, i)->widget();
         box = (QCheckBox*)ui.gridLayout->itemAtPosition(1, i+1)->widget();
@@ -259,7 +258,7 @@ void SessionAnalysisWidget::setupIcons(QList<QColor> colors)
 }
 
 void SessionAnalysisWidget::exec()
-{    
+{
     setWindowTitle("Session analysis: " + EventData::getInstance().eventInfo.eventName);
     setupBoxes();
     switch(EventData::getInstance().eventType)
@@ -327,7 +326,7 @@ void SessionAnalysisWidget::selectDriversClicked()
     update();
 }
 
-void SessionAnalysisWidget::on_buttonBox_clicked(QAbstractButton *button)
+void SessionAnalysisWidget::on_buttonBox_clicked(QAbstractButton *)
 {
     close();
 }
@@ -353,7 +352,8 @@ QTableWidgetItem* SessionAnalysisWidget::setItem(QTableWidget *table, int row, i
 
 void SessionAnalysisWidget::gatherData()
 {
-    lapDataArray.clear();
+//    lapDataArray.clear();
+    int lapsIn = 0;
     for (int i = 0; i < EventData::getInstance().driversData.size(); ++i)
     {
         DriverData &dd = EventData::getInstance().driversData[i];
@@ -362,28 +362,19 @@ void SessionAnalysisWidget::gatherData()
         {
             for (int j = 0; j < dd.lapData.size(); ++j)
             {
-                lapDataArray.append(dd.lapData[j]);
-//                if (dd.lapData[j].numLap >= first && dd.lapData[j].numLap <= last)// &&
-//                {
-//                    if (((dd.lapData[j].lapTime.isValid() && dd.lapData[j].lapTime.toDouble() >= min) || min == -1) &&
-//                         (dd.lapData[j].lapTime.isValid() && dd.lapData[j].lapTime.toDouble() <= max) || max == -1)
-//                        lapDataArray.append(dd.lapData[j]);
+                if (lapsIn >= lapDataArray.size())
+                    lapDataArray.append(dd.lapData[j]);
+                else
+                    lapDataArray[lapsIn] = dd.lapData[j];
 
+                ++lapsIn;
 
-//                    if (!dd.lapData[j].lapTime.isValid() && min != -1 && max != -1)
-//                    {
-//                        if (j > 0 && dd.lapData[j-1].lapTime.isValid() && dd.lapData[j-1].lapTime.toDouble() <= max && dd.lapData[j-1].lapTime.toDouble() >= min)
-//                            lapDataArray.append(dd.lapData[j]);
-
-//                        else if (j < dd.lapData.size()-1 && dd.lapData[j+1].lapTime.isValid() && dd.lapData[j+1].lapTime.toDouble() <= max && dd.lapData[j+1].lapTime.toDouble() >= min)
-//                            lapDataArray.append(dd.lapData[j]);
-//                    }
-
-//                }
             }
         }
-
     }
+    for (int i = lapDataArray.size()-1; i >= lapsIn; --i)
+        lapDataArray.removeAt(i);
+
     qSort(lapDataArray);
 }
 
@@ -417,9 +408,6 @@ bool SessionAnalysisWidget::lapInWindow(int j)
             int minute = sessLength - LTData::timeToMins(lapDataArray[j].sessionTime);
             inTimeWindow = (minute >= first && minute <= last) && lapDataArray[j].qualiPeriod == qPeriod;
         }
-
-
-        qDebug() <<"window: "<<first << " "<<last<<" "<<min <<" "<<max<< " " << inTimeWindow;
     }
     if (inTimeWindow)// &&
     {
@@ -453,7 +441,6 @@ bool SessionAnalysisWidget::lapInWindow(int j)
 void SessionAnalysisWidget::update(bool repaintCharts)
 {
     gatherData();
-    qDebug() << "size=" << lapDataArray.size() ;
 
     int rows = 0;
 
@@ -574,7 +561,7 @@ void SessionAnalysisWidget::on_pushButton_2_clicked()
     top10only = false;
     ui.top10pushButton->setChecked(top10only);
 
-    lapDataArray.clear();
+//    lapDataArray.clear();
     update();
 }
 
@@ -663,7 +650,6 @@ void SessionAnalysisWidget::onZoomChanged(int first, int last, double min,double
     this->min = min;
     this->max = max;
 
-    qDebug() << " first=" << first<<", " << last << " " << min << " " << max;
     update();
 }
 
@@ -673,11 +659,18 @@ void SessionAnalysisWidget::saveSettings(QSettings &settings)
     settings.setValue("ui/session_analysis_geometry", saveGeometry());
     settings.setValue("ui/session_analysis_splitter", ui.splitter->saveState());
     settings.setValue("ui/session_analysis_tab", ui.raceTabWidget->currentIndex());
+    settings.setValue("ui/session_analysis_quali_tab", ui.qualiTabWidget->currentIndex());
     settings.setValue("ui/session_analysis_splitter_fp", ui.splitterFP->saveState());
     settings.setValue("ui/session_analysis_splitter_quali", ui.splitterQuali->saveState());
     settings.setValue("ui/session_analysis_splitter_q1", ui.splitterQ1->saveState());
     settings.setValue("ui/session_analysis_splitter_q2", ui.splitterQ2->saveState());
     settings.setValue("ui/session_analysis_splitter_q3", ui.splitterQ3->saveState());
+    settings.setValue("ui/session_analysis_race_laptime", ui.lapTimeTableWidget->width());
+    settings.setValue("ui/session_analysis_fp_laptime", ui.lapTimeTableWidgetFP->width());
+    settings.setValue("ui/session_analysis_quali_laptime", ui.lapTimeTableWidgetQuali->width());
+    settings.setValue("ui/session_analysis_q1_laptime", ui.lapTimeTableWidgetQ1->width());
+    settings.setValue("ui/session_analysis_q2_laptime", ui.lapTimeTableWidgetQ2->width());
+    settings.setValue("ui/session_analysis_q3_laptime", ui.lapTimeTableWidgetQ3->width());
 }
 
 void SessionAnalysisWidget::loadSettings(QSettings &settings)
@@ -685,18 +678,35 @@ void SessionAnalysisWidget::loadSettings(QSettings &settings)
     restoreGeometry(settings.value("ui/session_analysis_geometry").toByteArray());
     ui.splitter->restoreState(settings.value("ui/session_analysis_splitter").toByteArray());
     ui.raceTabWidget->setCurrentIndex(settings.value("ui/session_analysis_tab").toInt());
+    ui.qualiTabWidget->setCurrentIndex(settings.value("ui/session_analysis_quali_tab").toInt());
     ui.splitterFP->restoreState(settings.value("ui/session_analysis_splitter_fp").toByteArray());
     ui.splitterQuali->restoreState(settings.value("ui/session_analysis_splitter_quali").toByteArray());
     ui.splitterQ1->restoreState(settings.value("ui/session_analysis_splitter_q1").toByteArray());
     ui.splitterQ2->restoreState(settings.value("ui/session_analysis_splitter_q2").toByteArray());
     ui.splitterQ3->restoreState(settings.value("ui/session_analysis_splitter_q3").toByteArray());
 
-    setupTables();
+    int w = settings.value("ui/session_analysis_race_laptime").toInt();
+    ui.lapTimeTableWidget->setGeometry(ui.lapTimeTableWidget->x(), ui.lapTimeTableWidget->y(), w == 0 ? 300 : w,ui.lapTimeTableWidget->height());
 
-//    ui.splitter->refresh();
+    w = settings.value("ui/session_analysis_fp_laptime").toInt();
+    ui.lapTimeTableWidgetFP->setGeometry(ui.lapTimeTableWidgetFP->x(), ui.lapTimeTableWidgetFP->y(), w == 0 ? 300 : w,ui.lapTimeTableWidgetFP->height());
+
+    w = settings.value("ui/session_analysis_quali_laptime").toInt();
+    ui.lapTimeTableWidgetQuali->setGeometry(ui.lapTimeTableWidgetQuali->x(), ui.lapTimeTableWidgetQuali->y(), w == 0 ? 300 : w,ui.lapTimeTableWidgetQuali->height());
+
+    w = settings.value("ui/session_analysis_q1_laptime").toInt();
+    ui.lapTimeTableWidgetQ1->setGeometry(ui.lapTimeTableWidgetQ1->x(), ui.lapTimeTableWidgetQ1->y(), w == 0 ? 300 : w,ui.lapTimeTableWidgetQ1->height());
+
+    w = settings.value("ui/session_analysis_q2_laptime").toInt();
+    ui.lapTimeTableWidgetQ2->setGeometry(ui.lapTimeTableWidgetQ2->x(), ui.lapTimeTableWidgetQ2->y(), w == 0 ? 300 : w,ui.lapTimeTableWidgetQ2->height());
+
+    w = settings.value("ui/session_analysis_q3_laptime").toInt();
+    ui.lapTimeTableWidgetQ3->setGeometry(ui.lapTimeTableWidgetQ3->x(), ui.lapTimeTableWidgetQ3->y(), w == 0 ? 300 : w,ui.lapTimeTableWidgetQ3->height());
+
+    setupTables();
 }
 
-void SessionAnalysisWidget::onSplitterMoved(int pos, int index)
+void SessionAnalysisWidget::onSplitterMoved(int, int)
 {
     resizeTables();
 }
@@ -714,7 +724,6 @@ void SessionAnalysisWidget::on_qualiTabWidget_currentChanged(int index)
     else if (index == 3)
         chart = ui.sessionLapTimesChartQ3;
 
-//    qDebug() << " gaag" << chart->getFirst() << " " << chart->getLast();
     first = chart->getFirst();
     last = chart->getLast();
     min = chart->getMin();

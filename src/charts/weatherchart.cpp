@@ -43,7 +43,7 @@ void WeatherChart::drawAxes(QPainter *p)
         int prevJ = first;
 
         double jFactor = sz < 5 ? 1.0 : (double)((sz-1)/6.0);
-        double jWDFactor = (double)((ed.weatherData[wetDryId].size()-1)/6.0);
+        double jWDFactor = ed.weatherData[wetDryId].size()-1 < 5 ? 1.0 : (double)((ed.weatherData[wetDryId].size()-1)/6.0);
 
         QPixmap dryPix;
         if ((jFactor * xFactor) < 40)
@@ -64,7 +64,11 @@ void WeatherChart::drawAxes(QPainter *p)
 
         for (; i < width()-15.0 && round(j) < last + 1 && round(j) < ed.weatherData[weatherId].size(); /*i += xFactor,*/ j += jFactor, jWD += jWDFactor)
         {
+            if (round(j) == prevJ && prevJ != 0)
+                continue;
+
             i += (double)(round(j) - prevJ) * xFactor;
+
             prevJ = round(j);
             p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
@@ -88,7 +92,7 @@ void WeatherChart::drawAxes(QPainter *p)
                     else
                         --cnt;
                 }
-                p->drawPixmap(round(i)+(nextI-round(i)-dryPix.width())/2, 5, cnt >= 0 ? wetPix : dryPix);
+                p->drawPixmap(round(i)+(nextI-round(i)-dryPix.width())/2, 5, cnt > 0 ? wetPix : dryPix);
             }
         }
     }
@@ -272,7 +276,7 @@ void TempChart::drawAxes(QPainter *p)
 
         double jFactor = end < 5 ? 1.0 : (double)((end-1)/6.0);
 
-        double jWDFactor = (double)((ed.weatherData[wetDryId].size()-1)/6.0);
+        double jWDFactor = ed.weatherData[wetDryId].size()-1 < 5 ? 1.0 : (double)((ed.weatherData[wetDryId].size()-1)/6.0);
 
         QPixmap dryPix;
         if ((jFactor * xFactor) < 40)
@@ -293,6 +297,9 @@ void TempChart::drawAxes(QPainter *p)
 
         for (; i < width()-15.0 && round(j) < end; /*i += xFactor,*/ j += jFactor, jWD += jWDFactor)
         {
+            if (round(j) == prevJ && prevJ != 0)
+                continue;
+
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
             p->setPen(QColor(LTData::colors[LTData::WHITE]));
@@ -317,7 +324,7 @@ void TempChart::drawAxes(QPainter *p)
                     else
                         --cnt;
                 }
-                p->drawPixmap(round(i)+(nextI-round(i)-dryPix.width())/2, 5, cnt >= 0 ? wetPix : dryPix);
+                p->drawPixmap(round(i)+(nextI-round(i)-dryPix.width())/2, 5, cnt > 0 ? wetPix : dryPix);
             }
         }
     }
@@ -466,8 +473,8 @@ void WetDryChart::drawAxes(QPainter *p)
         double i = 40.0;
         int prevJ = 1;
 
-        double jFactor = ed.weatherData[weatherId].size() < 5 ? 1.0 : (double)((ed.weatherData[weatherId].size()-1)/6.0);
-        double jWDFactor = (double)((ed.weatherData[wetDryId].size()-1)/6.0);
+        double jFactor = ed.weatherData[weatherId].size() < 5 ? 1.0 : (double)((ed.weatherData[weatherId].size()-1)/6.0);        
+        double jWDFactor = ed.weatherData[wetDryId].size()-1 < 5 ? 1.0 : (double)((ed.weatherData[wetDryId].size()-1)/6.0);
 
         QPixmap dryPix;
         if ((jFactor * xFactor) < 40)
@@ -488,6 +495,9 @@ void WetDryChart::drawAxes(QPainter *p)
 
         for (; i < width()-15.0 && round(j) < ed.weatherData[weatherId].size(); /*i += xFactor,*/ j += jFactor, jWD += jWDFactor)
         {
+            if (round(j) == prevJ && prevJ != 0)
+                continue;
+
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
             p->setPen(QColor(LTData::colors[LTData::WHITE]));
@@ -513,7 +523,7 @@ void WetDryChart::drawAxes(QPainter *p)
                     else
                         --cnt;
                 }
-                p->drawPixmap(round(i)+(nextI-round(i)-dryPix.width())/2, 5, cnt >= 0 ? wetPix : dryPix);
+                p->drawPixmap(round(i)+(nextI-round(i)-dryPix.width())/2, 5, cnt > 0 ? wetPix : dryPix);
             }
         }
     }

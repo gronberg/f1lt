@@ -2,8 +2,6 @@
 #include <QDataStream>
 #include <QFile>
 
-#include <QDebug>
-
 #include "eventdata.h"
 
 LTData::LTData()
@@ -300,7 +298,6 @@ QStringList LTData::getDriversListShort()
     for (int i = 0; i < 30; ++i)
     {
         DriverData dd = EventData::getInstance().getDriverData(i);
-        qDebug() << "driver=" << dd.number <<" " << dd.driver;
         if (dd.carID != -1)
         {
             list.append(QString::number(dd.number) + " " + LTData::getDriverShortName(dd.driver));
@@ -335,11 +332,24 @@ int LTData::timeToSecs(QTime time)
     return hour * 3600 + min * 60 + sec;
 }
 
+int LTData::getFPNumber()
+{
+    if (EventData::getInstance().eventId == 0)
+        return 1;
+
+    else
+        return (EventData::getInstance().eventId - 7066)%6;
+}
+
 int LTData::getFPLength()
 {
-//    LTEvent event = getCurrentEvent();
-    return 90;
-
+    switch (getFPNumber())
+    {
+        case 1: return 90;
+        case 2: return 90;
+        case 3: return 60;
+        default: return 90;
+    }
 }
 
 QTime LTData::correctFPTime(QTime time)
@@ -383,6 +393,7 @@ int LTData::getQualiLength(int q)
         case 2: return 15; break;
         case 3: return 10; break;
     }
+    return 20;
 }
 
 

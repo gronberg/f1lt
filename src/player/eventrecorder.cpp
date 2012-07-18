@@ -603,7 +603,7 @@ void EventRecorder::saveToFile(QString)
                 session = "quali"; break;
 
             default:
-                session = "fp1"; break;
+                session = "fp" + QString::number(LTData::getFPNumber()); break;
         }
         QString sNo = QString::number(no);
         if (no < 10)

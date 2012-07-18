@@ -63,7 +63,7 @@ private slots:
 
     void timeout();
     void on_tableWidget_cellDoubleClicked(int row, int column);
-    void on_tableWidget_cellClicked(int row, int column);
+    void on_tableWidget_cellClicked(int row, int);
     void on_tabWidget_currentChanged(int index);
 
     void on_actionHead_to_head_triggered();

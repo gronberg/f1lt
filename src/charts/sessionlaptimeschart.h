@@ -44,6 +44,7 @@ public:
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
     virtual void drawIntoImage(QImage &img);
+    virtual void drawImage(QPainter *p);
     virtual void drawLegend(QPainter *) { }
 //    virtual void drawScaleRect(QPainter *p);
 
@@ -68,7 +69,7 @@ public:
         if (ld.carID > 0)
         {
             DriverData dd = EventData::getInstance().driversData[ld.carID-1];
-            return QString::number(ld.pos) + ". " +  dd.driver + " - " + ld.lapTime.toString();
+            return QString::number(ld.pos) + ". " +  dd.driver + ": " + ld.lapTime.toString();
         }
         return "";
     }
@@ -107,6 +108,7 @@ protected:
     QList<LapData> lapDataArray;
     QList<QColor> colors;
 
+    QImage chartImg;
 };
 
 

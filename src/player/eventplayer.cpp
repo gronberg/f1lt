@@ -55,7 +55,6 @@ bool EventPlayer::loadFromFile(QString fName)
 
         stream >> sbuf;
         ltEvent.fpDate = QDate::fromString(sbuf, "dd-MM-yyyy");
-        qDebug() << "DATE " << sbuf << ", " << ltEvent.fpDate.toString("dd-MM-yyyy");
 
         stream >> sbuf;
         ltEvent.raceDate = QDate::fromString(sbuf, "dd-MM-yyyy");
@@ -107,7 +106,6 @@ bool EventPlayer::loadFromFile(QString fName)
 
 void EventPlayer::startPlaying()
 {
-    qDebug() << "PACKETS=" << packets.size();
     elapsedSeconds = 0;
     currentPos = 0;
 

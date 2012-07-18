@@ -236,10 +236,14 @@ public:
     static LTEvent getEvent(QDate);
     static LTEvent getCurrentEvent();
     static LTEvent getNextEvent();
+
     static int getEventNo(QDate);
     static int getDriverNo(QString);
     static int timeToMins(QTime);
     static int timeToSecs(QTime);
+
+    static int getFPNumber();
+
     static int getFPLength();
     static int getQualiLength(int q);
     static QTime correctFPTime(QTime time);

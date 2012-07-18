@@ -93,7 +93,7 @@ void ChartWidget::mouseMoveEvent(QMouseEvent *ev)
     }
 }
 
-void ChartWidget::mouseReleaseEvent(QMouseEvent *ev)
+void ChartWidget::mouseReleaseEvent(QMouseEvent *)
 {
 	if (scaling)
 	{
@@ -109,7 +109,7 @@ void ChartWidget::mouseReleaseEvent(QMouseEvent *ev)
 	}
 }
 
-void ChartWidget::mouseDoubleClickEvent(QMouseEvent *ev)
+void ChartWidget::mouseDoubleClickEvent(QMouseEvent *)
 {
 	if (!scaling)
 	{
@@ -290,28 +290,29 @@ void ChartWidget::drawChart(QPainter *p)
             	x = j;
 				y = y2;
 				continue;
-            }            
+            }
 
-            if (i >= 0 && i < last && i < driverData.lapData.size() && driverData.lapData[i-1].lapTime.toString() == "IN PIT" && y2 <= paintRect.bottom())
+            double tmpY2 = y2;
+            checkX1(x, y, x2, tmpY2);
+            checkX2(x, y, x2, tmpY2);
+
+            pen.setWidth(2);
+            p->setPen(pen);
+
+            p->drawLine(x, y, x2, tmpY2);
+
+            x = j;
+            y = y2;
+
+            if (i >= 0 && i < last && i < driverData.lapData.size() && driverData.lapData[i-1].lapTime.toString() == "IN PIT" && tmpY2 <= paintRect.bottom())
 			{
 				QPainterPath path;
-				path.addEllipse(QPoint(j, y2), 6, 6);
+                path.addEllipse(QPoint(j, tmpY2), 6, 6);
 				p->setBrush(QBrush(color));
 				p->setPen(color);
 
 				p->drawPath(path);
-			}
-
-            checkX1(x, y, x2, y2);
-            checkX2(x, y, x2, y2);
-
-
-            pen.setWidth(2);
-			p->setPen(pen);
-
-            p->drawLine(x, y, x2, y2);
-            x = j;
-            y = (double)paintRect.bottom() - (double)(driverData.posHistory[i]-tMin) * yFactor;
+			}            
         }
     }
 }
@@ -334,7 +335,7 @@ int ChartWidget::findLapDataXY(int x, int y)
     itemsInXY.clear();
     for (int i = 0; i < lapDataXYArray.size(); ++i)
     {
-        if (std::abs(lapDataXYArray[i].x - x) <= 3 && std::abs(lapDataXYArray[i].y - y) <= 3)
+        if (std::abs((float)(lapDataXYArray[i].x - x)) <= 3 && std::abs((float)(lapDataXYArray[i].y - y)) <= 3)
             itemsInXY.append(lapDataXYArray[i].idx);
     }
     qSort(itemsInXY.begin(), itemsInXY.end());
@@ -1091,8 +1092,16 @@ void GapChart::drawChart(QPainter *p)
                 }
                 else if (driverData.lapData[i].gap.size() > 0 && driverData.lapData[i].gap[driverData.lapData[i].gap.size()-1] == 'L')
                 {
-                    y2 = 10;
-                    gap = -1.0;
+                    if (tMax >= max)
+                    {
+                        y2 = 10;
+                        gap = -1.0;
+                    }
+                    else
+                    {
+                        gap = max;
+                        y2 = paintRect.top()-10;
+                    }
                 }
                 else if ((gap <= 0 || !ok || gap > tMax)  && tMax >= max)
                     y2 = 30;
@@ -1107,7 +1116,8 @@ void GapChart::drawChart(QPainter *p)
                 lastPaintedSC = driverData.lapData[i].numLap;
             }
 
-            if (y2 > paintRect.bottom() && y > paintRect.bottom())
+            if ((y2 > paintRect.bottom() && y > paintRect.bottom()) ||
+                 (y2 < paintRect.top() && y < paintRect.top()))
 			{
 				x = j;
 				y = y2;

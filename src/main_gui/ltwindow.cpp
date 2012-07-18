@@ -255,7 +255,7 @@ void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
     }
 }
 
-void LTWindow::on_tableWidget_cellClicked(int row, int col)
+void LTWindow::on_tableWidget_cellClicked(int row, int)
 {
     QList<DriverData> driverList = eventData.driversData;
     qSort(driverList);
@@ -836,10 +836,22 @@ void LTWindow::eventPlayerStopClicked(bool connect)
 
 void LTWindow::showSessionBoard(bool show)
 {
-	ui->eventStatusWidget->setVisible(!show);
-	ui->splitter->setVisible(!show);
+    if (show)
+    {
+        ui->splitter->setVisible(!show);
+        ui->eventStatusWidget->setVisible(!show);
+        ui->messageBoardWidget->setVisible(show);
+    }
+    else
+    {
+        ui->messageBoardWidget->setVisible(show);
+        ui->eventStatusWidget->setVisible(!show);
+        ui->splitter->setVisible(!show);
+    }
 	ui->actionRecord->setEnabled(!show);
-	ui->messageBoardWidget->setVisible(show);
+    ui->actionHead_to_head->setEnabled(!show);
+    ui->actionLap_time_comparison->setEnabled(!show);
+    ui->actionSession_analysis->setEnabled(!show);
 }
 
 void LTWindow::on_actionSession_analysis_triggered()

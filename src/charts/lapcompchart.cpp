@@ -188,8 +188,7 @@ void LapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 void LapCompChart::findFirstAndLastLap(int &firstLap, int &lastLap)
 {
     firstLap = 99, lastLap = 0;
-    int msecs;
-    double secs;
+
     for (int i = 0; i < 4; ++i)
     {
         if (!driverData[i].lapData.isEmpty())
@@ -216,7 +215,7 @@ void LapCompChart::drawChart(QPainter *p)
 {
     int firstLap = 99, lastLap = 0;
 
-    double x[4] = {(int)paintRect.left(), (int)paintRect.left(), (int)paintRect.left(), (int)paintRect.left()};
+    double x[4] = {paintRect.left(), paintRect.left(), paintRect.left(), paintRect.left()};
     double y1[4];
     double y2[4];
     double yFactor = (((double)paintRect.height()) / (double)(tMax-tMin));
@@ -302,23 +301,6 @@ void LapCompChart::drawChart(QPainter *p)
                         }
                     }
 
-//                    else if (index[k] < driverData[k].lapData.size()-1)
-//                    {
-//                    	lapTime = driverData[k].getLapData(i+1).lapTime;
-////                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
-//                        LapTime pl(driverData[k].getPitTime(ld.numLap));
-//
-//                        lapTime = lapTime - pl + LapTime(5000);
-//                    }
-//
-//                    if  (lapTime.toString() == "IN PIT" && index[k] < driverData[k].lapData.size()-1)
-//                    {
-//                    	lapTime = driverData[k].getLapData(i+1).lapTime;
-////                        lapTime = driverData[k].lapData[index[k]+1].lapTime;
-//                        LapTime pl(driverData[k].getPitTime(ld.numLap));
-//
-//                        lapTime = lapTime - pl + LapTime(5000);
-//                    }
                 }
                 msecs = -QTime::fromString(lapTime, "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
                 secs = (double)(msecs / 1000.0);
@@ -346,7 +328,12 @@ void LapCompChart::drawChart(QPainter *p)
                     }
                     ++lapsInWindow;
 
-                    p->drawLine(dx1, dy1, dx2, dy2);
+                    int pointSize = 3;
+                    if (EventData::getInstance().eventType == LTData::RACE_EVENT)
+                    {
+                        p->drawLine(dx1, dy1, dx2, dy2);
+                        pointSize = 2;
+                    }
                     p->setBrush(QBrush(colors[k]));
 
                     QPainterPath path;
@@ -356,7 +343,7 @@ void LapCompChart::drawChart(QPainter *p)
                             path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
 
                         else
-                            path.addEllipse(QPoint(j[k], y2[k]), 2, 2);
+                            path.addEllipse(QPoint(j[k], y2[k]), pointSize, pointSize);
 
                         p->drawPath(path);
                     }
@@ -437,7 +424,7 @@ int LapCompChart::findLapDataXY(int x, int y)
     itemsInXY.clear();
     for (int i = 0; i < lapDataXYCompArray.size(); ++i)
     {
-        if (std::abs(lapDataXYCompArray[i].x - x) <= 3 && std::abs(lapDataXYCompArray[i].y - y) <= 3)
+        if (abs(lapDataXYCompArray[i].x - x) <= 3 && abs(lapDataXYCompArray[i].y - y) <= 3)
             itemsInXY.append(i);
     }
     qSort(itemsInXY.begin(), itemsInXY.end(), PredXYTime(*this));
@@ -540,6 +527,9 @@ void LapCompChart::transform()
         first = 1;
 
     last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
+
+    if (first >= last)
+        first = last - 1;
 
     tMin = tMin + ceil((paintRect.bottom() - scaleRect.bottom()) / yFactor)-1;
     if (tMin < min)
@@ -681,27 +671,6 @@ void GapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
             }
         }
     }
-
-//    if (lastLap - firstLap > 0)
-//    {
-//        double xFactor = (width()-42) / ((lastLap - firstLap < 5) ? lastLap - firstLap : 5);
-//        double j = firstLap;
-
-//        double jFactor = lastLap - firstLap < 5 ? 1.0 : (double)((lastLap - firstLap)/5.0);
-//        for (int i = 37; i < width()-15 && round(j) < lastLap; i += xFactor, j += jFactor)
-//        {
-//            p->setPen(QColor(LTData::colors[LTData::WHITE]));
-//            p->drawText(i-5, height()-10, QString("L%1").arg(round(j)));
-
-//            if (i > 37)
-//            {
-//                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-//                pen.setStyle(Qt::DashLine);
-//                p->setPen(pen);
-//                p->drawLine(i, height()-25, i, 10);
-//            }
-//        }
-//    }
 }
 
 void GapCompChart::findFirstAndLastLap(int &firstLap, int &lastLap)
@@ -819,7 +788,12 @@ void GapCompChart::drawChart(QPainter *p)
                     checkX1(dx1, dy1, dx2, dy2);
                     checkX2(dx1, dy1, dx2, dy2);
 
-                    p->drawLine(dx1, dy1, dx2, dy2);
+                    int pointSize = 3;
+                    if (EventData::getInstance().eventType == LTData::RACE_EVENT)
+                    {
+                        pointSize = 2;
+                        p->drawLine(dx1, dy1, dx2, dy2);
+                    }
 
                     QPainterPath path;
                     p->setBrush(QBrush(colors[k]));
@@ -829,8 +803,8 @@ void GapCompChart::drawChart(QPainter *p)
                         if (ld.lapTime.toString() == "IN PIT")
                             path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
 
-                        else
-                            path.addEllipse(QPoint(j[k], y2[k]), 2, 2);
+                        else                            
+                            path.addEllipse(QPoint(j[k], y2[k]), pointSize, pointSize);
 
                         p->drawPath(path);
 
@@ -917,7 +891,7 @@ int GapCompChart::findLapDataXY(int x, int y)
     itemsInXY.clear();
     for (int i = 0; i < lapDataXYGapCompArray.size(); ++i)
     {
-        if (std::abs(lapDataXYGapCompArray[i].x - x) <= 3 && std::abs(lapDataXYGapCompArray[i].y - y) <= 3)
+        if (abs(lapDataXYGapCompArray[i].x - x) <= 3 && abs(lapDataXYGapCompArray[i].y - y) <= 3)
             itemsInXY.append(i);
     }
     qSort(itemsInXY.begin(), itemsInXY.end(), PredXYGap(*this));
@@ -1026,6 +1000,9 @@ void GapCompChart::transform()
 //		first = driverData.lapData.size() - 1;
 
     last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
+
+    if (first >= last)
+        first = last - 1;
 //	if (last >= driverData.lapData.size())
 //		last = driverData.lapData.size() - 1;
 
@@ -1121,8 +1098,6 @@ void PosCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 void PosCompChart::findFirstAndLastLap(int &firstLap, int &lastLap)
 {
     firstLap = 99, lastLap = 0;
-    int msecs;
-    double secs;
     for (int i = 0; i < 2; ++i)
     {
         if (!driverData[i].lapData.isEmpty())
@@ -1154,17 +1129,6 @@ void PosCompChart::drawChart(QPainter *p)
     double y2[2];
     double yFactor = ((double)paintRect.height() / (double)(tMax-tMin));
 
-//    for (int i = 0; i < 2; ++i)
-//    {
-//        if (!driverData[i].lapData.isEmpty())
-//        {
-//            if (driverData[i].lapData[0].numLap < firstLap)
-//                firstLap = driverData[i].lapData[0].numLap;
-//
-//            if (driverData[i].lapData.last().numLap > lastLap)
-//                lastLap = driverData[i].lapData.last().numLap;
-//        }
-//    }
     findFirstAndLastLap(firstLap, lastLap);
     drawAxes(p, firstLap, lastLap);
     if (lastLap - firstLap == 0)
@@ -1208,13 +1172,20 @@ void PosCompChart::drawChart(QPainter *p)
                 checkX1(dx1, dy1, dx2, dy2);
                 checkX2(dx1, dy1, dx2, dy2);
 
-                p->drawLine(dx1, dy1, dx2, dy2);
+                if (EventData::getInstance().eventType == LTData::RACE_EVENT)
+                    p->drawLine(dx1, dy1, dx2, dy2);
 
-                if (ld.lapTime.toString() == "IN PIT" && y2[k] <= paintRect.bottom())
+                if (y2[k] <= paintRect.bottom())
                 {
                     QPainterPath path;
-                    path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
                     p->setBrush(QBrush(colors[k]));
+
+                    if (ld.lapTime.toString() == "IN PIT")
+                        path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
+
+                    else if (EventData::getInstance().eventType != LTData::RACE_EVENT)
+                        path.addEllipse(QPoint(j[k], y2[k]), 3, 3);
+
                     p->drawPath(path);
                 }
 
@@ -1326,6 +1297,9 @@ void PosCompChart::transform()
         first = 1;
 
     last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
+
+    if (first >= last)
+        first = last - 1;
 
     tMin = tMin + ceil((paintRect.bottom() - scaleRect.bottom()) / yFactor)-1;
     if (tMin < min)

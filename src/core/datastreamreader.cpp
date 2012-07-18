@@ -857,7 +857,10 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             eventData.key = 0;
 
             if (ok)
+            {
+                eventData.eventId = number;
                 httpReader.obtainDecryptionKey(number);
+            }
             else
                 eventData.frame = 0;
 
@@ -913,6 +916,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 //                httpReader.obtainKeyFrame(53);
 //                onDecryptionKeyObtained(4246644581);      //gbr race
 //                onDecryptionKeyObtained(3195846070);	//gbr quali
+//                 onDecryptionKeyObtained(3397635038);	//gbr fp3
+//                 onDecryptionKeyObtained(4071769653);	//gbr fp1
 
 //                resetDecryption();
 
@@ -1208,7 +1213,7 @@ void DataStreamReader::onCookieReceived(QString cookie)
 {
     socketReader.openStream(host, port);
 //    socketReader.openStream("localhost", 6666);
-//    socketReader.openStream("192.168.1.101", 6666);
+//    socketReader.openStream("192.168.1.2", 6666);
 //    eventData.key = 2976363859;
 //    eventData.key = 2462388168;     //bahrain quali
 //    eventData.key = 3875488254; //fp1
@@ -1264,25 +1269,6 @@ void DataStreamReader::savePacket(const QByteArray &buf)
 
 void DataStreamReader::clearData()
 {
-//    eventData.eventInfo.laps = 0;
-//    eventData.eventInfo.eventNo = 0;
-//    eventData.key = 0;
-//    eventData.frame = 0;
-//    eventData.remainingTime = QTime();
-//    eventData.lapsCompleted = 0;
-
-//    eventData.flagStatus = LTData::GREEN_FLAG;
-
-//    eventData.trackTemp = 0;
-//    eventData.airTemp = 0;
-//    eventData.windSpeed = 0;
-//    eventData.humidity = 0;
-//    eventData.pressure = 0;
-//    eventData.windDirection = 0;
-//    eventData.sessionStarted = false;
-
-//    eventData.commentary = "";
-//    eventData.driversData.clear();
     eventData.clear();
 }
 
@@ -1301,7 +1287,6 @@ void DataStreamReader::parseEPPackets(const QList<Packet> &packets)
         {
             eventData.eventType = (LTData::EventType)packet.data;
 //            eventData.eventInfo = LTData::getEvent(QDate::currentDate());
-            qDebug() << "EVENT TYPE=" << eventData.eventType;
             eventData.lapsCompleted = 0;
         }
     }

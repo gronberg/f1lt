@@ -188,9 +188,6 @@ void SessionDataWidget::updateEventInfo()
 
 void SessionDataWidget::updateSpeedRecords()
 {
-    QTableWidgetItem *item;
-
-
     for (int i = 0, j = 0; i < 6; i+=1, j += 2)
     {
         setItem(ui->tableWidget_2, 1+i, 0, QString("%1").arg(eventData.sec1Speed[j]), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
@@ -230,9 +227,6 @@ void SessionDataWidget::updateFastestLaps()
 //        }
     }
     qSort(bestLaps);
-
-
-    QTableWidgetItem *item;
 
     QString str = eventData.FLTime;
     if (eventData.eventType != LTData::RACE_EVENT && !bestLaps.isEmpty())
@@ -418,7 +412,6 @@ void SessionDataWidget::updatePitStops(bool clear)
             ui->tableWidget_4->removeRow(i);
     }
     QList< PitStopAtom > pitData = getPitstops(eventData.driversData);
-    QTableWidgetItem *item;
 
     for (int i = 0; i < pitData.size(); ++i)
     {
@@ -552,7 +545,7 @@ void SessionDataWidget::keyPressEvent(QKeyEvent *event)
 
         // QModelIndex::operator < sorts first by row, then by column.
         // this is what we need
-        std::sort(indexes.begin(), indexes.end());
+        qSort(indexes.begin(), indexes.end());
 
         // You need a pair of indexes to find the row changes
         QModelIndex previous = indexes.first();

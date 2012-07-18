@@ -653,7 +653,6 @@ void LTTableWidget::setHeader()
             return;
     }
 
-    QTableWidgetItem *item;
     switch(eventData.eventType)
     {
         case LTData::RACE_EVENT:

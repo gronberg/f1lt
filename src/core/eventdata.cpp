@@ -10,6 +10,9 @@ EventData::EventData()
     sec2Record[2] = "-1";
     sec3Record[2] = "-1";
 
+
+    eventId = 0;
+
     eventInfo.laps = 0;
     eventInfo.eventNo = 0;
 
@@ -31,6 +34,7 @@ void EventData::clear()
 {
 //    eventInfo.laps = 0;
 //    eventInfo.eventNo = 0;
+    eventId = 0;
     key = 0;
     frame = 0;
     remainingTime = QTime();
@@ -59,7 +63,6 @@ void EventData::clear()
         if (i < 6)
         	weatherData[i].clear();
     }
-    qDebug() << "CLEAR";
 
     FLNumber = 0;
     FLDriver.clear();

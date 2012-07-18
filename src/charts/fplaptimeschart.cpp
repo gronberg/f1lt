@@ -181,24 +181,55 @@ void FPLapTimesChart::paintEvent(QPaintEvent *)
         resetZoom();
     }
 
+    if (!scaling && !repaintPopup)
+    {
+        chartImg = QImage(width(), height(), QImage::Format_ARGB32);
+        drawIntoImage(chartImg);
+    }
+
     QPainter p;
     p.begin(this);
 
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    drawChart(&p);
+//    p.setBrush(QColor(20,20,20));
+//    p.setPen(QColor(20,20,20));
+//    p.drawRect(0, 0, width(), height());
+//    drawChart(&p);
 
-    if (scaling)
-        drawScaleRect(&p);
-
-    else
+    if (!scaling && !repaintPopup)
     {
-        if (!repaintPopup)
-            findLapDataXY(mousePosX, mousePosY);
-
+        drawImage(&p);
+        findLapDataXY(mousePosX, mousePosY);
         drawLapDataXY(&p);
     }
+    if (scaling)
+    {
+        drawImage(&p);
+        drawScaleRect(&p);
+    }
+    if (repaintPopup)
+    {
+        drawImage(&p);
+        drawLapDataXY(&p);
+    }
+
+//    QPainter p;
+//    p.begin(this);
+
+//    p.setBrush(QColor(20,20,20));
+//    p.setPen(QColor(20,20,20));
+//    p.drawRect(0, 0, width(), height());
+//    drawChart(&p);
+
+//    if (scaling)
+//        drawScaleRect(&p);
+
+//    else
+//    {
+//        if (!repaintPopup)
+//            findLapDataXY(mousePosX, mousePosY);
+
+//        drawLapDataXY(&p);
+//    }
 //    drawLegend(&p, 35, 5);
 
     p.end();
@@ -396,10 +427,10 @@ void AllQualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int
         if (minute > lastMin && minute <= last)
             lastMin = minute;
 
-        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() < lMin && lapDataArray[j].lapTime.isValid() && lapDataArray[j].qualiPeriod == qualiPeriod)
+        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() < lMin && lapDataArray[j].lapTime.isValid())
             lMin = lapDataArray[j].lapTime.toDouble();
 
-        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() > lMax && lapDataArray[j].lapTime.isValid() && lapDataArray[j].qualiPeriod == qualiPeriod)
+        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() > lMax && lapDataArray[j].lapTime.isValid())
             lMax = lapDataArray[j].lapTime.toDouble();
 
         if (minute >= first && minute <= last)

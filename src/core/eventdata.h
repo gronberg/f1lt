@@ -33,6 +33,7 @@ public:
 
     unsigned int frame;
     unsigned int salt;
+    int eventId;
 
     LTData::EventType eventType;
     LTData::FlagStatus flagStatus;
