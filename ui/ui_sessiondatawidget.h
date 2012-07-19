@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Wed Jul 18 20:52:39 2012
+** Created: Thu Jul 19 16:22:35 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

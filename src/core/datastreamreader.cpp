@@ -1098,7 +1098,6 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             }
 
             break;
-<<<<<<< HEAD
         case LTData::SYS_COMMENTARY:        
             s = copyPacket.longData.mid(2, copyPacket.longData.size()-2);
 //            qDebug() << "COMMENTARY!!!!!!! " << (int)(copyPacket.longData[0]) << " " << (int)(copyPacket.longData[1]) << " " << s;
@@ -1125,25 +1124,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
 //                    eventData.commentary.insert(j+1, "\n\n");
 //                    j = eventData.commentary.indexOf(QRegExp("[\\.?!][A-Z]|[\\.?! ][0-9]{1,2}:[0-9]{1,2}"), j+2);
 //                }
-=======
-        case LTData::SYS_COMMENTARY:
-            eventData.commentary.append(packet.longData.mid(2, packet.longData.size()-2));
-            j = 0;
-            j = eventData.commentary.indexOf(QRegExp("[\\.?!][A-Z]|[\\.?! ][0-9]{1,2}:[0-9]{1,2}"));
-            while (j != -1)
-            {
-                eventData.commentary.insert(j+1, "\n\n");
-                j = eventData.commentary.indexOf(QRegExp("[\\.?!][A-Z]|[\\.?! ][0-9]{1,2}:[0-9]{1,2}"), j+2);
-            }
-            j = eventData.commentary.indexOf("’");
-            while (j != -1)
-            {
-                eventData.commentary.replace(j, 3, "'");
-                j = eventData.commentary.indexOf("’", j);
->>>>>>> Changed URL login, corrected displaying session time in DriverDataWidget, corrected commentary handling
-            }
-
-
+			}
+        
         case LTData::SYS_TIMESTAMP:
         {
     	   uc = copyPacket.longData[1];
