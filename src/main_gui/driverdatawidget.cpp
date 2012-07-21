@@ -314,9 +314,11 @@ void DriverDataWidget::printDriverData(int driverIdx)
                 s = "";
         }
         else if (eventData.eventType == LTData::PRACTICE_EVENT)
-            s = driverData.lapData[lapIndex].sessionTime.toString("h:mm:ss");
+            s = LTData::correctFPTime(driverData.lapData[lapIndex].sessionTime).toString("h:mm:ss");
+//            s = driverData.lapData[lapIndex].sessionTime.toString("h:mm:ss");
         else
-            s = QString("%1 (Q%2)").arg(driverData.lapData[lapIndex].sessionTime.toString("mm:ss")).arg(driverData.lapData[lapIndex].qualiPeriod);
+            s = LTData::correctQualiTime(driverData.lapData[lapIndex].sessionTime, driverData.lapData[lapIndex].qualiPeriod).toString("mm:ss") + QString(" (Q%1)").arg(driverData.lapData[lapIndex].qualiPeriod);
+//            s = QString("%1 (Q%2)").arg(driverData.lapData[lapIndex].sessionTime.toString("mm:ss")).arg(driverData.lapData[lapIndex].qualiPeriod);
 
 
         setItem(rows, 2, s, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::YELLOW],

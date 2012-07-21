@@ -1,6 +1,7 @@
 #include "sessionanalysiswidget.h"
 
 #include <QDebug>
+#include <QKeyEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QTableWidgetItem>
@@ -42,15 +43,12 @@ SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
 
     ui.sessionLapTimesChartQ1->setColors(colors);
     ui.sessionLapTimesChartQ1->setQualiPeriod(1);
-    ui.sessionLapTimesChartQ1->setSessionLength(20);
 
     ui.sessionLapTimesChartQ2->setColors(colors);
     ui.sessionLapTimesChartQ2->setQualiPeriod(2);
-    ui.sessionLapTimesChartQ2->setSessionLength(15);
 
     ui.sessionLapTimesChartQ3->setColors(colors);
     ui.sessionLapTimesChartQ3->setQualiPeriod(3);
-    ui.sessionLapTimesChartQ3->setSessionLength(10);
     selected = true;
 //    ui.splitter->refresh();
 //    QList<int> sizes;
@@ -617,6 +615,14 @@ void SessionAnalysisWidget::resizeEvent(QResizeEvent *e)
     resizeTables();
 
     QWidget::resizeEvent(e);
+}
+
+void SessionAnalysisWidget::keyPressEvent(QKeyEvent *k)
+{
+    if (k->key() == Qt::Key_Escape)
+        close();
+
+    QWidget::keyPressEvent(k);
 }
 
 void SessionAnalysisWidget::on_top10pushButton_clicked()

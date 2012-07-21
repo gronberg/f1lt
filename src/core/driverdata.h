@@ -320,6 +320,7 @@ struct DriverData
 
     LapData lastLap;
     LapData bestLap;
+    LapData bestQLaps[3];
 };
 
 

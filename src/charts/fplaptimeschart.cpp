@@ -5,7 +5,7 @@
 
 void FPLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &size)
 {
-    firstMin = sessionLength, lastMin = 0, size = 0;
+    firstMin = getSessionLength(), lastMin = 0, size = 0;
     double lMin = 99999999.0, lMax = 0.0;
 
     for (int j = 0; j < lapDataArray.size(); ++j)
@@ -106,7 +106,7 @@ void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
 void FPLapTimesChart::drawChart(QPainter *p)
 {
-    int firstMin = sessionLength, lastMin = 0;
+    int firstMin = getSessionLength(), lastMin = 0;
 
     double x = paintRect.left();
     double y;
@@ -244,8 +244,7 @@ void FPLapTimesChart::paintEvent(QPaintEvent *)
 
 void FPLapTimesChart::resetZoom()
 {
-    sessionLength = LTData::getFPLength();
-    first = 0; last = sessionLength;
+    first = 0; last = getSessionLength();
     int firstLap, lastLap, size;
     findFirstAndLastLap(firstLap, lastLap, size);
     tMin = min;
@@ -260,7 +259,7 @@ void FPLapTimesChart::transform()
     if (scaleRect == QRect())
     {
         first = 0;
-        last = sessionLength;
+        last = getSessionLength();
         tMin = min;
         tMax = max;
         return;
@@ -283,15 +282,15 @@ void FPLapTimesChart::transform()
     if (first < 0)
         first = 0;
 
-    if (first >= sessionLength)
-        first = sessionLength-1;
+    if (first >= getSessionLength())
+        first = getSessionLength()-1;
 
 //	if (first >= driverData.lapData.size())
 //		first = driverData.lapData.size() - 1;
 
     last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
-    if (last > sessionLength)
-        last = sessionLength;
+    if (last > getSessionLength())
+        last = getSessionLength();
 
 //	if (last >= driverData.lapData.size())
 //		last = driverData.lapData.size() - 1;
@@ -308,12 +307,12 @@ void FPLapTimesChart::transform()
 
 void QualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &size)
 {
-    firstMin = sessionLength, lastMin = 0, size = 0;
+    firstMin = getSessionLength(), lastMin = 0, size = 0;
     double lMin = 99999999.0, lMax = 0.0;
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        int minute = sessionLength - LTData::timeToMins(lapDataArray[j].sessionTime);
+        int minute = getSessionLength() - LTData::timeToMins(lapDataArray[j].sessionTime);
 
         if (minute < firstMin && minute >= first)
             firstMin = minute;
@@ -346,7 +345,7 @@ void QualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &s
 
 void QualiLapTimesChart::drawChart(QPainter *p)
 {
-    int firstMin = sessionLength, lastMin = 0;
+    int firstMin = getSessionLength(), lastMin = 0;
 
     double x = paintRect.left();
     double y;
@@ -369,8 +368,8 @@ void QualiLapTimesChart::drawChart(QPainter *p)
 
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        int minute = sessionLength - LTData::timeToMins(lapDataArray[i].sessionTime);
-        int second = sessionLength*60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
+        int minute = getSessionLength() - LTData::timeToMins(lapDataArray[i].sessionTime);
+        int second = getSessionLength()*60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
 
         if (lapDataArray[i].sessionTime.toString("h:mm:ss") == "")
         {
@@ -424,7 +423,7 @@ void QualiLapTimesChart::drawChart(QPainter *p)
 
 void AllQualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &size)
 {
-    firstMin = sessionLength, lastMin = 0, size = 0;
+    firstMin = getSessionLength(), lastMin = 0, size = 0;
     double lMin = 99999999.0, lMax = 0.0;
 
     for (int j = 0; j < lapDataArray.size(); ++j)
@@ -433,7 +432,7 @@ void AllQualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int
         for (int i = 0; i < lapDataArray[j].qualiPeriod-1; ++i)
             sessTime += LTData::getQualiLength(i+1);
 
-        int minute = sessionLength - sessTime;
+        int minute = getSessionLength() - sessTime;
 
         if (minute < firstMin && minute >= first)
             firstMin = minute;
@@ -610,7 +609,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
 void AllQualiLapTimesChart::drawChart(QPainter *p)
 {
-    int firstMin = sessionLength, lastMin = 0;
+    int firstMin = getSessionLength(), lastMin = 0;
 
     double x = paintRect.left();
     double y;
