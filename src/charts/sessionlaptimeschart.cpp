@@ -184,7 +184,7 @@ void SessionLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
 void SessionLapTimesChart::drawChart(QPainter *p)
 {
-    int firstLap = 99, lastLap = 0;
+    int firstLap = first, lastLap = last;
 
     double x = paintRect.left();
     double y;
@@ -193,6 +193,7 @@ void SessionLapTimesChart::drawChart(QPainter *p)
 
     int size;
     findFirstAndLastLap(firstLap, lastLap, size);
+    firstLap = first; lastLap = last;
 
     if (lastLap - firstLap == 0 || lapDataArray.isEmpty())
         return;
@@ -461,6 +462,7 @@ void SessionLapTimesChart::resetZoom()
     first = 1; last = 99;
     int firstLap, lastLap, size;
     findFirstAndLastLap(firstLap, lastLap, size);
+    first = 1; last = EventData::getInstance().eventInfo.laps;
     tMin = min;
     tMax = max;
 }
@@ -487,7 +489,7 @@ void SessionLapTimesChart::transform()
 
     int firstLap, lastLap, size;
     findFirstAndLastLap(firstLap, lastLap, size);
-    int sz = lastLap-firstLap+1;
+    int sz = last-first+1;
     double xFactor = ((double)paintRect.width()) / ((double)sz);
     double yFactor = (((double)paintRect.height()) / (double)(tMax - tMin));
 
@@ -541,10 +543,6 @@ void SessionLapTimesChart::mouseMoveEvent(QMouseEvent *ev)
         {
             repaintPopup = true;
             repaint();
-
-//            setAttribute(Qt::WA_OpaquePaintEvent, true);
-//            repaint();
-//            setAttribute(Qt::WA_OpaquePaintEvent, false);
             repaintPopup = false;
         }
 
@@ -555,62 +553,9 @@ void SessionLapTimesChart::mouseMoveEvent(QMouseEvent *ev)
 
 //=========================================================================
 
-//void SessionPositionsChart::resetZoom()
-//{
-//    first = 1; last = 99;
-//    int firstLap, lastLap, size;
-//    findFirstAndLastLap(firstLap, lastLap, size);
-//    tMin = min;
-//    tMax = max;
-//}
-
-//void SessionPositionsChart::transform()
-//{
-//    if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-//        return;
-
-//    if (scaleRect == QRect())
-//    {
-//        first = 1;
-//        last = 99;
-//        tMin = min;
-//        tMax = max;
-//        return;
-//    }
-
-//    if (scaleRect.left() > scaleRect.right())
-//        scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-//    if (scaleRect.top() > scaleRect.bottom())
-//        scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
-//    int firstLap, lastLap, size;
-//    findFirstAndLastLap(firstLap, lastLap, size);
-//    int sz = lastLap-firstLap+1;
-//    double xFactor = ((double)paintRect.width()) / ((double)sz);
-//    double yFactor = (((double)paintRect.height()) / (double)(tMax - tMin));
-
-//    first = firstLap + ceil((scaleRect.left() - paintRect.left()) / xFactor);
-//    if (first < 1)
-//        first = 1;
-
-////	if (first >= driverData.lapData.size())
-////		first = driverData.lapData.size() - 1;
-
-//    last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
-////	if (last >= driverData.lapData.size())
-////		last = driverData.lapData.size() - 1;
-
-//    tMin = tMin + ceil((paintRect.bottom() - scaleRect.bottom()) / yFactor)-1;
-//    if (tMin < min)
-//        tMin = min;
-//    tMax = tMin + ceil((scaleRect.bottom() - scaleRect.top()) / yFactor);
-//}
-
 void SessionPositionsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int &size)
 {
     firstLap = 99, lastLap = 0, size = 0;
-//    double lMin = 99999999.0, lMax = 0.0;
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
@@ -619,12 +564,6 @@ void SessionPositionsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int
 
         if (lapDataArray[j].numLap > lastLap && lapDataArray[j].numLap <= last)
             lastLap = lapDataArray[j].numLap;
-
-//        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last && lapDataArray[j].pos < lMin)
-//            lMin = (int)lapDataArray[j].pos;
-
-//        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last && lapDataArray[j].pos)
-//            lMax = (int)lapDataArray[j].pos;
 
         if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last)
             ++size;
@@ -700,6 +639,7 @@ void SessionPositionsChart::drawChart(QPainter *p)
 
     int size;
     findFirstAndLastLap(firstLap, lastLap, size);
+    firstLap = first; lastLap = last;
 
     if (lastLap - firstLap == 0 || lapDataArray.isEmpty())
         return;
@@ -867,7 +807,6 @@ void SessionPositionsChart::paintEvent(QPaintEvent *)
 void SessionGapsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int &size)
 {
     firstLap = 99, lastLap = 0, size = 0;
-//    double lMin = 99999999.0, lMax = 0.0;
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
@@ -876,12 +815,6 @@ void SessionGapsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int &siz
 
         if (lapDataArray[j].numLap > lastLap && lapDataArray[j].numLap <= last)
             lastLap = lapDataArray[j].numLap;
-
-//        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last && lapDataArray[j].pos < lMin)
-//            lMin = (int)lapDataArray[j].pos;
-
-//        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last && lapDataArray[j].gap.toDouble() > lMax)
-//            lMax = lapDataArray[j].gap.toDouble();
 
         if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last)
             ++size;
@@ -970,6 +903,7 @@ void SessionGapsChart::drawChart(QPainter *p)
 
     int size;
     findFirstAndLastLap(firstLap, lastLap, size);
+    firstLap = first; lastLap = last;
 
     if (lastLap - firstLap == 0 || lapDataArray.isEmpty())
         return;

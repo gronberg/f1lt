@@ -13,11 +13,13 @@ public:
         weatherId = id;
         wetDryId = id2;
         menu->removeAction(zoomOutAction);
+        allowedMin = 0;
     }
 
     virtual void drawAxes(QPainter *p);
     virtual void drawChart(QPainter *p);
     virtual void setMinMax();
+    virtual void setAllowedMin(int am) { allowedMin = am; }
 
     virtual void mouseMoveEvent(QMouseEvent *) {}
     virtual void mouseReleaseEvent(QMouseEvent *) {}
@@ -36,6 +38,7 @@ protected:
 
     int weatherId;
     int wetDryId;
+    int allowedMin;     //min could not be below this
 };
 
 class TempChart : public WeatherChart

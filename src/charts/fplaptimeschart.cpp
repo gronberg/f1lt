@@ -131,6 +131,13 @@ void FPLapTimesChart::drawChart(QPainter *p)
     {
         int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[i].sessionTime);
         int second = LTData::getFPLength()*60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
+
+        if (lapDataArray[i].sessionTime.toString("h:mm:ss") == "")
+        {
+            minute = 0;
+            second = 0;
+        }
+
         if (minute >= first && minute <= last)// && lapDataArray[i].lapTime.isValid())
         {
             secs = lapDataArray[i].lapTime.toDouble();
@@ -237,6 +244,7 @@ void FPLapTimesChart::paintEvent(QPaintEvent *)
 
 void FPLapTimesChart::resetZoom()
 {
+    sessionLength = LTData::getFPLength();
     first = 0; last = sessionLength;
     int firstLap, lastLap, size;
     findFirstAndLastLap(firstLap, lastLap, size);
@@ -363,6 +371,12 @@ void QualiLapTimesChart::drawChart(QPainter *p)
     {
         int minute = sessionLength - LTData::timeToMins(lapDataArray[i].sessionTime);
         int second = sessionLength*60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
+
+        if (lapDataArray[i].sessionTime.toString("h:mm:ss") == "")
+        {
+            minute = 0;
+            second = 0;
+        }
         if (minute >= first && minute <= last && lapDataArray[i].qualiPeriod == qualiPeriod)// && lapDataArray[i].lapTime.isValid())
         {
             secs = lapDataArray[i].lapTime.toDouble();
@@ -621,6 +635,12 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
     {
         int sessTime = LTData::getQualiLength(lapDataArray[i].qualiPeriod) - LTData::timeToMins(lapDataArray[i].sessionTime);
         int sessTimeSecs = LTData::getQualiLength(lapDataArray[i].qualiPeriod) * 60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
+
+        if (lapDataArray[i].sessionTime.toString("h:mm:ss") == "")
+        {
+            sessTime = 0;
+            sessTimeSecs = 0;
+        }
 
         for (int k = 0; k < lapDataArray[i].qualiPeriod-1; ++k)
         {

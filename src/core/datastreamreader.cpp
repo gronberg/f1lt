@@ -893,7 +893,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             }            
              resetDecryption();
 
-             if (!eventData.frame) // || decryption_failure
+
+             if (!eventData.frame || number == 1) // || decryption_failure
              {
                 eventData.frame = number;
                 httpReader.obtainKeyFrame(number);
@@ -1244,9 +1245,9 @@ void DataStreamReader::onKeyFrameObtained(QByteArray keyFrame)
 
 void DataStreamReader::savePacket(const QByteArray &buf)
 {
-//    QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
-//    if (file.open(QIODevice::WriteOnly))
-//        file.write(buf);
+    QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
+    if (file.open(QIODevice::WriteOnly))
+        file.write(buf);
 }
 
 void DataStreamReader::clearData()

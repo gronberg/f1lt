@@ -169,18 +169,21 @@ void WeatherChart::setMinMax()
         }
         else
         {
-            if (ed.weatherData[weatherId][i] < min)
-                min = ed.weatherData[weatherId][i];
+            if (ed.weatherData[weatherId][i] > 0)
+            {
+                if (ed.weatherData[weatherId][i] < min)
+                    min = ed.weatherData[weatherId][i];
 
-            if (ed.weatherData[weatherId][i] > max)
-                max = ed.weatherData[weatherId][i];
+                if (ed.weatherData[weatherId][i] > max)
+                    max = ed.weatherData[weatherId][i];
+            }
         }
     }
 //	min -= min * 0.01;
 //	max += max * 0.01;
 
-    if (min < 0.0)
-        min = 0.0;
+    if (min < allowedMin)
+        min = allowedMin;
 }
 
 void WeatherChart::resetZoom()
