@@ -91,7 +91,7 @@ void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
             p->setPen(QColor(LTData::colors[LTData::WHITE]));
-            p->drawText(round(i)-5, height()-10, QString("%1").arg(round(j)));
+            p->drawText(round(i)-5, height()-10, QString("%1'").arg(round(j)));
 
             if (i > paintRect.left())
             {
@@ -525,7 +525,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
             prevJ = round(j);
             p->setFont(QFont("Arial", 10, QFont::Bold, false));
             p->setPen(QColor(LTData::colors[LTData::WHITE]));
-            p->drawText(round(i)-5, height()-10, QString("%1").arg(qTime));
+            p->drawText(round(i)-5, height()-10, QString("%1'").arg(qTime));
 
             if (i > paintRect.left())
             {                

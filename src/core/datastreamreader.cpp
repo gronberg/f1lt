@@ -929,11 +929,16 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                 break;
                 case LTData::WEATHER_TRACK_TEMP:
                     number = 0;
-                    dbuf = packet.longData.toDouble(&ok);
+                    dbuf = packet.longData.toDouble(&ok);                    
                     if (ok)
                     {
-                        eventData.trackTemp = dbuf;
-						eventData.weatherData[1].append(dbuf);
+                        eventData.trackTemp = dbuf;                                               
+                        WeatherData wd;
+                        wd.lap = eventData.lapsCompleted;
+                        wd.sessionTime = eventData.remainingTime;
+                        wd.qPeriod = eventData.qualiPeriod;
+                        wd.value = dbuf;
+                        eventData.weatherData[1].append(wd);
                     }
                     break;
 
@@ -942,7 +947,12 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.airTemp = dbuf;
-						eventData.weatherData[0].append(dbuf);
+                        WeatherData wd;
+                        wd.lap = eventData.lapsCompleted;
+                        wd.sessionTime = eventData.remainingTime;
+                        wd.qPeriod = eventData.qualiPeriod;
+                        wd.value = dbuf;
+                        eventData.weatherData[0].append(wd);
                     }
                     break;
 
@@ -951,7 +961,12 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.windSpeed = dbuf;
-						eventData.weatherData[2].append(dbuf);
+                        WeatherData wd;
+                        wd.lap = eventData.lapsCompleted;
+                        wd.sessionTime = eventData.remainingTime;
+                        wd.qPeriod = eventData.qualiPeriod;
+                        wd.value = dbuf;
+                        eventData.weatherData[2].append(wd);
                     }
                     break;
 
@@ -960,7 +975,12 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.humidity = dbuf;
-						eventData.weatherData[4].append(dbuf);
+                        WeatherData wd;
+                        wd.lap = eventData.lapsCompleted;
+                        wd.sessionTime = eventData.remainingTime;
+                        wd.qPeriod = eventData.qualiPeriod;
+                        wd.value = dbuf;
+                        eventData.weatherData[4].append(wd);
                     }
                     break;
 
@@ -970,7 +990,12 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.pressure = dbuf;
-						eventData.weatherData[3].append(dbuf);
+                        WeatherData wd;
+                        wd.lap = eventData.lapsCompleted;
+                        wd.sessionTime = eventData.remainingTime;
+                        wd.qPeriod = eventData.qualiPeriod;
+                        wd.value = dbuf;
+                        eventData.weatherData[3].append(wd);
                     }
 
                     break;
@@ -986,7 +1011,12 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.wetdry = ibuf;
-						eventData.weatherData[5].append((double)ibuf);
+                        WeatherData wd;
+                        wd.lap = eventData.lapsCompleted;
+                        wd.sessionTime = eventData.remainingTime;
+                        wd.qPeriod = eventData.qualiPeriod;
+                        wd.value = (double)ibuf;
+                        eventData.weatherData[5].append(wd);
                     }
                     break;
 
@@ -1108,17 +1138,28 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
      	   if ((eventData.timeStamp==0 && ts <= 1000) ||
      		   (ts >= eventData.timeStamp+75 && ts < eventData.timeStamp+1000))
            {
-                eventData.weatherData[0].append(eventData.airTemp);
+                WeatherData wd;
+                wd.lap = eventData.lapsCompleted;
+                wd.sessionTime = eventData.remainingTime;
+                wd.qPeriod = eventData.qualiPeriod;
 
-                eventData.weatherData[1].append(eventData.trackTemp);
+                wd.value = eventData.airTemp;
+                eventData.weatherData[0].append(wd);
 
-                eventData.weatherData[2].append(eventData.windSpeed);
+                wd.value = eventData.trackTemp;
+                eventData.weatherData[1].append(wd);
 
-                eventData.weatherData[3].append(eventData.pressure);
+                wd.value = eventData.windSpeed;
+                eventData.weatherData[2].append(wd);
 
-                eventData.weatherData[4].append(eventData.humidity);
+                wd.value = eventData.pressure;
+                eventData.weatherData[3].append(wd);
 
-                eventData.weatherData[5].append(eventData.wetdry);
+                wd.value = eventData.humidity;
+                eventData.weatherData[4].append(wd);
+
+                wd.value = eventData.wetdry;
+                eventData.weatherData[5].append(wd);
 
                 eventData.timeStamp = ts;
            }

@@ -384,7 +384,7 @@ void SessionLapTimesChart::drawLapDataXY(QPainter *p)
 
 QColor SessionLapTimesChart::getCarColor(const LapData &ld)
 {
-    QColor color;
+    QColor color = LTData::colors[LTData::BACKGROUND];
     if (ld.carID > 0)
     {
         int no = EventData::getInstance().driversData[ld.carID-1].number;

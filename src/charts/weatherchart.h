@@ -28,6 +28,23 @@ public:
     void transform();
     void resetZoom();
 
+    QString getSessionTime(const WeatherData &wd)
+    {
+        QString text = QString("L%1").arg(wd.lap);
+        if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
+        {
+            QTime t = LTData::correctFPTime(wd.sessionTime);
+            text = QString::number(LTData::timeToMins(t)) + "'";
+        }
+
+        if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
+        {
+            QTime t = LTData::correctQualiTime(wd.sessionTime, wd.qPeriod);
+            text = QString("Q%1 %2'").arg(wd.qPeriod).arg(LTData::timeToMins(t));
+        }
+        return text;
+    }
+
 protected:
     void paintEvent(QPaintEvent *);
 
@@ -60,6 +77,11 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *);
+
+    virtual void resetPaintRect()
+    {
+        paintRect = QRect(40, 10, width()-45, height()-35);
+    }
 
 private:
     int trackTempId;

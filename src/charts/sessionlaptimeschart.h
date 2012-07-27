@@ -142,8 +142,14 @@ protected:
 
         DriverPosAtom(int p, int i) : pos(p), id(i) { }
 
-        bool operator<(const DriverPosAtom &p)const
+        bool operator < (const DriverPosAtom &p)const
         {
+            if (pos <= 0)
+                return false;
+
+            if (p.pos <= 0)
+                return true;
+
             return pos < p.pos;
         }
     };
