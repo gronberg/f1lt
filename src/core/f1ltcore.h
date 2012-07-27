@@ -12,7 +12,7 @@ class F1LTCore
 public:
     F1LTCore();
 
-    static QString programVersion() { return "1.3.0"; }
+    static QString programVersion() { return "1.3.1"; }
 
 
     static QString programHomeDir()
@@ -20,25 +20,47 @@ public:
 #ifdef WIN32
         return QCoreApplication::applicationDirPath();
 #else
-        return QCoreApplication::applicationDirPath();//QDir::homePath() + "/.f1lt";
+        return QCoreApplication::applicationDirPath();
 #endif
     }
 
     static QString iniFile()
     {
+#ifdef WIN32
         return programHomeDir() + "/f1lt.ini";
+#else
+        return QDir::homePath() + "/.f1lt";
+#endif
     }
 
     static QString seasonDataFile()
     {
         //QString prefix = STR(INSTALL_PREFIX);
         //return prefix+"share/F1LT/season.dat";
+#ifdef WIN32
         return programHomeDir() + "/season.dat";
+#else
+        QString prefix = STR(INSTALL_PREFIX);
+        QDir dir;
+        if (dir.exists(prefix))
+            return prefix + "/share/season.dat";
+        else
+            return programHomeDir() + "/season.dat";
+#endif
     }
 
     static QString ltDataHomeDir()
     {
+#ifdef WIN32
         return programHomeDir() + "/ltdata/";
+#else
+        QString prefix = STR(INSTALL_PREFIX);
+        QDir dir;
+        if (dir.exists(prefix))
+            return prefix + "/ltdata/";
+        else
+            return programHomeDir() + "/ltdata/";
+#endif
     }
 };
 

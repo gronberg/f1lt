@@ -570,6 +570,18 @@ void SessionPositionsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int
     }
 }
 
+QList<SessionPositionsChart::DriverPosAtom> SessionPositionsChart::getDriverStartingPositions()
+{
+    QList<SessionPositionsChart::DriverPosAtom> positionList;
+    for (int i = 0; i < EventData::getInstance().driversData.size(); ++i)
+    {
+        DriverData &dd = EventData::getInstance().driversData[i];
+        positionList.append(SessionPositionsChart::DriverPosAtom(dd.getStartingPos(), dd.carID));
+    }
+    qSort(positionList);
+    return positionList;
+}
+
 void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
@@ -583,14 +595,26 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
-    int chartMin = (tMin == 1 ? 0 : tMin);
+    QList<SessionPositionsChart::DriverPosAtom> positionList = getDriverStartingPositions();
+
+    int chartMin = (tMin == 1 ? 0 : tMin), k = 0;
     double yFactor = (double)((paintRect.height())/(tMax-chartMin));
     double yFactor2 = 1.0;//(double)((tMax-chartMin)/12.0);
     double j = tMin;
-    for (double i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
+    for (double i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2, ++k)
     {
+        DriverData dd;
+        int k = round(j)-1;
+        if (k >= 0 && k < positionList.size() && positionList[k].id-1 >= 0 && positionList[k].id-1 < EventData::getInstance().driversData.size())
+            dd = EventData::getInstance().driversData[positionList[round(j)-1].id-1];
+
+        QColor color = getCarColor(dd.lastLap);
+        p->setBrush(color);
+        p->setPen(color);
+        p->drawRect(5, i-6, 4, 11);
+        QString driver = LTData::getDriverShortName(dd.driver);
         p->setPen(QColor(LTData::colors[LTData::WHITE]));
-        p->drawText(5, i+5, QString("%1").arg(round(j)));
+        p->drawText(13, i+5, QString("%1 %2").arg(driver).arg(round(j)));
 
         if (i != paintRect.bottom())
         {

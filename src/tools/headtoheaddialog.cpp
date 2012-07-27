@@ -212,6 +212,9 @@ void HeadToHeadDialog::loadCarImages()
     comboBox[0]->clear();
     comboBox[1]->clear();
 
+    comboBox[0]->addItems(LTData::getDriversList());
+    comboBox[1]->addItems(LTData::getDriversList());
+
 //    comboBox[0]->addItems(LTData::getDriversList());
 //    comboBox[1]->addItems(LTData::getDriversList());
 }

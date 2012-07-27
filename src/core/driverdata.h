@@ -240,6 +240,14 @@ struct DriverData
         return idx;
     }
 
+    int getStartingPos()
+    {
+        if (!posHistory.isEmpty())
+            return posHistory[0];
+
+        return 0;
+    }
+
     void addLap(const EventData &ed);
     void correctNumLap(int raceNumLap);
     void updateLastLap();

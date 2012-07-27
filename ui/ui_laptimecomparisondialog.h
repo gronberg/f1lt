@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'laptimecomparisondialog.ui'
 **
-** Created: Sat Jul 21 18:14:11 2012
+** Created: Fri Jul 27 22:23:27 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

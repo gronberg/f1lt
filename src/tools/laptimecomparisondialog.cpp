@@ -105,10 +105,10 @@ void LapTimeComparisonDialog::loadCarImages()
     comboBox[2]->clear();
     comboBox[3]->clear();
 
-//    comboBox[0]->addItems(LTData::getDriversList());
-//    comboBox[1]->addItems(LTData::getDriversList());
-//    comboBox[2]->addItems(LTData::getDriversList());
-//    comboBox[3]->addItems(LTData::getDriversList());
+    comboBox[0]->addItems(LTData::getDriversList());
+    comboBox[1]->addItems(LTData::getDriversList());
+    comboBox[2]->addItems(LTData::getDriversList());
+    comboBox[3]->addItems(LTData::getDriversList());
 
     smallCarImg.clear();
     for (int i = 0; i < LTData::ltTeams.size(); ++i)

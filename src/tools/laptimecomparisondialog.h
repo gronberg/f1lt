@@ -39,7 +39,7 @@ public slots:
     {
         for (int i = 0; i < 4; ++i)
         {
-            if (dd.carID == eventData.getDriverId(comboBox[i]->currentText()))
+            if (dd.carID == eventData.getDriverId(getNumber(i)))
             {
                 updateData();
                 updateCharts();

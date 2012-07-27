@@ -674,7 +674,7 @@ void LTWindow::error(QNetworkReply::NetworkError er)
 
 void LTWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, "About F1LT", "<b>F1LT</b> v" + F1LTCore::programVersion()+"<br/>by Mariusz Pilarek, 2012");
+    QMessageBox::about(this, "About F1LT", "<b>F1LT</b> v" + F1LTCore::programVersion()+"<br/>by Mariusz Pilarek, 2012<br/><a href=\"http://code.google.com/p/f1lt/\">Home site</a>");
 }
 
 void LTWindow::on_actionAbout_Qt_triggered()

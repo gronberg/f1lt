@@ -81,7 +81,7 @@ public slots:
     virtual void onZoomOut();
 
 protected:
-    void paintEvent(QPaintEvent *);   
+    virtual void paintEvent(QPaintEvent *);
     virtual void mousePressEvent(QMouseEvent *);
     virtual void mouseMoveEvent(QMouseEvent *);
     virtual void mouseReleaseEvent(QMouseEvent *);
@@ -113,7 +113,6 @@ protected:
     QStack<ScaleAtom> scaleRectsStack;
     QRect paintRect;
     bool scaling;
-    int lastOp;		//0 - zoom out, 1 - zoom in
 
 
     QList<LapDataXY> lapDataXYArray;
@@ -129,7 +128,7 @@ class LapTimeChart : public ChartWidget
     Q_OBJECT
 
 public:
-    explicit LapTimeChart(QColor *col, QWidget *parent = 0) : ChartWidget(0, 180, col[0], parent)
+    LapTimeChart(QColor *col, QWidget *parent = 0) : ChartWidget(0, 180, col[0], parent)
     {
         for (int i = 0; i < 5; ++i)
             colors[i] = col[i];
@@ -158,7 +157,6 @@ protected:
     }
 
 private:
-//    DriverData driverData;
     QColor colors[5];
 };
 
@@ -166,7 +164,7 @@ class GapChart : public ChartWidget
 {
     Q_OBJECT
 public:
-    explicit GapChart(QColor col, QWidget *parent = 0) : ChartWidget(0, 60, col, parent) { }
+    GapChart(QColor col, QWidget *parent = 0) : ChartWidget(0, 60, col, parent) { }
 
     void drawAxes(QPainter *p);
     void drawChart(QPainter *p);    

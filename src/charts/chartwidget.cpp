@@ -29,8 +29,6 @@ ChartWidget::ChartWidget(double n, double x, QColor col, QWidget *parent) :
 	tMin = min;
 	tMax = max;
 
-	lastOp = 0;
-
     setMouseTracking(true);
 }
 
@@ -102,8 +100,7 @@ void ChartWidget::mouseReleaseEvent(QMouseEvent *)
 		{
 			pushScaleRect();
 	//		scaleRect = QRect();
-			transform();
-			lastOp = 1;
+            transform();
 		}
 		repaint();
 	}
@@ -112,8 +109,7 @@ void ChartWidget::mouseReleaseEvent(QMouseEvent *)
 void ChartWidget::mouseDoubleClickEvent(QMouseEvent *)
 {
 	if (!scaling)
-	{
-		lastOp = 0;
+    {
 		scaleRect = QRect();
 		resetZoom();
 		transform();
@@ -167,17 +163,7 @@ void ChartWidget::drawAxes(QPainter *p)
 
         j = first-1;
         prevJ = first - 1;
-//        if (driverData.posHistory.size() > driverData.lapData.size())
-//        {
-////            jFactor = driverData.posHistory.size() < 5 ? 1.0 : (double)((driverData.posHistory.size()-1)/5.0);
-//            j = 1.0;
-//        }
-//        else
-//        {
-////            jFactor = driverData.posHistory.size() < 5 ? 1.0 : (double)((driverData.posHistory.size())/5.0);
-//            j = 0.0;
-//            prevJ = 0;
-//        }
+
 
         for (; i < width()-15.0 && round(j) < last && round(j) < driverData.lapData.size(); /*i += xFactor,*/ j += jFactor)
         {
@@ -199,26 +185,6 @@ void ChartWidget::drawAxes(QPainter *p)
             }
         }
     }
-
-//    if (!data.isEmpty())
-//    {
-//        double xFactor = (width()-32) / 5;
-//        double j = 1.0;
-//        for (int i = 27; i < width()-15; i += xFactor, j += (double)(data.size()/5.0))
-//        {
-//            p->setPen(QColor(LTData::colors[LTData::WHITE]));
-//            p->drawText(i-5, height()-10, QString("L%1").arg(round(j)));
-
-//            if (i > 27)
-//            {
-//                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
-//                pen.setStyle(Qt::DashLine);
-//                p->setPen(pen);
-//                p->drawLine(i, height()-25, i, 10);
-//            }
-//        }
-//    }
-
 }
 
 void ChartWidget::checkX1(double &x1, double &y1, double x2, double y2)
@@ -523,10 +489,7 @@ void ChartWidget::onSave()
 void ChartWidget::onZoomOut()
 {
 	if (scaleRectsStack.size() > 1)
-	{
-//		if (lastOp == 1)
-//			scaleRectsStack.pop();
-
+    {
 		ChartWidget::ScaleAtom sa = scaleRectsStack.pop();
 		resetZoom();
 
@@ -544,8 +507,7 @@ void ChartWidget::onZoomOut()
 		resetZoom();
 //		transform();
 		repaint();
-	}
-	lastOp = 0;
+    }
 }
 
 //========================================================================
@@ -580,9 +542,7 @@ void LapTimeChart::drawAxes(QPainter *p)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
-//    std::cout<<"max="<<max<<std::endl;
     for (int i = paintRect.bottom(), j = tMin; i >= 50; i-= (height()-55)/6, j += (tMax-tMin)/6)
     {
         p->setPen(QColor(LTData::colors[LTData::WHITE]));
@@ -900,37 +860,20 @@ void LapTimeChart::drawLegend(QPainter *p)
     p->setBrush(QBrush());
 }
 
-void LapTimeChart::paintEvent(QPaintEvent *)
+void LapTimeChart::paintEvent(QPaintEvent *pe)
 {
-    resetPaintRect();
-
-	if (scaleRect.width() == 0 && scaleRect.height() == 0)
-	{
-		resetZoom();
-	}
+    ChartWidget::paintEvent(pe);
 
     QPainter p;
     p.begin(this);
-
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    drawAxes(&p);
-    drawChart(&p);
-
-    if (scaling)
-		drawScaleRect(&p);
-
-    else
+    if (!scaling)
     {
         if (!repaintPopup)
             findLapDataXY(mousePosX, mousePosY);
 
         drawLapDataXY(&p);
     }
-
     drawLegend(&p);
-
     p.end();
 }
 
@@ -1162,36 +1105,19 @@ void GapChart::drawChart(QPainter *p)
     }
 }
 
-void GapChart::paintEvent(QPaintEvent *)
+void GapChart::paintEvent(QPaintEvent *pe)
 {
-    resetPaintRect();
-
-    if (scaleRect.width() == 0 && scaleRect.height() == 0)
-    {
-        resetZoom();
-    }
-
-    QPainter p;
-    p.begin(this);
-
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    drawAxes(&p);
-    drawChart(&p);
-
-    if (scaling)
-        drawScaleRect(&p);
-
-    else
+    ChartWidget::paintEvent(pe);
+    if (!scaling)
     {
         if (!repaintPopup)
             findLapDataXY(mousePosX, mousePosY);
 
+        QPainter p;
+        p.begin(this);
         drawLapDataXY(&p);
+        p.end();
     }
-
-    p.end();
 }
 
 

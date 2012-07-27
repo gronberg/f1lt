@@ -125,15 +125,29 @@ public:
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
 
-    void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
+    void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);    
 
 protected:
     void paintEvent(QPaintEvent *);
 
     virtual void resetPaintRect()
     {
-        paintRect = QRect(30, 10, width()-35, height()-35);
+        paintRect = QRect(60, 10, width()-35, height()-35);
     }
+
+    struct DriverPosAtom
+    {
+        int pos;
+        int id;
+
+        DriverPosAtom(int p, int i) : pos(p), id(i) { }
+
+        bool operator<(const DriverPosAtom &p)const
+        {
+            return pos < p.pos;
+        }
+    };
+    QList<DriverPosAtom> getDriverStartingPositions();
 };
 
 

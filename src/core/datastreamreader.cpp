@@ -48,9 +48,6 @@ void DataStreamReader::connectToLTServer(QString email, QString passwd)
     eventData.frame = 0;
 //    httpReader.authorize("http://"+host, email, passwd);
     httpReader.authorize("http://"+host, "http://formula1.com", email, passwd);
-//    onCookieReceived("cookie");
-
-//    start();
 }
 
 void DataStreamReader::disconnectFromLTServer()
@@ -58,22 +55,14 @@ void DataStreamReader::disconnectFromLTServer()
     socketReader.disconnectFromHost();
 }
 
-//void DataStreamReader::run()
-//{
-//    exec();
-//}
-
 void DataStreamReader::parseStreamBlock()
 {
     Packet packet;
     int pos = 0;
 
-//    std::cout<<"encrypted="<<encryptedPackets.size()<<std::endl;
-
     parsing = true;
     while(parsePacket(streamData, packet, pos))
-    {        
-        //socketReader.wakeUpServer();
+    {
         if (packet.encrypted && !eventData.key)
         {
             packet.longData.clear();
@@ -82,22 +71,15 @@ void DataStreamReader::parseStreamBlock()
         Packet copyPacket = packet;
 
         if(packet.carID)
-        {
-//            qDebug("handle car packet!");
             parseCarPacket(packet);            
-        }
+
         else
-        {
-//            qDebug("handle system packet!");
             parseSystemPacket(packet);
 
-        }
         emit packetParsed(copyPacket);
         packet.longData.clear();
     }
     parsing = false;
-//    socketReader.wakeUpServer();
-    //socketReader.obtainData();
 }
 
 bool DataStreamReader::parsePacket(const QByteArray &buf, Packet &packet, int &pos)
@@ -197,8 +179,6 @@ bool DataStreamReader::parsePacket(const QByteArray &buf, Packet &packet, int &p
         }
     }    
 
-//    std::cout<<"PACKET: "<<packet.type<<", "<<packet.carID<<", "<<packet.data<<", "<<packet.length<<std::endl;
-
 //    decryptPacket = false;
     packet.encrypted = decryptPacket;
 
@@ -245,9 +225,6 @@ bool DataStreamReader::checkDecryption(QString stream)
 
     }
     return true;
-//    int j = str.indexOf(QRegExp("[^\\.?!\\-=:'\" ]&[^A-Z]"));//&[^a-z]&[^0-9]"));
-//    if (str != "")
-//        qDebug() << "CHECKKER= " << packet.longData << ", " << j;
 }
 
 void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
@@ -770,8 +747,7 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
 				eventData.sec3Record[1] = eventData.driversData[packet.carID-1].lastLap.sector3.toString();
 
 				eventData.sec3Record[2] = QString("%1").arg(eventData.driversData[packet.carID-1].lastLap.numLap);//.driversData[packet.carID-1].lastLap.numLap);
-			}
-//                eventData.driversData[packet.carID-1].bestSectors[2].second = eventData.driversData[packet.carID-1].lapData.last().numLap;
+            }
 
 
             if (eventData.driversData[packet.carID-1].lastLap.sector3.toString() == "STOP" && eventData.flagStatus != LTData::RED_FLAG)
@@ -810,7 +786,6 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
             break;
 
          default:
-//            std::cout<<"CAR DEFAULT!! "<<packet.type<<" "<<packet.carID<<" "<<packet.data<<std::endl;
             break;
     }
     eventData.driversData[packet.carID-1].carID = packet.carID;
@@ -836,7 +811,6 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
     int j = 0;
     int cnt;
     Packet copyPacket = packet;
-//    memcpy(packetLongData, packet.longData.constData(), 128);
 
     if (packet.type != LTData::SYS_COMMENTARY && packet.type != LTData::SYS_KEY_FRAME && !checkDecryption(packet.longData))
     {
@@ -1021,7 +995,6 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             }
             break;
         case LTData::SYS_TRACK_STATUS:
-//        qDebug() << "SYS_TRACK_STATUS=" << packetLongData[0] << ", " << packet.data;
             switch (packet.data)
             {
                 case 1:
@@ -1034,7 +1007,6 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
             break;
         case LTData::SYS_NOTICE:
             eventData.notice = packet.longData;
-//            std::cout<<"SYS_NOTICE: "<<packet.longData.constData()<<std::endl;
             break;
         case LTData::SYS_SPEED:
             switch((int)copyPacket.longData[0])
@@ -1135,31 +1107,24 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
            ts |= uc | 0 << 16;// & 0xff0000;
      	   if ((eventData.timeStamp==0 && ts <= 1000) ||
      		   (ts >= eventData.timeStamp+75 && ts < eventData.timeStamp+1000))
-    	   {
-//				if (!eventData.weatherData[0].isEmpty())
-					eventData.weatherData[0].append(eventData.airTemp);
+           {
+                eventData.weatherData[0].append(eventData.airTemp);
 
-//				if (!eventData.weatherData[1].isEmpty())
-					eventData.weatherData[1].append(eventData.trackTemp);
+                eventData.weatherData[1].append(eventData.trackTemp);
 
-//				if (!eventData.weatherData[2].isEmpty())
-					eventData.weatherData[2].append(eventData.windSpeed);
+                eventData.weatherData[2].append(eventData.windSpeed);
 
-//				if (!eventData.weatherData[3].isEmpty())
-					eventData.weatherData[3].append(eventData.pressure);
+                eventData.weatherData[3].append(eventData.pressure);
 
-//				if (!eventData.weatherData[4].isEmpty())
-					eventData.weatherData[4].append(eventData.humidity);
+                eventData.weatherData[4].append(eventData.humidity);
 
-//				if (!eventData.weatherData[5].isEmpty())
-					eventData.weatherData[5].append(eventData.wetdry);
+                eventData.weatherData[5].append(eventData.wetdry);
 
                 eventData.timeStamp = ts;
            }
         }
             break;
         default:
-            //dd = packet.longData.toDouble();
             break;
     }
     if (emitSignal)
@@ -1173,11 +1138,7 @@ void DataStreamReader::onDecryptionKeyObtained(unsigned int key)
    if (key == 0)
        return;
 
-//   QFile file(QString("packets/key.dat"));
-//   if (file.open(QIODevice::WriteOnly))
-//       file.write(QString::number(key).toAscii());
-
-   qDebug() << "KEY=" << key;
+//   qDebug() << "KEY=" << key;
 
     for (int i = 0; i < encryptedPackets.size(); ++i)
     {
@@ -1225,7 +1186,6 @@ void DataStreamReader::onStreamBlockObtained(const QByteArray &buf)
 
 void DataStreamReader::onKeyFrameObtained(QByteArray keyFrame)
 {
-//    std::cout<<"tu powinienem byc tylko raz!! parsing="<<parsing<<", size="<<keyFrame.size()<<std::endl;
     //streamData = keyFrame;
     savePacket(keyFrame);
 
@@ -1245,9 +1205,9 @@ void DataStreamReader::onKeyFrameObtained(QByteArray keyFrame)
 
 void DataStreamReader::savePacket(const QByteArray &buf)
 {
-    QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
-    if (file.open(QIODevice::WriteOnly))
-        file.write(buf);
+//    QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
+//    if (file.open(QIODevice::WriteOnly))
+//        file.write(buf);
 }
 
 void DataStreamReader::clearData()

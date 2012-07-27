@@ -4,23 +4,28 @@
 QT += core \
     gui \
     network
-PREFIX = ~/opt/
-DEFINES += INSTALL_PREFIX=$$PREFIX
+
 TARGET = F1LT
+PREFIX = /opt/$$TARGET
+DEFINES += INSTALL_PREFIX=$$PREFIX
 target.path = $$PREFIX/bin/
 TEMPLATE = app
+
 OBJECTS_DIR = obj/
 MOC_DIR = moc/
 UI_DIR = ui/
+
 INSTALLS += target \
     DATA_FILES \
     LT_FILES
-LT_FILES.files = ltdata/*
-LT_FILES.path = ~/.f1lt/ltdata/
-DATA_FILES.files = season.dat
-DATA_FILES.path = $$PREFIX/share/$$TARGET/
 
-# DEFINES += QT_NO_DEBUG_OUTPUT
+LT_FILES.files = ltdata/*
+LT_FILES.path = $$PREFIX/ltdata/
+
+DATA_FILES.files = season.dat
+DATA_FILES.path = $$PREFIX/share/
+
+DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
