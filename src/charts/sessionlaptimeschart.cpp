@@ -195,7 +195,7 @@ void SessionLapTimesChart::drawChart(QPainter *p)
     findFirstAndLastLap(firstLap, lastLap, size);
     firstLap = first; lastLap = last;
 
-    if (lastLap - firstLap == 0 || lapDataArray.isEmpty())
+    if (/*lastLap - firstLap == 0 ||*/ lapDataArray.isEmpty())
         return;
 
     drawAxes(p, firstLap, lastLap);
@@ -614,7 +614,7 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         p->drawRect(5, i-6, 4, 11);
         QString driver = LTData::getDriverShortName(dd.driver);
         p->setPen(QColor(LTData::colors[LTData::WHITE]));
-        p->drawText(13, i+5, QString("%1 %2").arg(driver).arg(round(j)));
+        p->drawText(13, i+5, QString("%1 %2").arg(round(j)).arg(driver));
 
         if (i != paintRect.bottom())
         {
@@ -665,7 +665,7 @@ void SessionPositionsChart::drawChart(QPainter *p)
     findFirstAndLastLap(firstLap, lastLap, size);
     firstLap = first; lastLap = last;
 
-    if (lastLap - firstLap == 0 || lapDataArray.isEmpty())
+    if (/*lastLap - firstLap == 0 ||*/ lapDataArray.isEmpty())
         return;
 
     drawAxes(p, firstLap, lastLap);
@@ -929,7 +929,7 @@ void SessionGapsChart::drawChart(QPainter *p)
     findFirstAndLastLap(firstLap, lastLap, size);
     firstLap = first; lastLap = last;
 
-    if (lastLap - firstLap == 0 || lapDataArray.isEmpty())
+    if (/*lastLap - firstLap == 0 ||*/ lapDataArray.isEmpty())
         return;
 
     drawAxes(p, firstLap, lastLap);

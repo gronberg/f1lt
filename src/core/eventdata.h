@@ -26,6 +26,32 @@ public:
         return ed;
     }
 
+    void saveWeatherData()
+    {
+        WeatherData wd;
+        wd.lap = lapsCompleted;
+        wd.sessionTime = remainingTime;
+        wd.qPeriod = qualiPeriod;
+
+        wd.value = airTemp;
+        weatherData[0].append(wd);
+
+        wd.value = trackTemp;
+        weatherData[1].append(wd);
+
+        wd.value = windSpeed;
+        weatherData[2].append(wd);
+
+        wd.value = pressure;
+        weatherData[3].append(wd);
+
+        wd.value = humidity;
+        weatherData[4].append(wd);
+
+        wd.value = wetdry;
+        weatherData[5].append(wd);
+    }
+
     void clear();
 
     int getDriverId(QString);
@@ -55,6 +81,8 @@ public:
     double pressure, trackTemp;
 
     QList<WeatherData> weatherData[6];	//0 air temp, 1 track temp, 2 wind speed, 3 pressure, 4 humidity, 5 wet-dry
+
+
     int timeStamp;
 
     bool sessionStarted;

@@ -12,18 +12,19 @@ public:
     {
         weatherId = id;
         wetDryId = id2;
-        menu->removeAction(zoomOutAction);
+//        menu->removeAction(zoomOutAction);
         allowedMin = 0;
     }
 
     virtual void drawAxes(QPainter *p);
     virtual void drawChart(QPainter *p);
+    void drawLine(QPainter *p, int x1, int y1, int x2, int y2);
     virtual void setMinMax();
     virtual void setAllowedMin(int am) { allowedMin = am; }
 
-    virtual void mouseMoveEvent(QMouseEvent *) {}
-    virtual void mouseReleaseEvent(QMouseEvent *) {}
-    virtual void mouseDoubleClickEvent (QMouseEvent *) {}
+//    virtual void mouseMoveEvent(QMouseEvent *) {}
+//    virtual void mouseReleaseEvent(QMouseEvent *) {}
+//    virtual void mouseDoubleClickEvent (QMouseEvent *) {}
 
     void transform();
     void resetZoom();
@@ -70,7 +71,7 @@ public:
     }
 
     void drawAxes(QPainter *p);
-    void drawChart(QPainter *p);
+    void drawChart(QPainter *p);    
     void drawLegend(QPainter *p);
     void setMinMax();
 
@@ -98,7 +99,17 @@ public:
     {
         min = 0.0;
         max = 1.0;
+
+        menu->removeAction(zoomOutAction);
     }
+
+
+protected:
+    void paintEvent(QPaintEvent *);
+
+    virtual void mouseMoveEvent(QMouseEvent *) {}
+    virtual void mouseReleaseEvent(QMouseEvent *) {}
+    virtual void mouseDoubleClickEvent (QMouseEvent *) {}
 
     void drawAxes(QPainter *p);
     void drawChart(QPainter *p);

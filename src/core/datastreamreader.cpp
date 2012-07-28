@@ -405,7 +405,10 @@ void DataStreamReader::parseCarPacket(Packet &packet, bool emitSignal)
             {
                 case LTData::RACE_EVENT:
                     if (eventData.driversData[packet.carID-1].pos == 1)
+                    {
                         eventData.lapsCompleted = packet.longData.toInt();                        
+                        eventData.saveWeatherData();
+                    }
 
                     if (packet.length > -1)
                         eventData.driversData[packet.carID-1].lastLap.interval = packet.longData;
@@ -932,13 +935,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     dbuf = packet.longData.toDouble(&ok);                    
                     if (ok)
                     {
-                        eventData.trackTemp = dbuf;                                               
-                        WeatherData wd;
-                        wd.lap = eventData.lapsCompleted;
-                        wd.sessionTime = eventData.remainingTime;
-                        wd.qPeriod = eventData.qualiPeriod;
-                        wd.value = dbuf;
-                        eventData.weatherData[1].append(wd);
+                        eventData.trackTemp = dbuf;
+                        eventData.saveWeatherData();
                     }
                     break;
 
@@ -947,12 +945,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.airTemp = dbuf;
-                        WeatherData wd;
-                        wd.lap = eventData.lapsCompleted;
-                        wd.sessionTime = eventData.remainingTime;
-                        wd.qPeriod = eventData.qualiPeriod;
-                        wd.value = dbuf;
-                        eventData.weatherData[0].append(wd);
+                        eventData.saveWeatherData();
                     }
                     break;
 
@@ -961,12 +954,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.windSpeed = dbuf;
-                        WeatherData wd;
-                        wd.lap = eventData.lapsCompleted;
-                        wd.sessionTime = eventData.remainingTime;
-                        wd.qPeriod = eventData.qualiPeriod;
-                        wd.value = dbuf;
-                        eventData.weatherData[2].append(wd);
+                        eventData.saveWeatherData();
                     }
                     break;
 
@@ -975,12 +963,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.humidity = dbuf;
-                        WeatherData wd;
-                        wd.lap = eventData.lapsCompleted;
-                        wd.sessionTime = eventData.remainingTime;
-                        wd.qPeriod = eventData.qualiPeriod;
-                        wd.value = dbuf;
-                        eventData.weatherData[4].append(wd);
+                        eventData.saveWeatherData();
                     }
                     break;
 
@@ -990,12 +973,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (ok)
                     {
                         eventData.pressure = dbuf;
-                        WeatherData wd;
-                        wd.lap = eventData.lapsCompleted;
-                        wd.sessionTime = eventData.remainingTime;
-                        wd.qPeriod = eventData.qualiPeriod;
-                        wd.value = dbuf;
-                        eventData.weatherData[3].append(wd);
+                        eventData.saveWeatherData();
                     }
 
                     break;
@@ -1010,13 +988,8 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
                     ibuf = packet.longData.toInt(&ok);
                     if (ok)
                     {
-                        eventData.wetdry = ibuf;
-                        WeatherData wd;
-                        wd.lap = eventData.lapsCompleted;
-                        wd.sessionTime = eventData.remainingTime;
-                        wd.qPeriod = eventData.qualiPeriod;
-                        wd.value = (double)ibuf;
-                        eventData.weatherData[5].append(wd);
+                        eventData.wetdry = ibuf;                        
+                        eventData.saveWeatherData();
                     }
                     break;
 
@@ -1138,29 +1111,7 @@ void DataStreamReader::parseSystemPacket(Packet &packet, bool emitSignal)
      	   if ((eventData.timeStamp==0 && ts <= 1000) ||
      		   (ts >= eventData.timeStamp+75 && ts < eventData.timeStamp+1000))
            {
-                WeatherData wd;
-                wd.lap = eventData.lapsCompleted;
-                wd.sessionTime = eventData.remainingTime;
-                wd.qPeriod = eventData.qualiPeriod;
-
-                wd.value = eventData.airTemp;
-                eventData.weatherData[0].append(wd);
-
-                wd.value = eventData.trackTemp;
-                eventData.weatherData[1].append(wd);
-
-                wd.value = eventData.windSpeed;
-                eventData.weatherData[2].append(wd);
-
-                wd.value = eventData.pressure;
-                eventData.weatherData[3].append(wd);
-
-                wd.value = eventData.humidity;
-                eventData.weatherData[4].append(wd);
-
-                wd.value = eventData.wetdry;
-                eventData.weatherData[5].append(wd);
-
+//                eventData.saveWeatherData();
                 eventData.timeStamp = ts;
            }
         }
@@ -1246,9 +1197,9 @@ void DataStreamReader::onKeyFrameObtained(QByteArray keyFrame)
 
 void DataStreamReader::savePacket(const QByteArray &buf)
 {
-//    QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
-//    if (file.open(QIODevice::WriteOnly))
-//        file.write(buf);
+    QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
+    if (file.open(QIODevice::WriteOnly))
+        file.write(buf);
 }
 
 void DataStreamReader::clearData()

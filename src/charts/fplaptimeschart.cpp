@@ -116,7 +116,7 @@ void FPLapTimesChart::drawChart(QPainter *p)
     int size;
     findFirstAndLastLap(firstMin, lastMin, size);
 
-    if (lastMin - firstMin == 0 || lapDataArray.isEmpty())
+    if (/*lastMin - firstMin == 0 ||*/ lapDataArray.isEmpty())
         return;
 
     drawAxes(p, firstMin, lastMin);
@@ -355,7 +355,7 @@ void QualiLapTimesChart::drawChart(QPainter *p)
     int size;
     findFirstAndLastLap(firstMin, lastMin, size);
 
-    if (lastMin - firstMin == 0 || lapDataArray.isEmpty())
+    if (/*lastMin - firstMin == 0 ||*/ lapDataArray.isEmpty())
         return;
 
     drawAxes(p, firstMin, lastMin);
@@ -619,7 +619,7 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
     int size;
     findFirstAndLastLap(firstMin, lastMin, size);
 
-    if (lastMin - firstMin == 0 || lapDataArray.isEmpty())
+    if (/*lastMin - firstMin == 0 ||*/ lapDataArray.isEmpty())
         return;
 
     drawAxes(p, firstMin, lastMin);

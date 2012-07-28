@@ -15,7 +15,7 @@ void WeatherChart::drawAxes(QPainter *p)
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
-    double yFactor = (double)((height()-75.0)/4.0);
+    double yFactor = (double)(((double)paintRect.height()-40.0)/4.0);
     double yFactor2 = (double)((tMax-tMin)/4.0);
     double j = tMin;
 
@@ -43,7 +43,7 @@ void WeatherChart::drawAxes(QPainter *p)
         int prevJ = first;
 
         double jFactor = sz < 5 ? 1.0 : (double)((sz-1)/6.0);
-        double jWDFactor = ed.weatherData[wetDryId].size()-1 < 5 ? 1.0 : (double)((ed.weatherData[wetDryId].size()-1)/6.0);
+        double jWDFactor = /*ed.weatherData[wetDryId].size()-1*/sz < 5 ? 1.0 : (double)((/*ed.weatherData[wetDryId].size()-1*/sz)/6.0);
 
         QPixmap dryPix;
         if ((jFactor * xFactor) < 40)
@@ -58,13 +58,13 @@ void WeatherChart::drawAxes(QPainter *p)
         else
             wetPix = QPixmap(":/ui_icons/weather_wet.png").scaledToWidth(40, Qt::SmoothTransformation);
 
-        j = 0.0;
-        prevJ = 0;
+//        j = 0.0;
+//        prevJ = 0;
 
 
         for (; i < width()-15.0 && round(j) < last + 1 && round(j) < ed.weatherData[weatherId].size(); /*i += xFactor,*/ j += jFactor, jWD += jWDFactor)
         {
-            if (round(j) == prevJ && prevJ != 0)
+            if (round(j) == prevJ && prevJ != first)
                 continue;
 
             i += (double)(round(j) - prevJ) * xFactor;           
@@ -72,7 +72,7 @@ void WeatherChart::drawAxes(QPainter *p)
             prevJ = round(j);
             p->setPen(QColor(LTData::colors[LTData::WHITE]));            
 
-            if (i > 40 && i < paintRect.right()-xFactor)
+            if (i > paintRect.left() && i < paintRect.right()-xFactor)
             {                
                 QString text = getSessionTime(ed.weatherData[weatherId][round(j)]);
                 p->drawText(round(i)-10, paintRect.bottom()+15, text);
@@ -96,7 +96,6 @@ void WeatherChart::drawAxes(QPainter *p)
             }
         }
     }
-
 }
 
 void WeatherChart::drawChart(QPainter *p)
@@ -112,31 +111,73 @@ void WeatherChart::drawChart(QPainter *p)
         p->setRenderHint(QPainter::Antialiasing);
 
         double xFactor = ((double)paintRect.width()) / ((double)sz);
-        double yFactor = (((double)height()-75.0) / (tMax - tMin));
+        double yFactor = (((double)paintRect.height()-40.0) / (tMax - tMin));
 
         double x = paintRect.left(), j = x + xFactor;
-        double y = (double)paintRect.height() - (double)(ed.weatherData[weatherId][first-1].value-tMin) * yFactor;
+        double y = (double)paintRect.bottom() - (double)(ed.weatherData[weatherId][first-1].value-tMin) * yFactor;
 
         int i = first;
         for (; i < last + 1 && i < ed.weatherData[weatherId].size(); ++i, j += xFactor)
         {
-            double y2 = (double)(height())-25.0 - (double)(ed.weatherData[weatherId][i].value-tMin) * yFactor;
+            double y2 = (double)paintRect.bottom() - (double)(ed.weatherData[weatherId][i].value-tMin) * yFactor;
             if (ed.weatherData[weatherId][i].value <= 0)
             {
                 y2 = y;
             }
 
-            double midx = (j + x)/2;
+            double ty = y, ty2 = y2;
+            drawLine(p, x, ty, j, ty2);
 
-            p->drawLine(x, y, midx, y);
-            p->drawLine(midx, y, midx, y2);
-            p->drawLine(midx, y2, j, y2);
-
-//            p->drawLine(x, y, j, y2);
             x = j;
             y = y2;
         }
     }
+}
+
+
+void WeatherChart::drawLine(QPainter *p, int x1, int y1, int x2, int y2)
+{
+    int top = paintRect.top()+35;
+    int bottom = paintRect.bottom();
+    bool noTopMid = false;
+    bool noBottomMid = false;
+
+    if ((y2 < top && y1 < top) || (y2 > bottom && y1 > bottom))
+        return;
+
+    if (y2 < top)
+    {
+        noTopMid = true;
+        y2 = top;
+    }
+
+    if (y2 > bottom)
+    {
+        noBottomMid = true;
+        y2 = bottom;
+    }
+
+    if (y1 < top)
+    {
+        noTopMid = true;
+        y1 = top;
+    }
+
+    if (y1 > bottom)
+    {
+        noBottomMid = true;
+        y1 = bottom;
+    }
+
+    double midx = (x1 + x2)/2;
+
+    if ((y1 >= y2 && !noBottomMid) || (y2 >= y1 && !noTopMid))
+        p->drawLine(x1, y1, midx, y1);
+
+    p->drawLine(midx, y1, midx, y2);
+
+    if ((y1 >= y2 && !noTopMid) || (y2 >= y1 && !noBottomMid))
+        p->drawLine(midx, y2, x2, y2);
 }
 
 void WeatherChart::paintEvent(QPaintEvent *)
@@ -146,13 +187,21 @@ void WeatherChart::paintEvent(QPaintEvent *)
     QPainter p;
     p.begin(this);
 
+    if (scaleRect.width() == 0 && scaleRect.height() == 0)
+    {
+        setMinMax();
+        resetZoom();
+    }
+
     p.setBrush(QColor(20,20,20));
     p.setPen(QColor(20,20,20));
     p.drawRect(0, 0, width(), height());
-    setMinMax();
-    resetZoom();
+
     drawAxes(&p);
     drawChart(&p);
+
+    if (scaling)
+        drawScaleRect(&p);
 
     p.end();
 }
@@ -217,7 +266,7 @@ void WeatherChart::transform()
 
     int sz = last-first+1;
     double xFactor = ((double)paintRect.width()) / ((double)sz);
-    double yFactor = (((double)paintRect.height()) / (double)(tMax - tMin));
+    double yFactor = (((double)paintRect.height()-40) / (double)(tMax - tMin));
 
     first = first + ceil((scaleRect.left() - paintRect.left()) / xFactor);
     if (first < 1)
@@ -243,17 +292,17 @@ void TempChart::drawAxes(QPainter *p)
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
     //x axe
-    p->drawLine(35, height()-25, width()-5, height()-25);
+    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
 
     //y axe
-    p->drawLine(35, height()-25, 35, 10);
+    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
     p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
-    double yFactor = (double)(((double)height()-75.0)/4.0);
-    double yFactor2 = (double)((max-min)/4.0);
-    double j = min;
+    double yFactor = (double)(((double)paintRect.height()-40.0)/4.0);
+    double yFactor2 = (double)((tMax-tMin)/4.0);
+    double j = tMin;
     for (int i = height()-25; i >= 50; i-= yFactor, j += yFactor2)
     {
         p->setPen(QColor(LTData::colors[LTData::WHITE]));
@@ -264,23 +313,24 @@ void TempChart::drawAxes(QPainter *p)
             QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
-            p->drawLine(35, i, width()-5, i);
+            p->drawLine(paintRect.left(), i, paintRect.right(), i);
         }
     }
 
     EventData &ed = EventData::getInstance();
     if (ed.weatherData[weatherId].size()>1 || ed.weatherData[trackTempId].size()>1)
     {
-        int end = std::max(ed.weatherData[weatherId].size(), ed.weatherData[trackTempId].size());
+//        int end = std::max(ed.weatherData[weatherId].size(), ed.weatherData[trackTempId].size());
         int id = ed.weatherData[weatherId].size() > ed.weatherData[trackTempId].size() ? weatherId : trackTempId;
-        double xFactor = ((double)width()-40.0) / (double)end;
-        double j = 1.0, jWD = 0.0;
-        double i = 35.0;
-        int prevJ = 1;
+        int sz = last - first + 1;
+        double xFactor = ((double)paintRect.width()) / (double)sz;
+        double j = first, jWD = first-1;
+        double i = paintRect.left();
+        int prevJ = first;
 
-        double jFactor = end < 5 ? 1.0 : (double)((end-1)/6.0);
+        double jFactor = sz < 5 ? 1.0 : (double)((sz-1)/6.0);
 
-        double jWDFactor = ed.weatherData[wetDryId].size()-1 < 5 ? 1.0 : (double)((ed.weatherData[wetDryId].size()-1)/6.0);
+        double jWDFactor = jFactor;//ed.weatherData[wetDryId].size()-1 < 5 ? 1.0 : (double)((ed.weatherData[wetDryId].size()-1)/6.0);
 
         QPixmap dryPix;
         if ((jFactor * xFactor) < 40)
@@ -295,32 +345,25 @@ void TempChart::drawAxes(QPainter *p)
         else
             wetPix = QPixmap(":/ui_icons/weather_wet.png").scaledToWidth(40, Qt::SmoothTransformation);
 
-        j = 0.0;
-        prevJ = 0;
-
-
-        for (; i < width()-15.0 && round(j) < end; /*i += xFactor,*/ j += jFactor, jWD += jWDFactor)
+        for (; i < width()-15.0 && round(j) < last+1; /*i += xFactor,*/ j += jFactor, jWD += jWDFactor)
         {
-            if (round(j) == prevJ && prevJ != 0)
+            if (round(j) == prevJ && prevJ != first)
                 continue;
 
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
             p->setPen(QColor(LTData::colors[LTData::WHITE]));
 
-//			p->drawText(round(i)-5, height()-10, QString("%1").arg(ed.weatherData[weatherId][round(j)]));
-
-            qDebug() << i << paintRect.right() << xFactor;
-            if (i > 35 && i < paintRect.right()-xFactor)
+            if (i > paintRect.left() && i < paintRect.right()-xFactor)
             {
                 QString text = getSessionTime(ed.weatherData[id][round(j)]);
                 p->drawText(round(i)-10, paintRect.bottom()+15, text);
                 QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
-                p->drawLine(round(i), height()-25, round(i), 10);
+                p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
             }
-            if (round(jWD) < ed.weatherData[wetDryId].size() && round(j) < end-1)
+            if (round(jWD) < ed.weatherData[wetDryId].size() && round(j) < last-1)
             {
                 int nextI = i + xFactor*jFactor;
                 int cnt = 0;
@@ -349,51 +392,64 @@ void TempChart::drawChart(QPainter *p)
         p->setPen(pen);
         p->setRenderHint(QPainter::Antialiasing);
 
-        double xFactor1 = ((double)width()-40.0) / (ed.weatherData[weatherId].size());
-        double xFactor2 = ((double)width()-40.0) / (ed.weatherData[trackTempId].size());
-        double yFactor = ((double)height()-75.0) / (double)(max-min);
+        int sz = last - first + 1;
 
-        double x = 35, j1 = x + xFactor1, j2 = x + xFactor2;
-        double y1 = (double)(height())-25.0 - (double)(ed.weatherData[weatherId][0].value-min) * yFactor;
-        double y2 = (double)(height())-25.0 - (double)(ed.weatherData[trackTempId][0].value-min) * yFactor;
+        if (sz <= 0)
+            return;
 
-        int i = 1;
+        double xFactor1 = ((double)paintRect.width()) / (double)sz;//(ed.weatherData[weatherId].size());
+        double yFactor = ((double)paintRect.height()-40.0) / (double)(tMax-tMin);
+
+        double x = paintRect.left(), j1 = x + xFactor1;
+        double y1 = (double)paintRect.bottom() - (double)(ed.weatherData[weatherId][first].value-tMin) * yFactor;
+        double y2 = (double)paintRect.bottom() - (double)(ed.weatherData[trackTempId][first].value-tMin) * yFactor;
+
+        int i = first;
         pen.setColor(color);
         p->setPen(pen);
-        for (; i < ed.weatherData[weatherId].size(); ++i, j1 += xFactor1)
+        for (; i < last + 1 && i < ed.weatherData[weatherId].size(); ++i, j1 += xFactor1)
         {
-            double y3 = (double)(height())-25.0 - (double)(ed.weatherData[weatherId][i].value-min) * yFactor;
+            double y3 = (double)paintRect.bottom() - (double)(ed.weatherData[weatherId][i].value-tMin) * yFactor;
+            double y4 = (double)paintRect.bottom() - (double)(ed.weatherData[trackTempId][i].value-tMin) * yFactor;
 
-            double midx = (j1 + x)/2;
+            double ty1 = y1, ty3 = y3, ty2 = y2, ty4 = y4;
 
-            p->drawLine(x, y1, midx, y1);
-            p->drawLine(midx, y1, midx, y3);
-            p->drawLine(midx, y3, j1, y3);
+            pen.setColor(color);
+            p->setPen(pen);
+            drawLine(p, x, ty1, j1, ty3);
+
+            pen.setColor(trackTempCol);
+            p->setPen(pen);
+            drawLine(p, x, ty2, j1, ty4);
 
             x = j1;
             y1 = y3;
-        }
-        i = 1;
-        x = 35;
-        pen.setColor(trackTempCol);
-        p->setPen(pen);
-        for (; i < ed.weatherData[trackTempId].size(); ++i, j2 += xFactor2)
-        {
-            double y4 = (double)(height())-25.0 - (double)(ed.weatherData[trackTempId][i].value-min) * yFactor;
-            double midx = (j2 + x)/2;
-
-            p->drawLine(x, y2, midx, y2);
-            p->drawLine(midx, y2, midx, y4);
-            p->drawLine(midx, y4, j2, y4);
-
-            x = j2;
             y2 = y4;
         }
+//        i = 1;
+//        x = paintRect.left();
+
+//        pen.setColor(trackTempCol);
+//        p->setPen(pen);
+//        for (; i < ed.weatherData[trackTempId].size(); ++i, j2 += xFactor2)
+//        {
+//            double y4 = (double)paintRect.width() - (double)(ed.weatherData[trackTempId][i].value-tMin) * yFactor;
+//            double midx = (j2 + x)/2;
+
+//            p->drawLine(x, y2, midx, y2);
+//            p->drawLine(midx, y2, midx, y4);
+//            p->drawLine(midx, y4, j2, y4);
+
+//            x = j2;
+//            y2 = y4;
+//        }
     }
 }
 
+
 void TempChart::drawLegend(QPainter *p)
 {
+    p->setFont(QFont("Arial", 10, QFont::Bold, false));
     p->setRenderHint(QPainter::Antialiasing, false);
     p->setBrush(QColor(20, 20, 20));
 
@@ -407,19 +463,20 @@ void TempChart::drawLegend(QPainter *p)
     p->drawText(width()-80, height()-40, "Track temp");
 }
 
-void TempChart::paintEvent(QPaintEvent *)
+void TempChart::paintEvent(QPaintEvent *pe)
 {
-    resetPaintRect();
+    WeatherChart::paintEvent(pe);
+//    resetPaintRect();
 
     QPainter p;
     p.begin(this);
 
-    p.setBrush(QColor(20,20,20));
-    p.setPen(QColor(20,20,20));
-    p.drawRect(0, 0, width(), height());
-    setMinMax();
-    drawAxes(&p);
-    drawChart(&p);
+//    p.setBrush(QColor(20,20,20));
+//    p.setPen(QColor(20,20,20));
+//    p.drawRect(0, 0, width(), height());
+//    setMinMax();
+//    drawAxes(&p);
+//    drawChart(&p);
     drawLegend(&p);
 
     p.end();
@@ -586,3 +643,20 @@ void WetDryChart::drawChart(QPainter *p)
     }
 }
 
+void WetDryChart::paintEvent(QPaintEvent *)
+{
+    resetPaintRect();
+    setMinMax();
+
+    QPainter p;
+    p.begin(this);
+
+    p.setBrush(QColor(20,20,20));
+    p.setPen(QColor(20,20,20));
+    p.drawRect(0, 0, width(), height());
+
+    drawAxes(&p);
+    drawChart(&p);
+
+    p.end();
+}

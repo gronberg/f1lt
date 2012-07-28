@@ -378,6 +378,7 @@ void LTWindow::timeout()
             {
                 secs = 59;
                 --mins;
+                eventData.saveWeatherData();
 
                 if (mins < 0)
                 {
