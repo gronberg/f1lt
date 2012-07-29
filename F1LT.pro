@@ -25,7 +25,7 @@ LT_FILES.path = $$PREFIX/ltdata/
 DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/
 
-#DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
