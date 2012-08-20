@@ -118,6 +118,11 @@
       </item>
       <item row="0" column="1">
        <widget class="QCheckBox" name="cb1">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>1 VET</string>
         </property>
