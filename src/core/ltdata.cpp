@@ -274,9 +274,9 @@ QStringList LTData::getDriversList()
     for (int i = 0; i < 30; ++i)
     {
     	DriverData dd = EventData::getInstance().getDriverData(i);
-    	if (dd.carID != -1)
+        if (dd.getCarID() != -1)
     	{
-    		list.append(QString::number(dd.number) + " " + dd.driver);
+            list.append(QString::number(dd.getNumber()) + " " + dd.getDriverName());
     	}
     }
     if (list.isEmpty())
@@ -298,9 +298,9 @@ QStringList LTData::getDriversListShort()
     for (int i = 0; i < 30; ++i)
     {
         DriverData dd = EventData::getInstance().getDriverData(i);
-        if (dd.carID != -1)
+        if (dd.getCarID() != -1)
         {
-            list.append(QString::number(dd.number) + " " + LTData::getDriverShortName(dd.driver));
+            list.append(QString::number(dd.getNumber()) + " " + LTData::getDriverShortName(dd.getDriverName()));
         }
     }
     if (list.isEmpty())
@@ -334,11 +334,11 @@ int LTData::timeToSecs(QTime time)
 
 int LTData::getFPNumber()
 {
-    if (EventData::getInstance().eventId == 0)
+    if (EventData::getInstance().getEventId() == 0)
         return 1;
 
     else
-        return (EventData::getInstance().eventId - 7066)%6;
+        return (EventData::getInstance().getEventId() - 7066)%6;
 }
 
 int LTData::getFPLength()

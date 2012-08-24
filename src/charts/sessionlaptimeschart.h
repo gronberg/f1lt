@@ -62,14 +62,14 @@ public:
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        return "LAP " + QString::number(ld.numLap);
+        return "LAP " + QString::number(ld.getLapNumber());
     }
     virtual QString getDriverInfoXY(const LapData &ld)
     {
-        if (ld.carID > 0)
+        if (ld.getCarID() > 0)
         {
-            DriverData dd = EventData::getInstance().driversData[ld.carID-1];
-            return QString::number(ld.pos) + ". " +  dd.driver + ": " + ld.lapTime.toString();
+            DriverData dd = EventData::getInstance().getDriversData()[ld.getCarID()-1];
+            return QString::number(ld.getPosition()) + ". " +  dd.getDriverName() + ": " + ld.getTime().toString();
         }
         return "";
     }
@@ -173,16 +173,16 @@ public:
 
     virtual QString getDriverInfoXY(const LapData &ld)
     {
-        if (ld.carID > 0)
+        if (ld.getCarID() > 0)
         {
-            DriverData dd = EventData::getInstance().driversData[ld.carID-1];
-            if (ld.pos == 1)
-                return QString::number(ld.pos) + ". " + dd.driver + ": Leader";
+            DriverData dd = EventData::getInstance().getDriversData()[ld.getCarID()-1];
+            if (ld.getPosition() == 1)
+                return QString::number(ld.getPosition()) + ". " + dd.getDriverName() + ": Leader";
 
-            QString gap = ld.gap;
+            QString gap = ld.getGap();
             if (gap == "")
                 gap = "1L";
-            return QString::number(ld.pos) + ". " +  dd.driver + ": +" + gap;
+            return QString::number(ld.getPosition()) + ". " +  dd.getDriverName() + ": +" + gap;
         }
         return "";
     }

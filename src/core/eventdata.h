@@ -3,56 +3,166 @@
 
 #include "driverdata.h"
 
-struct WeatherData
+class DataStreamReader;
+class EventData;
+class PacketParser;
+class SessionRecords;
+class Weather;
+
+class WeatherData
 {
+public:
+    WeatherData() : value(0.0), lap(0), sessionTime(), qPeriod(1) { }
+
+    double getValue() const { return value; }
+    int getLap() const { return lap; }
+    QTime getSessionTime() const { return sessionTime; }
+    int getQualiPeriod() const { return qPeriod; }
+
+    friend class Weather;
+    friend class EventData;
+    friend class PackerParser;
+
+private:
     double value;
     int lap;
     QTime sessionTime;
     int qPeriod;
 };
 
-struct EventData
+class Weather
 {
-private:
-    EventData();
-    EventData(const EventData&) {}
-    void operator=(const EventData&) {}
+public:
 
+    WeatherData getAirTemp()        const { return currentWeather[0]; }
+    WeatherData getTrackTemp()      const { return currentWeather[1]; }
+    WeatherData getWindSpeed()      const { return currentWeather[2]; }
+    WeatherData getPressure()       const { return currentWeather[3]; }
+    WeatherData getHumidity()       const { return currentWeather[4]; }
+    WeatherData getWetDry()         const { return currentWeather[5]; }
+    WeatherData getWindDirection()  const { return currentWeather[6]; }
+
+    void setAirTemp(double val)         { currentWeather[0].value = val; }
+    void setTrackTemp(double val)       { currentWeather[1].value = val; }
+    void setWindSpeed(double val)       { currentWeather[2].value = val; }
+    void setPressure(double val)        { currentWeather[3].value = val; }
+    void setHumidity(double val)        { currentWeather[4].value = val; }
+    void setWetDry(double val)          { currentWeather[5].value = val; }
+    void setWindDirection(double val)   { currentWeather[6].value = val; }
+
+    QList<WeatherData> getWeatherData(int idx) const
+    {
+        if (idx >= 0 && idx < 7)
+            return weatherData[idx];
+
+        return weatherData[0];
+    }
+
+    int getSize(int idx) const
+    {
+        if (idx >= 0 && idx < 7)
+            return weatherData[idx].size();
+
+        return 0;
+    }
+
+    void saveWeatherData(const EventData &);
+
+
+    friend class EventData;
+    friend class PackerParser;
+private:
+    //this list records the weather from whole session
+    QList<WeatherData> weatherData[7];	//0 air temp, 1 track temp, 2 wind speed, 3 pressure, 4 humidity, 5 wet-dry, 6 wind direction
+
+    //this list stores the current weather data
+    WeatherData currentWeather[7];
+};
+
+class SectorRecordData
+{
+public:
+
+    QString getDriverName()     const { return driver; }
+    int getNumber()         const { return number; }
+    LapTime getTime()       const { return lapTime; }
+    int getLapNumber()      const { return lapNum; }
+    QTime getSessionTime()  const { return sessionTime; }
+
+    friend class EventData;
+    friend class PacketParser;
+    friend class SessionRecords;
+private:
+    QString driver;
+    int number;
+    LapTime lapTime;
+    int lapNum;
+    QTime sessionTime;
+};
+
+class SpeedRecordData
+{    
+public:
+    QString getDriverName() const { return driver; }
+    double getSpeed()   const { return speed; }
+
+    friend class EventData;
+    friend class PacketParser;
+    friend class SessionRecords;
+private:
+    QString driver;
+    double speed;
+};
+
+class SessionRecords
+{
+public:
+    SpeedRecordData getSectorSpeed(int sector, int idx) const
+    {
+        if (sector >= 1 && sector <= 3 &&
+                idx >= 0 && idx < 6)
+            return secSpeed[sector][idx];
+
+        return SpeedRecordData();
+    }
+
+    SpeedRecordData getSpeedTrap(int idx) const
+    {
+        if (idx >= 0 && idx < 6)
+            return speedTrap[idx];
+
+        return SpeedRecordData();
+    }
+
+    SectorRecordData getFastestLap() const { return fastestLap; }
+
+    SectorRecordData getSectorRecord(int idx) const
+    {
+        if (idx >= 1 && idx <= 3)
+            return secRecord[idx-1];
+    }
+
+    friend class EventData;
+    friend class PacketParser;
+private:
+    SpeedRecordData secSpeed[3][6];
+    SpeedRecordData speedTrap[6];
+
+    SectorRecordData fastestLap;
+    SectorRecordData secRecord[3];
+};
+
+class EventData
+{
 public:
 
     static EventData &getInstance()
     {
         static EventData ed;
         return ed;
-    }
+    } 
 
-    void saveWeatherData()
-    {
-        WeatherData wd;
-        wd.lap = lapsCompleted;
-        wd.sessionTime = remainingTime;
-        wd.qPeriod = qualiPeriod;
-
-        wd.value = airTemp;
-        weatherData[0].append(wd);
-
-        wd.value = trackTemp;
-        weatherData[1].append(wd);
-
-        wd.value = windSpeed;
-        weatherData[2].append(wd);
-
-        wd.value = pressure;
-        weatherData[3].append(wd);
-
-        wd.value = humidity;
-        weatherData[4].append(wd);
-
-        wd.value = wetdry;
-        weatherData[5].append(wd);
-    }
-
-    void clear();
+    void clear();    
 
     int getDriverId(QString);
     int getDriverId(int no);
@@ -60,13 +170,42 @@ public:
     DriverData getDriverDataFromPos(int pos);
     QString calculateInterval(DriverData d1, DriverData d2, int lap);
 
-    unsigned int key;    
+    LTEvent getEventInfo()              const { return eventInfo; }
+    void setEventInfo(LTEvent ev)       { eventInfo = ev; }
+    int getEventId()                    const { return eventId; }
+    LTData::EventType getEventType()    const { return eventType; }
+    LTData::FlagStatus getFlagStatus()  const { return flagStatus; }
+
+    QTime getRemainingTime()            const { return remainingTime; }
+    int getCompletedLaps()              const { return lapsCompleted; }
+    Weather getWeather()                const { return weather; }
+    void saveWeather()                  { weather.saveWeatherData(*this); }
+
+    bool isSessionStarted()             const { return sessionStarted; }
+    void setSessionStarted(bool st)     { sessionStarted = st; }
+
+    QString getCommentary()             const { return commentary; }
+    int getQualiPeriod()                const { return qualiPeriod; }
+
+    SessionRecords getSessionRecords()  const { return sessionRecords; }
+
+    QList<DriverData> &getDriversData()        { return driversData; }
+
+    friend class PacketParser;
+    friend class DataStreamReader;
+
+private:
+    EventData();
+    EventData(const EventData&) {}
+    void operator=(const EventData&) {}
+
+    unsigned int key;
+    unsigned int frame;
+
     QString cookie;
 
-    LTEvent eventInfo;
+    LTEvent eventInfo;    
 
-    unsigned int frame;
-    unsigned int salt;
     int eventId;
 
     LTData::EventType eventType;
@@ -75,39 +214,16 @@ public:
     QTime remainingTime;
     int lapsCompleted;
 
-    double airTemp, humidity;
-    double windSpeed, windDirection;
-
-    double pressure, trackTemp;
-
-    QList<WeatherData> weatherData[6];	//0 air temp, 1 track temp, 2 wind speed, 3 pressure, 4 humidity, 5 wet-dry
-
-
-    int timeStamp;
+    Weather weather;
 
     bool sessionStarted;
 
-    int wetdry;
-
-    QString notice;
-
     QString commentary;
-    QString sec1Speed[12];
-    QString sec2Speed[12];
-    QString sec3Speed[12];
-    QString speedTrap[12];
 
-    int FLNumber;
-    QString FLDriver;
-    LapTime FLTime;
-    int FLLap;
-
-    QString sec1Record[4];
-    QString sec2Record[4];
-    QString sec3Record[4];
+    SessionRecords sessionRecords;
 
     QList<DriverData> driversData;
-    int qualiPeriod;
+    int qualiPeriod;   
 };
 
 //extern EventData eventData;

@@ -39,7 +39,7 @@ public slots:
     {
         for (int i = 0; i < 2; ++i)
         {
-            if (dd.carID == eventData.getDriverId(getNumber(i)))
+            if (dd.getCarID() == eventData.getDriverId(getNumber(i)))
             {
                 updateData();
                 updateCharts();

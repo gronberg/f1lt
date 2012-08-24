@@ -67,12 +67,12 @@ public:
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        return "LAP " + QString::number(ld.numLap);
+        return "LAP " + QString::number(ld.getLapNumber());
     }
     virtual QString getDriverInfoXY(const LapData &ld)
     {
-        DriverData dd = EventData::getInstance().driversData[ld.carID-1];
-        return dd.driver + ": " + ld.lapTime.toString();
+        DriverData dd = EventData::getInstance().getDriversData()[ld.getCarID()-1];
+        return dd.getDriverName() + ": " + ld.getTime().toString();
     }
     virtual int getPopupWidth()
     {
@@ -139,18 +139,18 @@ public:
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        return "LAP " + QString::number(ld.numLap);
+        return "LAP " + QString::number(ld.getLapNumber());
     }
     virtual QString getDriverInfoXY(const LapData &ld, double gap)
     {
-        DriverData dd = EventData::getInstance().driversData[ld.carID-1];
+        DriverData dd = EventData::getInstance().getDriversData()[ld.getCarID()-1];
         if (gap == 0.0)
-            return dd.driver;
+            return dd.getDriverName();
 
         if (gap == 1000.0)
-            return dd.driver + ": +1L <";
+            return dd.getDriverName() + ": +1L <";
 
-        return dd.driver + ": +" + QString::number(gap, 'f', 1);
+        return dd.getDriverName() + ": +" + QString::number(gap, 'f', 1);
     }
     virtual int getPopupWidth()
     {

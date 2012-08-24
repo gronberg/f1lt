@@ -65,7 +65,7 @@ bool EventPlayer::loadFromFile(QString fName)
         stream >> pixBuf;
         ltEvent.trackImg = pixBuf;
 
-        eventData.eventInfo = ltEvent;
+        eventData.setEventInfo(ltEvent);
         int size;
         stream >> size;
 

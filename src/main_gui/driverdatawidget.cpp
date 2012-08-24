@@ -119,7 +119,7 @@ void DriverDataWidget::printDriverData(int driverIdx)
     QString bestL;
     bool bl = false;
 
-    DriverData &driverData = eventData.driversData[driverIdx];
+    DriverData &driverData = eventData.getDriversData()[driverIdx];
 
     ui->tableWidget_4->setRowHeight(0, 100);
     QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget_4->cellWidget(0, 0));
@@ -130,41 +130,41 @@ void DriverDataWidget::printDriverData(int driverIdx)
         ui->tableWidget_4->setCellWidget(0, 0, lab);
         ui->tableWidget_4->setSpan(0, 0, 1, 8);
     }
-    lab->setPixmap(LTData::getCarImg(driverData.number));//eventData.carImages[idx]);
+    lab->setPixmap(LTData::getCarImg(driverData.getNumber()));//eventData.carImages[idx]);
 
-    s = QString("%1  %2 (%3)").arg(driverData.number).arg(driverData.driver).arg(LTData::getTeamName(driverData.number));
+    s = QString("%1  %2 (%3)").arg(driverData.getNumber()).arg(driverData.getDriverName()).arg(LTData::getTeamName(driverData.getNumber()));
 
     setItem(1, 0, s, Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::WHITE]);
     ui->tableWidget_4->setSpan(1, 0, 1, 8);
     ui->tableWidget_4->setRowHeight(1, 20);
 
     s = "Grid position:";
-    if (eventData.eventType != LTData::RACE_EVENT)
+    if (eventData.getEventType() != LTData::RACE_EVENT)
         s = "Laps completed:";
 
     setItem(2, 0, s, Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_4->setSpan(2, 0, 1, 3);
 
 
-    if (eventData.eventType == LTData::RACE_EVENT)
+    if (eventData.getEventType() == LTData::RACE_EVENT)
     {
-        if (!driverData.posHistory.isEmpty())
-            s = QString("%1").arg(driverData.posHistory[0]);
+        if (!driverData.getPositionHistory().isEmpty())
+            s = QString("%1").arg(driverData.getPositionHistory()[0]);
         else
             s = "";
     }
     else
-        s = QString("%1").arg((driverData.lastLap.numLap >= 0 ? driverData.lastLap.numLap : 0));
+        s = QString("%1").arg((driverData.getLastLap().getLapNumber() >= 0 ? driverData.getLastLap().getLapNumber() : 0));
 
     setItem(2, 3, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::YELLOW]);
     ui->tableWidget_4->setRowHeight(2, 20);
-    QTableWidgetItem *item = ui->tableWidget_4->item(2, 3);
+    ui->tableWidget_4->item(2, 3);
 
     setItem(3, 0, "Current position:", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_4->setSpan(3, 0, 1, 3);
 
 
-    s = QString("%1").arg(driverData.pos);
+    s = QString("%1").arg(driverData.getPosition());
     setItem(3, 3, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::CYAN]);
     ui->tableWidget_4->setRowHeight(3, 20);
 
@@ -174,9 +174,9 @@ void DriverDataWidget::printDriverData(int driverIdx)
 
     s = "";
 //    if (!driverData.lapData.isEmpty())
-        s = QString("%1").arg(driverData.lastLap.gap);
+        s = QString("%1").arg(driverData.getLastLap().getGap());
 
-    if (driverData.pos == 1)
+    if (driverData.getPosition() == 1)
         s = "-";
 
     setItem(4, 3, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::YELLOW]);
@@ -186,23 +186,23 @@ void DriverDataWidget::printDriverData(int driverIdx)
     ui->tableWidget_4->setSpan(5, 0, 1, 2);
 
 
-    if (driverData.lapData.isEmpty())
-        s = driverData.lastLap.lapTime;
+    if (driverData.getLapData().isEmpty())
+        s = driverData.getLastLap().getTime();
     else
-        s = driverData.lapData.last().lapTime;
+        s = driverData.getLapData().last().getTime();
 
 
     QString gap;
-    if (!driverData.lapData.isEmpty())
-        gap = DriverData::calculateGap(driverData.lapData.last().lapTime, driverData.bestLap.lapTime);
+    if (!driverData.getLapData().isEmpty())
+        gap = DriverData::calculateGap(driverData.getLapData().last().getTime(), driverData.getSessionRecords().getBestLap().getTime());
     else
-        gap = DriverData::calculateGap(driverData.lastLap.lapTime, driverData.bestLap.lapTime);
+        gap = DriverData::calculateGap(driverData.getLastLap().getTime(), driverData.getSessionRecords().getBestLap().getTime());
 
     if (gap != "0" && gap != "" && gap != "0.000")
         s += " (+"+gap +")";
 
     QColor color = LTData::colors[LTData::WHITE];
-    if (driverData.lastLap.lapTime.toString() == "IN PIT")
+    if (driverData.getLastLap().getTime().toString() == "IN PIT")
         color = LTData::colors[LTData::PIT];
 
     setItem(5, 2, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, color);
@@ -214,30 +214,30 @@ void DriverDataWidget::printDriverData(int driverIdx)
     setItem(6, 0, "Best lap:", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
     ui->tableWidget_4->setSpan(6, 0, 1, 2);
 
-    bestL = driverData.bestLap.lapTime;
+    bestL = driverData.getSessionRecords().getBestLap().getTime();
     if (bestL == "0")
         bestL = "";
 
     color = LTData::colors[LTData::GREEN];
-    if (bestL == eventData.FLTime)
+    if (bestL == eventData.getSessionRecords().getFastestLap().getTime())
         color = LTData::colors[LTData::VIOLET];
 
     setItem(6, 2, bestL, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, color);
     ui->tableWidget_4->setSpan(6, 2, 1, 2);
     ui->tableWidget_4->setRowHeight(6, 20);
 
-    if (eventData.eventType == LTData::RACE_EVENT)
+    if (eventData.getEventType() == LTData::RACE_EVENT)
     {
-        setItem(2, 5, QString("Pit stops (%1)").arg(driverData.numPits), Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
+        setItem(2, 5, QString("Pit stops (%1)").arg(driverData.getNumPits()), Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
         ui->tableWidget_4->setSpan(2, 5, 1, 3);
 
         for (int i = 0; i < 6; ++i)
         {
             QString s1 = "", s2 = "";
-            if (i < driverData.pitData.size())
+            if (i < driverData.getPitStops().size())
             {
-                s1 = QString("L%1").arg(driverData.pitData[i].pitLap);
-                s2 = driverData.pitData[i].pitTime;
+                s1 = QString("L%1").arg(driverData.getPitStops()[i].getPitLap());
+                s2 = driverData.getPitStops()[i].getPitTime();
             }
 
             setItem(3+2*(i/3), 5+i%3, s1, Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::WHITE]);
@@ -266,7 +266,7 @@ void DriverDataWidget::printDriverData(int driverIdx)
     setItem(8, 1, "P", Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
 
     s = "Gap";
-    if (eventData.eventType != LTData::RACE_EVENT)
+    if (eventData.getEventType() != LTData::RACE_EVENT)
         s = "Ses. time";
 
     setItem(8, 2, s, Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::DEFAULT]);
@@ -284,40 +284,42 @@ void DriverDataWidget::printDriverData(int driverIdx)
 
 ////        ui->tableWidget_4->insertRow(rows);
 //    }
-    for (int i = ui->tableWidget_4->rowCount()-1; i >= driverData.lapData.size()+rows; --i)
+    for (int i = ui->tableWidget_4->rowCount()-1; i >= driverData.getLapData().size()+rows; --i)
         ui->tableWidget_4->removeRow(i);
 
 //    for (int i = 0; i < driverData.lapData.size(); ++i)
-    for (int i = 0; i < driverData.lapData.size(); ++i)
+    for (int i = 0; i < driverData.getLapData().size(); ++i)
     {
-        int lapIndex = (reversedOrder ? driverData.lapData.size() - i - 1 : i);
+        int lapIndex = (reversedOrder ? driverData.getLapData().size() - i - 1 : i);
 
         if (i >= ui->tableWidget_4->rowCount() - 9)
             ui->tableWidget_4->insertRow(rows);
 
-        s = QString("%1").arg(driverData.lapData[lapIndex].numLap);
+        s = QString("%1").arg(driverData.getLapData()[lapIndex].getLapNumber());
 //        if (eventData.eventType == LTData::QUALI_EVENT)
 //            s += QString(" (Q%1)").arg(driverData.lapData[lapIndex].qualiPeriod);
 
         setItem(rows, 0, s, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::WHITE],
                 i%2 == 0 ? QBrush(LTData::colors[LTData::BACKGROUND]) : QBrush(LTData::colors[LTData::BACKGROUND2]));
 
-        setItem(rows, 1, QString("%1").arg(driverData.lapData[lapIndex].pos), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::CYAN],
+        setItem(rows, 1, QString("%1").arg(driverData.getLapData()[lapIndex].getPosition()), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignVCenter | Qt::AlignRight, LTData::colors[LTData::CYAN],
                 i%2 == 0 ? QBrush(LTData::colors[LTData::BACKGROUND]) : QBrush(LTData::colors[LTData::BACKGROUND2]));
 
 
         QString s;
-        if (eventData.eventType == LTData::RACE_EVENT)
+        if (eventData.getEventType() == LTData::RACE_EVENT)
         {
-            s = driverData.lapData[lapIndex].gap;
-            if (driverData.lapData[lapIndex].pos == 1)
+            s = driverData.getLapData()[lapIndex].getGap();
+            if (driverData.getLapData()[lapIndex].getPosition() == 1)
                 s = "";
         }
-        else if (eventData.eventType == LTData::PRACTICE_EVENT)
-            s = LTData::correctFPTime(driverData.lapData[lapIndex].sessionTime).toString("h:mm:ss");
+        else if (eventData.getEventType() == LTData::PRACTICE_EVENT)
+            s = LTData::correctFPTime(driverData.getLapData()[lapIndex].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");
 //            s = driverData.lapData[lapIndex].sessionTime.toString("h:mm:ss");
         else
-            s = LTData::correctQualiTime(driverData.lapData[lapIndex].sessionTime, driverData.lapData[lapIndex].qualiPeriod).toString("mm:ss") + QString(" (Q%1)").arg(driverData.lapData[lapIndex].qualiPeriod);
+            s = LTData::correctQualiTime(driverData.getLapData()[lapIndex].getQualiLapExtraData().getSessionTime(),
+                          driverData.getLapData()[lapIndex].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss") +
+                    QString(" (Q%1)").arg(driverData.getLapData()[lapIndex].getQualiLapExtraData().getQualiPeriod());
 //            s = QString("%1 (Q%2)").arg(driverData.lapData[lapIndex].sessionTime.toString("mm:ss")).arg(driverData.lapData[lapIndex].qualiPeriod);
 
 
@@ -327,29 +329,30 @@ void DriverDataWidget::printDriverData(int driverIdx)
         ui->tableWidget_4->setRowHeight(rows, 20);
 
         color = LTData::colors[LTData::WHITE];
-        s = QString("%1").arg(driverData.lapData[lapIndex].lapTime);
-        if (eventData.FLTime == driverData.lapData[lapIndex].lapTime && !bl)
+        s = QString("%1").arg(driverData.getLapData()[lapIndex].getTime());
+        if (eventData.getSessionRecords().getFastestLap().getTime() == driverData.getLapData()[lapIndex].getTime() && !bl)
         {
             bl = true;
             color = LTData::colors[LTData::VIOLET];
         }
-        else if (driverData.bestLap.lapTime.toString() != "" && driverData.bestLap.lapTime == driverData.lapData[lapIndex].lapTime && !bl)
+        else if (driverData.getSessionRecords().getBestLap().getTime().toString() != "" &&
+                 driverData.getSessionRecords().getBestLap().getTime() == driverData.getLapData()[lapIndex].getTime() && !bl)
         {
             bl = true;
             color = LTData::colors[LTData::GREEN];
         }
-        else if (driverData.lapData[lapIndex].lapTime.toString() == "IN PIT")
+        else if (driverData.getLapData()[lapIndex].getTime().toString() == "IN PIT")
         {
-            s += " (" + driverData.getPitTime(driverData.lapData[lapIndex].numLap) + ")";
+            s += " (" + driverData.getPitTime(driverData.getLapData()[lapIndex].getLapNumber()) + ")";
             color = LTData::colors[LTData::PIT];
         }
-        else if (driverData.lapData[lapIndex].lapTime.toString() == "RETIRED")
+        else if (driverData.getLapData()[lapIndex].getTime().toString() == "RETIRED")
             color = LTData::colors[LTData::RED];
 
-        else if (driverData.lapData[lapIndex].scLap == true)
+        else if (driverData.getLapData()[lapIndex].getRaceLapExtraData().isSCLap() == true)
             color = LTData::colors[LTData::YELLOW];
 
-        else if (eventData.eventType != LTData::RACE_EVENT && driverData.lapData[lapIndex].approxLap == true)
+        else if (eventData.getEventType() != LTData::RACE_EVENT && driverData.getLapData()[lapIndex].getPracticeLapExtraData().isApproxLap() == true)
             color = LTData::colors[LTData::CYAN];
 
 
@@ -359,7 +362,7 @@ void DriverDataWidget::printDriverData(int driverIdx)
 //        item->setFlags(Qt::NoItemFlags);
 
 
-        s = DriverData::calculateGap(driverData.lapData[lapIndex].lapTime, driverData.bestLap.lapTime);
+        s = DriverData::calculateGap(driverData.getLapData()[lapIndex].getTime(), driverData.getSessionRecords().getBestLap().getTime());
         if (s == "0" || s == "" || s == "0.000")
             s = "";
 
@@ -367,39 +370,42 @@ void DriverDataWidget::printDriverData(int driverIdx)
                 i%2 == 0 ? QBrush(LTData::colors[LTData::BACKGROUND]) : QBrush(LTData::colors[LTData::BACKGROUND2]));
 
         color = LTData::colors[LTData::WHITE];
-        if (driverData.driver == eventData.sec1Record[0] && driverData.lapData[lapIndex].numLap == eventData.sec1Record[2].toInt())
+        if (driverData.getDriverName() == eventData.getSessionRecords().getSectorRecord(1).getDriverName() &&
+                driverData.getLapData()[lapIndex].getLapNumber() == eventData.getSessionRecords().getSectorRecord(1).getLapNumber())
             color = LTData::colors[LTData::VIOLET];
 
-        else if (driverData.bestSectors[0].second == driverData.lapData[lapIndex].numLap)
+        else if (driverData.getSessionRecords().getBestSectorLapNumber(1) == driverData.getLapData()[lapIndex].getLapNumber())
             color = LTData::colors[LTData::GREEN];
 
-        setItem(rows, 5, QString("%1").arg(driverData.lapData[lapIndex].sector1), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color,
+        setItem(rows, 5, QString("%1").arg(driverData.getLapData()[lapIndex].getSectorTime(1)), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color,
                 i%2 == 0 ? QBrush(LTData::colors[LTData::BACKGROUND]) : QBrush(LTData::colors[LTData::BACKGROUND2]));
 
 
         color = LTData::colors[LTData::WHITE];
-        if (driverData.driver == eventData.sec2Record[0] && driverData.lapData[lapIndex].numLap == eventData.sec2Record[2].toInt())
+        if (driverData.getDriverName() == eventData.getSessionRecords().getSectorRecord(2).getDriverName() &&
+                driverData.getLapData()[lapIndex].getLapNumber() == eventData.getSessionRecords().getSectorRecord(2).getLapNumber())
             color = LTData::colors[LTData::VIOLET];
 
-        else if (driverData.bestSectors[1].second == driverData.lapData[lapIndex].numLap)
+        else if (driverData.getSessionRecords().getBestSectorLapNumber(2) == driverData.getLapData()[lapIndex].getLapNumber())
             color = LTData::colors[LTData::GREEN];
 
-        setItem(rows, 6, QString("%1").arg(driverData.lapData[lapIndex].sector2), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color,
+        setItem(rows, 6, QString("%1").arg(driverData.getLapData()[lapIndex].getSectorTime(2)), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color,
                 i%2 == 0 ? QBrush(LTData::colors[LTData::BACKGROUND]) : QBrush(LTData::colors[LTData::BACKGROUND2]));
 
         color = LTData::colors[LTData::WHITE];
-        if (driverData.driver == eventData.sec3Record[0] && driverData.lapData[lapIndex].numLap == eventData.sec3Record[2].toInt())
+        if (driverData.getDriverName() == eventData.getSessionRecords().getSectorRecord(3).getDriverName() &&
+                driverData.getLapData()[lapIndex].getLapNumber() == eventData.getSessionRecords().getSectorRecord(3).getLapNumber())
             color = LTData::colors[LTData::VIOLET];
 
-        else if (driverData.bestSectors[2].second == driverData.lapData[lapIndex].numLap)
+        else if (driverData.getSessionRecords().getBestSectorLapNumber(3) == driverData.getLapData()[lapIndex].getLapNumber())
             color = LTData::colors[LTData::GREEN];
 
-        setItem(rows, 7, QString("%1").arg(driverData.lapData[lapIndex].sector3), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color,
+        setItem(rows, 7, QString("%1").arg(driverData.getLapData()[lapIndex].getSectorTime(3)), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color,
                 i%2 == 0 ? QBrush(LTData::colors[LTData::BACKGROUND]) : QBrush(LTData::colors[LTData::BACKGROUND2]));
 
         ++rows;
     }
-    currentDriver = driverData.carID;
+    currentDriver = driverData.getCarID();
     ui->tableWidget_4->verticalScrollBar()->setSliderPosition(scrollBarPosition);
 }
 
@@ -408,14 +414,14 @@ void DriverDataWidget::printDriverChart(int driverIdx)
     if (driverIdx < 0)
         return;
 
-    DriverData &driverData = eventData.driversData[driverIdx];
+    DriverData &driverData = eventData.getDriversData()[driverIdx];
 
     QList<double> pos;
-    for (int i = 0; i < driverData.posHistory.size(); ++i)
+    for (int i = 0; i < driverData.getPositionHistory().size(); ++i)
     {
-        int iPos = driverData.posHistory[i];
+        int iPos = driverData.getPositionHistory()[i];
         if (i > 0 && iPos == 0)
-            iPos = driverData.posHistory[i-1];
+            iPos = driverData.getPositionHistory()[i-1];
 
         pos.append((double)(iPos));
     }

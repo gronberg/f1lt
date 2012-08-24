@@ -137,18 +137,18 @@ void LapTimeComparisonDialog::updateData()
         {
             if (i > 0)
                 wTitle += " - ";
-            wTitle += eventData.driversData[idx-1].driver;
-            if(!eventData.driversData[idx-1].lapData.isEmpty())
+            wTitle += eventData.getDriversData()[idx-1].getDriverName();
+            if(!eventData.getDriversData()[idx-1].getLapData().isEmpty())
             {
-                if (eventData.driversData[idx-1].lapData[0].numLap < firstLap)
-                    firstLap = eventData.driversData[idx-1].lapData[0].numLap;
+                if (eventData.getDriversData()[idx-1].getLapData()[0].getLapNumber() < firstLap)
+                    firstLap = eventData.getDriversData()[idx-1].getLapData()[0].getLapNumber();
 
-                if (eventData.driversData[idx-1].lapData.last().numLap > lastLap)
-                    lastLap = eventData.driversData[idx-1].lapData.last().numLap;
+                if (eventData.getDriversData()[idx-1].getLapData().last().getLapNumber() > lastLap)
+                    lastLap = eventData.getDriversData()[idx-1].getLapData().last().getLapNumber();
             }
 
-            DriverData &dd = eventData.driversData[idx-1];
-            int idx = (dd.number > 13 ? dd.number-2 : dd.number-1) / 2;
+            DriverData &dd = eventData.getDriversData()[idx-1];
+            int idx = (dd.getNumber() > 13 ? dd.getNumber() - 2 : dd.getNumber() - 1) / 2;
 			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
 			lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
         }
@@ -189,10 +189,10 @@ void LapTimeComparisonDialog::updateData()
         {
             int idx = eventData.getDriverId(getNumber(i));
 
-            if (idx > 0 && !eventData.driversData[idx-1].lapData.isEmpty())
+            if (idx > 0 && !eventData.getDriversData()[idx-1].getLapData().isEmpty())
             {
                 //int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
-                DriverData dd = eventData.driversData[idx-1];
+                DriverData dd = eventData.getDriversData()[idx-1];
                 LapData ld = dd.getLapData(lapNo);
 
 //                if (j == 0)
@@ -202,22 +202,22 @@ void LapTimeComparisonDialog::updateData()
 //                    lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
 //                }
 
-                if (dd.lapData.size() > index[i] && ld.numLap == lapNo && ld.carID != -1)
+                if (dd.getLapData().size() > index[i] && ld.getLapNumber() == lapNo && ld.getCarID() != -1)
                 {
-                    laps[i] = ld.lapTime;
+                    laps[i] = ld.getTime();
 
                     item = ui->tableWidget->item(j+1, i+1);
                     if (!item)
                     {
-                        item = new QTableWidgetItem(ld.lapTime);
+                        item = new QTableWidgetItem(ld.getTime());
                         item->setTextAlignment(Qt::AlignCenter);
                         ui->tableWidget->setItem(j+1, i+1, item);
                     }
                     else
-                        item->setText(ld.lapTime);
+                        item->setText(ld.getTime());
 
-                    if (ld.lapTime.toString() == "IN PIT")
-                        item->setText(item->text() + " (" + dd.getPitTime(ld.numLap) + ")");
+                    if (ld.getTime().toString() == "IN PIT")
+                        item->setText(item->text() + " (" + dd.getPitTime(ld.getLapNumber()) + ")");
 
                     ++index[i];
                 }
@@ -310,11 +310,11 @@ void LapTimeComparisonDialog::updateCharts()
         int idx = eventData.getDriverId(getNumber(i));
         if (idx > 0)
         {
-            driver = eventData.driversData[idx-1].driver;
-            driverData[i] = eventData.driversData[idx-1];
-            carIdx = (eventData.driversData[idx-1].number > 13 ?
-                             eventData.driversData[idx-1].number-2 :
-                             eventData.driversData[idx-1].number-1) / 2;
+            driver = eventData.getDriversData()[idx-1].getDriverName();
+            driverData[i] = eventData.getDriversData()[idx-1];
+            carIdx = (eventData.getDriversData()[idx-1].getNumber() > 13 ?
+                             eventData.getDriversData()[idx-1].getNumber() - 2 :
+                             eventData.getDriversData()[idx-1].getNumber() - 1) / 2;
 
             QTableWidgetItem *item = ui->chartsTableWidget->item(0, i);
             item->setText(driver);

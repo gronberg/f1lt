@@ -5,23 +5,23 @@
 
 bool lessThan(LapData ld1, LapData ld2)
 {
-    if (ld1.carID > 0 && ld2.carID > 0)
+    if (ld1.getCarID() > 0 && ld2.getCarID() > 0)
     {
-        DriverData dd1 = EventData::getInstance().driversData[ld1.carID-1];
-        DriverData dd2 = EventData::getInstance().driversData[ld2.carID-1];
+        DriverData dd1 = EventData::getInstance().getDriversData()[ld1.getCarID()-1];
+        DriverData dd2 = EventData::getInstance().getDriversData()[ld2.getCarID()-1];
 
-        if (dd1.pos > dd2.pos)
+        if (dd1.getPosition() > dd2.getPosition())
             return true;
 
-        if (dd1.pos < dd2.pos)
+        if (dd1.getPosition() < dd2.getPosition())
             return false;
 
-        if (dd1.pos == dd2.pos)
+        if (dd1.getPosition() == dd2.getPosition())
         {
-            if (dd1.carID != dd2.carID)
-                return dd1.carID < dd2.carID;
+            if (dd1.getCarID() != dd2.getCarID())
+                return dd1.getCarID() < dd2.getCarID();
 
-            if (ld1.numLap < ld2.numLap)
+            if (ld1.getLapNumber() < ld2.getLapNumber())
                 return true;
         }
     }
@@ -33,10 +33,10 @@ bool PredXYPos::operator ()(int item1, int item2)
     LapData ld1 = chart.lapDataArray[item1];
     LapData ld2 = chart.lapDataArray[item2];
 
-//    if (ld1.lapTime.isValid() && ld2.lapTime.isValid())
-        return ld1.pos < ld2.pos;
+//    if (ld1.getTime().isValid() && ld2.getTime().isValid())
+        return ld1.getPosition() < ld2.getPosition();
 
-//    if (ld1.lapTime.isValid() && !ld2.lapTime.isValid())
+//    if (ld1.getTime().isValid() && !ld2.getTime().isValid())
 //        return true;
 
 //    return false;
@@ -89,19 +89,19 @@ void SessionLapTimesChart::findFirstAndLastLap(int &firstLap, int &lastLap, int 
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        if (lapDataArray[j].numLap < firstLap && lapDataArray[j].numLap >= first)
-            firstLap = lapDataArray[j].numLap;
+        if (lapDataArray[j].getLapNumber() < firstLap && lapDataArray[j].getLapNumber() >= first)
+            firstLap = lapDataArray[j].getLapNumber();
 
-        if (lapDataArray[j].numLap > lastLap && lapDataArray[j].numLap <= last)
-            lastLap = lapDataArray[j].numLap;
+        if (lapDataArray[j].getLapNumber() > lastLap && lapDataArray[j].getLapNumber() <= last)
+            lastLap = lapDataArray[j].getLapNumber();
 
-        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last && lapDataArray[j].lapTime.toDouble() < lMin && lapDataArray[j].lapTime.isValid())
-            lMin = lapDataArray[j].lapTime.toDouble();
+        if (lapDataArray[j].getLapNumber() >= first && lapDataArray[j].getLapNumber() <= last && lapDataArray[j].getTime().toDouble() < lMin && lapDataArray[j].getTime().isValid())
+            lMin = lapDataArray[j].getTime().toDouble();
 
-        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last && lapDataArray[j].lapTime.toDouble() > lMax && lapDataArray[j].lapTime.isValid())
-            lMax = lapDataArray[j].lapTime.toDouble();
+        if (lapDataArray[j].getLapNumber() >= first && lapDataArray[j].getLapNumber() <= last && lapDataArray[j].getTime().toDouble() > lMax && lapDataArray[j].getTime().isValid())
+            lMax = lapDataArray[j].getTime().toDouble();
 
-        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last)
+        if (lapDataArray[j].getLapNumber() >= first && lapDataArray[j].getLapNumber() <= last)
             ++size;
     }
 
@@ -212,24 +212,24 @@ void SessionLapTimesChart::drawChart(QPainter *p)
     int lapsInWindow = 0;
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        if (lapDataArray[i].numLap >= firstLap && lapDataArray[i].numLap <= lastLap)// && lapDataArray[i].lapTime.isValid())
+        if (lapDataArray[i].getLapNumber() >= firstLap && lapDataArray[i].getLapNumber() <= lastLap)// && lapDataArray[i].getTime().isValid())
         {
-            secs = lapDataArray[i].lapTime.toDouble();
-            if (!lapDataArray[i].lapTime.isValid() && lapDataArray[i].numLap-1 >= firstLap && i > 0)// && i < lapDataArray.size()-1)
+            secs = lapDataArray[i].getTime().toDouble();
+            if (!lapDataArray[i].getTime().isValid() && lapDataArray[i].getLapNumber()-1 >= firstLap && i > 0)// && i < lapDataArray.size()-1)
             {
-                secs = lapDataArray[i-1].lapTime.toDouble();
+                secs = lapDataArray[i-1].getTime().toDouble();
 
-                if (!lapDataArray[i-1].lapTime.isValid() && lapDataArray[i].numLap+1 <= lastLap && i < lapDataArray.size()-1)
+                if (!lapDataArray[i-1].getTime().isValid() && lapDataArray[i].getLapNumber()+1 <= lastLap && i < lapDataArray.size()-1)
                 {
-                    QString pl =  EventData::getInstance().driversData[lapDataArray[i].carID-1].getPitTime(lapDataArray[i].numLap);
-                    secs = LapTime(lapDataArray[i+1].lapTime + LapTime(pl) + LapTime(5000)).toDouble();
+                    QString pl =  EventData::getInstance().getDriversData()[lapDataArray[i].getCarID()-1].getPitTime(lapDataArray[i].getLapNumber());
+                    secs = LapTime(lapDataArray[i+1].getTime() + LapTime(pl) + LapTime(5000)).toDouble();
                 }
             }
 
-            if (lapDataArray[i].scLap && lapDataArray[i].numLap > lastPaintedSC)
+            if (lapDataArray[i].getRaceLapExtraData().isSCLap() && lapDataArray[i].getLapNumber() > lastPaintedSC)
             {
-                double sc_x1 = (double)(lapDataArray[i].numLap-1 - firstLap) * xFactor + (double)paintRect.left();
-                double sc_x2 = (double)(lapDataArray[i].numLap - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x1 = (double)(lapDataArray[i].getLapNumber()-1 - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x2 = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
 
                 if (sc_x1 < paintRect.left())
                     sc_x1 = paintRect.left();
@@ -246,7 +246,7 @@ void SessionLapTimesChart::drawChart(QPainter *p)
                 p->setBrush(QBrush(QColor(255, 255, 0, 35)));
 
                 p->drawRect(round(sc_x1), paintRect.top(), round(sc_x2-sc_x1), paintRect.height());
-                lastPaintedSC = lapDataArray[i].numLap;
+                lastPaintedSC = lapDataArray[i].getLapNumber();
 
             }
 
@@ -258,9 +258,9 @@ void SessionLapTimesChart::drawChart(QPainter *p)
 //                secs = tMin;
 
             y = (double)(paintRect.bottom() - (double)(secs-tMin) * yFactor);
-            x = (double)(lapDataArray[i].numLap - firstLap) * xFactor + (double)paintRect.left();
+            x = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
 
-            //int no = EventData::getInstance()lapDataArray[i].carID
+            //int no = EventData::getInstance()lapDataArray[i].getCarID()
             QColor color = getCarColor(lapDataArray[i]);
 
             QPen pen;
@@ -281,7 +281,7 @@ void SessionLapTimesChart::drawChart(QPainter *p)
             p->setBrush(QBrush(color));
             if (y < paintRect.bottom())
             {
-                if (lapDataArray[i].lapTime.toString() == "IN PIT")
+                if (lapDataArray[i].getTime().toString() == "IN PIT")
                 {
     //                p->setBrush(QBrush(QColor()));
                     path.addEllipse(QPoint(x, y), 7, 7);
@@ -293,19 +293,19 @@ void SessionLapTimesChart::drawChart(QPainter *p)
                 p->drawPath(path);
             }
 
-            if (lapDataArray[i].numLap-1 >= firstLap && i > 0)
+            if (lapDataArray[i].getLapNumber()-1 >= firstLap && i > 0)
             {
-                double x1 = (double)(lapDataArray[i].numLap - 1 - firstLap) * xFactor + (double)paintRect.left();
-                secs = lapDataArray[i-1].lapTime.toDouble();
+                double x1 = (double)(lapDataArray[i].getLapNumber() - 1 - firstLap) * xFactor + (double)paintRect.left();
+                secs = lapDataArray[i-1].getTime().toDouble();
 
-                if (!lapDataArray[i-1].lapTime.isValid() && i-2 >= firstLap)
+                if (!lapDataArray[i-1].getTime().isValid() && i-2 >= firstLap)
                 {
-                    secs = lapDataArray[i-2].lapTime.toDouble();
+                    secs = lapDataArray[i-2].getTime().toDouble();
 
-                    if (!lapDataArray[i-2].lapTime.isValid())// && i < lapDataArray.size()-1)
+                    if (!lapDataArray[i-2].getTime().isValid())// && i < lapDataArray.size()-1)
                     {
-                        QString pl = EventData::getInstance().driversData[lapDataArray[i-1].carID-1].getPitTime(lapDataArray[i-1].numLap);
-                        secs = LapTime(lapDataArray[i].lapTime + LapTime(pl) + LapTime(5000)).toDouble();
+                        QString pl = EventData::getInstance().getDriversData()[lapDataArray[i-1].getCarID()-1].getPitTime(lapDataArray[i-1].getLapNumber());
+                        secs = LapTime(lapDataArray[i].getTime() + LapTime(pl) + LapTime(5000)).toDouble();
                     }                    
                 }
 
@@ -385,9 +385,9 @@ void SessionLapTimesChart::drawLapDataXY(QPainter *p)
 QColor SessionLapTimesChart::getCarColor(const LapData &ld)
 {
     QColor color = LTData::colors[LTData::BACKGROUND];
-    if (ld.carID > 0)
+    if (ld.getCarID() > 0)
     {
-        int no = EventData::getInstance().driversData[ld.carID-1].number;
+        int no = EventData::getInstance().getDriversData()[ld.getCarID()-1].getNumber();
 
         if (no > 0 && no < colors.size()+2)
             color = colors[no <= 12 ? no-1 : no -2];
@@ -462,7 +462,7 @@ void SessionLapTimesChart::resetZoom()
     first = 1; last = 99;
     int firstLap, lastLap, size;
     findFirstAndLastLap(firstLap, lastLap, size);
-    first = 1; last = EventData::getInstance().eventInfo.laps;
+    first = 1; last = EventData::getInstance().getEventInfo().laps;
     tMin = min;
     tMax = max;
 }
@@ -559,13 +559,13 @@ void SessionPositionsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        if (lapDataArray[j].numLap < firstLap && lapDataArray[j].numLap >= first)
-            firstLap = lapDataArray[j].numLap;
+        if (lapDataArray[j].getLapNumber() < firstLap && lapDataArray[j].getLapNumber() >= first)
+            firstLap = lapDataArray[j].getLapNumber();
 
-        if (lapDataArray[j].numLap > lastLap && lapDataArray[j].numLap <= last)
-            lastLap = lapDataArray[j].numLap;
+        if (lapDataArray[j].getLapNumber() > lastLap && lapDataArray[j].getLapNumber() <= last)
+            lastLap = lapDataArray[j].getLapNumber();
 
-        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last)
+        if (lapDataArray[j].getLapNumber() >= first && lapDataArray[j].getLapNumber() <= last)
             ++size;
     }
 }
@@ -573,10 +573,10 @@ void SessionPositionsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int
 QList<SessionPositionsChart::DriverPosAtom> SessionPositionsChart::getDriverStartingPositions()
 {
     QList<SessionPositionsChart::DriverPosAtom> positionList;
-    for (int i = 0; i < EventData::getInstance().driversData.size(); ++i)
+    for (int i = 0; i < EventData::getInstance().getDriversData().size(); ++i)
     {
-        DriverData &dd = EventData::getInstance().driversData[i];
-        positionList.append(SessionPositionsChart::DriverPosAtom(dd.getStartingPos(), dd.carID));
+        DriverData &dd = EventData::getInstance().getDriversData()[i];
+        positionList.append(SessionPositionsChart::DriverPosAtom(dd.getStartingPos(), dd.getCarID()));
     }
     qSort(positionList);
     return positionList;
@@ -605,14 +605,14 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     {
         DriverData dd;
         int k = round(j)-1;
-        if (k >= 0 && k < positionList.size() && positionList[k].id-1 >= 0 && positionList[k].id-1 < EventData::getInstance().driversData.size())
-            dd = EventData::getInstance().driversData[positionList[round(j)-1].id-1];
+        if (k >= 0 && k < positionList.size() && positionList[k].id-1 >= 0 && positionList[k].id-1 < EventData::getInstance().getDriversData().size())
+            dd = EventData::getInstance().getDriversData()[positionList[round(j)-1].id-1];
 
-        QColor color = getCarColor(dd.lastLap);
+        QColor color = getCarColor(dd.getLastLap());
         p->setBrush(color);
         p->setPen(color);
         p->drawRect(5, i-6, 4, 11);
-        QString driver = LTData::getDriverShortName(dd.driver);
+        QString driver = LTData::getDriverShortName(dd.getDriverName());
         p->setPen(QColor(LTData::colors[LTData::WHITE]));
         p->drawText(13, i+5, QString("%1 %2").arg(round(j)).arg(driver));
 
@@ -679,14 +679,14 @@ void SessionPositionsChart::drawChart(QPainter *p)
     int lastPaintedSC = -1;
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        if (lapDataArray[i].numLap >= firstLap && lapDataArray[i].numLap <= lastLap)// && lapDataArray[i].lapTime.isValid())
+        if (lapDataArray[i].getLapNumber() >= firstLap && lapDataArray[i].getLapNumber() <= lastLap)// && lapDataArray[i].getTime().isValid())
         {
 
 
-            if (lapDataArray[i].scLap && lapDataArray[i].numLap > lastPaintedSC)
+            if (lapDataArray[i].getRaceLapExtraData().isSCLap() && lapDataArray[i].getLapNumber() > lastPaintedSC)
             {
-                double sc_x1 = (double)(lapDataArray[i].numLap-1 - firstLap) * xFactor + (double)paintRect.left();
-                double sc_x2 = (double)(lapDataArray[i].numLap - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x1 = (double)(lapDataArray[i].getLapNumber()-1 - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x2 = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
 
                 if (sc_x1 < paintRect.left())
                     sc_x1 = paintRect.left();
@@ -703,15 +703,15 @@ void SessionPositionsChart::drawChart(QPainter *p)
                 p->setBrush(QBrush(QColor(255, 255, 0, 35)));
 
                 p->drawRect(round(sc_x1), paintRect.top(), round(sc_x2-sc_x1), paintRect.height());
-                lastPaintedSC = lapDataArray[i].numLap;
+                lastPaintedSC = lapDataArray[i].getLapNumber();
 
-//                lastSCLap = lapDataArray[i].numLap;
+//                lastSCLap = lapDataArray[i].getLapNumber();
             }
 
-            y = (double)(paintRect.bottom() - (double)(lapDataArray[i].pos-tMin) * yFactor);
-            x = (double)(lapDataArray[i].numLap - firstLap) * xFactor + (double)paintRect.left();
+            y = (double)(paintRect.bottom() - (double)(lapDataArray[i].getPosition()-tMin) * yFactor);
+            x = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
 
-            //int no = EventData::getInstance()lapDataArray[i].carID
+            //int no = EventData::getInstance()lapDataArray[i].getCarID()
             QColor color = getCarColor(lapDataArray[i]);
 
             QPen pen;
@@ -721,7 +721,7 @@ void SessionPositionsChart::drawChart(QPainter *p)
 
             if (y <= paintRect.bottom())
             {
-                if (lapDataArray[i].lapTime.toString() == "IN PIT")
+                if (lapDataArray[i].getTime().toString() == "IN PIT")
                 {
                     QPainterPath path;
                     p->setBrush(QBrush(color));
@@ -731,10 +731,10 @@ void SessionPositionsChart::drawChart(QPainter *p)
 
             }
 
-            if (lapDataArray[i].numLap-1 >= firstLap && i > 0)
+            if (lapDataArray[i].getLapNumber()-1 >= firstLap && i > 0)
             {
-                double x1 = (double)(lapDataArray[i].numLap - 1 - firstLap) * xFactor + (double)paintRect.left();
-                double y1 = (double)(paintRect.bottom() - (double)(lapDataArray[i-1].pos-tMin) * yFactor);
+                double x1 = (double)(lapDataArray[i].getLapNumber() - 1 - firstLap) * xFactor + (double)paintRect.left();
+                double y1 = (double)(paintRect.bottom() - (double)(lapDataArray[i-1].getPosition()-tMin) * yFactor);
 
 
                 if ((y > paintRect.bottom() && y1 > paintRect.bottom()) || (y < paintRect.top() && y1 < paintRect.top()))
@@ -834,13 +834,13 @@ void SessionGapsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int &siz
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        if (lapDataArray[j].numLap < firstLap && lapDataArray[j].numLap >= first)
-            firstLap = lapDataArray[j].numLap;
+        if (lapDataArray[j].getLapNumber() < firstLap && lapDataArray[j].getLapNumber() >= first)
+            firstLap = lapDataArray[j].getLapNumber();
 
-        if (lapDataArray[j].numLap > lastLap && lapDataArray[j].numLap <= last)
-            lastLap = lapDataArray[j].numLap;
+        if (lapDataArray[j].getLapNumber() > lastLap && lapDataArray[j].getLapNumber() <= last)
+            lastLap = lapDataArray[j].getLapNumber();
 
-        if (lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last)
+        if (lapDataArray[j].getLapNumber() >= first && lapDataArray[j].getLapNumber() <= last)
             ++size;
     }
 }
@@ -945,12 +945,12 @@ void SessionGapsChart::drawChart(QPainter *p)
     int lapsInWindow = 0;
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        if (lapDataArray[i].numLap >= firstLap && lapDataArray[i].numLap <= lastLap)// && lapDataArray[i].lapTime.isValid())
+        if (lapDataArray[i].getLapNumber() >= firstLap && lapDataArray[i].getLapNumber() <= lastLap)// && lapDataArray[i].getTime().isValid())
         {
-            if (lapDataArray[i].scLap && lapDataArray[i].numLap > lastPaintedSC)
+            if (lapDataArray[i].getRaceLapExtraData().isSCLap() && lapDataArray[i].getLapNumber() > lastPaintedSC)
             {
-                double sc_x1 = (double)(lapDataArray[i].numLap-1 - firstLap) * xFactor + (double)paintRect.left();
-                double sc_x2 = (double)(lapDataArray[i].numLap - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x1 = (double)(lapDataArray[i].getLapNumber()-1 - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x2 = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
 
                 if (sc_x1 < paintRect.left())
                     sc_x1 = paintRect.left();
@@ -967,14 +967,14 @@ void SessionGapsChart::drawChart(QPainter *p)
                 p->setBrush(QBrush(QColor(255, 255, 0, 35)));
 
                 p->drawRect(round(sc_x1), paintRect.top(), round(sc_x2-sc_x1), paintRect.height());
-                lastPaintedSC = lapDataArray[i].numLap;
+                lastPaintedSC = lapDataArray[i].getLapNumber();
 
-//                lastSCLap = lapDataArray[i].numLap;
+//                lastSCLap = lapDataArray[i].getLapNumber();
             }
 
-            double gap = lapDataArray[i].gap.toDouble();
+            double gap = lapDataArray[i].getGap().toDouble();
 
-            if (lapDataArray[i].gap.size() > 0 && lapDataArray[i].gap[lapDataArray[i].gap.size()-1] == 'L')
+            if (lapDataArray[i].getGap().size() > 0 && lapDataArray[i].getGap()[lapDataArray[i].getGap().size()-1] == 'L')
             {
                 if (tMax >= max)
                     gap = -1.0;
@@ -982,10 +982,10 @@ void SessionGapsChart::drawChart(QPainter *p)
                     gap = max;
             }
 
-            if (lapDataArray[i].pos == 1)
+            if (lapDataArray[i].getPosition() == 1)
                 gap = 0.0;
 
-            if (tMax >= max && lapDataArray[i].gap == "")
+            if (tMax >= max && lapDataArray[i].getGap() == "")
                 gap = -1.0;
 
             y = (double)(paintRect.bottom() - (double)(gap-tMin) * yFactor);
@@ -996,9 +996,9 @@ void SessionGapsChart::drawChart(QPainter *p)
             else if (gap > tMax && tMax >= max)
                 y = 30;
 
-            x = (double)(lapDataArray[i].numLap - firstLap) * xFactor + (double)paintRect.left();
+            x = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
 
-            //int no = EventData::getInstance()lapDataArray[i].carID
+            //int no = EventData::getInstance()lapDataArray[i].getCarID()
             QColor color = getCarColor(lapDataArray[i]);
 
             QPen pen;
@@ -1010,7 +1010,7 @@ void SessionGapsChart::drawChart(QPainter *p)
             {
                 QPainterPath path;
                 p->setBrush(QBrush(color));
-                if (lapDataArray[i].lapTime.toString() == "IN PIT")
+                if (lapDataArray[i].getTime().toString() == "IN PIT")
                 {                    
                     path.addEllipse(QPoint(x, y), 7, 7);                    
                 }
@@ -1030,13 +1030,13 @@ void SessionGapsChart::drawChart(QPainter *p)
                 ++lapsInWindow;
             }
 
-            if (lapDataArray[i].numLap-1 >= firstLap && i > 0)
+            if (lapDataArray[i].getLapNumber()-1 >= firstLap && i > 0)
             {
-                if (lapDataArray[i].carID == lapDataArray[i-1].carID)
+                if (lapDataArray[i].getCarID() == lapDataArray[i-1].getCarID())
                 {
-                    gap = lapDataArray[i-1].gap.toDouble();
+                    gap = lapDataArray[i-1].getGap().toDouble();
 
-                    if (lapDataArray[i-1].gap.size() > 0 && lapDataArray[i-1].gap[lapDataArray[i-1].gap.size()-1] == 'L')
+                    if (lapDataArray[i-1].getGap().size() > 0 && lapDataArray[i-1].getGap()[lapDataArray[i-1].getGap().size()-1] == 'L')
                     {
                         if (tMax >= max)
                             gap = -1.0;
@@ -1044,10 +1044,10 @@ void SessionGapsChart::drawChart(QPainter *p)
                             gap = max;
                     }
 
-                    if (lapDataArray[i-1].pos == 1)
+                    if (lapDataArray[i-1].getPosition() == 1)
                         gap = 0.0;
 
-                    if (tMax >= max && lapDataArray[i-1].gap == "")
+                    if (tMax >= max && lapDataArray[i-1].getGap() == "")
                         gap = -1.0;
 
                     double y1 = (double)(paintRect.bottom() - (double)(gap-tMin) * yFactor);
@@ -1059,7 +1059,7 @@ void SessionGapsChart::drawChart(QPainter *p)
                         y1 = 30;
 
 
-                    double x1 = (double)(lapDataArray[i].numLap - 1 - firstLap) * xFactor + (double)paintRect.left();
+                    double x1 = (double)(lapDataArray[i].getLapNumber() - 1 - firstLap) * xFactor + (double)paintRect.left();
 
 
                     if ((y > paintRect.bottom() && y1 > paintRect.bottom()) || (y < paintRect.top() && y1 < paintRect.top()))

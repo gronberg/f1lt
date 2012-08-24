@@ -241,24 +241,24 @@ void HeadToHeadDialog::updateData()
         int idx = eventData.getDriverId(getNumber(i));
         if (idx > 0)
         {
-        	if (!eventData.driversData[idx-1].lapData.isEmpty())
+            if (!eventData.getDriversData()[idx-1].getLapData().isEmpty())
         	{
-				if (eventData.driversData[idx-1].lapData[0].numLap < firstLap)
-					firstLap = eventData.driversData[idx-1].lapData[0].numLap;
+                if (eventData.getDriversData()[idx-1].getLapData()[0].getLapNumber() < firstLap)
+                    firstLap = eventData.getDriversData()[idx-1].getLapData()[0].getLapNumber();
 
-				if (eventData.driversData[idx-1].lapData.last().numLap >= lastLap)
+                if (eventData.getDriversData()[idx-1].getLapData().last().getLapNumber() >= lastLap)
 				{
-					lastLap = eventData.driversData[idx-1].lapData.last().numLap;
+                    lastLap = eventData.getDriversData()[idx-1].getLapData().last().getLapNumber();
 
-					if (lastLap < eventData.eventInfo.laps &&
-						!eventData.driversData[idx-1].retired &&
-						eventData.driversData[idx-1].lastLap.sector3.toString() == "" &&
-						eventData.driversData[idx-1].lastLap.lapTime.toString() != "IN PIT")
+                    if (lastLap < eventData.getEventInfo().laps &&
+                        !eventData.getDriversData()[idx-1].isRetired() &&
+                        eventData.getDriversData()[idx-1].getLastLap().getSectorTime(3).toString() == "" &&
+                        eventData.getDriversData()[idx-1].getLastLap().getTime().toString() != "IN PIT")
 						lastLap++;
 				}
         	}
-            DriverData &dd = eventData.driversData[idx-1];
-            int idx = (dd.number > 13 ? dd.number-2 : dd.number-1) / 2;
+            DriverData &dd = eventData.getDriversData()[idx-1];
+            int idx = (dd.getNumber() > 13 ? dd.getNumber()-2 : dd.getNumber()-1) / 2;
 			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
 			lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
         }
@@ -300,23 +300,23 @@ void HeadToHeadDialog::updateData()
             int idx = eventData.getDriverId(getNumber(i));
             driversIdx[i] = idx-1;            
 
-            if (idx > 0 && !eventData.driversData[idx-1].lapData.isEmpty())
+            if (idx > 0 && !eventData.getDriversData()[idx-1].getLapData().isEmpty())
             {
 //                int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
-                DriverData dd = eventData.driversData[idx-1];
+                DriverData dd = eventData.getDriversData()[idx-1];
                 LapData ld = dd.getLapData(lapNo);
-                if (ld.carID == -1)
-                	ld = dd.lapData.last();
+                if (ld.getCarID() == -1)
+                    ld = dd.getLapData().last();
 //                if (ld.carIDlapIndex >= 0 && lapIndex < dd.lapData.size())
 //                    ld = dd.lapData[lapIndex];
 //                else
 //                    ld = dd.lapData.last();
 
-                if (lapNo == (ld.numLap+1) && !dd.retired && dd.lastLap.sector3.toString() == "" && dd.lastLap.lapTime.toString() != "IN PIT")
+                if (lapNo == (ld.getLapNumber()+1) && !dd.isRetired() && dd.getLastLap().getSectorTime(3).toString() == "" && dd.getLastLap().getTime().toString() != "IN PIT")
                 {
                     newLap[i] = true;
-                    ld = dd.lastLap;
-                    ld.numLap += 1;
+                    ld = dd.getLastLap();
+                    ld.setLapNumber(ld.getLapNumber()+1);
                 }
 
 //                if (j == 0)
@@ -325,18 +325,18 @@ void HeadToHeadDialog::updateData()
 //                    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
 //                    lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
 //                }
-                if (dd.lapData.size() >= index[i] && ld.numLap == lapNo)
+                if (dd.getLapData().size() >= index[i] && ld.getLapNumber() == lapNo)
                 {                    
                     item = ui->tableWidget->item(j+2, 1+i*6);
                     if (!item)
                     {
-                        item = new QTableWidgetItem(QString::number(ld.pos));
+                        item = new QTableWidgetItem(QString::number(ld.getPosition()));
                         item->setTextColor(LTData::colors[LTData::CYAN]);
                         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
                         ui->tableWidget->setItem(j+2, 1 + i*6, item);
                     }
                     else
-                        item->setText(QString::number(ld.pos));
+                        item->setText(QString::number(ld.getPosition()));
 
 //                    QString gap = dd.lapData[lapIndex].pos == 1 ? "" : ld.gap;
 //                    item = new QTableWidgetItem(gap);
@@ -345,8 +345,8 @@ void HeadToHeadDialog::updateData()
 //                    ui->tableWidget->setItem(j+2, 2 + i*7, item);
 
                     item = ui->tableWidget->item(j+2, 2+i*6);
-                    QString lTime = newLap[i] ? "" : ld.lapTime.toString();
-                    laps[i] = newLap[i] ? LapTime() : ld.lapTime;
+                    QString lTime = newLap[i] ? "" : ld.getTime().toString();
+                    laps[i] = newLap[i] ? LapTime() : ld.getTime();
                     if (!item)
                     {
                         item = new QTableWidgetItem(lTime);
@@ -358,14 +358,14 @@ void HeadToHeadDialog::updateData()
 
                     if (lTime == "IN PIT")
                     {
-                        QString pitTime = dd.getPitTime(ld.numLap);
+                        QString pitTime = dd.getPitTime(ld.getLapNumber());
                         item->setText(item->text() + " (" + pitTime + ")");
                         item->setTextColor(LTData::colors[LTData::RED]);
                     }
                     else if (lTime == "RETIRED")
                         item->setTextColor(LTData::colors[LTData::RED]);
 
-                    else if (ld.scLap)
+                    else if (ld.getRaceLapExtraData().isSCLap())
                     {
                         item->setTextColor(LTData::colors[LTData::YELLOW]);
                         scLap = true;
@@ -377,12 +377,12 @@ void HeadToHeadDialog::updateData()
                     item = ui->tableWidget->item(j+2, 3+i*6);
                     if (!item)
                     {
-                        item = new QTableWidgetItem(ld.sector1.toString());
+                        item = new QTableWidgetItem(ld.getSectorTime(1).toString());
                         item->setTextAlignment(Qt::AlignCenter);
                         ui->tableWidget->setItem(j+2, 3 + i*6, item);
                     }
                     else
-                        item->setText(ld.sector1.toString());
+                        item->setText(ld.getSectorTime(1).toString());
                     if (scLap)
                         item->setTextColor(LTData::colors[LTData::YELLOW]);
                     else
@@ -391,12 +391,12 @@ void HeadToHeadDialog::updateData()
                     item = ui->tableWidget->item(j+2, 4+i*6);
                     if (!item)
                     {
-                        item = new QTableWidgetItem(ld.sector2.toString());
+                        item = new QTableWidgetItem(ld.getSectorTime(2).toString());
                         item->setTextAlignment(Qt::AlignCenter);
                         ui->tableWidget->setItem(j+2, 4 + i*6, item);
                     }
                     else
-                        item->setText(ld.sector2.toString());
+                        item->setText(ld.getSectorTime(2).toString());
 
                     if (scLap)
                         item->setTextColor(LTData::colors[LTData::YELLOW]);
@@ -406,12 +406,12 @@ void HeadToHeadDialog::updateData()
                     item = ui->tableWidget->item(j+2, 5+i*6);
                     if (!item)
                     {
-                        item = new QTableWidgetItem(ld.sector3.toString());
+                        item = new QTableWidgetItem(ld.getSectorTime(3).toString());
                         item->setTextAlignment(Qt::AlignCenter);
                         ui->tableWidget->setItem(j+2, 5 + i*6, item);
                     }
                     else
-                        item->setText(ld.sector3.toString());
+                        item->setText(ld.getSectorTime(3).toString());
 
                     if (scLap)
                         item->setTextColor(LTData::colors[LTData::YELLOW]);
@@ -489,12 +489,12 @@ void HeadToHeadDialog::updateData()
         {
             if (newLap[0] || newLap[1])
             {
-            	if (eventData.eventType == LTData::RACE_EVENT)
-                    sInterval = eventData.calculateInterval(eventData.driversData[driversIdx[0]], eventData.driversData[driversIdx[1]], lapNo-1);
+                if (eventData.getEventType() == LTData::RACE_EVENT)
+                    sInterval = eventData.calculateInterval(eventData.getDriversData()[driversIdx[0]], eventData.getDriversData()[driversIdx[1]], lapNo-1);
             	else
             	{
-            		if (std::abs(eventData.driversData[driversIdx[0]].lastLap.numLap -
-            				eventData.driversData[driversIdx[1]].lastLap.numLap) <= 1)
+                    if (std::abs(eventData.getDriversData()[driversIdx[0]].getLastLap().getLapNumber() -
+                            eventData.getDriversData()[driversIdx[1]].getLastLap().getLapNumber()) <= 1)
             			sInterval = "0.0";
             	}
 
@@ -527,7 +527,7 @@ void HeadToHeadDialog::updateData()
                 }
             }
             else
-                sInterval = eventData.calculateInterval(eventData.getInstance().driversData[driversIdx[0]], eventData.getInstance().driversData[driversIdx[1]], lapNo);
+                sInterval = eventData.calculateInterval(eventData.getDriversData()[driversIdx[0]], eventData.getDriversData()[driversIdx[1]], lapNo);
         }
         item = ui->tableWidget->item(j+2, 6);
         if (!item)
@@ -565,11 +565,11 @@ void HeadToHeadDialog::updateCharts()
         int idx = eventData.getDriverId(getNumber(i));
         if (idx > 0)
         {
-            driver = eventData.driversData[idx-1].driver;
-            driverData[i] = eventData.driversData[idx-1];
-            carIdx = (eventData.driversData[idx-1].number > 13 ?
-                             eventData.driversData[idx-1].number-2 :
-                             eventData.driversData[idx-1].number-1) / 2;
+            driver = eventData.getDriversData()[idx-1].getDriverName();
+            driverData[i] = eventData.getDriversData()[idx-1];
+            carIdx = (eventData.getDriversData()[idx-1].getNumber() > 13 ?
+                             eventData.getDriversData()[idx-1].getNumber() - 2 :
+                             eventData.getDriversData()[idx-1].getNumber() - 1) / 2;
 
             QTableWidgetItem *item = ui->chartsTableWidget->item(0, i);
             item->setText(driver);
@@ -646,7 +646,7 @@ void HeadToHeadDialog::updateCharts()
     lapCompChart->setData(driverData);
     lapCompChart->repaint();
 
-    int tab[2] = {driverData[0].carID-1, driverData[1].carID-1};
+    int tab[2] = {driverData[0].getCarID()-1, driverData[1].getCarID()-1};
     gapCompChart->setData(tab);
     gapCompChart->repaint();
 

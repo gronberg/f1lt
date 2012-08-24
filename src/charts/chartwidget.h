@@ -142,7 +142,7 @@ public:
 
     virtual QString getDriverInfoXY(const LapData &ld)
     {
-        return "LAP "+QString::number(ld.numLap)+": "+ld.lapTime.toString();
+        return "LAP "+QString::number(ld.getLapNumber())+": "+ld.getTime().toString();
     }
 
     void transform();
@@ -174,14 +174,14 @@ public:
 
     virtual QString getDriverInfoXY(const LapData &ld)
     {
-        QString gap = ld.gap;
+        QString gap = ld.getGap();
         if (gap == "")
             gap = "1L";
 
-        if (ld.pos == 1)
-            return "LAP "+QString::number(ld.numLap) + ": Leader";
+        if (ld.getPosition() == 1)
+            return "LAP "+QString::number(ld.getLapNumber()) + ": Leader";
 
-        return "LAP "+QString::number(ld.numLap)+": +"+gap;
+        return "LAP "+QString::number(ld.getLapNumber())+": +"+gap;
     }
     virtual int getPopupWidth()
     {

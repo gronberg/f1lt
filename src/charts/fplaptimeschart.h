@@ -27,8 +27,8 @@ public:
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        int minute = LTData::getFPLength() - LTData::timeToMins(ld.sessionTime);
-        if (ld.sessionTime.toString("h:mm:ss") == "")
+        int minute = LTData::getFPLength() - LTData::timeToMins(ld.getPracticeLapExtraData().getSessionTime());
+        if (ld.getPracticeLapExtraData().getSessionTime().toString("h:mm:ss") == "")
             minute = 0;
 
         return QString::number(minute) + ". minute";
@@ -68,9 +68,9 @@ public:
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        int minute = getSessionLength() - LTData::timeToMins(ld.sessionTime);
+        int minute = getSessionLength() - LTData::timeToMins(ld.getPracticeLapExtraData().getSessionTime());
 
-        if (ld.sessionTime.toString("h:mm:ss") == "")
+        if (ld.getPracticeLapExtraData().getSessionTime().toString("h:mm:ss") == "")
             minute = 0;
         return QString::number(minute) + ". minute";
     }
@@ -111,9 +111,9 @@ public:
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        int sessTime = LTData::getQualiLength(ld.qualiPeriod) - LTData::timeToMins(ld.sessionTime);
+        int sessTime = LTData::getQualiLength(ld.getQualiLapExtraData().getQualiPeriod()) - LTData::timeToMins(ld.getQualiLapExtraData().getSessionTime());
 
-        if (ld.sessionTime.toString("h:mm:ss") == "")
+        if (ld.getQualiLapExtraData().getSessionTime().toString("h:mm:ss") == "")
             sessTime = 0;
 //        int sessTimeSecs = LTData::getQualiLength(lapDataArray[i].qualiPeriod) * 60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
 
@@ -123,7 +123,7 @@ public:
 //            sessTimeSecs += LTData::getQualiLength(k+1)*60;
 //        }
 
-        return "Q" + QString::number(ld.qualiPeriod) + " " + QString::number(sessTime) + ". minute";
+        return "Q" + QString::number(ld.getQualiLapExtraData().getQualiPeriod()) + " " + QString::number(sessTime) + ". minute";
     }
 
 

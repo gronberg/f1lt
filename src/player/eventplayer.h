@@ -5,7 +5,7 @@
 #include <QPair>
 #include <QTime>
 #include <QWidget>
-#include "../core/datastreamreader.h"
+#include "../net/datastreamreader.h"
 
 namespace Ui {
 class EventPlayer;

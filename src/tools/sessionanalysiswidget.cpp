@@ -78,9 +78,9 @@ SessionAnalysisWidget::~SessionAnalysisWidget()
 
 void SessionAnalysisWidget::resetView()
 {
-    setWindowTitle("Session analysis: " + EventData::getInstance().eventInfo.eventName);
+    setWindowTitle("Session analysis: " + EventData::getInstance().getEventInfo().eventName);
     setupBoxes();
-    switch(EventData::getInstance().eventType)
+    switch(EventData::getInstance().getEventType())
     {
         case LTData::RACE_EVENT:
             ui.raceTabWidget->setVisible(true);
@@ -257,9 +257,9 @@ void SessionAnalysisWidget::setupIcons(QList<QColor> colors)
 
 void SessionAnalysisWidget::exec()
 {
-    setWindowTitle("Session analysis: " + EventData::getInstance().eventInfo.eventName);
+    setWindowTitle("Session analysis: " + EventData::getInstance().getEventInfo().eventName);
     setupBoxes();
-    switch(EventData::getInstance().eventType)
+    switch(EventData::getInstance().getEventType())
     {
     case LTData::RACE_EVENT:
         ui.raceTabWidget->setVisible(true);
@@ -352,18 +352,18 @@ void SessionAnalysisWidget::gatherData()
 {
 //    lapDataArray.clear();
     int lapsIn = 0;
-    for (int i = 0; i < EventData::getInstance().driversData.size(); ++i)
+    for (int i = 0; i < EventData::getInstance().getDriversData().size(); ++i)
     {
-        DriverData &dd = EventData::getInstance().driversData[i];
+        DriverData &dd = EventData::getInstance().getDriversData()[i];
 
-        if (driverChecked(dd.number))
+        if (driverChecked(dd.getNumber()))
         {
-            for (int j = 0; j < dd.lapData.size(); ++j)
+            for (int j = 0; j < dd.getLapData().size(); ++j)
             {
                 if (lapsIn >= lapDataArray.size())
-                    lapDataArray.append(dd.lapData[j]);
+                    lapDataArray.append(dd.getLapData()[j]);
                 else
-                    lapDataArray[lapsIn] = dd.lapData[j];
+                    lapDataArray[lapsIn] = dd.getLapData()[j];
 
                 ++lapsIn;
 
@@ -380,22 +380,22 @@ bool SessionAnalysisWidget::lapInWindow(int j)
 {
     bool inTimeWindow = true;
 
-    if (EventData::getInstance().eventType == LTData::RACE_EVENT)
-        inTimeWindow = lapDataArray[j].numLap >= first && lapDataArray[j].numLap <= last;
+    if (EventData::getInstance().getEventType() == LTData::RACE_EVENT)
+        inTimeWindow = lapDataArray[j].getLapNumber() >= first && lapDataArray[j].getLapNumber() <= last;
 
-    else if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
+    else if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
     {
-        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[j].sessionTime);
+        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[j].getPracticeLapExtraData().getSessionTime());
         inTimeWindow = minute >= first && minute <= last;
     }
-    else if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
+    else if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
     {
         int qPeriod = ui.qualiTabWidget->currentIndex();
         if (qPeriod == 0)
         {
-            int minute = LTData::getQualiLength(lapDataArray[j].qualiPeriod) - LTData::timeToMins(lapDataArray[j].sessionTime);
+            int minute = LTData::getQualiLength(lapDataArray[j].getQualiLapExtraData().getQualiPeriod()) - LTData::timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
 
-            for (int k = 0; k < lapDataArray[j].qualiPeriod-1; ++k)
+            for (int k = 0; k < lapDataArray[j].getQualiLapExtraData().getQualiPeriod()-1; ++k)
                 minute += LTData::getQualiLength(k+1);
 
             inTimeWindow = (minute >= first && minute <= last);
@@ -403,32 +403,32 @@ bool SessionAnalysisWidget::lapInWindow(int j)
         else
         {
             int sessLength = LTData::getQualiLength(qPeriod);
-            int minute = sessLength - LTData::timeToMins(lapDataArray[j].sessionTime);
-            inTimeWindow = (minute >= first && minute <= last) && lapDataArray[j].qualiPeriod == qPeriod;
+            int minute = sessLength - LTData::timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
+            inTimeWindow = (minute >= first && minute <= last) && lapDataArray[j].getQualiLapExtraData().getQualiPeriod() == qPeriod;
         }
     }
     if (inTimeWindow)// &&
     {
-        if (((lapDataArray[j].lapTime.isValid() && lapDataArray[j].lapTime.toDouble() >= min) || min == -1) &&
-             ((lapDataArray[j].lapTime.isValid() && lapDataArray[j].lapTime.toDouble() <= max) || max == -1))
+        if (((lapDataArray[j].getTime().isValid() && lapDataArray[j].getTime().toDouble() >= min) || min == -1) &&
+             ((lapDataArray[j].getTime().isValid() && lapDataArray[j].getTime().toDouble() <= max) || max == -1))
             return true;
 
 
-        if ((EventData::getInstance().eventType == LTData::RACE_EVENT) &&
-             (!lapDataArray[j].lapTime.isValid() && min != -1 && max != -1))
+        if ((EventData::getInstance().getEventType() == LTData::RACE_EVENT) &&
+             (!lapDataArray[j].getTime().isValid() && min != -1 && max != -1))
         {
-            DriverData &dd = EventData::getInstance().driversData[lapDataArray[j].carID-1];
-            LapData ld = dd.getLapData(lapDataArray[j].numLap-1);
+            DriverData &dd = EventData::getInstance().getDriversData()[lapDataArray[j].getCarID()-1];
+            LapData ld = dd.getLapData(lapDataArray[j].getLapNumber()-1);
 
-            if (ld.carID == dd.carID)
+            if (ld.getCarID() == dd.getCarID())
             {
-                if (ld.lapTime.isValid() && ld.lapTime.toDouble() <= max && ld.lapTime.toDouble() >= min)
+                if (ld.getTime().isValid() && ld.getTime().toDouble() <= max && ld.getTime().toDouble() >= min)
                     return true;
             }
-            ld = dd.getLapData(lapDataArray[j].numLap+1);
-            if (ld.carID == dd.carID)
+            ld = dd.getLapData(lapDataArray[j].getLapNumber()+1);
+            if (ld.getCarID() == dd.getCarID())
             {
-                if (ld.lapTime.isValid() && ld.lapTime.toDouble() <= max && ld.lapTime.toDouble() >= min)
+                if (ld.getTime().isValid() && ld.getTime().toDouble() <= max && ld.getTime().toDouble() >= min)
                     return true;
             }
         }
@@ -443,10 +443,10 @@ void SessionAnalysisWidget::update(bool repaintCharts)
     int rows = 0;
 
     QTableWidget *table = ui.lapTimeTableWidget;
-    if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
+    if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
         table = ui.lapTimeTableWidgetFP;
 
-    if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
+    if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
     {
         switch (ui.qualiTabWidget->currentIndex())
         {
@@ -470,31 +470,31 @@ void SessionAnalysisWidget::update(bool repaintCharts)
                 table->setRowHeight(rows+1, 22);
             }
 
-            if (lapDataArray[i].carID < 0)
+            if (lapDataArray[i].getCarID() < 0)
                 continue;
             setItem(table, rows+1, 0, QString::number(rows+1)+".", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::CYAN]);
 
-            QString s = EventData::getInstance().driversData[lapDataArray[i].carID-1].driver;
+            QString s = EventData::getInstance().getDriversData()[lapDataArray[i].getCarID()-1].getDriverName();
             QTableWidgetItem *item = setItem(table, rows+1, 1, s, Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
-            item->setIcon(getDriverIcon(EventData::getInstance().driversData[lapDataArray[i].carID-1].number));
+            item->setIcon(getDriverIcon(EventData::getInstance().getDriversData()[lapDataArray[i].getCarID()-1].getNumber()));
 
 
-            setItem(table, rows+1, 2, lapDataArray[i].lapTime.toString(), Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::WHITE]);
+            setItem(table, rows+1, 2, lapDataArray[i].getTime().toString(), Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::WHITE]);
 
-            s = (rows == 0 || !lapDataArray[i].lapTime.isValid()) ? "" : "+" + DriverData::calculateGap(lapDataArray[i].lapTime, lapDataArray[firstPlace].lapTime);
+            s = (rows == 0 || !lapDataArray[i].getTime().isValid()) ? "" : "+" + DriverData::calculateGap(lapDataArray[i].getTime(), lapDataArray[firstPlace].getTime());
             setItem(table, rows+1, 3, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::YELLOW]);
 
-            s = QString::number(lapDataArray[i].numLap);
-            if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
-                s = LTData::correctFPTime(lapDataArray[i].sessionTime).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTData::currentEventFPLength()-LTData::timeToMins(lapDataArray[i].sessionTime))+")";
+            s = QString::number(lapDataArray[i].getLapNumber());
+            if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
+                s = LTData::correctFPTime(lapDataArray[i].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTData::currentEventFPLength()-LTData::timeToMins(lapDataArray[i].sessionTime))+")";
 
-            else if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
-                s = LTData::correctQualiTime(lapDataArray[i].sessionTime, lapDataArray[i].qualiPeriod).toString("mm:ss");
+            else if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
+                s = LTData::correctQualiTime(lapDataArray[i].getQualiLapExtraData().getSessionTime(), lapDataArray[i].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
 
             setItem(table, rows+1, 4, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
 
             if (ui.qualiTabWidget->currentIndex() == 0)
-                setItem(table, rows+1, 5, QString::number(lapDataArray[i].qualiPeriod), Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
+                setItem(table, rows+1, 5, QString::number(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()), Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
 
             ++rows;
         }
@@ -507,7 +507,7 @@ void SessionAnalysisWidget::update(bool repaintCharts)
 
     if (repaintCharts)
     {
-        if (EventData::getInstance().eventType == LTData::RACE_EVENT)
+        if (EventData::getInstance().getEventType() == LTData::RACE_EVENT)
         {
             ui.sessionLapTimesChart->setData(lapDataArray);
             ui.sessionLapTimesChart->update();
@@ -518,12 +518,12 @@ void SessionAnalysisWidget::update(bool repaintCharts)
             ui.sessionGapsChart->setData(lapDataArray);
             ui.sessionGapsChart->update();
         }
-        if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
+        if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
         {
             ui.sessionLapTimesChartFP->setData(lapDataArray);
             ui.sessionLapTimesChartFP->update();
         }
-        if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
+        if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
         {
             switch (ui.qualiTabWidget->currentIndex())
             {
@@ -632,13 +632,13 @@ void SessionAnalysisWidget::on_top10pushButton_clicked()
 
     if (top10only)
     {
-        for (int k = 0; k < EventData::getInstance().driversData.size(); ++k)
+        for (int k = 0; k < EventData::getInstance().getDriversData().size(); ++k)
         {
-            if (EventData::getInstance().driversData[k].pos <= 10)
-                setDriverChecked(EventData::getInstance().driversData[k].number, true);
+            if (EventData::getInstance().getDriversData()[k].getPosition() <= 10)
+                setDriverChecked(EventData::getInstance().getDriversData()[k].getNumber(), true);
 
             else
-                setDriverChecked(EventData::getInstance().driversData[k].number, false);
+                setDriverChecked(EventData::getInstance().getDriversData()[k].getNumber(), false);
         }
     }
     else

@@ -31,17 +31,17 @@ public:
 
     QString getSessionTime(const WeatherData &wd)
     {
-        QString text = QString("L%1").arg(wd.lap);
-        if (EventData::getInstance().eventType == LTData::PRACTICE_EVENT)
+        QString text = QString("L%1").arg(wd.getLap());
+        if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
         {
-            QTime t = LTData::correctFPTime(wd.sessionTime);
+            QTime t = LTData::correctFPTime(wd.getSessionTime());
             text = QString::number(LTData::timeToMins(t)) + "'";
         }
 
-        if (EventData::getInstance().eventType == LTData::QUALI_EVENT)
+        if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
         {
-            QTime t = LTData::correctQualiTime(wd.sessionTime, wd.qPeriod);
-            text = QString("Q%1 %2'").arg(wd.qPeriod).arg(LTData::timeToMins(t));
+            QTime t = LTData::correctQualiTime(wd.getSessionTime(), wd.getQualiPeriod());
+            text = QString("Q%1 %2'").arg(wd.getQualiPeriod()).arg(LTData::timeToMins(t));
         }
         return text;
     }

@@ -31,7 +31,7 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
     src/main.cpp \
     src/main_gui/ltwindow.cpp \
-    src/core/datastreamreader.cpp \
+    src/net/datastreamreader.cpp \
     src/core/ltdata.cpp \
     src/net/httpdatareader.cpp \
     src/net/socketdatareader.cpp \
@@ -52,12 +52,14 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/charts/sessionlaptimeschart.cpp \
     src/charts/fplaptimeschart.cpp \
     src/charts/lapcompchart.cpp \
-    src/charts/weatherchart.cpp
+    src/charts/weatherchart.cpp \
+    src/core/lapdata.cpp \
+    src/net/packetparser.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
     src/main_gui/ltwindow.h \
-    src/core/datastreamreader.h \
+    src/net/datastreamreader.h \
     src/core/ltdata.h \
     src/net/httpdatareader.h \
     src/net/socketdatareader.h \
@@ -78,7 +80,9 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/charts/sessionlaptimeschart.h \
     src/charts/fplaptimeschart.h \
     src/charts/lapcompchart.h \
-    src/charts/weatherchart.h
+    src/charts/weatherchart.h \
+    src/core/lapdata.h \
+    src/net/packetparser.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

@@ -167,7 +167,7 @@ public:
         YELLOW_FLAG,
         SAFETY_CAR_STANDBY,
         SAFETY_CAR_DEPLOYED,
-        RED_FLAG,
+        RED_FLAG
     };
 
     enum Colors

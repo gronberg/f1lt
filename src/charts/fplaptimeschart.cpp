@@ -10,7 +10,7 @@ void FPLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &size
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[j].sessionTime);
+        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[j].getPracticeLapExtraData().getSessionTime());
 
         if (minute < firstMin && minute >= first)
             firstMin = minute;
@@ -18,11 +18,11 @@ void FPLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &size
         if (minute > lastMin && minute <= last)
             lastMin = minute;
 
-        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() < lMin && lapDataArray[j].lapTime.isValid())
-            lMin = lapDataArray[j].lapTime.toDouble();
+        if (minute >= first && minute <= last && lapDataArray[j].getTime().toDouble() < lMin && lapDataArray[j].getTime().isValid())
+            lMin = lapDataArray[j].getTime().toDouble();
 
-        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() > lMax && lapDataArray[j].lapTime.isValid())
-            lMax = lapDataArray[j].lapTime.toDouble();
+        if (minute >= first && minute <= last && lapDataArray[j].getTime().toDouble() > lMax && lapDataArray[j].getTime().isValid())
+            lMax = lapDataArray[j].getTime().toDouble();
 
         if (minute >= first && minute <= last)
             ++size;
@@ -129,18 +129,18 @@ void FPLapTimesChart::drawChart(QPainter *p)
     int lapsInWindow = 0;
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[i].sessionTime);
-        int second = LTData::getFPLength()*60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
+        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[i].getPracticeLapExtraData().getSessionTime());
+        int second = LTData::getFPLength()*60 - LTData::timeToSecs(lapDataArray[i].getPracticeLapExtraData().getSessionTime());
 
-        if (lapDataArray[i].sessionTime.toString("h:mm:ss") == "")
+        if (lapDataArray[i].getPracticeLapExtraData().getSessionTime().toString("h:mm:ss") == "")
         {
             minute = 0;
             second = 0;
         }
 
-        if (minute >= first && minute <= last)// && lapDataArray[i].lapTime.isValid())
+        if (minute >= first && minute <= last)// && lapDataArray[i].getTime().isValid())
         {
-            secs = lapDataArray[i].lapTime.toDouble();
+            secs = lapDataArray[i].getTime().toDouble();
 
             if (secs > tMax && tMax == max)
                 secs = tMax;
@@ -312,7 +312,7 @@ void QualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &s
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        int minute = getSessionLength() - LTData::timeToMins(lapDataArray[j].sessionTime);
+        int minute = getSessionLength() - LTData::timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
 
         if (minute < firstMin && minute >= first)
             firstMin = minute;
@@ -320,11 +320,11 @@ void QualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &s
         if (minute > lastMin && minute <= last)
             lastMin = minute;
 
-        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() < lMin && lapDataArray[j].lapTime.isValid() && lapDataArray[j].qualiPeriod == qualiPeriod)
-            lMin = lapDataArray[j].lapTime.toDouble();
+        if (minute >= first && minute <= last && lapDataArray[j].getTime().toDouble() < lMin && lapDataArray[j].getTime().isValid() && lapDataArray[j].getQualiLapExtraData().getQualiPeriod() == qualiPeriod)
+            lMin = lapDataArray[j].getTime().toDouble();
 
-        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() > lMax && lapDataArray[j].lapTime.isValid() && lapDataArray[j].qualiPeriod == qualiPeriod)
-            lMax = lapDataArray[j].lapTime.toDouble();
+        if (minute >= first && minute <= last && lapDataArray[j].getTime().toDouble() > lMax && lapDataArray[j].getTime().isValid() && lapDataArray[j].getQualiLapExtraData().getQualiPeriod() == qualiPeriod)
+            lMax = lapDataArray[j].getTime().toDouble();
 
         if (minute >= first && minute <= last)
             ++size;
@@ -368,17 +368,17 @@ void QualiLapTimesChart::drawChart(QPainter *p)
 
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        int minute = getSessionLength() - LTData::timeToMins(lapDataArray[i].sessionTime);
-        int second = getSessionLength()*60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
+        int minute = getSessionLength() - LTData::timeToMins(lapDataArray[i].getQualiLapExtraData().getSessionTime());
+        int second = getSessionLength()*60 - LTData::timeToSecs(lapDataArray[i].getQualiLapExtraData().getSessionTime());
 
-        if (lapDataArray[i].sessionTime.toString("h:mm:ss") == "")
+        if (lapDataArray[i].getQualiLapExtraData().getSessionTime().toString("h:mm:ss") == "")
         {
             minute = 0;
             second = 0;
         }
-        if (minute >= first && minute <= last && lapDataArray[i].qualiPeriod == qualiPeriod)// && lapDataArray[i].lapTime.isValid())
+        if (minute >= first && minute <= last && lapDataArray[i].getQualiLapExtraData().getQualiPeriod() == qualiPeriod)// && lapDataArray[i].getTime().isValid())
         {
-            secs = lapDataArray[i].lapTime.toDouble();
+            secs = lapDataArray[i].getTime().toDouble();
 
             if (secs > tMax && tMax == max)
                 secs = tMax;
@@ -428,8 +428,8 @@ void AllQualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        int sessTime = LTData::timeToMins(lapDataArray[j].sessionTime);
-        for (int i = 0; i < lapDataArray[j].qualiPeriod-1; ++i)
+        int sessTime = LTData::timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
+        for (int i = 0; i < lapDataArray[j].getQualiLapExtraData().getQualiPeriod()-1; ++i)
             sessTime += LTData::getQualiLength(i+1);
 
         int minute = getSessionLength() - sessTime;
@@ -440,11 +440,11 @@ void AllQualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int
         if (minute > lastMin && minute <= last)
             lastMin = minute;
 
-        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() < lMin && lapDataArray[j].lapTime.isValid())
-            lMin = lapDataArray[j].lapTime.toDouble();
+        if (minute >= first && minute <= last && lapDataArray[j].getTime().toDouble() < lMin && lapDataArray[j].getTime().isValid())
+            lMin = lapDataArray[j].getTime().toDouble();
 
-        if (minute >= first && minute <= last && lapDataArray[j].lapTime.toDouble() > lMax && lapDataArray[j].lapTime.isValid())
-            lMax = lapDataArray[j].lapTime.toDouble();
+        if (minute >= first && minute <= last && lapDataArray[j].getTime().toDouble() > lMax && lapDataArray[j].getTime().isValid())
+            lMax = lapDataArray[j].getTime().toDouble();
 
         if (minute >= first && minute <= last)
             ++size;
@@ -632,16 +632,16 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
 
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        int sessTime = LTData::getQualiLength(lapDataArray[i].qualiPeriod) - LTData::timeToMins(lapDataArray[i].sessionTime);
-        int sessTimeSecs = LTData::getQualiLength(lapDataArray[i].qualiPeriod) * 60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
+        int sessTime = LTData::getQualiLength(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()) - LTData::timeToMins(lapDataArray[i].getQualiLapExtraData().getSessionTime());
+        int sessTimeSecs = LTData::getQualiLength(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()) * 60 - LTData::timeToSecs(lapDataArray[i].getQualiLapExtraData().getSessionTime());
 
-        if (lapDataArray[i].sessionTime.toString("h:mm:ss") == "")
+        if (lapDataArray[i].getQualiLapExtraData().getSessionTime().toString("h:mm:ss") == "")
         {
             sessTime = 0;
             sessTimeSecs = 0;
         }
 
-        for (int k = 0; k < lapDataArray[i].qualiPeriod-1; ++k)
+        for (int k = 0; k < lapDataArray[i].getQualiLapExtraData().getQualiPeriod()-1; ++k)
         {
             sessTime += LTData::getQualiLength(k+1);
             sessTimeSecs += LTData::getQualiLength(k+1)*60;
@@ -650,9 +650,9 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
 
 //        int minute = LTData::currentEventFPLength() - LTData::timeToMins(lapDataArray[i].sessionTime);
 //        int second = LTData::currentEventFPLength()*60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
-        if (sessTime >= first && sessTime <= last)// && lapDataArray[i].lapTime.isValid())
+        if (sessTime >= first && sessTime <= last)// && lapDataArray[i].getTime().isValid())
         {
-            secs = lapDataArray[i].lapTime.toDouble();
+            secs = lapDataArray[i].getTime().toDouble();
 
             if (secs > tMax && tMax == max)
                 secs = tMax;

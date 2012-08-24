@@ -37,9 +37,9 @@ void EventStatusWidget::updateEventStatus()
 {
     EventData &eventData = EventData::getInstance();
 
-    if (eventData.sessionStarted)
+    if (eventData.isSessionStarted())
     {
-        switch (eventData.flagStatus)
+        switch (eventData.getFlagStatus())
         {
             case LTData::GREEN_FLAG:
                 ui->statusLabelIcon->setPixmap(icons[0]);
@@ -61,55 +61,55 @@ void EventStatusWidget::updateEventStatus()
     else
         ui->statusLabelIcon->clear();
 
-    if (eventData.eventType != LTData::RACE_EVENT)
+    if (eventData.getEventType() != LTData::RACE_EVENT)
     {
-        ui->timerLabel->setText(eventData.remainingTime.toString("h:mm:ss"));
+        ui->timerLabel->setText(eventData.getRemainingTime().toString("h:mm:ss"));
 
-        if (eventData.remainingTime.toString("hh:mm:ss") == "00:00:00")
+        if (eventData.getRemainingTime().toString("hh:mm:ss") == "00:00:00")
             ui->statusLabelIcon->setPixmap(icons[4]);
 
-        if (eventData.eventType == LTData::QUALI_EVENT)
-        	ui->infoLabel->setText("Q" + (eventData.qualiPeriod > 0 ? QString::number(eventData.qualiPeriod) : ""));
+        if (eventData.getEventType() == LTData::QUALI_EVENT)
+            ui->infoLabel->setText("Q" + (eventData.getQualiPeriod() > 0 ? QString::number(eventData.getQualiPeriod()) : ""));
         else
             ui->infoLabel->setText("FP" + QString::number(LTData::getFPNumber()));
     }
     else
     {
-    	int lapsCompleted = eventData.lapsCompleted+1;
+        int lapsCompleted = eventData.getCompletedLaps()+1;
 
-    	if (eventData.lapsCompleted == 0 && !eventData.sessionStarted)
+        if (eventData.getCompletedLaps() == 0 && !eventData.isSessionStarted())
     		lapsCompleted = 0;
 
-    	if (lapsCompleted > eventData.eventInfo.laps)
-    		lapsCompleted = eventData.eventInfo.laps;
+        if (lapsCompleted > eventData.getEventInfo().laps)
+            lapsCompleted = eventData.getEventInfo().laps;
 
-        ui->timerLabel->setText(QString("%1 / %2").arg(lapsCompleted).arg(eventData.eventInfo.laps));
+        ui->timerLabel->setText(QString("%1 / %2").arg(lapsCompleted).arg(eventData.getEventInfo().laps));
 
-        ui->infoLabel->setText(eventData.remainingTime.toString("h:mm:ss"));
-        if (eventData.lapsCompleted >= eventData.eventInfo.laps)
+        ui->infoLabel->setText(eventData.getRemainingTime().toString("h:mm:ss"));
+        if (eventData.getCompletedLaps() >= eventData.getEventInfo().laps)
             ui->statusLabelIcon->setPixmap(icons[4]);
     }
 
-    QString s = QString("%1").arg(eventData.airTemp);
+    QString s = QString("%1").arg(eventData.getWeather().getAirTemp().getValue());
     ui->airTempLabel->setText(s + "°C");
 
-    s = QString::number(eventData.trackTemp);
+    s = QString::number(eventData.getWeather().getTrackTemp().getValue());
     ui->trackTempLabel->setText(s + "°C");
 
-    s = QString::number(eventData.windSpeed);
+    s = QString::number(eventData.getWeather().getWindSpeed().getValue());
     ui->windSpeedLabel->setText(s + "m/s");
 
-    s = QString::number(eventData.humidity);
+    s = QString::number(eventData.getWeather().getHumidity().getValue());
     ui->humidityLabel->setText(s + "%");
 
-    s = QString::number(eventData.pressure);
+    s = QString::number(eventData.getWeather().getPressure().getValue());
     ui->pressureLabel->setText(s + "mb");
 
-    ui->weatherLabelIcon->setPixmap(eventData.wetdry == 1 ? icons[6] : icons[5]);
+    ui->weatherLabelIcon->setPixmap(int(eventData.getWeather().getWetDry().getValue()) == 1 ? icons[6] : icons[5]);
 
 
     QMatrix matrix;
-    matrix.rotate(eventData.windDirection);
+    matrix.rotate(eventData.getWeather().getWindDirection().getValue());
 
     ui->windSpeedLabelIcon->setPixmap(icons[7].transformed(matrix, Qt::SmoothTransformation));
 

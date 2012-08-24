@@ -23,7 +23,7 @@ public:
 
 signals:
     void streamOpened();
-    void packetObtained(QByteArray);
+    void packetObtained(const QByteArray &);
     void error(QAbstractSocket::SocketError);
 
 public slots:

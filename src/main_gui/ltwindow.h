@@ -9,7 +9,7 @@
 #include <QSettings>
 #include <QTimer>
 
-#include "../core/datastreamreader.h"
+#include "../net/datastreamreader.h"
 #include "../player/eventplayer.h"
 #include "../player/eventrecorder.h"
 #include "../tools/headtoheaddialog.h"

@@ -53,7 +53,7 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(eventPlayer, SIGNAL(forwardToEndClicked()), this, SLOT(eventPlayerForwardToEndClicked()));
     connect(eventPlayer, SIGNAL(rewindClicked()), this, SLOT(eventPlayerRewindClicked()));
     connect(eventPlayer, SIGNAL(stopClicked()), this, SLOT(eventPlayerStopClicked()));
-    connect(eventPlayer, SIGNAL(nextPackets(QList<Packet>)), streamReader, SLOT(parseEPPackets(QList<Packet>)));
+    connect(eventPlayer, SIGNAL(nextPackets(QList<Packet>)), streamReader, SLOT(parsePackets(QList<Packet>)));
 
     ui->messageBoardWidget->setVisible(false);
 
@@ -103,19 +103,19 @@ LTWindow::~LTWindow()
 void LTWindow::on_eventDataChanged()
 {
     if (!playing)
-        setWindowTitle("F1LT - " + eventData.eventInfo.eventName);
+        setWindowTitle("F1LT - " + eventData.getEventInfo().eventName);
     if (!playing && !recording && !ui->actionRecord->isEnabled())
         ui->actionRecord->setEnabled(true);
 
-    if (eventData.commentary.size() > ui->textEdit->toPlainText().size())
+    if (eventData.getCommentary().size() > ui->textEdit->toPlainText().size())
     {
-        ui->textEdit->setText(eventData.commentary);
+        ui->textEdit->setText(eventData.getCommentary());
 
         QTextCursor c = ui->textEdit->textCursor();
         c.movePosition(QTextCursor::End);
         ui->textEdit->setTextCursor(c);
     }
-    if (eventData.commentary.size() == 0 && ui->textEdit->toPlainText().size() > 0)
+    if (eventData.getCommentary().size() == 0 && ui->textEdit->toPlainText().size() > 0)
         ui->textEdit->clear();
 
 //    ui->trackStatusWidget->updateTrackStatus(eventData);
@@ -147,7 +147,7 @@ void LTWindow::on_driverDataChanged(int carID)
         {
             QTableWidgetItem *item = ui->tableWidget->item(i, 1);
 
-            if (item && currDriver >= 0 && item->text().toInt() == eventData.driversData[currDriver].number)
+            if (item && currDriver >= 0 && item->text().toInt() == eventData.getDriversData()[currDriver].getNumber())
             {
                 ui->tableWidget->setCurrentCell(i, 1);
                 break;
@@ -172,10 +172,10 @@ void LTWindow::on_driverDataChanged(int carID)
 
 //        if (h2hDialog->isVisible())
         for (int i = 0; i < ltcDialog.size(); ++i)
-            ltcDialog[i]->driverUpdated(eventData.driversData[carID-1]);
+            ltcDialog[i]->driverUpdated(eventData.getDriversData()[carID-1]);
 
         for (int i = 0; i < h2hDialog.size(); ++i)
-            h2hDialog[i]->driverUpdated(eventData.driversData[carID-1]);
+            h2hDialog[i]->driverUpdated(eventData.getDriversData()[carID-1]);
 
         if (saw->isVisible())
             saw->update();
@@ -186,10 +186,10 @@ void LTWindow::on_driverDataChanged(int carID)
 
 void LTWindow::on_dataChanged()
 {
-    setWindowTitle("FILT - " + eventData.eventInfo.eventName + " (" + eventPlayer->playedFile() + ")");
+    setWindowTitle("FILT - " + eventData.getEventInfo().eventName + " (" + eventPlayer->playedFile() + ")");
 //    if (eventData.commentary.size() > ui->textEdit->toPlainText().size())
     {
-        ui->textEdit->setText(eventData.commentary);
+        ui->textEdit->setText(eventData.getCommentary());
 
         QTextCursor c = ui->textEdit->textCursor();
         c.movePosition(QTextCursor::End);
@@ -226,7 +226,7 @@ void LTWindow::on_dataChanged()
     {
         QTableWidgetItem *item = ui->tableWidget->item(i, 1);
 
-        if (item && currDriver >= 0 && item->text().toInt() == eventData.driversData[currDriver].number)
+        if (item && currDriver >= 0 && item->text().toInt() == eventData.getDriversData()[currDriver].getNumber())
         {
             ui->tableWidget->setCurrentCell(i, 1);
             break;
@@ -242,14 +242,14 @@ void LTWindow::on_dataChanged()
 
 void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
 {
-    QList<DriverData> driverList = eventData.driversData;
+    QList<DriverData> driverList = eventData.getDriversData();
     qSort(driverList);
 
     ui->tabWidget->setCurrentIndex(0);
     if (row-1 < driverList.size() && (row-1 >= 0))
     {
         DriverData dd = driverList[row-1];
-        currDriver = dd.carID - 1;
+        currDriver = dd.getCarID() - 1;
 
         ui->driverDataWidget->printDriverData(currDriver);
     }
@@ -257,13 +257,13 @@ void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
 
 void LTWindow::on_tableWidget_cellClicked(int row, int)
 {
-    QList<DriverData> driverList = eventData.driversData;
+    QList<DriverData> driverList = eventData.getDriversData();
     qSort(driverList);
 
     if (row-1 < driverList.size() && (row-1 >= 0))
     {
         DriverData dd = driverList[row-1];
-        currDriver = dd.carID - 1;
+        currDriver = dd.getCarID() - 1;
 
         ui->driverDataWidget->printDriverData(currDriver);
     }
@@ -362,23 +362,23 @@ void LTWindow::timeout()
         eventPlayer->timeout();
 
     //during quali timer is stopped when we have red flag
-    if (eventData.sessionStarted)
+    if (eventData.isSessionStarted())
     {
         if (!playing && settings->value("ui/auto_record").toBool() && !recording && eventRecorder->isEmpty())
             on_actionRecord_triggered();
 
-        if (!(eventData.eventType == LTData::RACE_EVENT && eventData.lapsCompleted == eventData.eventInfo.laps) &&
-            !((eventData.eventType == LTData::QUALI_EVENT || eventData.eventType == LTData::RACE_EVENT) && eventData.flagStatus == LTData::RED_FLAG))
+        if (!(eventData.getEventType() == LTData::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
+            !((eventData.getEventType() == LTData::QUALI_EVENT || eventData.getEventType() == LTData::RACE_EVENT) && eventData.getFlagStatus() == LTData::RED_FLAG))
         {
-            int hours = eventData.remainingTime.hour();
-            int mins = eventData.remainingTime.minute();
-            int secs = eventData.remainingTime.second();
+            int hours = eventData.getRemainingTime().hour();
+            int mins = eventData.getRemainingTime().minute();
+            int secs = eventData.getRemainingTime().second();
             --secs;
             if (secs < 0)
             {
                 secs = 59;
                 --mins;
-                eventData.saveWeatherData();
+                eventData.saveWeather();
 
                 if (mins < 0)
                 {
@@ -389,12 +389,12 @@ void LTWindow::timeout()
                     {
                         secs = mins = hours = 0;
                         //we don't stop the timer here as it will be needed ie. for session recording, we only change the value of sessionStarted to false
-                        eventData.sessionStarted = false;
+                        eventData.setSessionStarted(false);
     //                    eventTimer->stop();
                     }
                 }
             }
-            eventData.remainingTime = QTime(hours, mins, secs);
+            eventData.getRemainingTime() = QTime(hours, mins, secs);
 //            ui->trackStatusWidget->updateTrackStatus(eventData);
             ui->eventStatusWidget->updateEventStatus();
         }

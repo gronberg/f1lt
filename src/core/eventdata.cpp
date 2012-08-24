@@ -3,27 +3,30 @@
 
 #include <QDebug>
 
+void Weather::saveWeatherData(const EventData &ed)
+{
+    WeatherData wd;
+    wd.lap = ed.getCompletedLaps();
+    wd.sessionTime = ed.getRemainingTime();
+    wd.qPeriod = ed.getQualiPeriod();
+
+    for (int i = 0; i < 7; ++i)
+        weatherData[i].append(currentWeather[i]);
+}
+
 EventData::EventData()
 {
-    FLLap = -1;
-    sec1Record[2] = "-1";
-    sec2Record[2] = "-1";
-    sec3Record[2] = "-1";
-
-
     eventId = 0;
 
     eventInfo.laps = 0;
     eventInfo.eventNo = 0;
 
-    timeStamp = 0;
+    key = 0;
+    frame = 0;
+    remainingTime = QTime();
+    lapsCompleted = 0;
 
-    trackTemp = 0;
-    airTemp = 0;
-    windSpeed = 0;
-    humidity = 0;
-    pressure = 0;
-    windDirection = 0;    
+    flagStatus = LTData::GREEN_FLAG;
 
     qualiPeriod = 0;
 
@@ -40,16 +43,10 @@ void EventData::clear()
     remainingTime = QTime();
     lapsCompleted = 0;
 
+    weather = Weather();
+
     flagStatus = LTData::GREEN_FLAG;
 
-    timeStamp = 0;
-
-    trackTemp = 0;
-    airTemp = 0;
-    windSpeed = 0;
-    humidity = 0;
-    pressure = 0;
-    windDirection = 0;
     sessionStarted = false;
     qualiPeriod = 0;
 
@@ -58,30 +55,7 @@ void EventData::clear()
     for (int i = 0; i < LTData::ltTeams.size(); ++i)
     {
         driversData.append(DriverData());
-        driversData.append(DriverData());
-
-        if (i < 6)
-        	weatherData[i].clear();
-    }
-
-    FLNumber = 0;
-    FLDriver.clear();
-    FLTime = LapTime();
-    FLLap = 0;
-
-    for (int i = 0; i < 12; ++i)
-    {
-        sec1Speed[i].clear();
-        sec2Speed[i].clear();
-        sec3Speed[i].clear();
-        speedTrap[i].clear();
-
-        if (i < 4)
-        {
-            sec1Record[i].clear();
-            sec2Record[i].clear();
-            sec3Record[i].clear();
-        }
+        driversData.append(DriverData());        
     }
 }
 
@@ -89,8 +63,8 @@ int EventData::getDriverId(QString name)
 {
     for (int i = 0; i < driversData.size(); ++i)
     {
-        if (driversData[i].driver == name)
-            return driversData[i].carID;
+        if (driversData[i].getDriverName() == name)
+            return driversData[i].getCarID();
     }
     return -1;
 }
@@ -99,8 +73,8 @@ int EventData::getDriverId(int no)
 {
     for (int i = 0; i < driversData.size(); ++i)
     {
-        if (driversData[i].number == no)
-            return driversData[i].carID;
+        if (driversData[i].getNumber() == no)
+            return driversData[i].getCarID();
     }
     return -1;
 }
@@ -118,7 +92,7 @@ DriverData EventData::getDriverDataFromPos(int pos)
 {
 	for (int i = 0; i < driversData.size(); ++i)
 	{
-		if (driversData[i].pos == pos)
+        if (driversData[i].getPosition() == pos)
 			return driversData[i];
 	}
 
@@ -130,31 +104,31 @@ QString EventData::calculateInterval(DriverData d1, DriverData d2, int lap)
 	LapData ld1 = d1.getLapData(lap);
 	LapData ld2 = d2.getLapData(lap);
 
-	if (lap == -1 && !d1.lapData.isEmpty() && !d2.lapData.isEmpty())
+    if (lap == -1 && !d1.getLapData().isEmpty() && !d2.getLapData().isEmpty())
 	{
-		ld1 = d1.lastLap;//d1.lapData.get(d1.lapData.size()-1);
-		ld2 = d2.lastLap;//d2.lapData.get(d2.lapData.size()-1);
+        ld1 = d1.getLastLap();//d1.lapData.get(d1.lapData.size()-1);
+        ld2 = d2.getLastLap();//d2.lapData.get(d2.lapData.size()-1);
 	}
 
-	if (ld1.carID == -1 || ld2.carID == -1)
+    if (ld1.getCarID() == -1 || ld2.getCarID() == -1)
 		return "";
 
-	QString gap1 = ld1.gap;
-	QString gap2 = ld2.gap;
+    QString gap1 = ld1.getGap();
+    QString gap2 = ld2.getGap();
 
-	if ((ld1.lapTime.toString() == "" && ld1.gap == "") ||
-		(ld2.lapTime.toString() == "" && ld2.gap == ""))
+    if ((ld1.getTime().toString() == "" && ld1.getGap() == "") ||
+        (ld2.getTime().toString() == "" && ld2.getGap() == ""))
 		return "";
 
-	if (ld1.pos == 1)
+    if (ld1.getPosition() == 1)
 		return "-" + (gap2 == "" ? "1L <" : gap2) + (gap2.contains("L") ? " <" : "");
 
-	if (ld2.pos == 1)
+    if (ld2.getPosition() == 1)
 		return "+" + (gap1 == "" ? "1L <" : gap1) + (gap1.contains("L") ? " <" : "");
 
 	if ((gap1 != "" && gap2 != "" && gap1[gap1.size()-1] != 'L' &&
 			gap2[gap2.size()-1] != 'L') ||
-	   ((ld1.pos == 1 && gap1 == "") || (ld2.pos == 1 && gap2 == "")))
+       ((ld1.getPosition() == 1 && gap1 == "") || (ld2.getPosition() == 1 && gap2 == "")))
 	{
 		double interval = 0.0;
 
@@ -171,8 +145,8 @@ QString EventData::calculateInterval(DriverData d1, DriverData d2, int lap)
 			(gap2 != "" && gap2.contains("L")) ||
 			(gap1 == "" || gap2 == ""))
 	{
-		int pos1 = ld1.pos;
-		int pos2 = ld2.pos;
+        int pos1 = ld1.getPosition();
+        int pos2 = ld2.getPosition();
 
 		bool neg = true;
 		if (pos2 < pos1)
@@ -189,19 +163,19 @@ QString EventData::calculateInterval(DriverData d1, DriverData d2, int lap)
 		{
 			LapData ld = driversData[i].getLapData(lap);
 
-			if (lap == -1 && !driversData[i].lapData.isEmpty())
-				ld = driversData[i].lastLap;//lapData.get(driversData.get(i).lapData.size()-1);
+            if (lap == -1 && !driversData[i].getLapData().isEmpty())
+                ld = driversData[i].getLastLap();//lapData.get(driversData.get(i).lapData.size()-1);
 
-			if (ld.carID == -1)
+            if (ld.getCarID() == -1)
 				continue;
 
-			int pos = ld.pos;
+            int pos = ld.getPosition();
 			if (pos > pos1 && pos <= pos2)
 			{
-				if (ld.interval != "" && ld.interval.contains("L"))
+                if (ld.getInterval() != "" && ld.getInterval().contains("L"))
 					return neg ? "-1L <" : "+1L <";
 
-				intervals.append(ld.interval);
+                intervals.append(ld.getInterval());
 			}
 		}
 		double interval = 0.0;
@@ -209,9 +183,9 @@ QString EventData::calculateInterval(DriverData d1, DriverData d2, int lap)
 		for (int i = 0; i < intervals.size(); ++i)
 			interval += intervals[i].toDouble();
 
-		if (neg && ld1.lapTime.isValid() && interval > ld1.lapTime.toDouble())
+        if (neg && ld1.getTime().isValid() && interval > ld1.getTime().toDouble())
 			return "-1L <";
-		if (!neg && ld2.lapTime.isValid() && interval > ld2.lapTime.toDouble())
+        if (!neg && ld2.getTime().isValid() && interval > ld2.getTime().toDouble())
 			return "+1L <";
 
 

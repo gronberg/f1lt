@@ -15,9 +15,7 @@ public:
     explicit HttpDataReader(QObject *parent = 0);
     ~HttpDataReader();
 
-    void authorize(QString host, QString loginHost, QString email, QString passwd);
-    void obtainKeyFrame(unsigned int frame);
-    void obtainDecryptionKey(unsigned int event_no);
+    void authorize(QString host, QString loginHost, QString email, QString passwd);    
 
     QString getCookie() { return cookie; }
     QString getHost() { return host; }
@@ -26,13 +24,15 @@ public:
     
 signals:
     void cookieRecieved(QString cookie);
-    void keyFrameObtained(QByteArray);
+    void keyFrameObtained(const QByteArray &);
     void decryptionKeyObtained(unsigned int);
     void authorizationError();
     void error(QNetworkReply::NetworkError);
     
 public slots:
     void finished();
+    void obtainKeyFrame(unsigned int frame);
+    void obtainDecryptionKey(unsigned int event_no);
     
 
 private:
