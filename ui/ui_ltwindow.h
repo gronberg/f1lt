@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Thu Aug 23 20:55:40 2012
+** Created: Wed Aug 29 18:29:21 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -27,7 +27,7 @@
 #include <QtGui/QWidget>
 #include "main_gui/driverdatawidget.h"
 #include "main_gui/eventstatuswidget.h"
-#include "main_gui/lttablewidget.h"
+#include "main_gui/ltwidget.h"
 #include "main_gui/nosessionboardwidget.h"
 #include "main_gui/sessiondatawidget.h"
 #include "main_gui/weatherchartswidget.h"
@@ -53,9 +53,7 @@ public:
     NoSessionBoardWidget *messageBoardWidget;
     EventStatusWidget *eventStatusWidget;
     QSplitter *splitter;
-    LTTableWidget *tableWidget;
-    QWidget *verticalLayoutWidget;
-    QVBoxLayout *verticalLayout_5;
+    LTWidget *ltWidget;
     QTabWidget *tabWidget;
     QWidget *tab_2;
     QVBoxLayout *verticalLayout_2;
@@ -141,7 +139,7 @@ public:
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
         verticalLayout_4->setSpacing(0);
-        verticalLayout_4->setContentsMargins(5, 5, 5, 5);
+        verticalLayout_4->setContentsMargins(4, 4, 4, 4);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         messageBoardWidget = new NoSessionBoardWidget(centralWidget);
         messageBoardWidget->setObjectName(QString::fromUtf8("messageBoardWidget"));
@@ -162,101 +160,11 @@ public:
 
         splitter = new QSplitter(centralWidget);
         splitter->setObjectName(QString::fromUtf8("splitter"));
-        splitter->setEnabled(true);
-        splitter->setMinimumSize(QSize(400, 0));
-        splitter->setMaximumSize(QSize(16777215, 16777215));
-        splitter->setFrameShape(QFrame::NoFrame);
-        splitter->setFrameShadow(QFrame::Plain);
-        splitter->setLineWidth(1);
         splitter->setOrientation(Qt::Horizontal);
-        splitter->setOpaqueResize(true);
-        tableWidget = new LTTableWidget(splitter);
-        if (tableWidget->columnCount() < 11)
-            tableWidget->setColumnCount(11);
-        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
-        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem1);
-        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem2);
-        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
-        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(5, __qtablewidgetitem5);
-        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(6, __qtablewidgetitem6);
-        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(7, __qtablewidgetitem7);
-        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(8, __qtablewidgetitem8);
-        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(9, __qtablewidgetitem9);
-        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(10, __qtablewidgetitem10);
-        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        QPalette palette;
-        QBrush brush(QColor(255, 255, 255, 255));
-        brush.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::WindowText, brush);
-        palette.setBrush(QPalette::Active, QPalette::Text, brush);
-        QBrush brush1(QColor(20, 20, 20, 255));
-        brush1.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Base, brush1);
-        QBrush brush2(QColor(73, 73, 73, 255));
-        brush2.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Highlight, brush2);
-        QBrush brush3(QColor(27, 27, 27, 255));
-        brush3.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::AlternateBase, brush3);
-        palette.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::Text, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::Base, brush1);
-        palette.setBrush(QPalette::Inactive, QPalette::Highlight, brush2);
-        palette.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush3);
-        QBrush brush4(QColor(130, 130, 130, 255));
-        brush4.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Disabled, QPalette::WindowText, brush4);
-        palette.setBrush(QPalette::Disabled, QPalette::Text, brush4);
-        QBrush brush5(QColor(240, 240, 240, 255));
-        brush5.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Disabled, QPalette::Base, brush5);
-        QBrush brush6(QColor(175, 175, 175, 255));
-        brush6.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
-        palette.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush3);
-        tableWidget->setPalette(palette);
-        QFont font;
-        font.setFamily(QString::fromUtf8("Arial"));
-        font.setPointSize(10);
-        font.setBold(true);
-        font.setWeight(75);
-        tableWidget->setFont(font);
-        tableWidget->setStyleSheet(QString::fromUtf8(""));
-        tableWidget->setFrameShape(QFrame::StyledPanel);
-        tableWidget->setFrameShadow(QFrame::Plain);
-        tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-        tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        tableWidget->setAlternatingRowColors(true);
-        tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-        tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-        tableWidget->setIconSize(QSize(200, 50));
-        tableWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-        tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
-        tableWidget->setShowGrid(false);
-        splitter->addWidget(tableWidget);
-        tableWidget->horizontalHeader()->setVisible(false);
-        tableWidget->verticalHeader()->setVisible(false);
-        verticalLayoutWidget = new QWidget(splitter);
-        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayout_5 = new QVBoxLayout(verticalLayoutWidget);
-        verticalLayout_5->setSpacing(6);
-        verticalLayout_5->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
-        verticalLayout_5->setContentsMargins(0, 0, 0, 0);
-        tabWidget = new QTabWidget(verticalLayoutWidget);
+        ltWidget = new LTWidget(splitter);
+        ltWidget->setObjectName(QString::fromUtf8("ltWidget"));
+        splitter->addWidget(ltWidget);
+        tabWidget = new QTabWidget(splitter);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
         tabWidget->setTabShape(QTabWidget::Rounded);
         tabWidget->setIconSize(QSize(15, 15));
@@ -305,35 +213,39 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         textEdit = new QTextEdit(tab_4);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
-        QPalette palette1;
-        QBrush brush7(QColor(220, 220, 220, 255));
-        brush7.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette1.setBrush(QPalette::Active, QPalette::Base, brush1);
-        QBrush brush8(QColor(159, 159, 159, 255));
-        brush8.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Highlight, brush8);
-        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush1);
-        palette1.setBrush(QPalette::Inactive, QPalette::Highlight, brush8);
-        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush4);
-        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush5);
-        palette1.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
-        textEdit->setPalette(palette1);
+        QPalette palette;
+        QBrush brush(QColor(220, 220, 220, 255));
+        brush.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Text, brush);
+        QBrush brush1(QColor(20, 20, 20, 255));
+        brush1.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Base, brush1);
+        QBrush brush2(QColor(159, 159, 159, 255));
+        brush2.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Highlight, brush2);
+        palette.setBrush(QPalette::Inactive, QPalette::Text, brush);
+        palette.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette.setBrush(QPalette::Inactive, QPalette::Highlight, brush2);
+        QBrush brush3(QColor(130, 130, 130, 255));
+        brush3.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::Text, brush3);
+        QBrush brush4(QColor(240, 240, 240, 255));
+        brush4.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::Base, brush4);
+        QBrush brush5(QColor(175, 175, 175, 255));
+        brush5.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        textEdit->setPalette(palette);
         textEdit->setLineWrapMode(QTextEdit::WidgetWidth);
         textEdit->setTextInteractionFlags(Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse);
 
         verticalLayout->addWidget(textEdit);
 
         tabWidget->addTab(tab_4, QString());
-
-        verticalLayout_5->addWidget(tabWidget);
-
-        splitter->addWidget(verticalLayoutWidget);
+        splitter->addWidget(tabWidget);
 
         verticalLayout_4->addWidget(splitter);
 
-        verticalLayout_4->setStretch(2, 1);
         LTWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(LTWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -414,22 +326,6 @@ public:
         actionLap_time_comparison->setText(QApplication::translate("LTWindow", "Lap time comparison", 0, QApplication::UnicodeUTF8));
         actionStop_recording->setText(QApplication::translate("LTWindow", "Stop recording", 0, QApplication::UnicodeUTF8));
         actionSession_analysis->setText(QApplication::translate("LTWindow", "Session analysis", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("LTWindow", "P", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(3);
-        ___qtablewidgetitem1->setText(QApplication::translate("LTWindow", "Name", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(4);
-        ___qtablewidgetitem2->setText(QApplication::translate("LTWindow", "Gap", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(5);
-        ___qtablewidgetitem3->setText(QApplication::translate("LTWindow", "Interval", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem4 = tableWidget->horizontalHeaderItem(7);
-        ___qtablewidgetitem4->setText(QApplication::translate("LTWindow", "Sector 1", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem5 = tableWidget->horizontalHeaderItem(8);
-        ___qtablewidgetitem5->setText(QApplication::translate("LTWindow", "Sector 2", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem6 = tableWidget->horizontalHeaderItem(9);
-        ___qtablewidgetitem6->setText(QApplication::translate("LTWindow", "Sector 3", 0, QApplication::UnicodeUTF8));
-        QTableWidgetItem *___qtablewidgetitem7 = tableWidget->horizontalHeaderItem(10);
-        ___qtablewidgetitem7->setText(QApplication::translate("LTWindow", "Pit", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("LTWindow", "Driver data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("LTWindow", "Session data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("LTWindow", "Weather charts", 0, QApplication::UnicodeUTF8));

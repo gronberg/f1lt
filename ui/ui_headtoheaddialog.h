@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'headtoheaddialog.ui'
 **
-** Created: Thu Aug 23 20:55:40 2012
+** Created: Wed Aug 29 18:29:21 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

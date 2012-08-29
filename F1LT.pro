@@ -25,7 +25,7 @@ LT_FILES.path = $$PREFIX/ltdata/
 DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+#DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
@@ -54,7 +54,17 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/charts/lapcompchart.cpp \
     src/charts/weatherchart.cpp \
     src/core/lapdata.cpp \
-    src/net/packetparser.cpp
+    src/net/packetparser.cpp \
+    src/main_gui/ltwidget.cpp \
+    src/main_gui/models/ltmodel.cpp \
+    src/main_gui/models/practicemodel.cpp \
+    src/main_gui/lttableview.cpp \
+    src/main_gui/models/qualimodel.cpp \
+    src/main_gui/models/racemodel.cpp \
+    src/main_gui/models/driverlaphistorymodel.cpp \
+    src/main_gui/ltitemdelegate.cpp \
+    src/main_gui/models/speedrecordsmodel.cpp \
+    src/main_gui/models/fastestlapsmodel.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -82,7 +92,17 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/charts/lapcompchart.h \
     src/charts/weatherchart.h \
     src/core/lapdata.h \
-    src/net/packetparser.h
+    src/net/packetparser.h \
+    src/main_gui/ltwidget.h \
+    src/main_gui/models/ltmodel.h \
+    src/main_gui/models/practicemodel.h \
+    src/main_gui/lttableview.h \
+    src/main_gui/models/qualimodel.h \
+    src/main_gui/models/racemodel.h \
+    src/main_gui/models/driverlaphistorymodel.h \
+    src/main_gui/ltitemdelegate.h \
+    src/main_gui/models/speedrecordsmodel.h \
+    src/main_gui/models/fastestlapsmodel.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -96,6 +116,7 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/logindialog.ui \
     ui/eventplayer.ui \
     ui/laptimecomparisondialog.ui \
-    ui/eventstatuswidget.ui
+    ui/eventstatuswidget.ui \
+    src/main_gui/ltwidget.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc

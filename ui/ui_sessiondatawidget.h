@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Thu Aug 23 20:55:40 2012
+** Created: Wed Aug 29 21:23:59 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -16,6 +16,7 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QHeaderView>
 #include <QtGui/QTabWidget>
+#include <QtGui/QTableView>
 #include <QtGui/QTableWidget>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
@@ -32,10 +33,12 @@ public:
     QTableWidget *tableWidget_5;
     QWidget *tab_2;
     QVBoxLayout *verticalLayout_3;
+    QTableView *fastestLapsTable;
     QTableWidget *tableWidget_3;
     QWidget *tab;
     QVBoxLayout *verticalLayout_2;
     QTableWidget *tableWidget_2;
+    QTableView *speedRecordsTable;
     QWidget *tab_3;
     QVBoxLayout *verticalLayout_4;
     QTableWidget *tableWidget_4;
@@ -106,6 +109,43 @@ public:
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
         verticalLayout_3 = new QVBoxLayout(tab_2);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        fastestLapsTable = new QTableView(tab_2);
+        fastestLapsTable->setObjectName(QString::fromUtf8("fastestLapsTable"));
+        QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(fastestLapsTable->sizePolicy().hasHeightForWidth());
+        fastestLapsTable->setSizePolicy(sizePolicy);
+        QPalette palette2;
+        palette2.setBrush(QPalette::Active, QPalette::Base, brush);
+        QBrush brush4(QColor(73, 73, 73, 255));
+        brush4.setStyle(Qt::SolidPattern);
+        palette2.setBrush(QPalette::Active, QPalette::Highlight, brush4);
+        QBrush brush5(QColor(27, 27, 27, 255));
+        brush5.setStyle(Qt::SolidPattern);
+        palette2.setBrush(QPalette::Active, QPalette::AlternateBase, brush5);
+        palette2.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette2.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
+        palette2.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush5);
+        palette2.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        QBrush brush6(QColor(175, 175, 175, 255));
+        brush6.setStyle(Qt::SolidPattern);
+        palette2.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        palette2.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush5);
+        fastestLapsTable->setPalette(palette2);
+        fastestLapsTable->setFrameShape(QFrame::NoFrame);
+        fastestLapsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        fastestLapsTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        fastestLapsTable->setAutoScroll(true);
+        fastestLapsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        fastestLapsTable->setAlternatingRowColors(true);
+        fastestLapsTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        fastestLapsTable->setShowGrid(false);
+        fastestLapsTable->horizontalHeader()->setVisible(false);
+        fastestLapsTable->verticalHeader()->setVisible(false);
+
+        verticalLayout_3->addWidget(fastestLapsTable);
+
         tableWidget_3 = new QTableWidget(tab_2);
         if (tableWidget_3->columnCount() < 8)
             tableWidget_3->setColumnCount(8);
@@ -126,24 +166,20 @@ public:
         QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
         tableWidget_3->setHorizontalHeaderItem(7, __qtablewidgetitem8);
         tableWidget_3->setObjectName(QString::fromUtf8("tableWidget_3"));
-        QPalette palette2;
-        palette2.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette2.setBrush(QPalette::Active, QPalette::Text, brush2);
-        palette2.setBrush(QPalette::Active, QPalette::Base, brush);
-        QBrush brush4(QColor(73, 73, 73, 255));
-        brush4.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Active, QPalette::Highlight, brush4);
-        palette2.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette2.setBrush(QPalette::Inactive, QPalette::Text, brush2);
-        palette2.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette2.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
-        palette2.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette2.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette2.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        QBrush brush5(QColor(175, 175, 175, 255));
-        brush5.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
-        tableWidget_3->setPalette(palette2);
+        QPalette palette3;
+        palette3.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette3.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette3.setBrush(QPalette::Active, QPalette::Base, brush);
+        palette3.setBrush(QPalette::Active, QPalette::Highlight, brush4);
+        palette3.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette3.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette3.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette3.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
+        palette3.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        palette3.setBrush(QPalette::Disabled, QPalette::Text, brush3);
+        palette3.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette3.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        tableWidget_3->setPalette(palette3);
         tableWidget_3->setFont(font);
         tableWidget_3->setEditTriggers(QAbstractItemView::NoEditTriggers);
         tableWidget_3->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -159,9 +195,6 @@ public:
         tab = new QWidget();
         tab->setObjectName(QString::fromUtf8("tab"));
         verticalLayout_2 = new QVBoxLayout(tab);
-#ifndef Q_OS_MAC
-        verticalLayout_2->setContentsMargins(9, 9, 9, 9);
-#endif
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         tableWidget_2 = new QTableWidget(tab);
         if (tableWidget_2->columnCount() < 5)
@@ -177,25 +210,28 @@ public:
         QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
         tableWidget_2->setHorizontalHeaderItem(4, __qtablewidgetitem13);
         tableWidget_2->setObjectName(QString::fromUtf8("tableWidget_2"));
-        QPalette palette3;
-        palette3.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette3.setBrush(QPalette::Active, QPalette::Text, brush2);
-        palette3.setBrush(QPalette::Active, QPalette::Base, brush);
-        palette3.setBrush(QPalette::Active, QPalette::Highlight, brush4);
-        QBrush brush6(QColor(27, 27, 27, 255));
-        brush6.setStyle(Qt::SolidPattern);
-        palette3.setBrush(QPalette::Active, QPalette::AlternateBase, brush6);
-        palette3.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette3.setBrush(QPalette::Inactive, QPalette::Text, brush2);
-        palette3.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette3.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
-        palette3.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush6);
-        palette3.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette3.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette3.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        palette3.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
-        palette3.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush6);
-        tableWidget_2->setPalette(palette3);
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Ignored);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(tableWidget_2->sizePolicy().hasHeightForWidth());
+        tableWidget_2->setSizePolicy(sizePolicy1);
+        QPalette palette4;
+        palette4.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette4.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette4.setBrush(QPalette::Active, QPalette::Base, brush);
+        palette4.setBrush(QPalette::Active, QPalette::Highlight, brush4);
+        palette4.setBrush(QPalette::Active, QPalette::AlternateBase, brush5);
+        palette4.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette4.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette4.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette4.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
+        palette4.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush5);
+        palette4.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        palette4.setBrush(QPalette::Disabled, QPalette::Text, brush3);
+        palette4.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette4.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        palette4.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush5);
+        tableWidget_2->setPalette(palette4);
         tableWidget_2->setFont(font);
         tableWidget_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
         tableWidget_2->setAlternatingRowColors(true);
@@ -207,6 +243,34 @@ public:
         tableWidget_2->verticalHeader()->setVisible(false);
 
         verticalLayout_2->addWidget(tableWidget_2);
+
+        speedRecordsTable = new QTableView(tab);
+        speedRecordsTable->setObjectName(QString::fromUtf8("speedRecordsTable"));
+        sizePolicy.setHeightForWidth(speedRecordsTable->sizePolicy().hasHeightForWidth());
+        speedRecordsTable->setSizePolicy(sizePolicy);
+        QPalette palette5;
+        palette5.setBrush(QPalette::Active, QPalette::Base, brush);
+        palette5.setBrush(QPalette::Active, QPalette::Highlight, brush4);
+        palette5.setBrush(QPalette::Active, QPalette::AlternateBase, brush5);
+        palette5.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette5.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
+        palette5.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush5);
+        palette5.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette5.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        palette5.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush5);
+        speedRecordsTable->setPalette(palette5);
+        speedRecordsTable->setFrameShape(QFrame::NoFrame);
+        speedRecordsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        speedRecordsTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        speedRecordsTable->setAutoScroll(true);
+        speedRecordsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        speedRecordsTable->setAlternatingRowColors(true);
+        speedRecordsTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        speedRecordsTable->setShowGrid(false);
+        speedRecordsTable->horizontalHeader()->setVisible(false);
+        speedRecordsTable->verticalHeader()->setVisible(false);
+
+        verticalLayout_2->addWidget(speedRecordsTable);
 
         tabWidget->addTab(tab, QString());
         tab_3 = new QWidget();
@@ -229,20 +293,20 @@ public:
         QTableWidgetItem *__qtablewidgetitem19 = new QTableWidgetItem();
         tableWidget_4->setHorizontalHeaderItem(5, __qtablewidgetitem19);
         tableWidget_4->setObjectName(QString::fromUtf8("tableWidget_4"));
-        QPalette palette4;
-        palette4.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette4.setBrush(QPalette::Active, QPalette::Text, brush2);
-        palette4.setBrush(QPalette::Active, QPalette::Base, brush);
-        palette4.setBrush(QPalette::Active, QPalette::Highlight, brush4);
-        palette4.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette4.setBrush(QPalette::Inactive, QPalette::Text, brush2);
-        palette4.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette4.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
-        palette4.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette4.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette4.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        palette4.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
-        tableWidget_4->setPalette(palette4);
+        QPalette palette6;
+        palette6.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette6.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette6.setBrush(QPalette::Active, QPalette::Base, brush);
+        palette6.setBrush(QPalette::Active, QPalette::Highlight, brush4);
+        palette6.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette6.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette6.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette6.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
+        palette6.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        palette6.setBrush(QPalette::Disabled, QPalette::Text, brush3);
+        palette6.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette6.setBrush(QPalette::Disabled, QPalette::Highlight, brush6);
+        tableWidget_4->setPalette(palette6);
         tableWidget_4->setFont(font);
         tableWidget_4->setEditTriggers(QAbstractItemView::NoEditTriggers);
         tableWidget_4->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -261,7 +325,7 @@ public:
 
         retranslateUi(SessionDataWidget);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(SessionDataWidget);

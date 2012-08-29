@@ -28,7 +28,10 @@ DriverData &DriverData::operator=(const DriverData &dd)
 
     colorData = dd.colorData;
 
-    lapData = dd.lapData;
+    lapData.clear();
+    for (int i = 0; i < dd.lapData.size(); ++i)
+        lapData.append(dd.lapData[i]);
+
     lastLap = dd.lastLap; //&lapData[lapData.size()-1];
     sessionRecords = dd.sessionRecords;
 
@@ -188,9 +191,7 @@ void DriverData::addLap(const EventData &ed)
         //during practice and quali we only save timed laps
         if ((lastLap.lapTime.toString() != "") && (lapData.empty() ||
             (/*(lastLap.numLap > lapData.last().numLap) &&*/ lastLap.getSectorTime(1).toString() != "" && lastLap.getSectorTime(2).toString() != "" && lastLap.getSectorTime(3).toString() != "")))
-        {            
-//            std::cout<<"LASTLAP="<<lastLap.lapTime.toString().toStdString()<<std::endl;
-
+        {
         	bool correction = false;
 			//sometimes servers messes up with lap numbers, we catch this if the numlap is <= than the last one
             if (!lapData.isEmpty() && lastLap.lapNum <= lapData.last().lapNum)

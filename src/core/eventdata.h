@@ -121,7 +121,7 @@ public:
     {
         if (sector >= 1 && sector <= 3 &&
                 idx >= 0 && idx < 6)
-            return secSpeed[sector][idx];
+            return secSpeed[sector-1][idx];
 
         return SpeedRecordData();
     }
@@ -159,16 +159,27 @@ public:
     static EventData &getInstance()
     {
         static EventData ed;
+
+        if (ed.driversData.isEmpty())
+        {
+            for (int i = 0; i < LTData::ltTeams.size(); ++i)
+            {
+                ed.driversData.append(DriverData());
+                ed.driversData.append(DriverData());
+            }
+        }
+
         return ed;
     } 
 
     void clear();    
 
-    int getDriverId(QString);
-    int getDriverId(int no);
-    DriverData getDriverData(int no);
-    DriverData getDriverDataFromPos(int pos);
-    QString calculateInterval(DriverData d1, DriverData d2, int lap);
+    int getDriverId(QString) const;
+    int getDriverId(int no) const;
+    DriverData getDriverData(int no) const;
+    DriverData getDriverDataByPos(int pos) const;
+    DriverData getDriverDataById(int id) const;
+    QString calculateInterval(DriverData d1, DriverData d2, int lap) const;
 
     LTEvent getEventInfo()              const { return eventInfo; }
     void setEventInfo(LTEvent ev)       { eventInfo = ev; }
@@ -223,7 +234,7 @@ private:
     SessionRecords sessionRecords;
 
     QList<DriverData> driversData;
-    int qualiPeriod;   
+    int qualiPeriod;           
 };
 
 //extern EventData eventData;

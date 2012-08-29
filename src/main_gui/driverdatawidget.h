@@ -11,6 +11,8 @@
 #include "../core/ltdata.h"
 #include "../charts/chartwidget.h"
 
+#include "models/driverlaphistorymodel.h"
+
 namespace Ui {
 class DriverDataWidget;
 }
@@ -25,8 +27,6 @@ public:
 
     void setFont(const QFont &);
 
-    void printDriverData(int driverIdx);
-    void printDriverChart(int driverIdx);
     void updateView();
 
     int currentIndex();
@@ -37,6 +37,17 @@ public:
 
     void clearData();       
 
+public slots:
+    void updateDriverData()
+    {
+        printDriverData(currentDriver);
+    }
+
+    void printDriverData(int id);
+    void printDriverChart(int id);
+
+    void updateDriverInfo(const DriverData &);
+
 protected:
     void resizeEvent(QResizeEvent *);
     void keyPressEvent(QKeyEvent *);
@@ -45,9 +56,6 @@ private slots:
     void on_tabWidget_currentChanged(int index);
 
 private:
-
-    QTableWidgetItem* setItem(int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
-                 QColor textColor = LTData::colors[LTData::DEFAULT], QBrush background = QBrush());
 
     Ui::DriverDataWidget *ui;
 
@@ -59,6 +67,8 @@ private:
 
     bool reversedOrder;     //print lap data rows in reverse?
     EventData &eventData;
+
+    DriverLapHistoryModel *driverLapHistoryModel;
 };
 
 #endif // DRIVERDATAWIDGET_H

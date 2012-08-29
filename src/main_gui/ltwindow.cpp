@@ -55,6 +55,10 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(eventPlayer, SIGNAL(stopClicked()), this, SLOT(eventPlayerStopClicked()));
     connect(eventPlayer, SIGNAL(nextPackets(QList<Packet>)), streamReader, SLOT(parsePackets(QList<Packet>)));
 
+    connect(ui->ltWidget, SIGNAL(driverSelected(int)), ui->driverDataWidget, SLOT(printDriverData(int)));
+    connect(ui->ltWidget, SIGNAL(driverDoubleClicked(int)), this, SLOT(ltWidgetDriverSelected(int)));
+
+
     ui->messageBoardWidget->setVisible(false);
 
     QStringList args = qApp->arguments();
@@ -128,7 +132,7 @@ void LTWindow::on_eventDataChanged()
 //    if (recording)
 //        eventRecorder->updateEventData(eventData);
 
-    ui->tableWidget->updateLT();
+    ui->ltWidget->updateLT();
 }
 
 void LTWindow::on_driverDataChanged(int carID)
@@ -140,19 +144,19 @@ void LTWindow::on_driverDataChanged(int carID)
     {                
 //        eventData.driversData[dd.carID-1] = dd;
 
-        ui->tableWidget->updateLT();
+        ui->ltWidget->updateLT();
 
         //if (currDriver == (dd.carID-1))
-        for (int i = 0; i < ui->tableWidget->rowCount(); ++i)
-        {
-            QTableWidgetItem *item = ui->tableWidget->item(i, 1);
+//        for (int i = 0; i < ui->tableWidget->rowCount(); ++i)
+//        {
+//            QTableWidgetItem *item = ui->tableWidget->item(i, 1);
 
-            if (item && currDriver >= 0 && item->text().toInt() == eventData.getDriversData()[currDriver].getNumber())
-            {
-                ui->tableWidget->setCurrentCell(i, 1);
-                break;
-            }
-        }
+//            if (item && currDriver >= 0 && item->text().toInt() == eventData.getDriversData()[currDriver].getNumber())
+//            {
+//                ui->tableWidget->setCurrentCell(i, 1);
+//                break;
+//            }
+//        }
 
         ui->sessionDataWidget->updateFastestLaps();
 //        ui->tableWidget->updateLT();
@@ -160,8 +164,8 @@ void LTWindow::on_driverDataChanged(int carID)
         {
             case 0:                
 
-                if (currDriver >= 0 && currDriver == carID-1)
-                    ui->driverDataWidget->printDriverData(currDriver);
+//                if (currDriver >= 0 && currDriver == carID-1)
+                    ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
 
                 break;
 
@@ -206,8 +210,8 @@ void LTWindow::on_dataChanged()
     ui->sessionDataWidget->updateSpeedRecords();
     ui->sessionDataWidget->updatePitStops(true);
 
-    if (currDriver >= 0)
-        ui->driverDataWidget->printDriverData(currDriver);
+//    if (currDriver >= 0)
+        ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
 
     for (int i = 0; i < ltcDialog.size(); ++i)
     {
@@ -221,17 +225,17 @@ void LTWindow::on_dataChanged()
         h2hDialog[i]->updateCharts();
     }
 
-    ui->tableWidget->updateLT();
-    for (int i = 0; i < ui->tableWidget->rowCount(); ++i)
-    {
-        QTableWidgetItem *item = ui->tableWidget->item(i, 1);
+    ui->ltWidget->updateLT();
+//    for (int i = 0; i < ui->tableWidget->rowCount(); ++i)
+//    {
+//        QTableWidgetItem *item = ui->tableWidget->item(i, 1);
 
-        if (item && currDriver >= 0 && item->text().toInt() == eventData.getDriversData()[currDriver].getNumber())
-        {
-            ui->tableWidget->setCurrentCell(i, 1);
-            break;
-        }
-    }
+//        if (item && currDriver >= 0 && item->text().toInt() == eventData.getDriversData()[currDriver].getNumber())
+//        {
+//            ui->tableWidget->setCurrentCell(i, 1);
+//            break;
+//        }
+//    }
 
     if (ui->tabWidget->currentIndex() == 2)
 		ui->weatherChartsWidget->updateCharts();
@@ -240,34 +244,34 @@ void LTWindow::on_dataChanged()
         saw->update();
 }
 
-void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
-{
-    QList<DriverData> driverList = eventData.getDriversData();
-    qSort(driverList);
+//void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
+//{
+//    QList<DriverData> driverList = eventData.getDriversData();
+//    qSort(driverList);
 
-    ui->tabWidget->setCurrentIndex(0);
-    if (row-1 < driverList.size() && (row-1 >= 0))
-    {
-        DriverData dd = driverList[row-1];
-        currDriver = dd.getCarID() - 1;
+//    ui->tabWidget->setCurrentIndex(0);
+//    if (row-1 < driverList.size() && (row-1 >= 0))
+//    {
+//        DriverData dd = driverList[row-1];
+//        currDriver = dd.getCarID() - 1;
 
-        ui->driverDataWidget->printDriverData(currDriver);
-    }
-}
+//        ui->driverDataWidget->printDriverData(currDriver);
+//    }
+//}
 
-void LTWindow::on_tableWidget_cellClicked(int row, int)
-{
-    QList<DriverData> driverList = eventData.getDriversData();
-    qSort(driverList);
+//void LTWindow::on_tableWidget_cellClicked(int row, int)
+//{
+//    QList<DriverData> driverList = eventData.getDriversData();
+//    qSort(driverList);
 
-    if (row-1 < driverList.size() && (row-1 >= 0))
-    {
-        DriverData dd = driverList[row-1];
-        currDriver = dd.getCarID() - 1;
+//    if (row-1 < driverList.size() && (row-1 >= 0))
+//    {
+//        DriverData dd = driverList[row-1];
+//        currDriver = dd.getCarID() - 1;
 
-        ui->driverDataWidget->printDriverData(currDriver);
-    }
-}
+//        ui->driverDataWidget->printDriverData(currDriver);
+//    }
+//}
 
 void LTWindow::on_tabWidget_currentChanged(int index)
 {
@@ -277,7 +281,7 @@ void LTWindow::on_tabWidget_currentChanged(int index)
 //            eventData.driversData[dd.carID-1] = dd;
             ui->driverDataWidget->updateView();
             if (currDriver >= 0)// && currDriver == dd.carID-1)
-                ui->driverDataWidget->printDriverData(currDriver);
+                ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
 
             break;
 
@@ -338,7 +342,7 @@ void LTWindow::on_showNoSessionBoard(bool show, QString msg)
 {
 	if (show)
 	{
-		ui->tableWidget->clear();
+        //ui->tableWidget->clear();
 		ui->textEdit->clear();
 		ui->driverDataWidget->clearData();
 		ui->sessionDataWidget->clearData();
@@ -349,8 +353,14 @@ void LTWindow::on_showNoSessionBoard(bool show, QString msg)
 	else
 	{
 		showSessionBoard(false);
-		ui->tableWidget->updateLT();
+        ui->ltWidget->updateLT();
 	}
+}
+
+void LTWindow::ltWidgetDriverSelected(int id)
+{
+    ui->driverDataWidget->printDriverData(id);
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 void LTWindow::timeout()
@@ -438,7 +448,7 @@ void LTWindow::loadSettings()
 //    prefs->setAutoRecord(settings->value("ui/auto_record").toBool());
 
     ui->splitter->setOpaqueResize(settings->value("ui/ltresize").toBool());
-    ui->tableWidget->setAlternatingRowColors(settings->value("ui/alt_colors").toBool());
+    //ui->tableWidget->setAlternatingRowColors(settings->value("ui/alt_colors").toBool());
 
     setFonts(mainFont, commentaryFont);
 
@@ -457,7 +467,7 @@ void LTWindow::loadSettings()
 //    prefs->setReverseOrderLapTimeComparison(settings->value("ui/reversed_lap_time_comparison").toBool());
 
     ui->driverDataWidget->setReversedOrder(settings->value("ui/reversed_lap_history").toBool());
-    ui->tableWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
+    ui->ltWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
 
     eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
 
@@ -494,7 +504,7 @@ void LTWindow::on_actionPreferences_triggered()
         setFonts(prefs->getMainFont(), prefs->getCommentaryFont());
 
         ui->splitter->setOpaqueResize(prefs->isSplitterOpaqueResize());
-        ui->tableWidget->setAlternatingRowColors(prefs->isAlternatingRowColors());
+        //ui->tableWidget->setAlternatingRowColors(prefs->isAlternatingRowColors());
 
         eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
 
@@ -531,16 +541,16 @@ void LTWindow::on_actionPreferences_triggered()
                 ltcDialog[i]->updateData();
         }
 
-        if (currDriver >= 0)
-            ui->driverDataWidget->printDriverData(currDriver);
+//        if (currDriver >= 0)
+            ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
 
-        ui->tableWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
+        ui->ltWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
     }
 }
 
 void LTWindow::setFonts(const QFont &mainFont, const QFont &commentaryFont)
 {
-    ui->tableWidget->setFont(mainFont);
+    ui->ltWidget->setFont(mainFont);
     ui->driverDataWidget->setFont(mainFont);
     ui->sessionDataWidget->setFont(mainFont);
 
@@ -744,12 +754,12 @@ void LTWindow::on_actionOpen_triggered()
 
         showSessionBoard(false);
 
-        ui->tableWidget->clear();
+        //ui->tableWidget->clear();
         ui->textEdit->clear();
         ui->driverDataWidget->clearData();
         ui->sessionDataWidget->clearData();        
 
-        ui->tableWidget->loadCarImages();
+        ui->ltWidget->loadCarImages();
         for (int i = 0; i < h2hDialog.size(); ++i)
             h2hDialog[i]->loadCarImages();
 
@@ -807,7 +817,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
     eventPlayerAction->setVisible(false);
     ui->actionRecord->setVisible(true);
     ui->actionStop_recording->setVisible(true);
-    ui->tableWidget->clear();
+    //ui->tableWidget->clear();
     ui->driverDataWidget->clearData();
     ui->sessionDataWidget->clearData();
     ui->textEdit->clear();
@@ -816,7 +826,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
     playing = false;
     LTData::loadLTData();
 
-    ui->tableWidget->loadCarImages();
+    ui->ltWidget->loadCarImages();
     for (int i = 0; i < h2hDialog.size(); ++i)
         h2hDialog[i]->loadCarImages();
 

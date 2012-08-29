@@ -11,7 +11,10 @@ void Weather::saveWeatherData(const EventData &ed)
     wd.qPeriod = ed.getQualiPeriod();
 
     for (int i = 0; i < 7; ++i)
-        weatherData[i].append(currentWeather[i]);
+    {
+        wd.value = currentWeather[i].value;
+        weatherData[i].append(wd);
+    }
 }
 
 EventData::EventData()
@@ -44,6 +47,7 @@ void EventData::clear()
     lapsCompleted = 0;
 
     weather = Weather();
+    sessionRecords = SessionRecords();
 
     flagStatus = LTData::GREEN_FLAG;
 
@@ -59,7 +63,7 @@ void EventData::clear()
     }
 }
 
-int EventData::getDriverId(QString name)
+int EventData::getDriverId(QString name) const
 {
     for (int i = 0; i < driversData.size(); ++i)
     {
@@ -69,7 +73,7 @@ int EventData::getDriverId(QString name)
     return -1;
 }
 
-int EventData::getDriverId(int no)
+int EventData::getDriverId(int no) const
 {
     for (int i = 0; i < driversData.size(); ++i)
     {
@@ -79,16 +83,15 @@ int EventData::getDriverId(int no)
     return -1;
 }
 
-DriverData EventData::getDriverData(int no)
+DriverData EventData::getDriverData(int no) const
 {
 	int id = getDriverId(no);
 	if (id > 0 && id <= driversData.size())
 		return driversData[id-1];
 
-
     return DriverData();
 }
-DriverData EventData::getDriverDataFromPos(int pos)
+DriverData EventData::getDriverDataByPos(int pos) const
 {
 	for (int i = 0; i < driversData.size(); ++i)
 	{
@@ -99,7 +102,15 @@ DriverData EventData::getDriverDataFromPos(int pos)
     return DriverData();
 }
 
-QString EventData::calculateInterval(DriverData d1, DriverData d2, int lap)
+DriverData EventData::getDriverDataById(int id) const
+{
+    if (id > 0 && id <= driversData.size())
+        return driversData[id-1];
+
+    return DriverData();
+}
+
+QString EventData::calculateInterval(DriverData d1, DriverData d2, int lap) const
 {
 	LapData ld1 = d1.getLapData(lap);
 	LapData ld2 = d2.getLapData(lap);

@@ -8,6 +8,8 @@
 #include <QTableWidgetItem>
 
 #include "../core/eventdata.h"
+#include "models/fastestlapsmodel.h"
+#include "models/speedrecordsmodel.h"
 
 namespace Ui {
 class SessionDataWidget;
@@ -67,6 +69,8 @@ private:
     };
 
     QList< PitStopAtom > getPitstops(const QList<DriverData> &driversData);
+    SpeedRecordsModel speedRecordsModel;
+    FastestLapsModel fastestLapsModel;
 };
 
 #endif // SESSIONDATAWIDGET_H

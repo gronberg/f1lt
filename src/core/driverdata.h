@@ -110,23 +110,23 @@ public:
 
     QPair<LapTime, int> getBestSector(int idx)
     {
-        if (idx >= 0 && idx < 3)
-            return bestSectors[idx];
+        if (idx >= 1 && idx <= 3)
+            return bestSectors[idx-1];
 
         return QPair<LapTime, int>();
     }
 
     int getBestSectorLapNumber(int idx)
     {
-        if (idx >= 0 && idx < 3)
-            return bestSectors[idx].second;
+        if (idx >= 1 && idx <= 3)
+            return bestSectors[idx-1].second;
 
         return 0;
     }
     LapTime getBestSectorTime(int idx)
     {
-        if (idx >= 0 && idx < 3)
-            return bestSectors[idx].first;
+        if (idx >= 1 && idx <= 3)
+            return bestSectors[idx-1].first;
 
         return LapTime();
     }
@@ -167,7 +167,7 @@ public:
     int getPosition()           const { return pos; }
 
     const QList<LapData> &getLapData() const { return lapData; }
-    QList<int> &getPositionHistory()  { return posHistory; }
+    const QList<int> &getPositionHistory()  const { return posHistory; }
     QList<PitData> getPitStops() const { return pitData; }
 
     ColorData getColorData()    const { return colorData; }
@@ -254,7 +254,7 @@ public:
         sessionRecords.bestLap.sectorTimes[2] = LapTime();
     }
 
-    QString getPitTime(int lap)
+    QString getPitTime(int lap) const
     {
         for (int i = 0; i < pitData.size(); ++i)
         {

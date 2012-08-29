@@ -15,7 +15,7 @@
 #include "../tools/headtoheaddialog.h"
 #include "../tools/laptimecomparisondialog.h"
 #include "logindialog.h"
-#include "lttablewidget.h"
+//#include "lttablewidget.h"
 #include "preferencesdialog.h"
 #include "../tools/sessionanalysiswidget.h"
 
@@ -48,6 +48,8 @@ public slots:
     void eventPlayerRewindClicked();
     void eventPlayerStopClicked(bool connect = true);
 
+    void ltWidgetDriverSelected(int id);
+
 private slots:
     void on_authorized(QString);
     void on_authorizationError();
@@ -62,8 +64,8 @@ private slots:
     void on_showNoSessionBoard(bool, QString);
 
     void timeout();
-    void on_tableWidget_cellDoubleClicked(int row, int column);
-    void on_tableWidget_cellClicked(int row, int);
+//    void on_tableWidget_cellDoubleClicked(int row, int column);
+//    void on_tableWidget_cellClicked(int row, int);
     void on_tabWidget_currentChanged(int index);
 
     void on_actionHead_to_head_triggered();

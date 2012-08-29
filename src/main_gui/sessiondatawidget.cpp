@@ -2,9 +2,12 @@
 #include "ui_sessiondatawidget.h"
 
 #include <QClipboard>
+#include <QDebug>
 #include <QLabel>
 #include <QPair>
 #include <QResizeEvent>
+
+#include "ltitemdelegate.h"
 
 SessionDataWidget::SessionDataWidget(QWidget *parent) :
     QWidget(parent), ui(new Ui::SessionDataWidget), eventData(EventData::getInstance())
@@ -30,6 +33,18 @@ SessionDataWidget::SessionDataWidget(QWidget *parent) :
             ui->tableWidget_5->insertRow(i);
 
     }
+    ui->speedRecordsTable->setModel(&speedRecordsModel);
+    ui->fastestLapsTable->setModel(&fastestLapsModel);
+
+    ui->speedRecordsTable->setItemDelegate(new LTItemDelegate(this));
+    ui->fastestLapsTable->setItemDelegate(new LTItemDelegate(this));
+
+    for (int i = 0; i < speedRecordsModel.rowCount(); ++i)
+        ui->speedRecordsTable->setRowHeight(i, 22);
+
+    for (int i = 0; i < fastestLapsModel.rowCount(); ++i)
+        ui->fastestLapsTable->setRowHeight(i, 22);
+
     setupContents();
 }
 
@@ -121,7 +136,7 @@ void SessionDataWidget::updateData()
         case 0:
             updateEventInfo();
         case 2:
-            updateSpeedRecords();
+            updateSpeedRecords();            
             break;
 
 //        case 1:
@@ -188,6 +203,7 @@ void SessionDataWidget::updateEventInfo()
 
 void SessionDataWidget::updateSpeedRecords()
 {
+    speedRecordsModel.update();
     for (int i = 0, j = 0; i < 6; i+=1, j++)
     {
         setItem(ui->tableWidget_2, 1+i, 0, eventData.getSessionRecords().getSectorSpeed(1, j).getDriverName(),
@@ -218,6 +234,8 @@ void SessionDataWidget::updateSpeedRecords()
 
 void SessionDataWidget::updateFastestLaps()
 {
+    fastestLapsModel.update();
+
     for (int i = 0; i < eventData.getDriversData().size() && i < bestLaps.size(); ++i)
     {
         if (eventData.getDriversData()[i].getSessionRecords().getBestLap().getTime().isValid())
@@ -268,9 +286,8 @@ void SessionDataWidget::updateFastestLaps()
     setItem(ui->tableWidget_3, 1, 3, eventData.getSessionRecords().getSectorRecord(1).getDriverName(), Qt::NoItemFlags, Qt::AlignVCenter | Qt::AlignLeft, LTData::colors[LTData::WHITE]);
     ui->tableWidget_3->setSpan(1, 3, 1, 3);
 
-    str = "";
-    bool ok;
-    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(1).getLapNumber() > -1) && ok)
+    str = "";    
+    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(1).getLapNumber() > -1))
         str = QString("L%1").arg(eventData.getSessionRecords().getSectorRecord(1).getLapNumber());
 
     else if (eventData.getEventType() != LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(1).getSessionTime().isValid())
@@ -286,7 +303,7 @@ void SessionDataWidget::updateFastestLaps()
     ui->tableWidget_3->setSpan(2, 3, 1, 3);
 
     str = "";
-    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(2).getLapNumber() > -1) && ok)
+    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(2).getLapNumber() > -1))
         str = QString("L%1").arg(eventData.getSessionRecords().getSectorRecord(2).getLapNumber());
 
     else if (eventData.getEventType() != LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(2).getSessionTime().isValid())
@@ -301,7 +318,7 @@ void SessionDataWidget::updateFastestLaps()
     ui->tableWidget_3->setSpan(3, 3, 1, 3);
 
     str = "";
-    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(3).getLapNumber() > -1) && ok)
+    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(3).getLapNumber() > -1))
         str = QString("L%1").arg(eventData.getSessionRecords().getSectorRecord(3).getLapNumber());
 
     else if (eventData.getEventType() != LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(3).getSessionTime().isValid())
@@ -487,6 +504,17 @@ void SessionDataWidget::on_tabWidget_currentChanged(int index)
             ui->tableWidget_3->setColumnWidth(5, 0.1 * w);
             ui->tableWidget_3->setColumnWidth(6, 0.1 * w);
             ui->tableWidget_3->setColumnWidth(7, 0.12 * w);
+
+            w = ui->fastestLapsTable->viewport()->width();
+            ui->fastestLapsTable->setColumnWidth(0, 0.06 * w);
+            ui->fastestLapsTable->setColumnWidth(1, 0.24 * w);
+            ui->fastestLapsTable->setColumnWidth(2, 0.16 * w);
+            ui->fastestLapsTable->setColumnWidth(3, 0.12 * w);
+            ui->fastestLapsTable->setColumnWidth(4, 0.1 * w);
+            ui->fastestLapsTable->setColumnWidth(5, 0.1 * w);
+            ui->fastestLapsTable->setColumnWidth(6, 0.1 * w);
+            ui->fastestLapsTable->setColumnWidth(7, 0.12 * w);
+
             break;
 
         case 2:
@@ -498,6 +526,13 @@ void SessionDataWidget::on_tabWidget_currentChanged(int index)
             ui->tableWidget_2->setColumnWidth(2, 0.09 * w);
             ui->tableWidget_2->setColumnWidth(3, 0.34 * w);
             ui->tableWidget_2->setColumnWidth(4, 0.11 * w);
+
+            w = ui->speedRecordsTable->viewport()->width();
+            ui->speedRecordsTable->setColumnWidth(0, 0.34 * w);
+            ui->speedRecordsTable->setColumnWidth(1, 0.11 * w);
+            ui->speedRecordsTable->setColumnWidth(2, 0.09 * w);
+            ui->speedRecordsTable->setColumnWidth(3, 0.34 * w);
+            ui->speedRecordsTable->setColumnWidth(4, 0.11 * w);
             break;
 
         case 3:
@@ -524,6 +559,8 @@ void SessionDataWidget::setFont(const QFont &font)
     ui->tableWidget_2->setFont(font);
     ui->tableWidget_3->setFont(font);
     ui->tableWidget_4->setFont(font);
+    ui->speedRecordsTable->setFont(font);
+    ui->fastestLapsTable->setFont(font);
 }
 
 int SessionDataWidget::currentIndex()
