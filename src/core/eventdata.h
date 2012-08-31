@@ -88,6 +88,7 @@ public:
     LapTime getTime()       const { return lapTime; }
     int getLapNumber()      const { return lapNum; }
     QTime getSessionTime()  const { return sessionTime; }
+    int getQualiPeriod()    const { return qPeriod; }
 
     friend class EventData;
     friend class PacketParser;
@@ -98,6 +99,7 @@ private:
     LapTime lapTime;
     int lapNum;
     QTime sessionTime;
+    int qPeriod;
 };
 
 class SpeedRecordData
@@ -188,6 +190,7 @@ public:
     LTData::FlagStatus getFlagStatus()  const { return flagStatus; }
 
     QTime getRemainingTime()            const { return remainingTime; }
+    void setRemainingTime(QTime t)       { remainingTime = t; }
     int getCompletedLaps()              const { return lapsCompleted; }
     Weather getWeather()                const { return weather; }
     void saveWeather()                  { weather.saveWeatherData(*this); }

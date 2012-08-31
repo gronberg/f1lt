@@ -31,7 +31,6 @@ void DriverLapHistoryModel::update(const DriverData &dd)
     }
     else if (laps < rows)
     {
-        qDebug () << "removing " << rows - laps - 1 << "rows";
         removeRows(laps + 1, rows - laps - 1);
         rows = laps + 1;
     }
@@ -141,6 +140,9 @@ QVariant DriverLapHistoryModel::getLapTime(const LapData &ld, int role) const
         color = LTData::colors[LTData::PIT];
         s = QString("IN PIT (%1)").arg(driverData.getPitTime(ld.getLapNumber()));
     }
+
+    if (ld.getTime().toString() == "RETIRED")
+        color = LTData::colors[LTData::PIT];
 
     if ((EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT && ld.getPracticeLapExtraData().isApproxLap()) ||
         (EventData::getInstance().getEventType() == LTData::QUALI_EVENT && ld.getQualiLapExtraData().isApproxLap()))

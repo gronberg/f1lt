@@ -64,7 +64,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/models/driverlaphistorymodel.cpp \
     src/main_gui/ltitemdelegate.cpp \
     src/main_gui/models/speedrecordsmodel.cpp \
-    src/main_gui/models/fastestlapsmodel.cpp
+    src/main_gui/models/fastestlapsmodel.cpp \
+    src/main_gui/models/pitstopsmodel.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -102,7 +103,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/models/driverlaphistorymodel.h \
     src/main_gui/ltitemdelegate.h \
     src/main_gui/models/speedrecordsmodel.h \
-    src/main_gui/models/fastestlapsmodel.h
+    src/main_gui/models/fastestlapsmodel.h \
+    src/main_gui/models/pitstopsmodel.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

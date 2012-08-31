@@ -48,6 +48,9 @@ public:
 
     bool printDiff(int row, int col) { }
 
+    void clearData();
+
+
 protected:
     virtual void resizeEvent(QResizeEvent *);
     

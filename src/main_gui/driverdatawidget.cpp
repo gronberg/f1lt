@@ -124,10 +124,19 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
     if (eventData.getEventType() == LTData::RACE_EVENT)
     {
-        s = driverData.getLastLap().getTime().toString();
-        if (driverData.getLastLap().getTime() != driverData.getSessionRecords().getBestLap().getTime() &&
-            driverData.getLastLap().getTime().isValid())
-            s += " (+" + DriverData::calculateGap(driverData.getLastLap().getTime(), driverData.getSessionRecords().getBestLap().getTime()) + ")";
+        LapTime lt = driverData.getLastLap().getTime();
+        s = lt.toString();
+        if (lt != driverData.getSessionRecords().getBestLap().getTime() &&
+            lt.isValid())
+            s += " (+" + DriverData::calculateGap(lt, driverData.getSessionRecords().getBestLap().getTime()) + ")";
+
+        QPalette palette = ui->lastLapLabel->palette();
+        if (lt.toString() == "RETIRED" || lt.toString() == "IN PIT" || lt.toString() == "OUT")
+            palette.setBrush(QPalette::Foreground, LTData::colors[LTData::RED]);
+        else
+            palette.setBrush(QPalette::Foreground, LTData::colors[LTData::WHITE]);
+
+        ui->lastLapLabel->setPalette(palette);
     }
     else
     {
@@ -138,8 +147,7 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
         s = lt.toString();
 
         if (lt.isValid() && lt != driverData.getSessionRecords().getBestLap().getTime())
-            s += " (+" + DriverData::calculateGap(lt, driverData.getSessionRecords().getBestLap().getTime()) + ")";
-
+            s += " (+" + DriverData::calculateGap(lt, driverData.getSessionRecords().getBestLap().getTime()) + ")";        
     }
 
     ui->lastLapLabel->setText(s);

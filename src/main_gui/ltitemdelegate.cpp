@@ -1,4 +1,5 @@
 #include "ltitemdelegate.h"
+#include <QDebug>
 
 #include <QPainter>
 
@@ -25,7 +26,8 @@ QPixmap LTMainItemDelegate::getCarImage(const DriverData &dd) const
     {
         int idx = (dd.getNumber() > 13 ? dd.getNumber()-2 : dd.getNumber()-1) / 2;
 
-        return (*carImg)[idx];
+        if (idx >= 0 && idx < carImg->size())
+            return (*carImg)[idx];
     }
     return QPixmap();
 }

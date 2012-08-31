@@ -18,6 +18,8 @@ public:
     QVariant headerData(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
     void update();
+
+    QList<LapData> &getFastestLaps() { return fastestLaps; }
     
 signals:
     

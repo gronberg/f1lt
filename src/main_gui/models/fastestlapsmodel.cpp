@@ -45,10 +45,16 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
     {
         case 0:
             if (role == Qt::DisplayRole)
-                return QString("%1.").arg(index.row());
+            {
+                if (ld.getTime().isValid())
+                    return QString("%1.").arg(index.row());
+            }
 
             if (role == Qt::ForegroundRole)
                 return LTData::colors[LTData::CYAN];
+
+            if (role == Qt::TextAlignmentRole)
+                return (int)(Qt::AlignVCenter | Qt::AlignRight);
 
             return QVariant();
 
@@ -100,12 +106,13 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
 
             if (role == Qt::ForegroundRole)
             {
-                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(1))
-                    return LTData::colors[LTData::GREEN];
-
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getLapNumber() &&
                     dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getDriverName())
                     return LTData::colors[LTData::VIOLET];
+
+
+                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(1))
+                    return LTData::colors[LTData::GREEN];
 
                 return LTData::colors[LTData::WHITE];
             }
@@ -119,12 +126,12 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
 
             if (role == Qt::ForegroundRole)
             {
-                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(2))
-                    return LTData::colors[LTData::GREEN];
-
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getLapNumber() &&
                     dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getDriverName())
                     return LTData::colors[LTData::VIOLET];
+
+                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(2))
+                    return LTData::colors[LTData::GREEN];                
 
                 return LTData::colors[LTData::WHITE];
             }
@@ -138,12 +145,12 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
 
             if (role == Qt::ForegroundRole)
             {
-                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(3))
-                    return LTData::colors[LTData::GREEN];
-
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getLapNumber() &&
                     dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getDriverName())
                     return LTData::colors[LTData::VIOLET];
+
+                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(3))
+                    return LTData::colors[LTData::GREEN];                
 
                 return LTData::colors[LTData::WHITE];
             }
@@ -153,7 +160,15 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
 
         case 7:
             if (role == Qt::DisplayRole)
-                return ld.getLapNumber();
+            {
+                if (ld.getTime().isValid())
+                {
+                    if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
+                        return QString("%1 (Q%2)").arg(ld.getLapNumber()).arg(ld.getQualiLapExtraData().getQualiPeriod());
+
+                    return ld.getLapNumber();
+                }
+            }
 
             if (role == Qt::ForegroundRole)
                 return LTData::colors[LTData::WHITE];
@@ -188,7 +203,7 @@ QVariant FastestLapsModel::headerData(const QModelIndex & index, int role) const
         if (index.column() >= 2 && index.column() <= 6)
             return (int)(Qt::AlignCenter);
 
-        if (index.column() == 7)
+        if (index.column() == 0 || index.column() == 7)
             return (int)(Qt::AlignVCenter | Qt::AlignRight);
     }
 

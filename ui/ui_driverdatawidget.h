@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'driverdatawidget.ui'
 **
-** Created: Wed Aug 29 18:29:21 2012
+** Created: Fri Aug 31 16:18:36 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -38,21 +38,21 @@ public:
     QVBoxLayout *verticalLayout;
     QWidget *infoWidget;
     QGridLayout *gridLayout;
-    QLabel *label_5;
-    QLabel *driverNameLabel;
-    QLabel *bestLapLabel;
-    QLabel *label_4;
-    QLabel *pitStopsLabel;
-    QLabel *gridLabel;
-    QLabel *currentPositionLabel;
     QLabel *gridPositionLabel;
-    QLabel *label_3;
     QLabel *gapLabel;
-    QLabel *lastLapLabel;
     QLabel *label;
-    QLabel *label_2;
+    QLabel *lastLapLabel;
+    QLabel *label_4;
+    QLabel *gridLabel;
     QLabel *numPitsLabel;
+    QLabel *label_5;
+    QLabel *bestLapLabel;
+    QLabel *currentPositionLabel;
+    QLabel *pitStopsLabel;
+    QLabel *label_3;
     QLabel *carImageLabel;
+    QLabel *label_2;
+    QLabel *driverNameLabel;
     QTableView *tableView;
     QWidget *tab_3;
     QVBoxLayout *verticalLayout_4;
@@ -113,167 +113,146 @@ public:
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setHorizontalSpacing(20);
         gridLayout->setVerticalSpacing(6);
-        label_5 = new QLabel(infoWidget);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
+        gridPositionLabel = new QLabel(infoWidget);
+        gridPositionLabel->setObjectName(QString::fromUtf8("gridPositionLabel"));
         QPalette palette1;
-        QBrush brush2(QColor(150, 150, 150, 255));
+        QBrush brush2(QColor(255, 255, 0, 255));
         brush2.setStyle(Qt::SolidPattern);
         palette1.setBrush(QPalette::Active, QPalette::WindowText, brush2);
         palette1.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
         QBrush brush3(QColor(130, 130, 130, 255));
         brush3.setStyle(Qt::SolidPattern);
         palette1.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        label_5->setPalette(palette1);
-        label_5->setAlignment(Qt::AlignCenter);
+        gridPositionLabel->setPalette(palette1);
+        gridPositionLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(label_5, 9, 0, 1, 4);
+        gridLayout->addWidget(gridPositionLabel, 5, 1, 1, 1);
 
-        driverNameLabel = new QLabel(infoWidget);
-        driverNameLabel->setObjectName(QString::fromUtf8("driverNameLabel"));
+        gapLabel = new QLabel(infoWidget);
+        gapLabel->setObjectName(QString::fromUtf8("gapLabel"));
         QPalette palette2;
-        QBrush brush4(QColor(220, 220, 220, 255));
-        brush4.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Active, QPalette::WindowText, brush4);
-        palette2.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette2.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette2.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
         palette2.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        driverNameLabel->setPalette(palette2);
-        driverNameLabel->setAlignment(Qt::AlignCenter);
+        gapLabel->setPalette(palette2);
+        gapLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(driverNameLabel, 2, 0, 1, 4);
+        gridLayout->addWidget(gapLabel, 8, 1, 1, 1);
 
-        bestLapLabel = new QLabel(infoWidget);
-        bestLapLabel->setObjectName(QString::fromUtf8("bestLapLabel"));
+        label = new QLabel(infoWidget);
+        label->setObjectName(QString::fromUtf8("label"));
         QPalette palette3;
-        QBrush brush5(QColor(0, 255, 0, 255));
-        brush5.setStyle(Qt::SolidPattern);
-        palette3.setBrush(QPalette::Active, QPalette::WindowText, brush5);
-        palette3.setBrush(QPalette::Inactive, QPalette::WindowText, brush5);
+        QBrush brush4(QColor(150, 150, 150, 255));
+        brush4.setStyle(Qt::SolidPattern);
+        palette3.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette3.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
         palette3.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        bestLapLabel->setPalette(palette3);
-        bestLapLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label->setPalette(palette3);
 
-        gridLayout->addWidget(bestLapLabel, 6, 3, 1, 1);
+        gridLayout->addWidget(label, 7, 0, 1, 1);
+
+        lastLapLabel = new QLabel(infoWidget);
+        lastLapLabel->setObjectName(QString::fromUtf8("lastLapLabel"));
+        QPalette palette4;
+        QBrush brush5(QColor(220, 220, 220, 255));
+        brush5.setStyle(Qt::SolidPattern);
+        palette4.setBrush(QPalette::Active, QPalette::WindowText, brush5);
+        palette4.setBrush(QPalette::Inactive, QPalette::WindowText, brush5);
+        palette4.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        lastLapLabel->setPalette(palette4);
+        lastLapLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(lastLapLabel, 5, 3, 1, 1);
 
         label_4 = new QLabel(infoWidget);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        QPalette palette4;
-        palette4.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette4.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette4.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        label_4->setPalette(palette4);
-
-        gridLayout->addWidget(label_4, 6, 2, 1, 1);
-
-        pitStopsLabel = new QLabel(infoWidget);
-        pitStopsLabel->setObjectName(QString::fromUtf8("pitStopsLabel"));
         QPalette palette5;
-        palette5.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette5.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette5.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette5.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
         palette5.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        pitStopsLabel->setPalette(palette5);
+        label_4->setPalette(palette5);
 
-        gridLayout->addWidget(pitStopsLabel, 7, 2, 1, 1);
+        gridLayout->addWidget(label_4, 7, 2, 1, 1);
 
         gridLabel = new QLabel(infoWidget);
         gridLabel->setObjectName(QString::fromUtf8("gridLabel"));
         QPalette palette6;
-        palette6.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette6.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette6.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette6.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
         palette6.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
         gridLabel->setPalette(palette6);
 
-        gridLayout->addWidget(gridLabel, 4, 0, 1, 1);
+        gridLayout->addWidget(gridLabel, 5, 0, 1, 1);
 
-        currentPositionLabel = new QLabel(infoWidget);
-        currentPositionLabel->setObjectName(QString::fromUtf8("currentPositionLabel"));
+        numPitsLabel = new QLabel(infoWidget);
+        numPitsLabel->setObjectName(QString::fromUtf8("numPitsLabel"));
         QPalette palette7;
-        QBrush brush6(QColor(0, 255, 255, 255));
+        QBrush brush6(QColor(255, 0, 0, 255));
         brush6.setStyle(Qt::SolidPattern);
         palette7.setBrush(QPalette::Active, QPalette::WindowText, brush6);
         palette7.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
         palette7.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        currentPositionLabel->setPalette(palette7);
+        numPitsLabel->setPalette(palette7);
+        numPitsLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(numPitsLabel, 8, 3, 1, 1);
+
+        label_5 = new QLabel(infoWidget);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        QPalette palette8;
+        palette8.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette8.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette8.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        label_5->setPalette(palette8);
+        label_5->setAlignment(Qt::AlignCenter);
+
+        gridLayout->addWidget(label_5, 10, 0, 1, 4);
+
+        bestLapLabel = new QLabel(infoWidget);
+        bestLapLabel->setObjectName(QString::fromUtf8("bestLapLabel"));
+        QPalette palette9;
+        QBrush brush7(QColor(0, 255, 0, 255));
+        brush7.setStyle(Qt::SolidPattern);
+        palette9.setBrush(QPalette::Active, QPalette::WindowText, brush7);
+        palette9.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
+        palette9.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        bestLapLabel->setPalette(palette9);
+        bestLapLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(bestLapLabel, 7, 3, 1, 1);
+
+        currentPositionLabel = new QLabel(infoWidget);
+        currentPositionLabel->setObjectName(QString::fromUtf8("currentPositionLabel"));
+        QPalette palette10;
+        QBrush brush8(QColor(0, 255, 255, 255));
+        brush8.setStyle(Qt::SolidPattern);
+        palette10.setBrush(QPalette::Active, QPalette::WindowText, brush8);
+        palette10.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
+        palette10.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        currentPositionLabel->setPalette(palette10);
         currentPositionLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout->addWidget(currentPositionLabel, 6, 1, 1, 1);
+        gridLayout->addWidget(currentPositionLabel, 7, 1, 1, 1);
 
-        gridPositionLabel = new QLabel(infoWidget);
-        gridPositionLabel->setObjectName(QString::fromUtf8("gridPositionLabel"));
-        QPalette palette8;
-        QBrush brush7(QColor(255, 255, 0, 255));
-        brush7.setStyle(Qt::SolidPattern);
-        palette8.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette8.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette8.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        gridPositionLabel->setPalette(palette8);
-        gridPositionLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        gridLayout->addWidget(gridPositionLabel, 4, 1, 1, 1);
-
-        label_3 = new QLabel(infoWidget);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        QPalette palette9;
-        palette9.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette9.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette9.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        label_3->setPalette(palette9);
-
-        gridLayout->addWidget(label_3, 4, 2, 1, 1);
-
-        gapLabel = new QLabel(infoWidget);
-        gapLabel->setObjectName(QString::fromUtf8("gapLabel"));
-        QPalette palette10;
-        palette10.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette10.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette10.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        gapLabel->setPalette(palette10);
-        gapLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        gridLayout->addWidget(gapLabel, 7, 1, 1, 1);
-
-        lastLapLabel = new QLabel(infoWidget);
-        lastLapLabel->setObjectName(QString::fromUtf8("lastLapLabel"));
+        pitStopsLabel = new QLabel(infoWidget);
+        pitStopsLabel->setObjectName(QString::fromUtf8("pitStopsLabel"));
         QPalette palette11;
         palette11.setBrush(QPalette::Active, QPalette::WindowText, brush4);
         palette11.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
         palette11.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        lastLapLabel->setPalette(palette11);
-        lastLapLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        pitStopsLabel->setPalette(palette11);
 
-        gridLayout->addWidget(lastLapLabel, 4, 3, 1, 1);
+        gridLayout->addWidget(pitStopsLabel, 8, 2, 1, 1);
 
-        label = new QLabel(infoWidget);
-        label->setObjectName(QString::fromUtf8("label"));
+        label_3 = new QLabel(infoWidget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
         QPalette palette12;
-        palette12.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette12.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette12.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette12.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
         palette12.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        label->setPalette(palette12);
+        label_3->setPalette(palette12);
 
-        gridLayout->addWidget(label, 6, 0, 1, 1);
-
-        label_2 = new QLabel(infoWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        QPalette palette13;
-        palette13.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette13.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette13.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        label_2->setPalette(palette13);
-
-        gridLayout->addWidget(label_2, 7, 0, 1, 1);
-
-        numPitsLabel = new QLabel(infoWidget);
-        numPitsLabel->setObjectName(QString::fromUtf8("numPitsLabel"));
-        QPalette palette14;
-        QBrush brush8(QColor(255, 0, 0, 255));
-        brush8.setStyle(Qt::SolidPattern);
-        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush8);
-        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
-        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        numPitsLabel->setPalette(palette14);
-        numPitsLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        gridLayout->addWidget(numPitsLabel, 7, 3, 1, 1);
+        gridLayout->addWidget(label_3, 5, 2, 1, 1);
 
         carImageLabel = new QLabel(infoWidget);
         carImageLabel->setObjectName(QString::fromUtf8("carImageLabel"));
@@ -285,7 +264,28 @@ public:
         carImageLabel->setMinimumSize(QSize(0, 80));
         carImageLabel->setAlignment(Qt::AlignCenter);
 
-        gridLayout->addWidget(carImageLabel, 1, 0, 1, 4);
+        gridLayout->addWidget(carImageLabel, 2, 0, 1, 4);
+
+        label_2 = new QLabel(infoWidget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        QPalette palette13;
+        palette13.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette13.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette13.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        label_2->setPalette(palette13);
+
+        gridLayout->addWidget(label_2, 8, 0, 1, 1);
+
+        driverNameLabel = new QLabel(infoWidget);
+        driverNameLabel->setObjectName(QString::fromUtf8("driverNameLabel"));
+        QPalette palette14;
+        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush5);
+        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush5);
+        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        driverNameLabel->setPalette(palette14);
+        driverNameLabel->setAlignment(Qt::AlignCenter);
+
+        gridLayout->addWidget(driverNameLabel, 1, 0, 1, 4);
 
 
         verticalLayout->addWidget(infoWidget);
@@ -428,21 +428,21 @@ public:
     void retranslateUi(QWidget *DriverDataWidget)
     {
         DriverDataWidget->setWindowTitle(QApplication::translate("DriverDataWidget", "Form", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("DriverDataWidget", "Lap history", 0, QApplication::UnicodeUTF8));
-        driverNameLabel->setText(QApplication::translate("DriverDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        bestLapLabel->setText(QApplication::translate("DriverDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("DriverDataWidget", "Best lap:", 0, QApplication::UnicodeUTF8));
-        pitStopsLabel->setText(QApplication::translate("DriverDataWidget", "Pit stops:", 0, QApplication::UnicodeUTF8));
-        gridLabel->setText(QApplication::translate("DriverDataWidget", "Grid position:", 0, QApplication::UnicodeUTF8));
-        currentPositionLabel->setText(QApplication::translate("DriverDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        gridPositionLabel->setText(QApplication::translate("DriverDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("DriverDataWidget", "Last lap:", 0, QApplication::UnicodeUTF8));
-        gapLabel->setText(QApplication::translate("DriverDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        lastLapLabel->setText(QApplication::translate("DriverDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
+        gridPositionLabel->setText(QString());
+        gapLabel->setText(QString());
         label->setText(QApplication::translate("DriverDataWidget", "Current position:", 0, QApplication::UnicodeUTF8));
+        lastLapLabel->setText(QString());
+        label_4->setText(QApplication::translate("DriverDataWidget", "Best lap:", 0, QApplication::UnicodeUTF8));
+        gridLabel->setText(QApplication::translate("DriverDataWidget", "Grid position:", 0, QApplication::UnicodeUTF8));
+        numPitsLabel->setText(QString());
+        label_5->setText(QApplication::translate("DriverDataWidget", "Lap history", 0, QApplication::UnicodeUTF8));
+        bestLapLabel->setText(QString());
+        currentPositionLabel->setText(QString());
+        pitStopsLabel->setText(QApplication::translate("DriverDataWidget", "Pit stops:", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("DriverDataWidget", "Last lap:", 0, QApplication::UnicodeUTF8));
+        carImageLabel->setText(QString());
         label_2->setText(QApplication::translate("DriverDataWidget", "Gap to leader:", 0, QApplication::UnicodeUTF8));
-        numPitsLabel->setText(QApplication::translate("DriverDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        carImageLabel->setText(QApplication::translate("DriverDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
+        driverNameLabel->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("DriverDataWidget", "Lap history", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("DriverDataWidget", "Lap time chart", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("DriverDataWidget", "Position && gap charts", 0, QApplication::UnicodeUTF8));

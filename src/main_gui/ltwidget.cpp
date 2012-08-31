@@ -17,6 +17,7 @@ LTWidget::LTWidget(QWidget *parent) :
     ltModel(0)
 {
     ui->setupUi(this);
+    loadCarImages();
     itemDelegate = new LTMainItemDelegate(ui->tableView, &carImg, drawCarThumbnails);
     ui->tableView->setItemDelegate(itemDelegate);
 
@@ -28,6 +29,15 @@ LTWidget::~LTWidget()
     if (ltModel)
         delete ltModel;
     delete ui;
+}
+
+void LTWidget::clearData()
+{
+    if (ltModel)
+    {
+        delete ltModel;
+        ltModel = 0;
+    }
 }
 
 void LTWidget::loadCarImages()
@@ -48,7 +58,7 @@ void LTWidget::setFont(const QFont &font)
 
 void LTWidget::updateLT()
 {
-    if (eventType != eventData.getEventType())
+    if (eventType != eventData.getEventType() || !ltModel)
     {
         if (ltModel)
             delete ltModel;

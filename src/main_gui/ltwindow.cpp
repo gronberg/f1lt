@@ -404,7 +404,7 @@ void LTWindow::timeout()
                     }
                 }
             }
-            eventData.getRemainingTime() = QTime(hours, mins, secs);
+            eventData.setRemainingTime(QTime(hours, mins, secs));
 //            ui->trackStatusWidget->updateTrackStatus(eventData);
             ui->eventStatusWidget->updateEventStatus();
         }
@@ -818,6 +818,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
     ui->actionRecord->setVisible(true);
     ui->actionStop_recording->setVisible(true);
     //ui->tableWidget->clear();
+    ui->ltWidget->clearData();
     ui->driverDataWidget->clearData();
     ui->sessionDataWidget->clearData();
     ui->textEdit->clear();

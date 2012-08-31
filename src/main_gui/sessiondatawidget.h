@@ -9,6 +9,7 @@
 
 #include "../core/eventdata.h"
 #include "models/fastestlapsmodel.h"
+#include "models/pitstopsmodel.h"
 #include "models/speedrecordsmodel.h"
 
 namespace Ui {
@@ -50,27 +51,13 @@ private:
     QTableWidgetItem* setItem(QTableWidget *table, int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
                  QColor textColor = LTData::colors[LTData::DEFAULT], QBrush background = QBrush());
 
-    Ui::SessionDataWidget *ui;
-    QList<LapData> bestLaps;
+    Ui::SessionDataWidget *ui;    
 
     EventData &eventData;
 
-    struct PitStopAtom
-    {
-    	double time;
-    	int lap;
-    	QString driver;
-    	int pos;
-
-    	bool operator <(const PitStopAtom &psa) const
-    	{
-    		return time < psa.time;
-    	}
-    };
-
-    QList< PitStopAtom > getPitstops(const QList<DriverData> &driversData);
     SpeedRecordsModel speedRecordsModel;
     FastestLapsModel fastestLapsModel;
+    PitStopsModel pitStopsModel;
 };
 
 #endif // SESSIONDATAWIDGET_H

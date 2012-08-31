@@ -1,15 +1,15 @@
-#ifndef DRIVERLAPHISTORYMODEL_H
-#define DRIVERLAPHISTORYMODEL_H
+#ifndef PITSTOPSMODEL_H
+#define PITSTOPSMODEL_H
 
 #include <QAbstractTableModel>
-#include <QDebug>
+
 #include "../../core/eventdata.h"
 
-class DriverLapHistoryModel : public QAbstractTableModel
+class PitStopsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit DriverLapHistoryModel(QObject *parent = 0);
+    explicit PitStopsModel(QObject *parent = 0);
 
     virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -29,21 +29,33 @@ public:
         return true;
     }
 
-    QVariant getLapTime(const LapData &, int role) const;
-    QVariant getSectorTime(const LapData &, int role, int sector) const;
-
     QVariant headerData(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
-    void update(const DriverData &dd);
-    
+    void update();
+
 signals:
     
 public slots:
 
 private:
-    DriverData driverData;
     int rows;
+
+    struct PitStopAtom
+    {
+        double time;
+        int lap;
+        QString driver;
+        int pos;
+
+        bool operator <(const PitStopAtom &psa) const
+        {
+            return time < psa.time;
+        }
+    };
+
+    void getPitstops(const QList<DriverData> &driversData);
+    QList< PitStopAtom > pitStops;
     
 };
 
-#endif // DRIVERLAPHISTORYMODEL_H
+#endif // PITSTOPSMODEL_H
