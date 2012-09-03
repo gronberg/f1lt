@@ -1,5 +1,5 @@
 #include "fplaptimeschart.h"
-#include "../core/ltdata.h"
+#include "../core/seasondata.h"
 
 #include <QPainter>
 
@@ -10,7 +10,7 @@ void FPLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &size
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[j].getPracticeLapExtraData().getSessionTime());
+        int minute = SeasonData::getInstance().getFPLength() - SeasonData::getInstance().timeToMins(lapDataArray[j].getPracticeLapExtraData().getSessionTime());
 
         if (minute < firstMin && minute >= first)
             firstMin = minute;
@@ -43,7 +43,7 @@ void FPLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &size
 
 void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -52,14 +52,14 @@ void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     double yFactor = (double)((paintRect.height())/10.0);
     double yFactor2 = (double)((tMax-tMin)/10.0);
     double j = tMin;
     for (double i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         int msecs = j * 1000;
         LapTime lt(msecs);
         QString str = lt.toString();
@@ -71,7 +71,7 @@ void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -90,12 +90,12 @@ void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("%1'").arg(round(j)));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -129,8 +129,8 @@ void FPLapTimesChart::drawChart(QPainter *p)
     int lapsInWindow = 0;
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[i].getPracticeLapExtraData().getSessionTime());
-        int second = LTData::getFPLength()*60 - LTData::timeToSecs(lapDataArray[i].getPracticeLapExtraData().getSessionTime());
+        int minute = SeasonData::getInstance().getFPLength() - SeasonData::getInstance().timeToMins(lapDataArray[i].getPracticeLapExtraData().getSessionTime());
+        int second = SeasonData::getInstance().getFPLength()*60 - SeasonData::getInstance().timeToSecs(lapDataArray[i].getPracticeLapExtraData().getSessionTime());
 
         if (lapDataArray[i].getPracticeLapExtraData().getSessionTime().toString("h:mm:ss") == "")
         {
@@ -312,7 +312,7 @@ void QualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &s
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        int minute = getSessionLength() - LTData::timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
+        int minute = getSessionLength() - SeasonData::getInstance().timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
 
         if (minute < firstMin && minute >= first)
             firstMin = minute;
@@ -368,8 +368,8 @@ void QualiLapTimesChart::drawChart(QPainter *p)
 
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        int minute = getSessionLength() - LTData::timeToMins(lapDataArray[i].getQualiLapExtraData().getSessionTime());
-        int second = getSessionLength()*60 - LTData::timeToSecs(lapDataArray[i].getQualiLapExtraData().getSessionTime());
+        int minute = getSessionLength() - SeasonData::getInstance().timeToMins(lapDataArray[i].getQualiLapExtraData().getSessionTime());
+        int second = getSessionLength()*60 - SeasonData::getInstance().timeToSecs(lapDataArray[i].getQualiLapExtraData().getSessionTime());
 
         if (lapDataArray[i].getQualiLapExtraData().getSessionTime().toString("h:mm:ss") == "")
         {
@@ -404,7 +404,7 @@ void QualiLapTimesChart::drawChart(QPainter *p)
                 lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
 
             QPainterPath path;
-//            p->setBrush(QBrush(LTData::colors[LTData::BACKGROUND]));
+//            p->setBrush(QBrush(SeasonData::getInstance().getColor(LTPackets::BACKGROUND]));
             p->setBrush(QBrush(color));
             if (y < paintRect.bottom())
             {
@@ -428,9 +428,9 @@ void AllQualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int
 
     for (int j = 0; j < lapDataArray.size(); ++j)
     {
-        int sessTime = LTData::timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
+        int sessTime = SeasonData::getInstance().timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
         for (int i = 0; i < lapDataArray[j].getQualiLapExtraData().getQualiPeriod()-1; ++i)
-            sessTime += LTData::getQualiLength(i+1);
+            sessTime += SeasonData::getInstance().getQualiLength(i+1);
 
         int minute = getSessionLength() - sessTime;
 
@@ -465,7 +465,7 @@ void AllQualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int
 
 void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -474,14 +474,14 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     double yFactor = (double)((paintRect.height())/10.0);
     double yFactor2 = (double)((tMax-tMin)/10.0);
     double j = tMin;
     for (double i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         int msecs = j * 1000;
         LapTime lt(msecs);
         QString str = lt.toString();
@@ -493,7 +493,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -508,23 +508,23 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         int prevJ = first;
 
         double jFactor = (last - first) < 6 ? 1.0 : (double)((last - first) / 9.0);
-        double q1Line = (LTData::getQualiLength(1) - first) * xFactor + paintRect.left();
-        double q2Line = (LTData::getQualiLength(1)+LTData::getQualiLength(2) - first) * xFactor + paintRect.left();
-        QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+        double q1Line = (SeasonData::getInstance().getQualiLength(1) - first) * xFactor + paintRect.left();
+        double q2Line = (SeasonData::getInstance().getQualiLength(1)+SeasonData::getInstance().getQualiLength(2) - first) * xFactor + paintRect.left();
+        QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
         pen.setWidth(1);
         for (; i < width()-15.0 && round(j) < last; /*i += xFactor,*/ j += jFactor)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             int qTime = round(j);
-            if (qTime > (LTData::getQualiLength(1) + LTData::getQualiLength(2)))
-                qTime -= (LTData::getQualiLength(1) + LTData::getQualiLength(2));
+            if (qTime > (SeasonData::getInstance().getQualiLength(1) + SeasonData::getInstance().getQualiLength(2)))
+                qTime -= (SeasonData::getInstance().getQualiLength(1) + SeasonData::getInstance().getQualiLength(2));
 
-            else if (qTime > LTData::getQualiLength(1))
-                qTime -= LTData::getQualiLength(1);
+            else if (qTime > SeasonData::getInstance().getQualiLength(1))
+                qTime -= SeasonData::getInstance().getQualiLength(1);
 
             prevJ = round(j);
             p->setFont(QFont("Arial", 10, QFont::Bold, false));
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("%1'").arg(qTime));
 
             if (i > paintRect.left())
@@ -538,7 +538,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         int qpos[6] = {-1, -1, -1, -1, -1, -1};
         if (i >= q1Line && q1Line > paintRect.left())
         {
-            pen.setColor(QColor(LTData::colors[LTData::WHITE]));
+            pen.setColor(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             pen.setWidth(4);
             pen.setStyle(Qt::SolidLine);
             p->setPen(pen);
@@ -550,7 +550,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
             qpos[2] = q1Line;
             qpos[3] = paintRect.right();
         }
-        else if (last <= LTData::getQualiLength(1))
+        else if (last <= SeasonData::getInstance().getQualiLength(1))
         {
             qpos[0] = paintRect.left();
             qpos[1] = paintRect.right();
@@ -558,23 +558,23 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         if (i >= q2Line && q2Line > paintRect.left())
         {
             pen.setWidth(4);
-            pen.setColor(QColor(LTData::colors[LTData::WHITE]));
+            pen.setColor(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             pen.setStyle(Qt::SolidLine);
             p->setPen(pen);
             p->drawLine(round(q2Line), paintRect.bottom(), round(q2Line), paintRect.top());
 
-            qpos[2] = first < LTData::getQualiLength(1) ? q1Line : paintRect.left();
+            qpos[2] = first < SeasonData::getInstance().getQualiLength(1) ? q1Line : paintRect.left();
             qpos[3] = q2Line;
 
             qpos[4] = q2Line;
             qpos[5] = paintRect.right();
         }
-        else if (first >= LTData::getQualiLength(1) && last <= (LTData::getQualiLength(1) + LTData::getQualiLength(2)))
+        else if (first >= SeasonData::getInstance().getQualiLength(1) && last <= (SeasonData::getInstance().getQualiLength(1) + SeasonData::getInstance().getQualiLength(2)))
         {
             qpos[2] = paintRect.left();
             qpos[3] = paintRect.right();
         }
-        else if (first >= (LTData::getQualiLength(1) + LTData::getQualiLength(2)))
+        else if (first >= (SeasonData::getInstance().getQualiLength(1) + SeasonData::getInstance().getQualiLength(2)))
         {
             qpos[4] = paintRect.left();
             qpos[5] = paintRect.right();
@@ -632,8 +632,10 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
 
     for (int i = 0; i < lapDataArray.size(); ++i)
     {
-        int sessTime = LTData::getQualiLength(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()) - LTData::timeToMins(lapDataArray[i].getQualiLapExtraData().getSessionTime());
-        int sessTimeSecs = LTData::getQualiLength(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()) * 60 - LTData::timeToSecs(lapDataArray[i].getQualiLapExtraData().getSessionTime());
+        int sessTime = SeasonData::getInstance().getQualiLength(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()) -
+                SeasonData::getInstance().timeToMins(lapDataArray[i].getQualiLapExtraData().getSessionTime());
+        int sessTimeSecs = SeasonData::getInstance().getQualiLength(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()) * 60 -
+                SeasonData::getInstance().timeToSecs(lapDataArray[i].getQualiLapExtraData().getSessionTime());
 
         if (lapDataArray[i].getQualiLapExtraData().getSessionTime().toString("h:mm:ss") == "")
         {
@@ -643,13 +645,13 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
 
         for (int k = 0; k < lapDataArray[i].getQualiLapExtraData().getQualiPeriod()-1; ++k)
         {
-            sessTime += LTData::getQualiLength(k+1);
-            sessTimeSecs += LTData::getQualiLength(k+1)*60;
+            sessTime += SeasonData::getInstance().getQualiLength(k+1);
+            sessTimeSecs += SeasonData::getInstance().getQualiLength(k+1)*60;
         }
 
 
-//        int minute = LTData::currentEventFPLength() - LTData::timeToMins(lapDataArray[i].sessionTime);
-//        int second = LTData::currentEventFPLength()*60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
+//        int minute = LTPackets::currentEventFPLength() - LTPackets::timeToMins(lapDataArray[i].sessionTime);
+//        int second = LTPackets::currentEventFPLength()*60 - LTPackets::timeToSecs(lapDataArray[i].sessionTime);
         if (sessTime >= first && sessTime <= last)// && lapDataArray[i].getTime().isValid())
         {
             secs = lapDataArray[i].getTime().toDouble();

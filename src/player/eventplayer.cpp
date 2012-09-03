@@ -83,7 +83,7 @@ bool EventPlayer::loadFromFile(QString fName)
 
             ltTeamList.append(team);
         }
-        LTData::ltTeams = ltTeamList;
+        SeasonData::getInstance().setTeams(ltTeamList);
 
         stream >> size;
 

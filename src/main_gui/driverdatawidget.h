@@ -8,7 +8,7 @@
 #include <QTableWidgetItem>
 
 
-#include "../core/ltdata.h"
+#include "../core/seasondata.h"
 #include "../charts/chartwidget.h"
 
 #include "models/driverlaphistorymodel.h"
@@ -25,7 +25,7 @@ public:
     explicit DriverDataWidget(QWidget *parent = 0);
     ~DriverDataWidget();
 
-    void setFont(const QFont &);
+    void setFont(const QFont &, const QFont &);
 
     void updateView();
 
@@ -45,6 +45,7 @@ public slots:
 
     void printDriverData(int id);
     void printDriverChart(int id);
+    void printDriverMainEvents(int id);
 
     void updateDriverInfo(const DriverData &);
 

@@ -82,19 +82,19 @@ void SessionAnalysisWidget::resetView()
     setupBoxes();
     switch(EventData::getInstance().getEventType())
     {
-        case LTData::RACE_EVENT:
+        case LTPackets::RACE_EVENT:
             ui.raceTabWidget->setVisible(true);
             ui.fpTabWidget->setVisible(false);
             ui.qualiTabWidget->setVisible(false);
             break;
 
-        case LTData::PRACTICE_EVENT:
+        case LTPackets::PRACTICE_EVENT:
             ui.raceTabWidget->setVisible(false);
             ui.fpTabWidget->setVisible(true);
             ui.qualiTabWidget->setVisible(false);
         break;
 
-        case LTData::QUALI_EVENT:
+        case LTPackets::QUALI_EVENT:
             ui.raceTabWidget->setVisible(false);
             ui.fpTabWidget->setVisible(false);
             ui.qualiTabWidget->setVisible(true);
@@ -171,67 +171,68 @@ void SessionAnalysisWidget::setupTables()
 
 //    QList<int> sizes = ui.splitter->sizes();
 
-	setItem(ui.lapTimeTableWidget, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-	setItem(ui.lapTimeTableWidget, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-	setItem(ui.lapTimeTableWidget, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
-	setItem(ui.lapTimeTableWidget, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-	setItem(ui.lapTimeTableWidget, 0, 4, "Lap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    SeasonData &sd = SeasonData::getInstance();
+    setItem(ui.lapTimeTableWidget, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 4, "Lap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidget->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetFP->rowCount() == 0)
         ui.lapTimeTableWidgetFP->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetFP, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetFP, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetFP, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetFP, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetFP, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetFP, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQuali->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetQuali->rowCount() == 0)
         ui.lapTimeTableWidgetQuali->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetQuali, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQuali, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQuali, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQuali, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQuali, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQuali, 0, 5, "Period", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetQuali, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 5, "Period", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQuali->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetQ1->rowCount() == 0)
         ui.lapTimeTableWidgetQ1->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetQ1, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ1, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ1, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ1, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ1, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetQ1, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQ1->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetQ2->rowCount() == 0)
         ui.lapTimeTableWidgetQ2->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetQ2, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ2, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ2, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ2, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ2, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetQ2, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQ2->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetQ3->rowCount() == 0)
         ui.lapTimeTableWidgetQ3->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetQ3, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ3, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ3, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ3, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
-    setItem(ui.lapTimeTableWidgetQ3, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::DEFAULT]);
+    setItem(ui.lapTimeTableWidgetQ3, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQ3->setRowHeight(0, 22);
 
@@ -261,19 +262,19 @@ void SessionAnalysisWidget::exec()
     setupBoxes();
     switch(EventData::getInstance().getEventType())
     {
-    case LTData::RACE_EVENT:
+    case LTPackets::RACE_EVENT:
         ui.raceTabWidget->setVisible(true);
         ui.fpTabWidget->setVisible(false);
         ui.qualiTabWidget->setVisible(false);
         break;
 
-    case LTData::PRACTICE_EVENT:
+    case LTPackets::PRACTICE_EVENT:
         ui.raceTabWidget->setVisible(false);
         ui.fpTabWidget->setVisible(true);
         ui.qualiTabWidget->setVisible(false);
         break;
 
-    case LTData::QUALI_EVENT:
+    case LTPackets::QUALI_EVENT:
         ui.raceTabWidget->setVisible(false);
         ui.fpTabWidget->setVisible(false);
         ui.qualiTabWidget->setVisible(true);
@@ -292,7 +293,7 @@ void SessionAnalysisWidget::exec()
 
 void SessionAnalysisWidget::setupBoxes()
 {
-    QStringList driverList = LTData::getDriversListShort();
+    QStringList driverList = SeasonData::getInstance().getDriversListShort();
     for (int i = 0; i < driverCheckBoxes.size() && i < driverList.size(); ++i)
     {
         QString str = driverList[i];
@@ -380,30 +381,31 @@ bool SessionAnalysisWidget::lapInWindow(int j)
 {
     bool inTimeWindow = true;
 
-    if (EventData::getInstance().getEventType() == LTData::RACE_EVENT)
+    if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT)
         inTimeWindow = lapDataArray[j].getLapNumber() >= first && lapDataArray[j].getLapNumber() <= last;
 
-    else if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
+    else if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
     {
-        int minute = LTData::getFPLength() - LTData::timeToMins(lapDataArray[j].getPracticeLapExtraData().getSessionTime());
+        int minute = SeasonData::getInstance().getFPLength() - SeasonData::getInstance().timeToMins(lapDataArray[j].getPracticeLapExtraData().getSessionTime());
         inTimeWindow = minute >= first && minute <= last;
     }
-    else if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
+    else if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
     {
         int qPeriod = ui.qualiTabWidget->currentIndex();
         if (qPeriod == 0)
         {
-            int minute = LTData::getQualiLength(lapDataArray[j].getQualiLapExtraData().getQualiPeriod()) - LTData::timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
+            int minute = SeasonData::getInstance().getQualiLength(lapDataArray[j].getQualiLapExtraData().getQualiPeriod()) -
+                    SeasonData::getInstance().timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
 
             for (int k = 0; k < lapDataArray[j].getQualiLapExtraData().getQualiPeriod()-1; ++k)
-                minute += LTData::getQualiLength(k+1);
+                minute += SeasonData::getInstance().getQualiLength(k+1);
 
             inTimeWindow = (minute >= first && minute <= last);
         }
         else
         {
-            int sessLength = LTData::getQualiLength(qPeriod);
-            int minute = sessLength - LTData::timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
+            int sessLength = SeasonData::getInstance().getQualiLength(qPeriod);
+            int minute = sessLength - SeasonData::getInstance().timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
             inTimeWindow = (minute >= first && minute <= last) && lapDataArray[j].getQualiLapExtraData().getQualiPeriod() == qPeriod;
         }
     }
@@ -414,7 +416,7 @@ bool SessionAnalysisWidget::lapInWindow(int j)
             return true;
 
 
-        if ((EventData::getInstance().getEventType() == LTData::RACE_EVENT) &&
+        if ((EventData::getInstance().getEventType() == LTPackets::RACE_EVENT) &&
              (!lapDataArray[j].getTime().isValid() && min != -1 && max != -1))
         {
             DriverData &dd = EventData::getInstance().getDriversData()[lapDataArray[j].getCarID()-1];
@@ -443,10 +445,10 @@ void SessionAnalysisWidget::update(bool repaintCharts)
     int rows = 0;
 
     QTableWidget *table = ui.lapTimeTableWidget;
-    if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
+    if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
         table = ui.lapTimeTableWidgetFP;
 
-    if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
+    if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
     {
         switch (ui.qualiTabWidget->currentIndex())
         {
@@ -472,29 +474,31 @@ void SessionAnalysisWidget::update(bool repaintCharts)
 
             if (lapDataArray[i].getCarID() < 0)
                 continue;
-            setItem(table, rows+1, 0, QString::number(rows+1)+".", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::CYAN]);
+
+            SeasonData &sd = SeasonData::getInstance();
+            setItem(table, rows+1, 0, QString::number(rows+1)+".", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::CYAN));
 
             QString s = EventData::getInstance().getDriversData()[lapDataArray[i].getCarID()-1].getDriverName();
-            QTableWidgetItem *item = setItem(table, rows+1, 1, s, Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
+            QTableWidgetItem *item = setItem(table, rows+1, 1, s, Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
             item->setIcon(getDriverIcon(EventData::getInstance().getDriversData()[lapDataArray[i].getCarID()-1].getNumber()));
 
 
-            setItem(table, rows+1, 2, lapDataArray[i].getTime().toString(), Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::WHITE]);
+            setItem(table, rows+1, 2, lapDataArray[i].getTime().toString(), Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::WHITE));
 
             s = (rows == 0 || !lapDataArray[i].getTime().isValid()) ? "" : "+" + DriverData::calculateGap(lapDataArray[i].getTime(), lapDataArray[firstPlace].getTime());
-            setItem(table, rows+1, 3, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::YELLOW]);
+            setItem(table, rows+1, 3, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::YELLOW));
 
             s = QString::number(lapDataArray[i].getLapNumber());
-            if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
-                s = LTData::correctFPTime(lapDataArray[i].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTData::currentEventFPLength()-LTData::timeToMins(lapDataArray[i].sessionTime))+")";
+            if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
+                s = sd.correctFPTime(lapDataArray[i].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTPackets::currentEventFPLength()-LTPackets::timeToMins(lapDataArray[i].sessionTime))+")";
 
-            else if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
-                s = LTData::correctQualiTime(lapDataArray[i].getQualiLapExtraData().getSessionTime(), lapDataArray[i].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
+            else if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
+                s = sd.correctQualiTime(lapDataArray[i].getQualiLapExtraData().getSessionTime(), lapDataArray[i].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
 
-            setItem(table, rows+1, 4, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
+            setItem(table, rows+1, 4, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
 
             if (ui.qualiTabWidget->currentIndex() == 0)
-                setItem(table, rows+1, 5, QString::number(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()), Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, LTData::colors[LTData::WHITE]);
+                setItem(table, rows+1, 5, QString::number(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()), Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
 
             ++rows;
         }
@@ -507,7 +511,7 @@ void SessionAnalysisWidget::update(bool repaintCharts)
 
     if (repaintCharts)
     {
-        if (EventData::getInstance().getEventType() == LTData::RACE_EVENT)
+        if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT)
         {
             ui.sessionLapTimesChart->setData(lapDataArray);
             ui.sessionLapTimesChart->update();
@@ -518,12 +522,12 @@ void SessionAnalysisWidget::update(bool repaintCharts)
             ui.sessionGapsChart->setData(lapDataArray);
             ui.sessionGapsChart->update();
         }
-        if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
+        if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
         {
             ui.sessionLapTimesChartFP->setData(lapDataArray);
             ui.sessionLapTimesChartFP->update();
         }
-        if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
+        if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
         {
             switch (ui.qualiTabWidget->currentIndex())
             {
@@ -573,7 +577,7 @@ bool SessionAnalysisWidget::driverChecked(int no)
         if (idx != 0)
             drvNo = str.left(idx).toInt();
 
-        if (drvNo == no)//LTData::getDriverShortName(driver) == driverCheckBoxes[i]->text())
+        if (drvNo == no)//LTPackets::getDriverShortName(driver) == driverCheckBoxes[i]->text())
         {
             if (driverCheckBoxes[i]->isChecked())
                 return true;
@@ -593,7 +597,7 @@ void SessionAnalysisWidget::setDriverChecked(int no, bool checked)
         if (idx != 0)
             drvNo = str.left(idx).toInt();
 
-        if (drvNo == no)//LTData::getDriverShortName(driver) == driverCheckBoxes[i]->text())
+        if (drvNo == no)//LTPackets::getDriverShortName(driver) == driverCheckBoxes[i]->text())
         {
             driverCheckBoxes[i]->setChecked(checked);
         }

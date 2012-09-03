@@ -5,7 +5,7 @@
 #include <QDialog>
 
 #include <QList>
-#include "../core/ltdata.h"
+#include "../core/seasondata.h"
 #include "../charts/lapcompchart.h"
 
 namespace Ui {

@@ -40,17 +40,17 @@ public:
     ColorData()
     {
         for (int i = 0; i < 15; ++i)
-            colorData[i] = LTData::DEFAULT;
+            colorData[i] = LTPackets::DEFAULT;
     }
 
-    LTData::Colors &positionColor() { return colorData[0]; }
-    LTData::Colors &numberColor() { return colorData[1]; }
-    LTData::Colors &driverColor() { return colorData[2]; }
-    LTData::Colors &gapColor() { return colorData[3]; }
-    LTData::Colors &intervalColor() { return colorData[4]; }
-    LTData::Colors &lapTimeColor() { return colorData[5]; }
+    LTPackets::Colors &positionColor() { return colorData[0]; }
+    LTPackets::Colors &numberColor() { return colorData[1]; }
+    LTPackets::Colors &driverColor() { return colorData[2]; }
+    LTPackets::Colors &gapColor() { return colorData[3]; }
+    LTPackets::Colors &intervalColor() { return colorData[4]; }
+    LTPackets::Colors &lapTimeColor() { return colorData[5]; }
 
-    LTData::Colors &qualiTimeColor(int idx)
+    LTPackets::Colors &qualiTimeColor(int idx)
     {
         switch (idx)
         {
@@ -61,7 +61,7 @@ public:
         }
     }
 
-    LTData::Colors &sectorColor(int idx)
+    LTPackets::Colors &sectorColor(int idx)
     {
         if (idx >= 1 && idx <= 3)
             return colorData[5+idx];
@@ -69,19 +69,19 @@ public:
         return colorData[6];
     }
 
-    LTData::Colors &pitColor(int idx)
+    LTPackets::Colors &pitColor(int idx)
     {
         if (idx >= 1 && idx <= 3)
             return colorData[8+idx];
 
         return colorData[9];
     }
-    LTData::Colors &numPitsColor() { return colorData[12]; }
+    LTPackets::Colors &numPitsColor() { return colorData[12]; }
 
-    LTData::Colors &numLapsColor() { return colorData[12]; }
+    LTPackets::Colors &numLapsColor() { return colorData[12]; }
 
 private:
-    LTData::Colors colorData[15];
+    LTPackets::Colors colorData[15];
 };
 
 //------------------------------------------------------

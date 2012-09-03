@@ -22,12 +22,12 @@ public:
 
     virtual int getSessionLength()
     {
-        return LTData::getFPLength();
+        return SeasonData::getInstance().getFPLength();
     }
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        int minute = LTData::getFPLength() - LTData::timeToMins(ld.getPracticeLapExtraData().getSessionTime());
+        int minute = SeasonData::getInstance().getFPLength() - SeasonData::getInstance().timeToMins(ld.getPracticeLapExtraData().getSessionTime());
         if (ld.getPracticeLapExtraData().getSessionTime().toString("h:mm:ss") == "")
             minute = 0;
 
@@ -63,12 +63,12 @@ public:
 
     virtual int getSessionLength()
     {
-        return LTData::getQualiLength(qualiPeriod);
+        return SeasonData::getInstance().getQualiLength(qualiPeriod);
     }
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        int minute = getSessionLength() - LTData::timeToMins(ld.getPracticeLapExtraData().getSessionTime());
+        int minute = getSessionLength() - SeasonData::getInstance().timeToMins(ld.getPracticeLapExtraData().getSessionTime());
 
         if (ld.getPracticeLapExtraData().getSessionTime().toString("h:mm:ss") == "")
             minute = 0;
@@ -101,7 +101,7 @@ public:
     {
         int sessionLength = 0;
         for (int i = 0; i < 3; ++i)
-            sessionLength += LTData::getQualiLength(i+1);
+            sessionLength += SeasonData::getInstance().getQualiLength(i+1);
 
         return sessionLength;
     }
@@ -111,7 +111,7 @@ public:
 
     virtual QString getLapInfoXY(const LapData &ld)
     {
-        int sessTime = LTData::getQualiLength(ld.getQualiLapExtraData().getQualiPeriod()) - LTData::timeToMins(ld.getQualiLapExtraData().getSessionTime());
+        int sessTime = SeasonData::getInstance().getQualiLength(ld.getQualiLapExtraData().getQualiPeriod()) - SeasonData::getInstance().timeToMins(ld.getQualiLapExtraData().getSessionTime());
 
         if (ld.getQualiLapExtraData().getSessionTime().toString("h:mm:ss") == "")
             sessTime = 0;

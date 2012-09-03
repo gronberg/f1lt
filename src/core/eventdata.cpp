@@ -1,5 +1,5 @@
 #include "eventdata.h"
-#include "ltdata.h"
+#include "seasondata.h"
 
 #include <QDebug>
 
@@ -13,7 +13,9 @@ void Weather::saveWeatherData(const EventData &ed)
     for (int i = 0; i < 7; ++i)
     {
         wd.value = currentWeather[i].value;
-        weatherData[i].append(wd);
+
+        if (!(weatherData[i].isEmpty() && wd.value == 0.0 && i != 5))
+            weatherData[i].append(wd);
     }
 }
 
@@ -29,7 +31,7 @@ EventData::EventData()
     remainingTime = QTime();
     lapsCompleted = 0;
 
-    flagStatus = LTData::GREEN_FLAG;
+    flagStatus = LTPackets::GREEN_FLAG;
 
     qualiPeriod = 0;
 
@@ -49,14 +51,14 @@ void EventData::clear()
     weather = Weather();
     sessionRecords = SessionRecords();
 
-    flagStatus = LTData::GREEN_FLAG;
+    flagStatus = LTPackets::GREEN_FLAG;
 
     sessionStarted = false;
     qualiPeriod = 0;
 
     commentary = "";
     driversData.clear();
-    for (int i = 0; i < LTData::ltTeams.size(); ++i)
+    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
     {
         driversData.append(DriverData());
         driversData.append(DriverData());        

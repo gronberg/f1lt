@@ -4,7 +4,9 @@
 #include <QPair>
 #include <QTime>
 
-#include "ltdata.h"
+#include <cmath>
+
+#include "seasondata.h"
 
 struct EventData;
 

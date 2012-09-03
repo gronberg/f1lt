@@ -12,15 +12,14 @@ LTWidget::LTWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::LTWidget),
     eventData(EventData::getInstance()),
-    eventType((LTData::EventType)0),
+    eventType((LTPackets::EventType)0),
     currDriverId(0),
     ltModel(0)
 {
     ui->setupUi(this);
     loadCarImages();
     itemDelegate = new LTMainItemDelegate(ui->tableView, &carImg, drawCarThumbnails);
-    ui->tableView->setItemDelegate(itemDelegate);
-
+    ui->tableView->setItemDelegate(itemDelegate);        
     //connect(ui->tableView, SIGNAL(headerClicked(int)), this, SLOT(on_tableView_headerClicked(int)));
 }
 
@@ -46,8 +45,8 @@ void LTWidget::loadCarImages()
     currDriverId = 0;
 
     carImg.clear();
-    for (int i = 0; i < LTData::ltTeams.size(); ++i)
-        carImg.append(LTData::ltTeams[i].carImg.scaledToWidth(75, Qt::SmoothTransformation));
+    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
+        carImg.append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(75, Qt::SmoothTransformation));
 }
 
 void LTWidget::setFont(const QFont &font)
@@ -63,17 +62,17 @@ void LTWidget::updateLT()
         if (ltModel)
             delete ltModel;
 
-        if (eventData.getEventType() == LTData::PRACTICE_EVENT)
+        if (eventData.getEventType() == LTPackets::PRACTICE_EVENT)
         {
             ltModel = new PracticeModel(this);
             ui->tableView->setModel(ltModel);
         }
-        else if (eventData.getEventType() == LTData::QUALI_EVENT)
+        else if (eventData.getEventType() == LTPackets::QUALI_EVENT)
         {
             ltModel = new QualiModel(this);
             ui->tableView->setModel(ltModel);
         }
-        else if (eventData.getEventType() == LTData::RACE_EVENT)
+        else if (eventData.getEventType() == LTPackets::RACE_EVENT)
         {
             ltModel = new RaceModel(this);
             ui->tableView->setModel(ltModel);
@@ -99,7 +98,7 @@ void LTWidget::resizeEvent(QResizeEvent *e)
 
     switch(eventData.getEventType())
     {
-        case LTData::RACE_EVENT:
+        case LTPackets::RACE_EVENT:
             if (drawCarThumbnails)
             {
                 ui->tableView->setColumnWidth(0, 0.04 * w);
@@ -130,7 +129,7 @@ void LTWidget::resizeEvent(QResizeEvent *e)
             }
             break;
 
-        case LTData::PRACTICE_EVENT:
+        case LTPackets::PRACTICE_EVENT:
             if (drawCarThumbnails)
             {
                 ui->tableView->setColumnWidth(0, 0.04 * w);
@@ -159,7 +158,7 @@ void LTWidget::resizeEvent(QResizeEvent *e)
             }
             break;
 
-        case LTData::QUALI_EVENT:
+        case LTPackets::QUALI_EVENT:
             if (drawCarThumbnails)
             {
                 ui->tableView->setColumnWidth(0, 0.04 * w);
@@ -190,6 +189,7 @@ void LTWidget::resizeEvent(QResizeEvent *e)
             }
             break;
     }
+    //tu sie sypie przy przejsciu do nast. sesji
     if (ltModel)
     {
         for (int i = 0; i < ltModel->rowCount(); ++i)

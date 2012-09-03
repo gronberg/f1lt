@@ -1,69 +1,9 @@
 #ifndef LTDATA_H
 #define LTDATA_H
 
-#include <QByteArray>
-#include <QCoreApplication>
-#include <QDate>
-#include <QList>
-#include <QPixmap>
-#include <QTime>
-#include <iostream>
-#include <cmath>
-#include <QMap>
-#include <QStringList>
-
-
-#include "f1ltcore.h"
-//#include "driverdata.h"
-//#include "eventdata.h"
-
-//Two additional stuctures that hold the basic info about all teams and events. Data is loaded from the file.
-struct LTTeam
-{
-    //used for sorting
-    bool operator < (const LTTeam lt) const
-    {
-        return driver1No < lt.driver1No;
-    }
-
-    QString teamName;
-
-    QString driver1Name;
-    QString driver1ShortName;
-    int driver1No;
-
-    QString driver2Name;
-    QString driver2ShortName;
-    int driver2No;
-
-    QPixmap carImg;
-};
-
-struct LTEvent
-{
-    LTEvent() : eventNo(0), laps(0), trackImg(100,100) { }
-    int eventNo;
-    QString eventName;
-    QString eventShortName;
-    QString eventPlace;
-    int laps;
-    QDate fpDate;
-    QDate raceDate;
-
-    QPixmap trackImg;
-
-    bool operator<(const LTEvent &event) const
-    {
-        return fpDate < event.fpDate;
-    }
-};
-
-//This class defines all the packet types that server sends to us. Code below is highly based on the live-f1 source code by Dave Pusey.
-class LTData
+class LTPackets
 {
 public:
-    LTData();
-
     enum CarPacket
     {
         CAR_POSITION_UPDATE	= 0,
@@ -222,38 +162,6 @@ public:
     {
         return 0;
     }
-
-    static bool loadLTData();
-    static void init();
-    static QPixmap getCarImg(int no);
-    static QString getDriverName(QString);
-    static QString getDriverShortName(QString);
-    static QString getDriverNameFromShort(QString);
-    static QString getTeamName(int);
-    static QStringList getDriversList();
-    static QStringList getDriversListShort();
-    static LTEvent getEvent(int);
-    static LTEvent getEvent(QDate);
-    static LTEvent getCurrentEvent();
-    static LTEvent getNextEvent();
-
-    static int getEventNo(QDate);
-    static int getDriverNo(QString);
-    static int timeToMins(QTime);
-    static int timeToSecs(QTime);
-
-    static int getFPNumber();
-
-    static int getFPLength();
-    static int getQualiLength(int q);
-    static QTime correctFPTime(QTime time);
-    static QTime correctQualiTime(QTime time, int qualiPeriod);
-
-    static QList<LTTeam> ltTeams;
-    static QList<LTEvent> ltEvents;
-    static int season;
-
-    static QList<QColor> colors;
 };
 
 #endif // LTDATA_H

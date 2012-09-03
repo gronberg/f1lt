@@ -32,13 +32,13 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
 
     loadCarImages();
 
-    color[0] = LTData::colors[LTData::YELLOW];
-    color[1] = LTData::colors[LTData::CYAN];
+    color[0] = SeasonData::getInstance().getColor(LTPackets::YELLOW);
+    color[1] = SeasonData::getInstance().getColor(LTPackets::CYAN);
     lapCompChart = new LapCompChart(color, this);
     gapCompChart = new GapCompChart(color, this);
     posCompChart = new PosCompChart(color, this);
 
-    posCompChart->setMinMax(1, LTData::ltTeams.size()*2);
+    posCompChart->setMinMax(1, SeasonData::getInstance().getTeams().size()*2);
 
 
     connect(ui->comboBox1, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxValueChanged(int)));
@@ -127,72 +127,72 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
     ui->tableWidget->insertRow(1);
     item = new QTableWidgetItem("L");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 0, item);
 
     item = new QTableWidgetItem("P");
     item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 1, item);
 
 //    item = new QTableWidgetItem("Gap");
 //    item->setTextAlignment(Qt::AlignCenter);
-//    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+//    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT]);
 //    ui->tableWidget->setItem(1, 2, item);
 
     item = new QTableWidgetItem("Lap time");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 2, item);
 
     item = new QTableWidgetItem("S1");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 3, item);
 
     item = new QTableWidgetItem("S2");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 4, item);
 
     item = new QTableWidgetItem("S3");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 5, item);
 
     item = new QTableWidgetItem("Gap");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 6, item);
 
     item = new QTableWidgetItem("P");
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 7, item);
 
 //    item = new QTableWidgetItem("Gap");
 //    item->setTextAlignment(Qt::AlignCenter);
-//    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+//    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT]);
 //    ui->tableWidget->setItem(1, 9, item);
 
     item = new QTableWidgetItem("Lap time");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 8, item);
 
     item = new QTableWidgetItem("S1");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 9, item);
 
     item = new QTableWidgetItem("S2");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 10, item);
 
     item = new QTableWidgetItem("S3");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 11, item);
 
     ui->tableWidget->setRowHeight(1, 20);    
@@ -206,17 +206,17 @@ HeadToHeadDialog::~HeadToHeadDialog()
 void HeadToHeadDialog::loadCarImages()
 {
     smallCarImg.clear();
-    for (int i = 0; i < LTData::ltTeams.size(); ++i)
-        smallCarImg.append(LTData::ltTeams[i].carImg.scaledToWidth(150, Qt::SmoothTransformation));
+    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
+        smallCarImg.append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(150, Qt::SmoothTransformation));
 
     comboBox[0]->clear();
     comboBox[1]->clear();
 
-    comboBox[0]->addItems(LTData::getDriversList());
-    comboBox[1]->addItems(LTData::getDriversList());
+    comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+    comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
 
-//    comboBox[0]->addItems(LTData::getDriversList());
-//    comboBox[1]->addItems(LTData::getDriversList());
+//    comboBox[0]->addItems(LTPackets::getDriversList());
+//    comboBox[1]->addItems(LTPackets::getDriversList());
 }
 
 void HeadToHeadDialog::updateData()
@@ -285,7 +285,7 @@ void HeadToHeadDialog::updateData()
         {
             item = new QTableWidgetItem(QString("%1.").arg(lapNo));
             item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::DEFAULT]);
+            item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
             ui->tableWidget->setItem(j+2, 0, item);
         }
         else
@@ -331,7 +331,7 @@ void HeadToHeadDialog::updateData()
                     if (!item)
                     {
                         item = new QTableWidgetItem(QString::number(ld.getPosition()));
-                        item->setTextColor(LTData::colors[LTData::CYAN]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::CYAN));
                         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
                         ui->tableWidget->setItem(j+2, 1 + i*6, item);
                     }
@@ -340,7 +340,7 @@ void HeadToHeadDialog::updateData()
 
 //                    QString gap = dd.lapData[lapIndex].pos == 1 ? "" : ld.gap;
 //                    item = new QTableWidgetItem(gap);
-//                    item->setTextColor(LTData::colors[LTData::YELLOW]);
+//                    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW]);
 //                    item->setTextAlignment(Qt::AlignCenter);
 //                    ui->tableWidget->setItem(j+2, 2 + i*7, item);
 
@@ -360,18 +360,18 @@ void HeadToHeadDialog::updateData()
                     {
                         QString pitTime = dd.getPitTime(ld.getLapNumber());
                         item->setText(item->text() + " (" + pitTime + ")");
-                        item->setTextColor(LTData::colors[LTData::RED]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
                     }
                     else if (lTime == "RETIRED")
-                        item->setTextColor(LTData::colors[LTData::RED]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
 
                     else if (ld.getRaceLapExtraData().isSCLap())
                     {
-                        item->setTextColor(LTData::colors[LTData::YELLOW]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
                         scLap = true;
                     }
                     else
-                        item->setTextColor(LTData::colors[LTData::GREEN]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
 
 
                     item = ui->tableWidget->item(j+2, 3+i*6);
@@ -384,9 +384,9 @@ void HeadToHeadDialog::updateData()
                     else
                         item->setText(ld.getSectorTime(1).toString());
                     if (scLap)
-                        item->setTextColor(LTData::colors[LTData::YELLOW]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
                     else
-                        item->setTextColor(LTData::colors[LTData::WHITE]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::WHITE));
 
                     item = ui->tableWidget->item(j+2, 4+i*6);
                     if (!item)
@@ -399,9 +399,9 @@ void HeadToHeadDialog::updateData()
                         item->setText(ld.getSectorTime(2).toString());
 
                     if (scLap)
-                        item->setTextColor(LTData::colors[LTData::YELLOW]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
                     else
-                        item->setTextColor(LTData::colors[LTData::WHITE]);                   
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::WHITE));
 
                     item = ui->tableWidget->item(j+2, 5+i*6);
                     if (!item)
@@ -414,9 +414,9 @@ void HeadToHeadDialog::updateData()
                         item->setText(ld.getSectorTime(3).toString());
 
                     if (scLap)
-                        item->setTextColor(LTData::colors[LTData::YELLOW]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
                     else
-                        item->setTextColor(LTData::colors[LTData::WHITE]);
+                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::WHITE));
 
                     if (!newLap[i])
                         ++index[i];
@@ -456,7 +456,7 @@ void HeadToHeadDialog::updateData()
                 item->setText(item->text() + " (+"+QString::number(laps[i].toDouble(), 'f', 3)+")");
 
                 if (!scLap)
-                    item->setTextColor(LTData::colors[LTData::WHITE]);
+                    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::WHITE));
             }
         }
 
@@ -477,7 +477,7 @@ void HeadToHeadDialog::updateData()
                     if (s1 == s2)
                         greenIdx = laps[1] < laps[0] ? 3+i : 9+i;
 
-                    ui->tableWidget->item(j+2, greenIdx)->setTextColor(LTData::colors[LTData::GREEN]);
+                    ui->tableWidget->item(j+2, greenIdx)->setTextColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
                 }
             }
         }
@@ -489,7 +489,7 @@ void HeadToHeadDialog::updateData()
         {
             if (newLap[0] || newLap[1])
             {
-                if (eventData.getEventType() == LTData::RACE_EVENT)
+                if (eventData.getEventType() == LTPackets::RACE_EVENT)
                     sInterval = eventData.calculateInterval(eventData.getDriversData()[driversIdx[0]], eventData.getDriversData()[driversIdx[1]], lapNo-1);
             	else
             	{
@@ -540,9 +540,9 @@ void HeadToHeadDialog::updateData()
             item->setText(sInterval);
 
         if (sInterval[0] == '-')
-            item->setTextColor(LTData::colors[LTData::VIOLET]);
+            item->setTextColor(SeasonData::getInstance().getColor(LTPackets::VIOLET));
         else
-            item->setTextColor(LTData::colors[LTData::RED]);
+            item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
 
         ui->tableWidget->setRowHeight(j+2, 20);
     }
@@ -658,8 +658,8 @@ void HeadToHeadDialog::show()
 {
     if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
     {
-        comboBox[0]->addItems(LTData::getDriversList());
-        comboBox[1]->addItems(LTData::getDriversList());
+        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
     }
 
 //    if (j == 0)
@@ -683,8 +683,8 @@ int HeadToHeadDialog::exec()
 {
     if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
     {
-        comboBox[0]->addItems(LTData::getDriversList());
-        comboBox[1]->addItems(LTData::getDriversList());
+        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
     }
 
     updateData();

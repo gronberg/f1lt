@@ -11,7 +11,7 @@ EventRecorder::EventRecorder(QObject *parent) :
 void EventRecorder::startRecording()
 {
     //prepare everyting for record, clear old records and store the LTTeam and LTEvent data
-    ltTeamList = LTData::ltTeams;
+    ltTeamList = SeasonData::getInstance().getTeams();
     ltEvent = eventData.getEventInfo();
 
     packets.clear();
@@ -50,7 +50,7 @@ void EventRecorder::gatherInitialData()
 
     //commentary
     packet.carID = 0;
-    packet.type = LTData::SYS_COMMENTARY;
+    packet.type = LTPackets::SYS_COMMENTARY;
     packet.data = 0;
     packet.longData.append("  ");   //append 2 empty bytes
     packet.longData.append(eventData.getCommentary());
@@ -66,7 +66,7 @@ void EventRecorder::gatherSysData()
 
     //event type
     packet.carID = 0;
-    packet.type = LTData::SYS_EVENT_ID;
+    packet.type = LTPackets::SYS_EVENT_ID;
     packet.data = eventData.getEventType();
     packet.length = 0;      //we don't need a number for the decryption key
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -74,7 +74,7 @@ void EventRecorder::gatherSysData()
 
     //track status
     packet.carID = 0;
-    packet.type = LTData::SYS_TRACK_STATUS;
+    packet.type = LTPackets::SYS_TRACK_STATUS;
     packet.data = 1;
     packet.longData.append((char)(eventData.getFlagStatus()) + '0');
     packet.length = 1;
@@ -83,8 +83,8 @@ void EventRecorder::gatherSysData()
 
     //remaining time
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_SESSION_CLOCK;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_SESSION_CLOCK;
     packet.longData.append(eventData.getRemainingTime().toString("h:mm:ss"));
     packet.length = packet.longData.size();
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -94,8 +94,8 @@ void EventRecorder::gatherSysData()
     //weather data
     //track temp
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_TRACK_TEMP;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_TRACK_TEMP;
     packet.longData.append(QString::number(eventData.getWeather().getTrackTemp().getValue()));
     packet.length = packet.longData.size();
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -103,8 +103,8 @@ void EventRecorder::gatherSysData()
 
     //air temp
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_AIR_TEMP;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_AIR_TEMP;
     packet.longData.append(QString::number(eventData.getWeather().getAirTemp().getValue()));
     packet.length = packet.longData.size();
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -112,8 +112,8 @@ void EventRecorder::gatherSysData()
 
     //wind speed
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_WIND_SPEED;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_WIND_SPEED;
     packet.longData.append(QString::number(eventData.getWeather().getWindSpeed().getValue()));
     packet.length = packet.longData.size();
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -121,8 +121,8 @@ void EventRecorder::gatherSysData()
 
     //humidity
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_HUMIDITY;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_HUMIDITY;
     packet.longData.append(QString::number(eventData.getWeather().getHumidity().getValue()));
     packet.length = packet.longData.size();
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -130,8 +130,8 @@ void EventRecorder::gatherSysData()
 
     //pressure
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_PRESSURE;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_PRESSURE;
     packet.longData.append(QString::number(eventData.getWeather().getPressure().getValue()));
     packet.length = packet.longData.size();
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -139,8 +139,8 @@ void EventRecorder::gatherSysData()
 
     //wind dir.
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_WIND_DIRECTION;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_WIND_DIRECTION;
     packet.longData.append(QString::number(eventData.getWeather().getWindDirection().getValue()));
     packet.length = packet.longData.size();
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -148,8 +148,8 @@ void EventRecorder::gatherSysData()
 
     //wet track
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_WET_TRACK;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_WET_TRACK;
     packet.longData.append(QString::number(eventData.getWeather().getWetDry().getValue()));
     packet.length = packet.longData.size();
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
@@ -158,12 +158,12 @@ void EventRecorder::gatherSysData()
     //speed records
     //sector 1
     packet.carID = 0;
-    packet.type = LTData::SYS_SPEED;
+    packet.type = LTPackets::SYS_SPEED;
     packet.data = 0;
-    packet.longData.append(QString::number(LTData::SPEED_SECTOR1));
+    packet.longData.append(QString::number(LTPackets::SPEED_SECTOR1));
     for (int i = 0; i < 6; ++i)
     {
-        QString name = LTData::getDriverShortName(eventData.getSessionRecords().getSectorSpeed(1, i).getDriverName());
+        QString name = SeasonData::getInstance().getDriverShortName(eventData.getSessionRecords().getSectorSpeed(1, i).getDriverName());
         QString speed = QString::number(eventData.getSessionRecords().getSectorSpeed(1, i).getSpeed());
         packet.longData.append(name + speed);
     }
@@ -173,12 +173,12 @@ void EventRecorder::gatherSysData()
 
     //sector 2
     packet.carID = 0;
-    packet.type = LTData::SYS_SPEED;
+    packet.type = LTPackets::SYS_SPEED;
     packet.data = 0;
-    packet.longData.append(QString::number(LTData::SPEED_SECTOR2));
+    packet.longData.append(QString::number(LTPackets::SPEED_SECTOR2));
     for (int i = 0; i < 6; ++i)
     {
-        QString name = LTData::getDriverShortName(eventData.getSessionRecords().getSectorSpeed(2, i).getDriverName());
+        QString name = SeasonData::getInstance().getDriverShortName(eventData.getSessionRecords().getSectorSpeed(2, i).getDriverName());
         QString speed = QString::number(eventData.getSessionRecords().getSectorSpeed(2, i).getSpeed());
         packet.longData.append(name + speed);
     }
@@ -188,12 +188,12 @@ void EventRecorder::gatherSysData()
 
     //sector 3
     packet.carID = 0;
-    packet.type = LTData::SYS_SPEED;
+    packet.type = LTPackets::SYS_SPEED;
     packet.data = 0;
-    packet.longData.append(QString::number(LTData::SPEED_SECTOR3));
+    packet.longData.append(QString::number(LTPackets::SPEED_SECTOR3));
     for (int i = 0; i < 6; ++i)
     {
-        QString name = LTData::getDriverShortName(eventData.getSessionRecords().getSectorSpeed(3, i).getDriverName());
+        QString name = SeasonData::getInstance().getDriverShortName(eventData.getSessionRecords().getSectorSpeed(3, i).getDriverName());
         QString speed = QString::number(eventData.getSessionRecords().getSectorSpeed(3, i).getSpeed());
         packet.longData.append(name + speed);
     }
@@ -203,12 +203,12 @@ void EventRecorder::gatherSysData()
 
     //speed trap
     packet.carID = 0;
-    packet.type = LTData::SYS_SPEED;
+    packet.type = LTPackets::SYS_SPEED;
     packet.data = 0;
-    packet.longData.append(QString::number(LTData::SPEED_TRAP));
+    packet.longData.append(QString::number(LTPackets::SPEED_TRAP));
     for (int i = 0; i < 6; ++i)
     {
-        QString name = LTData::getDriverShortName(eventData.getSessionRecords().getSpeedTrap(i).getDriverName());
+        QString name = SeasonData::getInstance().getDriverShortName(eventData.getSessionRecords().getSpeedTrap(i).getDriverName());
         QString speed = QString::number(eventData.getSessionRecords().getSpeedTrap(i).getSpeed());
         packet.longData.append(name + speed);
     }
@@ -219,36 +219,36 @@ void EventRecorder::gatherSysData()
     //fastest lap data
     //FL_CAR
     packet.carID = 0;
-    packet.type = LTData::SYS_SPEED;
+    packet.type = LTPackets::SYS_SPEED;
     packet.data = 0;
-    packet.longData.append(QString::number(LTData::FL_CAR));
+    packet.longData.append(QString::number(LTPackets::FL_CAR));
     packet.longData.append(QString::number(eventData.getSessionRecords().getFastestLap().getNumber()));
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
     packet.longData.clear();
 
     //FL_DRIVER
     packet.carID = 0;
-    packet.type = LTData::SYS_SPEED;
+    packet.type = LTPackets::SYS_SPEED;
     packet.data = 0;
-    packet.longData.append(QString::number(LTData::FL_DRIVER));
+    packet.longData.append(QString::number(LTPackets::FL_DRIVER));
     packet.longData.append(eventData.getSessionRecords().getFastestLap().getDriverName().toUpper());
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
     packet.longData.clear();
 
     //FL_LAP
     packet.carID = 0;
-    packet.type = LTData::SYS_SPEED;
+    packet.type = LTPackets::SYS_SPEED;
     packet.data = 0;
-    packet.longData.append(QString::number(LTData::FL_LAP));
+    packet.longData.append(QString::number(LTPackets::FL_LAP));
     packet.longData.append(QString::number(eventData.getSessionRecords().getFastestLap().getLapNumber()));
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
     packet.longData.clear();
 
     //FL_TIME
     packet.carID = 0;
-    packet.type = LTData::SYS_SPEED;
+    packet.type = LTPackets::SYS_SPEED;
     packet.data = 0;
-    packet.longData.append(QString::number(LTData::FL_LAP));
+    packet.longData.append(QString::number(LTPackets::FL_LAP));
     packet.longData.append(eventData.getSessionRecords().getFastestLap().getTime());
     packets.append(QPair<int, Packet>(elapsedSeconds, packet));
     packet.longData.clear();
@@ -260,7 +260,7 @@ void EventRecorder::gatherDriverData()
     //car position update
     for (int i = 0; i < eventData.getDriversData().size(); ++i)
     {
-        packet.type = LTData::CAR_POSITION_UPDATE;
+        packet.type = LTPackets::CAR_POSITION_UPDATE;
         packet.carID = eventData.getDriversData()[i].getCarID();
         packet.length = 0;
         packet.data = eventData.getDriversData()[i].getPosition();
@@ -271,7 +271,7 @@ void EventRecorder::gatherDriverData()
     //car position history
     for (int i = 0; i < eventData.getDriversData().size(); ++i)
     {
-        packet.type = LTData::CAR_POSITION_HISTORY;
+        packet.type = LTPackets::CAR_POSITION_HISTORY;
         packet.carID = eventData.getDriversData()[i].getCarID();
         packet.data = 0;
         packet.length = eventData.getDriversData()[i].getPositionHistory().size();
@@ -287,7 +287,7 @@ void EventRecorder::gatherDriverData()
     for (int i = 0; i < eventData.getDriversData().size(); ++i)
     {
         //position
-        packet.type = LTData::RACE_POSITION;
+        packet.type = LTPackets::RACE_POSITION;
         packet.carID = eventData.getDriversData()[i].getCarID();
         packet.data = eventData.getDriversData()[i].getColorData().positionColor();
         packet.longData.append(QString::number(eventData.getDriversData()[i].getPosition()));
@@ -296,7 +296,7 @@ void EventRecorder::gatherDriverData()
 
 
         //number
-        packet.type = LTData::RACE_NUMBER;
+        packet.type = LTPackets::RACE_NUMBER;
         packet.carID = eventData.getDriversData()[i].getCarID();
         packet.data = eventData.getDriversData()[i].getColorData().numberColor();
         packet.longData.append(QString::number(eventData.getDriversData()[i].getNumber()));
@@ -304,17 +304,17 @@ void EventRecorder::gatherDriverData()
         packet.longData.clear();
 
         //car driver
-        packet.type = LTData::RACE_DRIVER;
+        packet.type = LTPackets::RACE_DRIVER;
         packet.carID = eventData.getDriversData()[i].getCarID();
         packet.data = eventData.getDriversData()[i].getColorData().driverColor();
         packet.longData.append(eventData.getDriversData()[i].getDriverName().toUpper());
         packets.append(QPair<int, Packet>(elapsedSeconds, packet));
         packet.longData.clear();
 
-        if (eventData.getEventType() == LTData::RACE_EVENT)
+        if (eventData.getEventType() == LTPackets::RACE_EVENT)
         {
             //race gap
-            packet.type = LTData::RACE_GAP;
+            packet.type = LTPackets::RACE_GAP;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().gapColor();
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getGap());
@@ -322,7 +322,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //race gap
-            packet.type = LTData::RACE_INTERVAL;
+            packet.type = LTPackets::RACE_INTERVAL;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().intervalColor();
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getInterval());
@@ -330,7 +330,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //race lap time
-            packet.type = LTData::RACE_LAP_TIME;
+            packet.type = LTPackets::RACE_LAP_TIME;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().lapTimeColor();
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getTime().toString());
@@ -338,7 +338,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //race sector 1
-            packet.type = LTData::RACE_SECTOR_1;
+            packet.type = LTPackets::RACE_SECTOR_1;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(1);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(1));
@@ -346,7 +346,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //race sector 2
-            packet.type = LTData::RACE_SECTOR_2;
+            packet.type = LTPackets::RACE_SECTOR_2;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(2);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(2));
@@ -354,7 +354,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //race sector 3
-            packet.type = LTData::RACE_SECTOR_3;
+            packet.type = LTPackets::RACE_SECTOR_3;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(3);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(3));
@@ -362,17 +362,17 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //race num pits
-            packet.type = LTData::RACE_NUM_PITS;
+            packet.type = LTPackets::RACE_NUM_PITS;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().numPitsColor();
             packet.longData.append(QString::number(eventData.getDriversData()[i].getNumPits()));
             packets.append(QPair<int, Packet>(elapsedSeconds, packet));
             packet.longData.clear();
         }
-        else if (eventData.getEventType() == LTData::QUALI_EVENT)
+        else if (eventData.getEventType() == LTPackets::QUALI_EVENT)
         {
             //quali 1
-            packet.type = LTData::QUALI_PERIOD_1;
+            packet.type = LTPackets::QUALI_PERIOD_1;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().qualiTimeColor(1);
             packet.longData.append(eventData.getDriversData()[i].getQualiTime(1).toString());
@@ -380,7 +380,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //quali 2
-            packet.type = LTData::QUALI_PERIOD_2;
+            packet.type = LTPackets::QUALI_PERIOD_2;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().qualiTimeColor(2);
             packet.longData.append(eventData.getDriversData()[i].getQualiTime(2).toString());
@@ -388,7 +388,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //quali 3
-            packet.type = LTData::QUALI_PERIOD_3;
+            packet.type = LTPackets::QUALI_PERIOD_3;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().qualiTimeColor(3);
             packet.longData.append(eventData.getDriversData()[i].getQualiTime(3).toString());
@@ -396,7 +396,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //quali sector 1
-            packet.type = LTData::QUALI_SECTOR_1;
+            packet.type = LTPackets::QUALI_SECTOR_1;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(1);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(1));
@@ -404,7 +404,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //quali sector 2
-            packet.type = LTData::QUALI_SECTOR_2;
+            packet.type = LTPackets::QUALI_SECTOR_2;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(2);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(2));
@@ -412,7 +412,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //quali sector 3
-            packet.type = LTData::QUALI_SECTOR_3;
+            packet.type = LTPackets::QUALI_SECTOR_3;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(3);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(3));
@@ -420,17 +420,17 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //quali lap
-            packet.type = LTData::QUALI_LAP;
+            packet.type = LTPackets::QUALI_LAP;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().numLapsColor();
             packet.longData.append(QString::number(eventData.getDriversData()[i].getLastLap().getLapNumber()));
             packets.append(QPair<int, Packet>(elapsedSeconds, packet));
             packet.longData.clear();
         }
-        else if (eventData.getEventType() == LTData::PRACTICE_EVENT)
+        else if (eventData.getEventType() == LTPackets::PRACTICE_EVENT)
         {
             //practice best
-            packet.type = LTData::PRACTICE_BEST;
+            packet.type = LTPackets::PRACTICE_BEST;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().lapTimeColor();
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getTime().toString());
@@ -438,7 +438,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //practice gap
-            packet.type = LTData::PRACTICE_GAP;
+            packet.type = LTPackets::PRACTICE_GAP;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().gapColor();
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getGap());
@@ -446,7 +446,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //practice sector 1
-            packet.type = LTData::PRACTICE_SECTOR_1;
+            packet.type = LTPackets::PRACTICE_SECTOR_1;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(1);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(1));
@@ -454,7 +454,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //practice sector 2
-            packet.type = LTData::PRACTICE_SECTOR_2;
+            packet.type = LTPackets::PRACTICE_SECTOR_2;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(2);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(2));
@@ -462,7 +462,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //practice sector 3
-            packet.type = LTData::PRACTICE_SECTOR_3;
+            packet.type = LTPackets::PRACTICE_SECTOR_3;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().sectorColor(3);
             packet.longData.append(eventData.getDriversData()[i].getLastLap().getSectorTime(3));
@@ -470,7 +470,7 @@ void EventRecorder::gatherDriverData()
             packet.longData.clear();
 
             //practice lap
-            packet.type = LTData::PRACTICE_LAP;
+            packet.type = LTPackets::PRACTICE_LAP;
             packet.carID = eventData.getDriversData()[i].getCarID();
             packet.data = eventData.getDriversData()[i].getColorData().numLapsColor();
             packet.longData.append(QString::number(eventData.getDriversData()[i].getLastLap().getLapNumber()));
@@ -548,8 +548,8 @@ void EventRecorder::timeout()
     //append the system clock packet every second
     Packet packet;
     packet.carID = 0;
-    packet.type = LTData::SYS_WEATHER;
-    packet.data = LTData::WEATHER_SESSION_CLOCK;
+    packet.type = LTPackets::SYS_WEATHER;
+    packet.data = LTPackets::WEATHER_SESSION_CLOCK;
     packet.longData.append(eventData.getRemainingTime().toString("h:mm:ss"));
     packet.length = packet.longData.size();
 
@@ -559,7 +559,7 @@ void EventRecorder::timeout()
 //    DriverData dd;
 //    int qPeriod = 0;
 //
-//    if (eventData.eventType == LTData::QUALI_EVENT)
+//    if (eventData.eventType == LTPackets::QUALI_EVENT)
 //    {
 //    	dd = eventData.getDriverDataFromPos(1);
 //    	qPeriod = (!dd.lapData.isEmpty() ? dd.lapData.last().qualiPeriod : 0);
@@ -567,9 +567,9 @@ void EventRecorder::timeout()
 //    }
     if (autoStopRecord >= 0)
     {
-        if((eventData.getRemainingTime().toString("h:mm:ss") == "0:00:00" && eventData.getEventType() == LTData::PRACTICE_EVENT) ||
-            (eventData.getRemainingTime().toString("h:mm:ss") == "0:00:00" && eventData.getEventType() == LTData::QUALI_EVENT && eventData.getQualiPeriod() == 3) ||
-            (eventData.getCompletedLaps() == eventData.getEventInfo().laps && eventData.getEventType() == LTData::RACE_EVENT))
+        if((eventData.getRemainingTime().toString("h:mm:ss") == "0:00:00" && eventData.getEventType() == LTPackets::PRACTICE_EVENT) ||
+            (eventData.getRemainingTime().toString("h:mm:ss") == "0:00:00" && eventData.getEventType() == LTPackets::QUALI_EVENT && eventData.getQualiPeriod() == 3) ||
+            (eventData.getCompletedLaps() == eventData.getEventInfo().laps && eventData.getEventType() == LTPackets::RACE_EVENT))
     		++elapsedTimeToStop;
 
 		if (elapsedTimeToStop >= (autoStopRecord * 60))
@@ -596,28 +596,28 @@ void EventRecorder::saveToFile(QString)
         QString session;
         switch (eventData.getEventType())
         {
-            case LTData::RACE_EVENT:
+            case LTPackets::RACE_EVENT:
                 session = "race"; break;
 
-            case LTData::QUALI_EVENT:
+            case LTPackets::QUALI_EVENT:
                 session = "quali"; break;
 
             default:
-                session = "fp" + QString::number(LTData::getFPNumber()); break;
+                session = "fp" + QString::number(SeasonData::getInstance().getFPNumber()); break;
         }
         QString sNo = QString::number(no);
         if (no < 10)
             sNo = "0" + QString::number(no);
 
-        QString fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg(session);
+        QString fName = QString("LTPackets/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg(session);
 
         //since we have 3 practice session we have to choose the correct session number
         if (session == "fp1" && QFile::exists(fName))
         {
-            fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp2");
+            fName = QString("LTPackets/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp2");
 
             if (QFile::exists(fName))
-                fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp3");
+                fName = QString("LTPackets/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp3");
         }
         QDir dir(F1LTCore::ltDataHomeDir());
         if (!dir.exists())

@@ -32,16 +32,16 @@ public:
     QString getSessionTime(const WeatherData &wd)
     {
         QString text = QString("L%1").arg(wd.getLap());
-        if (EventData::getInstance().getEventType() == LTData::PRACTICE_EVENT)
+        if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
         {
-            QTime t = LTData::correctFPTime(wd.getSessionTime());
-            text = QString::number(LTData::timeToMins(t)) + "'";
+            QTime t = SeasonData::getInstance().correctFPTime(wd.getSessionTime());
+            text = QString::number(SeasonData::getInstance().timeToMins(t)) + "'";
         }
 
-        if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
+        if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
         {
-            QTime t = LTData::correctQualiTime(wd.getSessionTime(), wd.getQualiPeriod());
-            text = QString("Q%1 %2'").arg(wd.getQualiPeriod()).arg(LTData::timeToMins(t));
+            QTime t = SeasonData::getInstance().correctQualiTime(wd.getSessionTime(), wd.getQualiPeriod());
+            text = QString("Q%1 %2'").arg(wd.getQualiPeriod()).arg(SeasonData::getInstance().timeToMins(t));
         }
         return text;
     }

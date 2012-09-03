@@ -69,7 +69,7 @@ private:
     QList<QPixmap> carImg;
 
     EventData &eventData;
-    LTData::EventType eventType;
+    LTPackets::EventType eventType;
 
     int currDriverId;
 

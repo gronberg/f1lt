@@ -18,14 +18,15 @@ SessionDataWidget::SessionDataWidget(QWidget *parent) :
     {
         ui->tableWidget_5->insertRow(i);
     }
+
+
     ui->speedRecordsTable->setModel(&speedRecordsModel);
     ui->fastestLapsTable->setModel(&fastestLapsModel);
-    ui->pitStopsTable->setModel(&pitStopsModel);
+    ui->pitStopsTable->setModel(&pitStopsModel);    
 
     ui->speedRecordsTable->setItemDelegate(new LTItemDelegate(this));
     ui->fastestLapsTable->setItemDelegate(new LTItemDelegate(this));
-    ui->pitStopsTable->setItemDelegate(new LTItemDelegate(this));
-
+    ui->pitStopsTable->setItemDelegate(new LTItemDelegate(this));    
 
     for (int i = 0; i < speedRecordsModel.rowCount(); ++i)
         ui->speedRecordsTable->setRowHeight(i, 22);
@@ -36,7 +37,7 @@ SessionDataWidget::SessionDataWidget(QWidget *parent) :
     for (int i = 0; i < pitStopsModel.rowCount(); ++i)
         ui->pitStopsTable->setRowHeight(i, 22);
 
-    setupContents();
+    setupContents();    
 }
 
 
@@ -99,16 +100,17 @@ void SessionDataWidget::updateEventInfo()
     QTableWidgetItem *item;
     LTEvent event = eventData.getEventInfo();
 
-    item = setItem(ui->tableWidget_5, 0, 0, event.eventName, Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::YELLOW]);
+    item = setItem(ui->tableWidget_5, 0, 0, event.eventName, Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::YELLOW));
     item->setFont(QFont("Arial", 15, QFont::Bold));
 
-    item = setItem(ui->tableWidget_5, 1, 0, event.eventPlace, Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::GREEN]);
+    item = setItem(ui->tableWidget_5, 1, 0, event.eventPlace, Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::GREEN));
     item->setFont(QFont("Arial", 12, QFont::Bold));
 
-    item = setItem(ui->tableWidget_5, 2, 0, event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"), Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::WHITE]);
+    item = setItem(ui->tableWidget_5, 2, 0, event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"),
+                   Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::WHITE));
     item->setFont(QFont("Arial", 10, QFont::Bold));
 
-    item = setItem(ui->tableWidget_5, 3, 0, QString::number(event.laps) + " laps", Qt::NoItemFlags, Qt::AlignCenter, LTData::colors[LTData::CYAN]);
+    item = setItem(ui->tableWidget_5, 3, 0, QString::number(event.laps) + " laps", Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::CYAN));
 
 
     QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget_5->cellWidget(4, 0));
@@ -157,13 +159,13 @@ void SessionDataWidget::updateFastestLaps()
     QList<LapData> fastestLaps = fastestLapsModel.getFastestLaps();
 
     QString str = eventData.getSessionRecords().getFastestLap().getTime();
-    if (eventData.getEventType() != LTData::RACE_EVENT && !fastestLaps.isEmpty())
+    if (eventData.getEventType() != LTPackets::RACE_EVENT && !fastestLaps.isEmpty())
         str = fastestLaps[0].getTime().toString();
 
     ui->flTimeLabel->setText(str);
 
     str = eventData.getSessionRecords().getFastestLap().getDriverName();
-    if (eventData.getEventType() != LTData::RACE_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getCarID() != -1)
+    if (eventData.getEventType() != LTPackets::RACE_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getCarID() != -1)
         str = eventData.getDriverDataById(fastestLaps[0].getCarID()).getDriverName();
 
     ui->flDriverLabel->setText(str);
@@ -172,12 +174,12 @@ void SessionDataWidget::updateFastestLaps()
     if (eventData.getSessionRecords().getFastestLap().getLapNumber() <= 0)
         str = "";
 
-    if (eventData.getEventType() == LTData::PRACTICE_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getTime().isValid())
-        str = LTData::correctFPTime(fastestLaps[0].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");
+    if (eventData.getEventType() == LTPackets::PRACTICE_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getTime().isValid())
+        str = SeasonData::getInstance().correctFPTime(fastestLaps[0].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");
 
-    else if (eventData.getEventType() == LTData::QUALI_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getTime().isValid())
+    else if (eventData.getEventType() == LTPackets::QUALI_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getTime().isValid())
     {
-        QString time = LTData::correctQualiTime(fastestLaps[0].getQualiLapExtraData().getSessionTime(), fastestLaps[0].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
+        QString time = SeasonData::getInstance().correctQualiTime(fastestLaps[0].getQualiLapExtraData().getSessionTime(), fastestLaps[0].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
         str = QString("%1 (Q%2)").arg(time).arg(fastestLaps[0].getQualiLapExtraData().getQualiPeriod());
     }
 
@@ -187,16 +189,17 @@ void SessionDataWidget::updateFastestLaps()
     ui->s1DriverLabel->setText(eventData.getSessionRecords().getSectorRecord(1).getDriverName());
 
     str = "";    
-    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(1).getLapNumber() > -1))
+    if ((eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(1).getLapNumber() > -1))
         str = QString("L%1").arg(eventData.getSessionRecords().getSectorRecord(1).getLapNumber());
 
     else if (eventData.getSessionRecords().getSectorRecord(1).getSessionTime().isValid())
     {
-        if (eventData.getEventType() == LTData::PRACTICE_EVENT)
-            str = LTData::correctFPTime(eventData.getSessionRecords().getSectorRecord(1).getSessionTime()).toString("h:mm:ss");
+        if (eventData.getEventType() == LTPackets::PRACTICE_EVENT)
+            str = SeasonData::getInstance().correctFPTime(eventData.getSessionRecords().getSectorRecord(1).getSessionTime()).toString("h:mm:ss");
         else
         {
-            QString time = LTData::correctQualiTime(eventData.getSessionRecords().getSectorRecord(1).getSessionTime(), eventData.getSessionRecords().getSectorRecord(1).getQualiPeriod()).toString("mm:ss");
+            QString time = SeasonData::getInstance().correctQualiTime(eventData.getSessionRecords().getSectorRecord(1).getSessionTime(),
+                                                                      eventData.getSessionRecords().getSectorRecord(1).getQualiPeriod()).toString("mm:ss");
             str = QString("%1 (Q%2)").arg(time).arg(eventData.getSessionRecords().getSectorRecord(1).getQualiPeriod());
         }
     }
@@ -208,16 +211,17 @@ void SessionDataWidget::updateFastestLaps()
     ui->s2DriverLabel->setText(eventData.getSessionRecords().getSectorRecord(2).getDriverName());
 
     str = "";
-    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(2).getLapNumber() > -1))
+    if ((eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(2).getLapNumber() > -1))
         str = QString("L%1").arg(eventData.getSessionRecords().getSectorRecord(2).getLapNumber());
 
     else if (eventData.getSessionRecords().getSectorRecord(2).getSessionTime().isValid())
     {
-        if (eventData.getEventType() == LTData::PRACTICE_EVENT)
-            str = LTData::correctFPTime(eventData.getSessionRecords().getSectorRecord(2).getSessionTime()).toString("h:mm:ss");
+        if (eventData.getEventType() == LTPackets::PRACTICE_EVENT)
+            str = SeasonData::getInstance().correctFPTime(eventData.getSessionRecords().getSectorRecord(2).getSessionTime()).toString("h:mm:ss");
         else
         {
-            QString time = LTData::correctQualiTime(eventData.getSessionRecords().getSectorRecord(2).getSessionTime(), eventData.getSessionRecords().getSectorRecord(2).getQualiPeriod()).toString("mm:ss");
+            QString time = SeasonData::getInstance().correctQualiTime(eventData.getSessionRecords().getSectorRecord(2).getSessionTime(),
+                                                                      eventData.getSessionRecords().getSectorRecord(2).getQualiPeriod()).toString("mm:ss");
             str = QString("%1 (Q%2)").arg(time).arg(eventData.getSessionRecords().getSectorRecord(2).getQualiPeriod());
         }
     }
@@ -228,16 +232,17 @@ void SessionDataWidget::updateFastestLaps()
     ui->s3DriverLabel->setText(eventData.getSessionRecords().getSectorRecord(3).getDriverName());
 
     str = "";
-    if ((eventData.getEventType() == LTData::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(3).getLapNumber() > -1))
+    if ((eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getSessionRecords().getSectorRecord(3).getLapNumber() > -1))
         str = QString("L%1").arg(eventData.getSessionRecords().getSectorRecord(3).getLapNumber());
 
     else if (eventData.getSessionRecords().getSectorRecord(3).getSessionTime().isValid())
     {
-        if (eventData.getEventType() == LTData::PRACTICE_EVENT)
-            str = LTData::correctFPTime(eventData.getSessionRecords().getSectorRecord(3).getSessionTime()).toString("h:mm:ss");
+        if (eventData.getEventType() == LTPackets::PRACTICE_EVENT)
+            str = SeasonData::getInstance().correctFPTime(eventData.getSessionRecords().getSectorRecord(3).getSessionTime()).toString("h:mm:ss");
         else
         {
-            QString time = LTData::correctQualiTime(eventData.getSessionRecords().getSectorRecord(3).getSessionTime(), eventData.getSessionRecords().getSectorRecord(3).getQualiPeriod()).toString("mm:ss");
+            QString time = SeasonData::getInstance().correctQualiTime(eventData.getSessionRecords().getSectorRecord(3).getSessionTime(),
+                                                                      eventData.getSessionRecords().getSectorRecord(3).getQualiPeriod()).toString("mm:ss");
             str = QString("%1 (Q%2)").arg(time).arg(eventData.getSessionRecords().getSectorRecord(3).getQualiPeriod());
         }
     }

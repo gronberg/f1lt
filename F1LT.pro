@@ -32,10 +32,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main.cpp \
     src/main_gui/ltwindow.cpp \
     src/net/datastreamreader.cpp \
-    src/core/ltdata.cpp \
     src/net/httpdatareader.cpp \
     src/net/socketdatareader.cpp \
-    src/main_gui/lttablewidget.cpp \
     src/main_gui/driverdatawidget.cpp \
     src/charts/chartwidget.cpp \
     src/main_gui/sessiondatawidget.cpp \
@@ -65,16 +63,15 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/ltitemdelegate.cpp \
     src/main_gui/models/speedrecordsmodel.cpp \
     src/main_gui/models/fastestlapsmodel.cpp \
-    src/main_gui/models/pitstopsmodel.cpp
+    src/main_gui/models/pitstopsmodel.cpp \
+    src/core/seasondata.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
     src/main_gui/ltwindow.h \
     src/net/datastreamreader.h \
-    src/core/ltdata.h \
     src/net/httpdatareader.h \
     src/net/socketdatareader.h \
-    src/main_gui/lttablewidget.h \
     src/main_gui/driverdatawidget.h \
     src/charts/chartwidget.h \
     src/main_gui/sessiondatawidget.h \
@@ -104,7 +101,9 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/ltitemdelegate.h \
     src/main_gui/models/speedrecordsmodel.h \
     src/main_gui/models/fastestlapsmodel.h \
-    src/main_gui/models/pitstopsmodel.h
+    src/main_gui/models/pitstopsmodel.h \
+    src/core/seasondata.h \
+    src/core/ltpackets.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

@@ -41,19 +41,19 @@ void EventStatusWidget::updateEventStatus()
     {
         switch (eventData.getFlagStatus())
         {
-            case LTData::GREEN_FLAG:
+            case LTPackets::GREEN_FLAG:
                 ui->statusLabelIcon->setPixmap(icons[0]);
                 break;
 
-            case LTData::RED_FLAG:
+            case LTPackets::RED_FLAG:
                 ui->statusLabelIcon->setPixmap(icons[1]);
                 break;
 
-            case LTData::YELLOW_FLAG:
+            case LTPackets::YELLOW_FLAG:
                 ui->statusLabelIcon->setPixmap(icons[2]);
                 break;
 
-			case LTData::SAFETY_CAR_DEPLOYED:
+            case LTPackets::SAFETY_CAR_DEPLOYED:
 				ui->statusLabelIcon->setPixmap(icons[3]);
 				break;
         }
@@ -61,17 +61,17 @@ void EventStatusWidget::updateEventStatus()
     else
         ui->statusLabelIcon->clear();
 
-    if (eventData.getEventType() != LTData::RACE_EVENT)
+    if (eventData.getEventType() != LTPackets::RACE_EVENT)
     {
         ui->timerLabel->setText(eventData.getRemainingTime().toString("h:mm:ss"));
 
         if (eventData.getRemainingTime().toString("hh:mm:ss") == "00:00:00")
             ui->statusLabelIcon->setPixmap(icons[4]);
 
-        if (eventData.getEventType() == LTData::QUALI_EVENT)
+        if (eventData.getEventType() == LTPackets::QUALI_EVENT)
             ui->infoLabel->setText("Q" + (eventData.getQualiPeriod() > 0 ? QString::number(eventData.getQualiPeriod()) : ""));
         else
-            ui->infoLabel->setText("FP" + QString::number(LTData::getFPNumber()));
+            ui->infoLabel->setText("FP" + QString::number(SeasonData::getInstance().getFPNumber()));
     }
     else
     {

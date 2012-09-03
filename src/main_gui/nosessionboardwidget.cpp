@@ -1,5 +1,7 @@
 #include "nosessionboardwidget.h"
-#include "../core/ltdata.h"
+#include "../core/seasondata.h"
+
+#include <QDateTime>
 
 NoSessionBoardWidget::NoSessionBoardWidget(QWidget *parent)
     : QWidget(parent)
@@ -22,10 +24,14 @@ void NoSessionBoardWidget::showSessionBoard(QString msg)
 	int day = msg.mid(4, 2).toInt();
 	int hour = msg.mid(6, 2).toInt() + 1;
 
-	LTEvent event = LTData::getCurrentEvent();
+    QDateTime dateTime(QDate(year, month, day), QTime(hour, 0), Qt::UTC);
+    dateTime = dateTime.toLocalTime();
+
+    LTEvent event = SeasonData::getInstance().getCurrentEvent();
 	QString str = event.eventName +
-		"\n\n" + QString::number(year) + "." + (month < 10 ? "0" + QString::number(month) : QString::number(month)) + "." +
-		(day < 10 ? "0" + QString::number(day) : QString::number(day)) + " - " + QString::number(hour) + ":00 GMT";
+            "\n\n" + dateTime.toString("hh:mm, dddd dd MMMM yyyy");
+            /*QString::number(year) + "." + (month < 10 ? "0" + QString::number(month) : QString::number(month)) + "." +
+        (day < 10 ? "0" + QString::number(day) : QString::number(day)) + " - " + QString::number(hour) + ":00 GMT";*/
 
 	ui.sessionLabel->setText(str);
 	QPixmap pix = event.trackImg.height() > 600 ? event.trackImg.scaledToHeight(600, Qt::SmoothTransformation) : event.trackImg;
@@ -38,7 +44,7 @@ void NoSessionBoardWidget::showStartupBoard()
 	ui.noSessionWidget->setVisible(false);
 	ui.startupWidget->setVisible(true);
 
-	LTEvent event = LTData::getNextEvent();
+    LTEvent event = SeasonData::getInstance().getNextEvent();
 	QString str = event.eventName;
 
 	ui.sessionLabel2->setText(str);

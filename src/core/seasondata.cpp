@@ -1,40 +1,45 @@
-#include "ltdata.h"
+#include "seasondata.h"
+
+#include "ltpackets.h"
 #include <QDataStream>
 #include <QFile>
 
 #include "eventdata.h"
 
-LTData::LTData()
+SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
 {
-}
+    fpLengths[0] = 90;
+    fpLengths[1] = 90;
+    fpLengths[2] = 60;
 
-void LTData::init()
-{
-    LTData::colors.clear();
+    qualiLengths[0] = 20;
+    qualiLengths[1] = 15;
+    qualiLengths[2] = 10;
+
+    colors.clear();
     for (int i = 0; i < 10; ++i)
-        LTData::colors.append(QColor());
+        colors.append(QColor());
 
-    LTData::colors[LTData::DEFAULT] = QColor(150, 150, 150);
-    LTData::colors[LTData::CYAN] = QColor(0, 255, 255);
-    LTData::colors[LTData::GREEN] = QColor(0, 255, 0);
-    LTData::colors[LTData::VIOLET] = QColor(255, 0, 255);
-    LTData::colors[LTData::WHITE] = QColor(220, 220, 220);
-    LTData::colors[LTData::YELLOW] = QColor(255, 255, 0);
-    LTData::colors[LTData::RED] = QColor(231, 31, 31);
-    LTData::colors[LTData::PIT] = QColor(231, 31, 31);
-    LTData::colors[LTData::BACKGROUND] = QColor(20, 20, 20);
-    LTData::colors[LTData::BACKGROUND2] = QColor(27, 27, 27);
+    colors[LTPackets::DEFAULT] = QColor(150, 150, 150);
+    colors[LTPackets::CYAN] = QColor(0, 255, 255);
+    colors[LTPackets::GREEN] = QColor(0, 255, 0);
+    colors[LTPackets::VIOLET] = QColor(255, 0, 255);
+    colors[LTPackets::WHITE] = QColor(220, 220, 220);
+    colors[LTPackets::YELLOW] = QColor(255, 255, 0);
+    colors[LTPackets::RED] = QColor(231, 31, 31);
+    colors[LTPackets::PIT] = QColor(231, 31, 31);
+    colors[LTPackets::BACKGROUND] = QColor(20, 20, 20);
+    colors[LTPackets::BACKGROUND2] = QColor(27, 27, 27);
 
     ltTeams.clear();
 }
 
-bool LTData::loadLTData()
-{   
-    init();
+bool SeasonData::loadSeasonFile()
+{
     QString fName = F1LTCore::seasonDataFile();
     if (!fName.isNull())
     {
-        QFile f(fName);        
+        QFile f(fName);
         if (f.open(QIODevice::ReadOnly))
         {
             QDataStream stream(&f);
@@ -114,13 +119,13 @@ bool LTData::loadLTData()
     }
     else
         return false;
-    qSort(ltTeams);    
+    qSort(ltTeams);
     qSort(ltEvents);
 
     return true;
 }
 
-QPixmap LTData::getCarImg(int no)
+QPixmap SeasonData::getCarImg(int no)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -130,7 +135,7 @@ QPixmap LTData::getCarImg(int no)
     return QPixmap();
 }
 
-QString LTData::getDriverName(QString name)
+QString SeasonData::getDriverName(QString name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -153,7 +158,15 @@ QString LTData::getDriverName(QString name)
     return name;
 }
 
-QString LTData::getDriverShortName(QString name)
+QString SeasonData::getDriverLastName(QString name)
+{
+    if (name.size() > 3)
+        return name.right(name.size()-3);
+
+    return name;
+}
+
+QString SeasonData::getDriverShortName(QString name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -167,17 +180,9 @@ QString LTData::getDriverShortName(QString name)
             return ltTeams[i].driver2ShortName;
     }
     return name.toUpper().mid(3, 3);
-//    name = name.left(4) + name.right(name.size()-4).toLower();
-//    int idx = name.indexOf(" ");
-//    while (idx != -1)
-//    {
-//        name.replace(name[idx+1], name[idx+1].toUpper());
-//        idx = name.indexOf(" ", idx+1);
-//    }
-//    return name;
 }
 
-QString LTData::getDriverNameFromShort(QString name)
+QString SeasonData::getDriverNameFromShort(QString name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -193,7 +198,7 @@ QString LTData::getDriverNameFromShort(QString name)
     return name.left(1) + name.right(name.size()-1).toLower();
 }
 
-QString LTData::getTeamName(int no)
+QString SeasonData::getTeamName(int no)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -203,7 +208,7 @@ QString LTData::getTeamName(int no)
     return QString();
 }
 
-LTEvent LTData::getEvent(int ev)
+LTEvent SeasonData::getEvent(int ev)
 {
     for (int i = 0; i < ltEvents.size(); ++i)
     {
@@ -213,17 +218,17 @@ LTEvent LTData::getEvent(int ev)
     return LTEvent();
 }
 
-int LTData::getEventNo(QDate date)
+int SeasonData::getEventNo(QDate date)
 {
     for (int i = 1; i < ltEvents.size(); ++i)
-    {        
-        if (date >= ltEvents[i-1].fpDate && date < ltEvents[i].fpDate)     
-            return ltEvents[i-1].eventNo;        
+    {
+        if (date >= ltEvents[i-1].fpDate && date < ltEvents[i].fpDate)
+            return ltEvents[i-1].eventNo;
     }
     return 1;
 }
 
-LTEvent LTData::getEvent(QDate date)
+LTEvent SeasonData::getEvent(QDate date)
 {
     for (int i = 1; i < ltEvents.size(); ++i)
     {
@@ -236,24 +241,24 @@ LTEvent LTData::getEvent(QDate date)
     return ltEvents[0];
 }
 
-LTEvent LTData::getCurrentEvent()
+LTEvent SeasonData::getCurrentEvent()
 {
-	return getEvent(QDate::currentDate());
+    return getEvent(QDate::currentDate());
 }
 
-LTEvent LTData::getNextEvent()
+LTEvent SeasonData::getNextEvent()
 {
-	QDate date = QDate::currentDate();
-	for (int i = 1; i < ltEvents.size(); ++i)
-	{
-		if (date > ltEvents[i-1].raceDate && date <= ltEvents[i].raceDate)
-			return ltEvents[i];
-	}
+    QDate date = QDate::currentDate();
+    for (int i = 1; i < ltEvents.size(); ++i)
+    {
+        if (date > ltEvents[i-1].raceDate && date <= ltEvents[i].raceDate)
+            return ltEvents[i];
+    }
 
-	return ltEvents[0];
+    return ltEvents[0];
 }
 
-int LTData::getDriverNo(QString name)
+int SeasonData::getDriverNo(QString name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -266,32 +271,32 @@ int LTData::getDriverNo(QString name)
     return -1;
 }
 
-QStringList LTData::getDriversList()
+QStringList SeasonData::getDriversList()
 {
     QStringList list;
     list.append("");
 
     for (int i = 0; i < 30; ++i)
     {
-    	DriverData dd = EventData::getInstance().getDriverData(i);
+        DriverData dd = EventData::getInstance().getDriverData(i);
         if (dd.getCarID() != -1)
-    	{
+        {
             list.append(QString::number(dd.getNumber()) + " " + dd.getDriverName());
-    	}
+        }
     }
     if (list.isEmpty())
     {
-		for (int i = 0; i < ltTeams.size(); ++i)
-		{
+        for (int i = 0; i < ltTeams.size(); ++i)
+        {
             list.append(QString::number(ltTeams[i].driver1No) + " " + ltTeams[i].driver1Name);
             list.append(QString::number(ltTeams[i].driver2No) + " " + ltTeams[i].driver2Name);
-		}
+        }
     }
 
     return list;
 }
 
-QStringList LTData::getDriversListShort()
+QStringList SeasonData::getDriversListShort()
 {
     QStringList list;
 
@@ -300,7 +305,7 @@ QStringList LTData::getDriversListShort()
         DriverData dd = EventData::getInstance().getDriverData(i);
         if (dd.getCarID() != -1)
         {
-            list.append(QString::number(dd.getNumber()) + " " + LTData::getDriverShortName(dd.getDriverName()));
+            list.append(QString::number(dd.getNumber()) + " " + SeasonData::getDriverShortName(dd.getDriverName()));
         }
     }
     if (list.isEmpty())
@@ -315,7 +320,7 @@ QStringList LTData::getDriversListShort()
     return list;
 }
 
-int LTData::timeToMins(QTime time)
+int SeasonData::timeToMins(QTime time)
 {
     int hour = time.hour();
     int min = time.minute();
@@ -323,7 +328,7 @@ int LTData::timeToMins(QTime time)
     return hour * 60 + min;
 }
 
-int LTData::timeToSecs(QTime time)
+int SeasonData::timeToSecs(QTime time)
 {
     int hour = time.hour();
     int min = time.minute();
@@ -332,7 +337,7 @@ int LTData::timeToSecs(QTime time)
     return hour * 3600 + min * 60 + sec;
 }
 
-int LTData::getFPNumber()
+int SeasonData::getFPNumber()
 {
     if (EventData::getInstance().getEventId() == 0)
         return 1;
@@ -341,18 +346,20 @@ int LTData::getFPNumber()
         return (EventData::getInstance().getEventId() - 7066)%6;
 }
 
-int LTData::getFPLength()
+int SeasonData::getFPLength()
 {
-    switch (getFPNumber())
-    {
-        case 1: return 90;
-        case 2: return 90;
-        case 3: return 60;
-        default: return 90;
-    }
+    return getFPLength(getFPNumber());
 }
 
-QTime LTData::correctFPTime(QTime time)
+int SeasonData::getFPLength(int fp)
+{
+    if (fp >= 1 && fp <= 3)
+        return fpLengths[fp-1];
+
+    return 0;
+}
+
+QTime SeasonData::correctFPTime(QTime time)
 {
     int hour = time.hour();
     int min = time.minute();
@@ -367,7 +374,7 @@ QTime LTData::correctFPTime(QTime time)
     return newTime;
 }
 
-QTime LTData::correctQualiTime(QTime time, int qualiPeriod)
+QTime SeasonData::correctQualiTime(QTime time, int qualiPeriod)
 {
     int hour = time.hour();
     int min = time.minute();
@@ -385,20 +392,10 @@ QTime LTData::correctQualiTime(QTime time, int qualiPeriod)
     return newTime;
 }
 
-int LTData::getQualiLength(int q)
+int SeasonData::getQualiLength(int q)
 {
-    switch (q)
-    {
-        case 1: return 20; break;
-        case 2: return 15; break;
-        case 3: return 10; break;
-    }
-    return 20;
+    if (q >= 1 && q <= 3)
+        return qualiLengths[q-1];
 }
 
-
-QList<QColor> LTData::colors;
-int LTData::season;
-QList<LTEvent> LTData::ltEvents;
-QList<LTTeam> LTData::ltTeams;
 

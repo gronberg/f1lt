@@ -51,7 +51,7 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             }
 
             if (role == Qt::ForegroundRole)
-                return LTData::colors[LTData::CYAN];
+                return SeasonData::getInstance().getColor(LTPackets::CYAN);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);
@@ -65,9 +65,9 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             if (role == Qt::ForegroundRole)
             {
                 if (index.row() == 1)
-                    return LTData::colors[LTData::VIOLET];
+                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
-                return LTData::colors[LTData::WHITE];
+                return SeasonData::getInstance().getColor(LTPackets::WHITE);
             }
             return QVariant();
 
@@ -78,9 +78,9 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             if (role == Qt::ForegroundRole)
             {
                 if (index.row() == 1)
-                    return LTData::colors[LTData::VIOLET];
+                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
-                return LTData::colors[LTData::GREEN];
+                return SeasonData::getInstance().getColor(LTPackets::GREEN);
             }
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignCenter);
@@ -93,7 +93,7 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
 
 
             if (role == Qt::ForegroundRole)
-                return LTData::colors[LTData::YELLOW];
+                return SeasonData::getInstance().getColor(LTPackets::YELLOW);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignCenter);
@@ -108,13 +108,13 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getLapNumber() &&
                     dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getDriverName())
-                    return LTData::colors[LTData::VIOLET];
+                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
 
                 if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(1))
-                    return LTData::colors[LTData::GREEN];
+                    return SeasonData::getInstance().getColor(LTPackets::GREEN);
 
-                return LTData::colors[LTData::WHITE];
+                return SeasonData::getInstance().getColor(LTPackets::WHITE);
             }
 
             if (role == Qt::TextAlignmentRole)
@@ -128,12 +128,12 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getLapNumber() &&
                     dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getDriverName())
-                    return LTData::colors[LTData::VIOLET];
+                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
                 if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(2))
-                    return LTData::colors[LTData::GREEN];                
+                    return SeasonData::getInstance().getColor(LTPackets::GREEN);
 
-                return LTData::colors[LTData::WHITE];
+                return SeasonData::getInstance().getColor(LTPackets::WHITE);
             }
 
             if (role == Qt::TextAlignmentRole)
@@ -147,12 +147,12 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getLapNumber() &&
                     dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getDriverName())
-                    return LTData::colors[LTData::VIOLET];
+                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
                 if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(3))
-                    return LTData::colors[LTData::GREEN];                
+                    return SeasonData::getInstance().getColor(LTPackets::GREEN);
 
-                return LTData::colors[LTData::WHITE];
+                return SeasonData::getInstance().getColor(LTPackets::WHITE);
             }
 
             if (role == Qt::TextAlignmentRole)
@@ -163,7 +163,7 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             {
                 if (ld.getTime().isValid())
                 {
-                    if (EventData::getInstance().getEventType() == LTData::QUALI_EVENT)
+                    if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
                         return QString("%1 (Q%2)").arg(ld.getLapNumber()).arg(ld.getQualiLapExtraData().getQualiPeriod());
 
                     return ld.getLapNumber();
@@ -171,7 +171,7 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             }
 
             if (role == Qt::ForegroundRole)
-                return LTData::colors[LTData::WHITE];
+                return SeasonData::getInstance().getColor(LTPackets::WHITE);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);
@@ -196,7 +196,7 @@ QVariant FastestLapsModel::headerData(const QModelIndex & index, int role) const
         }
     }
     if (role == Qt::ForegroundRole)
-        return LTData::colors[LTData::DEFAULT];
+        return SeasonData::getInstance().getColor(LTPackets::DEFAULT);
 
     if (role == Qt::TextAlignmentRole)
     {

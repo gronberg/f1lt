@@ -48,7 +48,7 @@ QVariant SpeedRecordsModel::data(const QModelIndex & index, int role) const
                 return EventData::getInstance().getSessionRecords().getSectorSpeed(sector, row).getDriverName();
 
             if (role == Qt::ForegroundRole)
-                return LTData::colors[LTData::WHITE];
+                return SeasonData::getInstance().getColor(LTPackets::WHITE);
 
             return QVariant();
 
@@ -57,7 +57,7 @@ QVariant SpeedRecordsModel::data(const QModelIndex & index, int role) const
                 return EventData::getInstance().getSessionRecords().getSectorSpeed(sector, row).getSpeed();
 
             if (role == Qt::ForegroundRole)
-                return LTData::colors[LTData::YELLOW];
+                return SeasonData::getInstance().getColor(LTPackets::YELLOW);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);
@@ -74,7 +74,7 @@ QVariant SpeedRecordsModel::data(const QModelIndex & index, int role) const
             }
 
             if (role == Qt::ForegroundRole)
-                return LTData::colors[LTData::WHITE];
+                return SeasonData::getInstance().getColor(LTPackets::WHITE);
 
             return QVariant();
 
@@ -88,7 +88,7 @@ QVariant SpeedRecordsModel::data(const QModelIndex & index, int role) const
             }
 
             if (role == Qt::ForegroundRole)
-                return LTData::colors[LTData::YELLOW];
+                return SeasonData::getInstance().getColor(LTPackets::YELLOW);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);
@@ -117,7 +117,7 @@ QVariant SpeedRecordsModel::headerData(const QModelIndex & index, int role) cons
         }
     }
     if (role == Qt::ForegroundRole)
-        return LTData::colors[LTData::DEFAULT];
+        return SeasonData::getInstance().getColor(LTPackets::DEFAULT);
 
     if (role == Qt::TextAlignmentRole)
     {

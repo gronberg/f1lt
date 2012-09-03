@@ -164,7 +164,7 @@ public:
 
         if (ed.driversData.isEmpty())
         {
-            for (int i = 0; i < LTData::ltTeams.size(); ++i)
+            for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
             {
                 ed.driversData.append(DriverData());
                 ed.driversData.append(DriverData());
@@ -186,8 +186,8 @@ public:
     LTEvent getEventInfo()              const { return eventInfo; }
     void setEventInfo(LTEvent ev)       { eventInfo = ev; }
     int getEventId()                    const { return eventId; }
-    LTData::EventType getEventType()    const { return eventType; }
-    LTData::FlagStatus getFlagStatus()  const { return flagStatus; }
+    LTPackets::EventType getEventType()    const { return eventType; }
+    LTPackets::FlagStatus getFlagStatus()  const { return flagStatus; }
 
     QTime getRemainingTime()            const { return remainingTime; }
     void setRemainingTime(QTime t)       { remainingTime = t; }
@@ -222,8 +222,8 @@ private:
 
     int eventId;
 
-    LTData::EventType eventType;
-    LTData::FlagStatus flagStatus;
+    LTPackets::EventType eventType;
+    LTPackets::FlagStatus flagStatus;
 
     QTime remainingTime;
     int lapsCompleted;

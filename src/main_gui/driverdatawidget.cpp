@@ -13,18 +13,18 @@ DriverDataWidget::DriverDataWidget(QWidget *parent) :
 {        
     ui->setupUi(this);
 
-    posChart = new ChartWidget(1, 24, LTData::colors[LTData::CYAN], this);
+    posChart = new ChartWidget(1, 24, SeasonData::getInstance().getColor(LTPackets::CYAN), this);
 
     QColor colors[5];
-    colors[0] = LTData::colors[LTData::RED];
-    colors[1] = LTData::colors[LTData::WHITE];
-    colors[2] = LTData::colors[LTData::GREEN];
-    colors[3] = LTData::colors[LTData::VIOLET];
-    colors[4] = LTData::colors[LTData::YELLOW];
+    colors[0] = SeasonData::getInstance().getColor(LTPackets::RED);
+    colors[1] = SeasonData::getInstance().getColor(LTPackets::WHITE);
+    colors[2] = SeasonData::getInstance().getColor(LTPackets::GREEN);
+    colors[3] = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+    colors[4] = SeasonData::getInstance().getColor(LTPackets::YELLOW);
 
     lapTimeChart = new LapTimeChart(colors, this);
 
-    gapChart = new GapChart(LTData::colors[LTData::YELLOW], this);
+    gapChart = new GapChart(SeasonData::getInstance().getColor(LTPackets::YELLOW), this);
 
     ui->chartsTableWidget->setColumnWidth(0, ui->chartsTableWidget->width());
     ui->lapTimeChartTableWidget->setColumnWidth(0, ui->lapTimeChartTableWidget->width());
@@ -33,8 +33,7 @@ DriverDataWidget::DriverDataWidget(QWidget *parent) :
 
     driverLapHistoryModel = new DriverLapHistoryModel(this);
     ui->tableView->setModel(driverLapHistoryModel);
-    ui->tableView->setItemDelegate(new LTItemDelegate(this));
-
+    ui->tableView->setItemDelegate(new LTItemDelegate(this));    
 //    ui->toolBox->insertItem(0, gapChart, QIcon(), "Position chart");
 //    ui->stackedWidget->addWidget(gapChart);
 
@@ -74,7 +73,7 @@ DriverDataWidget::DriverDataWidget(QWidget *parent) :
 
     ui->chartsTableWidget->insertRow(3);
     ui->chartsTableWidget->setCellWidget(3, 0, gapChart);
-    ui->chartsTableWidget->setRowHeight(3, 200);
+    ui->chartsTableWidget->setRowHeight(3, 200);    
 }
 
 DriverDataWidget::~DriverDataWidget()
@@ -90,12 +89,12 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
     QString s;
 
-    s = QString("%1  %2 (%3)").arg(driverData.getNumber()).arg(driverData.getDriverName()).arg(LTData::getTeamName(driverData.getNumber()));
+    s = QString("%1  %2 (%3)").arg(driverData.getNumber()).arg(driverData.getDriverName()).arg(SeasonData::getInstance().getTeamName(driverData.getNumber()));
     ui->driverNameLabel->setText(s);
 
-    ui->carImageLabel->setPixmap(LTData::getCarImg(driverData.getNumber()));
+    ui->carImageLabel->setPixmap(SeasonData::getInstance().getCarImg(driverData.getNumber()));
 
-    if (eventData.getEventType() == LTData::RACE_EVENT)
+    if (eventData.getEventType() == LTPackets::RACE_EVENT)
     {
         ui->gridLabel->setText("Grid position");
         if (!driverData.getPositionHistory().isEmpty())
@@ -105,7 +104,7 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
     }
     else
     {
-        ui->gridLabel->setText("Laps completed");
+        ui->gridLabel->setText("Laps completed:");
         int laps = driverData.getLastLap().getLapNumber();
         if (laps < 0)
             laps = 0;
@@ -122,7 +121,7 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
     ui->gapLabel->setText(s);
 
-    if (eventData.getEventType() == LTData::RACE_EVENT)
+    if (eventData.getEventType() == LTPackets::RACE_EVENT)
     {
         LapTime lt = driverData.getLastLap().getTime();
         s = lt.toString();
@@ -132,9 +131,9 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
         QPalette palette = ui->lastLapLabel->palette();
         if (lt.toString() == "RETIRED" || lt.toString() == "IN PIT" || lt.toString() == "OUT")
-            palette.setBrush(QPalette::Foreground, LTData::colors[LTData::RED]);
+            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::RED));
         else
-            palette.setBrush(QPalette::Foreground, LTData::colors[LTData::WHITE]);
+            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
 
         ui->lastLapLabel->setPalette(palette);
     }
@@ -157,19 +156,28 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
     if (driverData.getDriverName() == eventData.getSessionRecords().getFastestLap().getDriverName() &&
         driverData.getSessionRecords().getBestLap().getTime() == eventData.getSessionRecords().getFastestLap().getTime())
-        palette.setBrush(QPalette::Foreground, LTData::colors[LTData::VIOLET]);
+        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
 
     else
-        palette.setBrush(QPalette::Foreground, LTData::colors[LTData::GREEN]);
+        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
 
     ui->bestLapLabel->setPalette(palette);
 
-
-    if (eventData.getEventType() == LTData::RACE_EVENT)
+    if (driverData.getSessionRecords().getBestSectorTime(1).isValid() &&
+        driverData.getSessionRecords().getBestSectorTime(2).isValid() &&
+        driverData.getSessionRecords().getBestSectorTime(3).isValid())
     {
-        ui->pitStopsLabel->setText("Pit stops");
+        ui->approxLapLabel->setText(LapData::sumSectors(driverData.getSessionRecords().getBestSectorTime(1),
+                                    driverData.getSessionRecords().getBestSectorTime(2), driverData.getSessionRecords().getBestSectorTime(3)));
+    }
+    else
+        ui->approxLapLabel->setText("");
+
+    if (eventData.getEventType() == LTPackets::RACE_EVENT)
+    {
+        ui->pitStopsLabel->setText("Pit stops:");
         palette = ui->pitStopsLabel->palette();
-        palette.setBrush(QPalette::Foreground, LTData::colors[LTData::DEFAULT]);
+        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
         ui->pitStopsLabel->setPalette(palette);
 
         ui->numPitsLabel->setText(QString::number(driverData.getNumPits()));
@@ -180,15 +188,15 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
     else
     {
         palette = ui->pitStopsLabel->palette();
-        if (driverData.getColorData().numberColor() == LTData::PIT)
+        if (driverData.getColorData().numberColor() == LTPackets::PIT)
         {
             ui->pitStopsLabel->setText("In pits");
-            palette.setBrush(QPalette::Foreground, LTData::colors[LTData::PIT]);
+            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::PIT));
         }
         else
         {
             ui->pitStopsLabel->setText("On track");
-            palette.setBrush(QPalette::Foreground, LTData::colors[LTData::GREEN]);
+            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
         }
         ui->pitStopsLabel->setPalette(palette);
 
@@ -202,8 +210,10 @@ void DriverDataWidget::printDriverData(int id)
     if (id <= 0)
         return;
 
-    currentDriver = id;
     printDriverChart(id);
+    printDriverMainEvents(id);
+
+    currentDriver = id;
 
     const DriverData &driverData = eventData.getDriverDataById(id);
 
@@ -240,7 +250,7 @@ void DriverDataWidget::printDriverChart(int id)
     lapTimeChart->setData(driverData);
     lapTimeChart->repaint();
 
-//    if (eventData.eventType == LTData::RACE_EVENT)
+//    if (eventData.eventType == LTPackets::RACE_EVENT)
     {
         gapChart->setData(driverData);
         gapChart->repaint();
@@ -260,6 +270,58 @@ void DriverDataWidget::printDriverChart(int id)
     }
 }
 
+void DriverDataWidget::printDriverMainEvents(int id)
+{
+    if (id <= 0)
+        return;
+
+    int idx = 0;
+
+    if (id == currentDriver)
+    {
+        QString prevLast;
+        QString text = ui->textEdit->toPlainText();
+
+        idx = text.lastIndexOf("\n", -2);
+        if (idx != -1)
+        {
+            prevLast = text.mid(idx+1, text.size() - idx - 2);
+
+            idx = eventData.getCommentary().lastIndexOf(prevLast, -2, Qt::CaseInsensitive);
+            if (idx != -1)
+                idx += prevLast.size();
+        }
+        else
+        {
+            ui->textEdit->clear();
+            idx = 0;
+        }
+    }
+    else
+        ui->textEdit->clear();
+
+    const DriverData &driverData = eventData.getDriverDataById(id);
+    QString searchT = SeasonData::getInstance().getDriverLastName(driverData.getDriverName());
+    QString lastEvent;
+
+    idx = eventData.getCommentary().indexOf(searchT, idx, Qt::CaseInsensitive);
+
+    while (idx != -1)
+    {
+        int beg = eventData.getCommentary().lastIndexOf("\n", idx);
+        int end = eventData.getCommentary().indexOf("\n", idx);
+
+        QString ev = eventData.getCommentary().mid(beg+1, end-beg-1);
+
+        if (ev != lastEvent)
+        {
+            lastEvent = ev;
+            ui->textEdit->append(ev + "\n");
+        }
+        idx = eventData.getCommentary().indexOf(searchT, idx+1, Qt::CaseInsensitive);
+    }
+}
+
 void DriverDataWidget::resizeEvent(QResizeEvent *event)
 {
     int h = event->size().height() - 110;
@@ -267,10 +329,10 @@ void DriverDataWidget::resizeEvent(QResizeEvent *event)
 //    int w = ui->chartsTableWidget->viewport()->width();//event->size().width() - 40;
 
 //    ui->chartsTableWidget->setColumnWidth(0, w);
-//    if (eventData.eventType == LTData::RACE_EVENT)
+//    if (eventData.eventType == LTPackets::RACE_EVENT)
     {
-//        int div = eventData.eventType == LTData::RACE_EVENT ? 3 : 2;
-//        ?int end = eventData.eventType == LTData::RACE_EVENT ? ui->chartsTableWidget->rowCount() : ui->chartsTableWidget->rowCount() - 2;
+//        int div = eventData.eventType == LTPackets::RACE_EVENT ? 3 : 2;
+//        ?int end = eventData.eventType == LTPackets::RACE_EVENT ? ui->chartsTableWidget->rowCount() : ui->chartsTableWidget->rowCount() - 2;
         for (int i = 1; i < ui->chartsTableWidget->rowCount(); i += 2)
         {
             int rH = (h/2 < 150 ? 150 : h/2);
@@ -329,10 +391,11 @@ void DriverDataWidget::updateView()
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
 }
 
-void DriverDataWidget::setFont(const QFont &font)
+void DriverDataWidget::setFont(const QFont &font, const QFont &cFont)
 {
     ui->infoWidget->setFont(font);
     ui->tableView->setFont(font);
+    ui->textEdit->setFont(cFont);
 }
 
 int DriverDataWidget::currentIndex()
@@ -384,4 +447,5 @@ void DriverDataWidget::keyPressEvent(QKeyEvent *event)
 
 void DriverDataWidget::clearData()
 {
+    ui->textEdit->clear();
 }

@@ -1,6 +1,6 @@
 #include "driverdata.h"
 #include "eventdata.h"
-#include "ltdata.h"
+#include "seasondata.h"
 
 #include <QDebug>
 
@@ -72,7 +72,7 @@ void DriverData::addLap(const EventData &ed)
     //- if the lapData array is empty - check if lapNum is greater than 0
     //- don't add the out lap - "OUT",
     //- finally - check if we don't try to add the same lap again, we use the gap, interval and lap time info for this
-    if (ed.getEventType() == LTData::RACE_EVENT)
+    if (ed.getEventType() == LTPackets::RACE_EVENT)
     {
 
         if (!retired && ed.getCompletedLaps() > 0 && (lastLap.lapTime.toString() != "" || lastLap.lapNum == 1) &&
@@ -128,12 +128,12 @@ void DriverData::addLap(const EventData &ed)
                 sessionRecords.bestLap = lastLap;
 
             //best sectors
-//            if (colorData[LTData::RACE_SECTOR_1] == LTData::GREEN || colorData[LTData::RACE_SECTOR_1] == LTData::VIOLET)
+//            if (colorData[LTPackets::RACE_SECTOR_1] == LTPackets::GREEN || colorData[LTPackets::RACE_SECTOR_1] == LTPackets::VIOLET)
 //            {
 //                bestSectors[0].first = lapData.last().sector1;
 //                bestSectors[0].second = lapData.last().numLap;
 //            }
-//            if (colorData[LTData::RACE_SECTOR_2] == LTData::GREEN || colorData[LTData::RACE_SECTOR_2] == LTData::VIOLET)
+//            if (colorData[LTPackets::RACE_SECTOR_2] == LTPackets::GREEN || colorData[LTPackets::RACE_SECTOR_2] == LTPackets::VIOLET)
 //            {
 //                bestSectors[1].first = lapData.last().sector2;
 //                bestSectors[1].second = lapData.last().numLap;
@@ -174,7 +174,7 @@ void DriverData::addLap(const EventData &ed)
 //                bestLap.sector3 = lastLap.sector3;
 //            }
 
-            if (ed.getFlagStatus() == LTData::SAFETY_CAR_DEPLOYED || ed.getFlagStatus() == LTData::RED_FLAG)
+            if (ed.getFlagStatus() == LTPackets::SAFETY_CAR_DEPLOYED || ed.getFlagStatus() == LTPackets::RED_FLAG)
                 lapData.last().raceLapExtraData.scLap = true;
 
             else
@@ -221,7 +221,7 @@ void DriverData::addLap(const EventData &ed)
                 lastLap.practiceLapExtraData.sessionTime = ed.getRemainingTime();
 				lapData.append(lastLap);
 
-                if (ed.getEventType() == LTData::QUALI_EVENT)
+                if (ed.getEventType() == LTPackets::QUALI_EVENT)
 				{
                     int qPeriod = ed.getQualiPeriod() > 0 ? ed.getQualiPeriod() : 1;
                     lastLap.qualiLapExtraData.qualiPeriod = qPeriod;
@@ -257,7 +257,7 @@ void DriverData::addLap(const EventData &ed)
 
 			if (!correction)
 			{
-                if (ed.getEventType() == LTData::PRACTICE_EVENT)
+                if (ed.getEventType() == LTPackets::PRACTICE_EVENT)
                 {
                     if (lastLap < sessionRecords.bestLap)
                         sessionRecords.bestLap = lapData.last();
@@ -271,7 +271,7 @@ void DriverData::addLap(const EventData &ed)
                         lapData.last().practiceLapExtraData.approxLap = false;
 
                 }
-                else if (ed.getEventType() == LTData::QUALI_EVENT)
+                else if (ed.getEventType() == LTPackets::QUALI_EVENT)
                 {
                     if (lastLap < sessionRecords.bestQLaps[lastLap.qualiLapExtraData.qualiPeriod-1])
                     {

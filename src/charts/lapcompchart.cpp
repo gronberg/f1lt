@@ -110,7 +110,7 @@ void LapCompChart::setData(DriverData *dd)
 
 void LapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -119,19 +119,19 @@ void LapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     double yFactor = (double)((paintRect.height())/6.0);
     double yFactor2 = (double)((tMax-tMin)/6.0);
     double j = tMin;
     for (int i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString("%1").arg(j, 0, 'f', 1));
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -150,12 +150,12 @@ void LapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -171,12 +171,12 @@ void LapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 //        double jFactor = lastLap - firstLap < 5 ? 1.0 : (double)((lastLap - firstLap)/5.0);
 //        for (int i = 37; i < width()-15 && round(j) < lastLap; i += xFactor, j += jFactor)
 //        {
-//            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+//            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE]));
 //            p->drawText(i-5, height()-10, QString("L%1").arg(round(j)));
 
 //            if (i > 37)
 //            {
-//                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+//                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT]));
 //                pen.setStyle(Qt::DashLine);
 //                p->setPen(pen);
 //                p->drawLine(i, height()-25, i, 10);
@@ -329,7 +329,7 @@ void LapCompChart::drawChart(QPainter *p)
                     ++lapsInWindow;
 
                     int pointSize = 3;
-                    if (EventData::getInstance().getEventType() == LTData::RACE_EVENT)
+                    if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT)
                     {
                         p->drawLine(dx1, dy1, dx2, dy2);
                         pointSize = 2;
@@ -414,7 +414,7 @@ void LapCompChart::drawLegend(QPainter *p)
     if (yy > 5)
     {
         p->setBrush(QBrush());
-        p->setPen(LTData::colors[LTData::DEFAULT]);
+        p->setPen(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
         p->drawRect(40, 5, 115, yy);
     }
 }
@@ -459,7 +459,7 @@ void LapCompChart::drawLapDataXY(QPainter *p)
 
 
     p->setFont(QFont("Arial", 10, QFont::Normal, true));
-    p->setPen(LTData::colors[LTData::WHITE]);
+    p->setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
 
     int didx = lapDataXYCompArray[itemsInXY[0]].driverIdx;
     int lidx = lapDataXYCompArray[itemsInXY[0]].idx;
@@ -603,7 +603,7 @@ double GapCompChart::calculateInterval(int lap)
 
 void GapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -612,7 +612,7 @@ void GapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     if (tMax == max && max >= 60)
     {
@@ -625,12 +625,12 @@ void GapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     double j = tMin;
     for (int i = paintRect.bottom(); i > 10; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString("%1").arg(j, 0, 'f', 1));
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -639,9 +639,9 @@ void GapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
     if (max == 60)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         p->drawText(5, 15, ">60");
-        QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+        QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
         pen.setStyle(Qt::DashLine);
         p->setPen(pen);
         p->drawLine(paintRect.left(), 10, paintRect.right(), 10);
@@ -659,12 +659,12 @@ void GapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -789,7 +789,7 @@ void GapCompChart::drawChart(QPainter *p)
                     checkX2(dx1, dy1, dx2, dy2);
 
                     int pointSize = 3;
-                    if (EventData::getInstance().getEventType() == LTData::RACE_EVENT)
+                    if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT)
                     {
                         pointSize = 2;
                         p->drawLine(dx1, dy1, dx2, dy2);
@@ -870,7 +870,7 @@ void GapCompChart::drawLegend(QPainter *p)
     p->setRenderHint(QPainter::Antialiasing, false);
     p->setBrush(QColor(20, 20, 20));
 
-    p->setPen(LTData::colors[LTData::DEFAULT]);
+    p->setPen(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     p->drawRect(40, 5, 115, 45);
 
     double yy = 0.0;
@@ -926,7 +926,7 @@ void GapCompChart::drawLapDataXY(QPainter *p)
 
 
     p->setFont(QFont("Arial", 10, QFont::Normal, true));
-    p->setPen(LTData::colors[LTData::WHITE]);
+    p->setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
 
     int didx = lapDataXYGapCompArray[itemsInXY[0]].driverIdx;
     int lidx = lapDataXYGapCompArray[itemsInXY[0]].idx;
@@ -1017,7 +1017,7 @@ void GapCompChart::transform()
 
 void PosCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -1026,7 +1026,7 @@ void PosCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
 
     double yFactor = (double)(paintRect.height()/6.0);
@@ -1035,12 +1035,12 @@ void PosCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
     for (int i = paintRect.bottom(); i >= paintRect.top(); i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString("%1").arg(round(j)));
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -1059,12 +1059,12 @@ void PosCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -1080,12 +1080,12 @@ void PosCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 //        double jFactor = lastLap - firstLap < 5 ? 1.0 : (double)((lastLap - firstLap)/5.0);
 //        for (int i = 37; i < width()-15 && round(j) < lastLap; i += xFactor, j += jFactor)
 //        {
-//            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+//            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE]));
 //            p->drawText(i-5, height()-10, QString("L%1").arg(round(j)));
 
 //            if (i > 37)
 //            {
-//                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+//                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT]));
 //                pen.setStyle(Qt::DashLine);
 //                p->setPen(pen);
 //                p->drawLine(i, height()-25, i, 10);
@@ -1172,7 +1172,7 @@ void PosCompChart::drawChart(QPainter *p)
                 checkX1(dx1, dy1, dx2, dy2);
                 checkX2(dx1, dy1, dx2, dy2);
 
-                if (EventData::getInstance().getEventType() == LTData::RACE_EVENT)
+                if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT)
                     p->drawLine(dx1, dy1, dx2, dy2);
 
                 if (y2[k] <= paintRect.bottom())
@@ -1183,7 +1183,7 @@ void PosCompChart::drawChart(QPainter *p)
                     if (ld.getTime().toString() == "IN PIT")
                         path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
 
-                    else if (EventData::getInstance().getEventType() != LTData::RACE_EVENT)
+                    else if (EventData::getInstance().getEventType() != LTPackets::RACE_EVENT)
                         path.addEllipse(QPoint(j[k], y2[k]), 3, 3);
 
                     p->drawPath(path);
@@ -1230,7 +1230,7 @@ void PosCompChart::drawLegend(QPainter *p)
     p->setRenderHint(QPainter::Antialiasing, false);
     p->setBrush(QColor(20, 20, 20));
 
-    p->setPen(LTData::colors[LTData::DEFAULT]);
+    p->setPen(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     p->drawRect(40, 5, 115, 45);
 
     double yy = 0.0;

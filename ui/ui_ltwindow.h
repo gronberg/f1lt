@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Fri Aug 31 15:55:35 2012
+** Created: Mon Sep 3 16:37:03 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -302,7 +302,7 @@ public:
         retranslateUi(LTWindow);
         QObject::connect(actionExit, SIGNAL(triggered(bool)), LTWindow, SLOT(close()));
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(LTWindow);

@@ -24,10 +24,10 @@ LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
 
     loadCarImages();
 
-    color[0] = LTData::colors[LTData::GREEN];
-    color[1] = LTData::colors[LTData::CYAN];
-    color[2] = LTData::colors[LTData::YELLOW];
-    color[3] = LTData::colors[LTData::VIOLET];
+    color[0] = SeasonData::getInstance().getColor(LTPackets::GREEN);
+    color[1] = SeasonData::getInstance().getColor(LTPackets::CYAN);
+    color[2] = SeasonData::getInstance().getColor(LTPackets::YELLOW);
+    color[3] = SeasonData::getInstance().getColor(LTPackets::VIOLET);
     lapCompChart = new LapCompChart(color, this);
 
 
@@ -71,7 +71,7 @@ LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
     item = new QTableWidgetItem("Lap");
     item->setFlags(Qt::NoItemFlags);
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(LTData::colors[LTData::DEFAULT]);
+    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(0, 0, item);
 
     QLabel *lab = new QLabel();
@@ -105,14 +105,14 @@ void LapTimeComparisonDialog::loadCarImages()
     comboBox[2]->clear();
     comboBox[3]->clear();
 
-    comboBox[0]->addItems(LTData::getDriversList());
-    comboBox[1]->addItems(LTData::getDriversList());
-    comboBox[2]->addItems(LTData::getDriversList());
-    comboBox[3]->addItems(LTData::getDriversList());
+    comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+    comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
+    comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
+    comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
 
     smallCarImg.clear();
-    for (int i = 0; i < LTData::ltTeams.size(); ++i)
-        smallCarImg.append(LTData::ltTeams[i].carImg.scaledToWidth(150, Qt::SmoothTransformation));
+    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
+        smallCarImg.append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(150, Qt::SmoothTransformation));
 }
 
 void LapTimeComparisonDialog::updateData()
@@ -178,7 +178,7 @@ void LapTimeComparisonDialog::updateData()
             item = new QTableWidgetItem(QString("%1.").arg(lapNo));
 //                item->setFlags(Qt::ItemIsSelectable);
             item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            item->setTextColor(LTData::colors[LTData::DEFAULT]);
+            item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
             ui->tableWidget->setItem(j+1, 0, item);
         }
         else
@@ -270,26 +270,26 @@ void LapTimeComparisonDialog::updateData()
                         double maxGap = std::max(std::max(msecs[0], msecs[1]), msecs[2]);
                         double minGap = std::min(std::min(msecs[0], msecs[1]), msecs[2]);
 
-                        LTData::Colors color = LTData::YELLOW;
+                        LTPackets::Colors color = LTPackets::YELLOW;
 
                         if (laps[i].toMsecs() == minGap)
-                            color = LTData::WHITE;
+                            color = LTPackets::WHITE;
 
                         else if (laps[i].toMsecs() == maxGap)
-                            color = LTData::RED;
+                            color = LTPackets::RED;
 
-                        item->setTextColor(LTData::colors[color]);
+                        item->setTextColor(SeasonData::getInstance().getColor(color));
                     }
                 }
                 else if (laps[i].toString() == "IN PIT" || laps[i].toString() == "RETIRED")
                 {
                     item = ui->tableWidget->item(j+1, i+1);
-                    item->setTextColor(LTData::colors[LTData::RED]);
+                    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
                 }
             }
             item = ui->tableWidget->item(j+1, bestIdx+1);
             if (item && laps[bestIdx].toString() != "IN PIT" && laps[bestIdx].toString() != "RETIRED")
-                item->setTextColor(LTData::colors[LTData::GREEN]);
+                item->setTextColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
         }
         ui->tableWidget->setRowHeight(j+1, 20);
     }
@@ -352,10 +352,10 @@ void LapTimeComparisonDialog::show()
 {
     if (comboBox[0]->itemText(1) == "")
     {
-        comboBox[0]->addItems(LTData::getDriversList());
-        comboBox[1]->addItems(LTData::getDriversList());
-        comboBox[2]->addItems(LTData::getDriversList());
-        comboBox[3]->addItems(LTData::getDriversList());
+        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
+        comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
+        comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
     }
     for (int i = 0; i < 4; ++i)
     {
@@ -374,10 +374,10 @@ int LapTimeComparisonDialog::exec()
 {
     if (comboBox[0]->itemText(1) == "")
     {
-        comboBox[0]->addItems(LTData::getDriversList());
-        comboBox[1]->addItems(LTData::getDriversList());
-        comboBox[2]->addItems(LTData::getDriversList());
-        comboBox[3]->addItems(LTData::getDriversList());
+        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
+        comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
+        comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
     }
 
     updateData();

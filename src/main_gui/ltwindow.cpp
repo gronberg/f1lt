@@ -11,8 +11,8 @@
 LTWindow::LTWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::LTWindow), eventData(EventData::getInstance())
-{
-    ui->setupUi(this);
+{    
+    ui->setupUi(this);    
 
     currDriver = -1;
 
@@ -20,19 +20,19 @@ LTWindow::LTWindow(QWidget *parent) :
     prefs = new PreferencesDialog(this);
     settings = new QSettings(F1LTCore::iniFile(), QSettings::IniFormat, this);
     loginDialog = new LoginDialog(this);
-    saw = new SessionAnalysisWidget();
+    saw = new SessionAnalysisWidget();    
 
 //    ui->trackStatusWidget->setupItems();
 
-    connect(streamReader, SIGNAL(authorized(QString)), this, SLOT(on_authorized(QString)));
-    connect(streamReader, SIGNAL(eventDataChanged()), this, SLOT(on_eventDataChanged()));
-    connect(streamReader, SIGNAL(driverDataChanged(int)), this, SLOT(on_driverDataChanged(int)));
-    connect(streamReader, SIGNAL(dataChanged()), this, SLOT(on_dataChanged()));
-    connect(streamReader, SIGNAL(sessionStarted()), this, SLOT(on_sessionStarted()));
-    connect(streamReader, SIGNAL(authorizationError()), this, SLOT(on_authorizationError()));
+    connect(streamReader, SIGNAL(authorized(QString)), this, SLOT(authorized(QString)));
+    connect(streamReader, SIGNAL(eventDataChanged()), this, SLOT(eventDataChanged()));
+    connect(streamReader, SIGNAL(driverDataChanged(int)), this, SLOT(driverDataChanged(int)));
+    connect(streamReader, SIGNAL(dataChanged()), this, SLOT(dataChanged()));
+    connect(streamReader, SIGNAL(sessionStarted()), this, SLOT(sessionStarted()));
+    connect(streamReader, SIGNAL(authorizationError()), this, SLOT(authorizationError()));
     connect(streamReader, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
     connect(streamReader, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
-    connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(on_showNoSessionBoard(bool, QString)));
+    connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(showNoSessionBoard(bool, QString)));
 
     eventTimer = new QTimer(this);
     eventRecorder = new EventRecorder(this);
@@ -46,7 +46,7 @@ LTWindow::LTWindow(QWidget *parent) :
     playing = false;
 
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timeout()));
-    connect(eventRecorder, SIGNAL(recordingStopped()), this, SLOT(on_autoStopRecording()));
+    connect(eventRecorder, SIGNAL(recordingStopped()), this, SLOT(autoStopRecording()));
     connect(eventPlayer, SIGNAL(playClicked(int)), this, SLOT(eventPlayerPlayClicked(int)));
     connect(eventPlayer, SIGNAL(pauseClicked()), this, SLOT(eventPlayerPauseClicked()));
     connect(eventPlayer, SIGNAL(rewindToStartClicked()), this, SLOT(eventPlayerRewindToStartClicked()));
@@ -88,7 +88,7 @@ LTWindow::LTWindow(QWidget *parent) :
     		ui->messageBoardWidget->showStartupBoard();
     		showSessionBoard(true);
     	}
-    }
+    }    
 
 }
 
@@ -104,7 +104,7 @@ LTWindow::~LTWindow()
 
 //------------------------- updating the data ----------------------
 
-void LTWindow::on_eventDataChanged()
+void LTWindow::eventDataChanged()
 {
     if (!playing)
         setWindowTitle("F1LT - " + eventData.getEventInfo().eventName);
@@ -112,7 +112,7 @@ void LTWindow::on_eventDataChanged()
         ui->actionRecord->setEnabled(true);
 
     if (eventData.getCommentary().size() > ui->textEdit->toPlainText().size())
-    {
+    {        
         ui->textEdit->setText(eventData.getCommentary());
 
         QTextCursor c = ui->textEdit->textCursor();
@@ -135,7 +135,7 @@ void LTWindow::on_eventDataChanged()
     ui->ltWidget->updateLT();
 }
 
-void LTWindow::on_driverDataChanged(int carID)
+void LTWindow::driverDataChanged(int carID)
 {
     if (!playing && !recording && !ui->actionRecord->isEnabled())
         ui->actionRecord->setEnabled(true);
@@ -188,11 +188,11 @@ void LTWindow::on_driverDataChanged(int carID)
     }
 }
 
-void LTWindow::on_dataChanged()
+void LTWindow::dataChanged()
 {
-    setWindowTitle("FILT - " + eventData.getEventInfo().eventName + " (" + eventPlayer->playedFile() + ")");
+    setWindowTitle("F1LT - " + eventData.getEventInfo().eventName + " (" + eventPlayer->playedFile() + ")");
 //    if (eventData.commentary.size() > ui->textEdit->toPlainText().size())
-    {
+    {        
         ui->textEdit->setText(eventData.getCommentary());
 
         QTextCursor c = ui->textEdit->textCursor();
@@ -332,17 +332,18 @@ void LTWindow::on_actionHead_to_head_triggered()
 //    h2hDialog->activateWindow();
 }
 
-void LTWindow::on_sessionStarted()
+void LTWindow::sessionStarted()
 {
     if (!eventTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))
         eventTimer->start(1000);
 }
 
-void LTWindow::on_showNoSessionBoard(bool show, QString msg)
+void LTWindow::showNoSessionBoard(bool show, QString msg)
 {
 	if (show)
 	{
         //ui->tableWidget->clear();
+        ui->ltWidget->clearData();
 		ui->textEdit->clear();
 		ui->driverDataWidget->clearData();
 		ui->sessionDataWidget->clearData();
@@ -377,8 +378,8 @@ void LTWindow::timeout()
         if (!playing && settings->value("ui/auto_record").toBool() && !recording && eventRecorder->isEmpty())
             on_actionRecord_triggered();
 
-        if (!(eventData.getEventType() == LTData::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
-            !((eventData.getEventType() == LTData::QUALI_EVENT || eventData.getEventType() == LTData::RACE_EVENT) && eventData.getFlagStatus() == LTData::RED_FLAG))
+        if (!(eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
+            !((eventData.getEventType() == LTPackets::QUALI_EVENT || eventData.getEventType() == LTPackets::RACE_EVENT) && eventData.getFlagStatus() == LTPackets::RED_FLAG))
         {
             int hours = eventData.getRemainingTime().hour();
             int mins = eventData.getRemainingTime().minute();
@@ -551,7 +552,7 @@ void LTWindow::on_actionPreferences_triggered()
 void LTWindow::setFonts(const QFont &mainFont, const QFont &commentaryFont)
 {
     ui->ltWidget->setFont(mainFont);
-    ui->driverDataWidget->setFont(mainFont);
+    ui->driverDataWidget->setFont(mainFont, commentaryFont);
     ui->sessionDataWidget->setFont(mainFont);
 
     for (int i = 0; i < h2hDialog.size(); ++i)
@@ -582,11 +583,11 @@ bool LTWindow::close()
 
 //-------------------- connection with server ----------------------
 
-void LTWindow::on_authorized(QString)
+void LTWindow::authorized(QString)
 {
 }
 
-void LTWindow::on_authorizationError()
+void LTWindow::authorizationError()
 {
     if (!playing)
     {
@@ -716,7 +717,7 @@ void LTWindow::on_actionStop_recording_triggered()
     disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
 }
 
-void LTWindow::on_autoStopRecording()
+void LTWindow::autoStopRecording()
 {
 	recording = false;
 	ui->actionOpen->setEnabled(true);
@@ -825,7 +826,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
     saw->resetView();
 
     playing = false;
-    LTData::loadLTData();
+    SeasonData::getInstance().loadSeasonFile();
 
     ui->ltWidget->loadCarImages();
     for (int i = 0; i < h2hDialog.size(); ++i)

@@ -51,17 +51,17 @@ public slots:
     void ltWidgetDriverSelected(int id);
 
 private slots:
-    void on_authorized(QString);
-    void on_authorizationError();
+    void authorized(QString);
+    void authorizationError();
     void error(QAbstractSocket::SocketError);
     void error(QNetworkReply::NetworkError);
     void on_actionConnect_triggered();
 
-    void on_eventDataChanged();
-    void on_driverDataChanged(int);
-    void on_dataChanged();
-    void on_sessionStarted();
-    void on_showNoSessionBoard(bool, QString);
+    void eventDataChanged();
+    void driverDataChanged(int);
+    void dataChanged();
+    void sessionStarted();
+    void showNoSessionBoard(bool, QString);
 
     void timeout();
 //    void on_tableWidget_cellDoubleClicked(int row, int column);
@@ -74,7 +74,7 @@ private slots:
 
     void on_actionRecord_triggered();
     void on_actionStop_recording_triggered();
-    void on_autoStopRecording();
+    void autoStopRecording();
 
     void on_actionPreferences_triggered();
 

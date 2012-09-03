@@ -120,7 +120,7 @@ void SessionLapTimesChart::findFirstAndLastLap(int &firstLap, int &lastLap, int 
 
 void SessionLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
 
     //x axe
@@ -130,14 +130,14 @@ void SessionLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     double yFactor = (double)((paintRect.height())/10.0);
     double yFactor2 = (double)((tMax-tMin)/10.0);
     double j = tMin;
     for (double i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         int msecs = j * 1000;
         LapTime lt(msecs);
         QString str = lt.toString();
@@ -149,7 +149,7 @@ void SessionLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -168,12 +168,12 @@ void SessionLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -277,7 +277,7 @@ void SessionLapTimesChart::drawChart(QPainter *p)
                 else
                     lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
             }
-//            p->setBrush(QBrush(LTData::colors[LTData::BACKGROUND]));
+//            p->setBrush(QBrush(SeasonData::getInstance().getColor(LTPackets::BACKGROUND]));
             p->setBrush(QBrush(color));
             if (y < paintRect.bottom())
             {
@@ -372,7 +372,7 @@ void SessionLapTimesChart::drawLapDataXY(QPainter *p)
     p->drawRect(x+20, y, getPopupWidth(), 20 * (itemsInXY.size()+1));
 
     p->setFont(QFont("Arial", 10, QFont::Normal, true));
-    p->setPen(LTData::colors[LTData::WHITE]);
+    p->setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
     p->drawText(x+25, y+15, getLapInfoXY(lapDataArray[itemsInXY[0]]));
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
@@ -384,7 +384,7 @@ void SessionLapTimesChart::drawLapDataXY(QPainter *p)
 
 QColor SessionLapTimesChart::getCarColor(const LapData &ld)
 {
-    QColor color = LTData::colors[LTData::BACKGROUND];
+    QColor color = SeasonData::getInstance().getColor(LTPackets::BACKGROUND);
     if (ld.getCarID() > 0)
     {
         int no = EventData::getInstance().getDriversData()[ld.getCarID()-1].getNumber();
@@ -584,7 +584,7 @@ QList<SessionPositionsChart::DriverPosAtom> SessionPositionsChart::getDriverStar
 
 void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -593,7 +593,7 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     QList<SessionPositionsChart::DriverPosAtom> positionList = getDriverStartingPositions();
 
@@ -612,13 +612,13 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         p->setBrush(color);
         p->setPen(color);
         p->drawRect(5, i-6, 4, 11);
-        QString driver = LTData::getDriverShortName(dd.getDriverName());
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        QString driver = SeasonData::getInstance().getDriverShortName(dd.getDriverName());
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         p->drawText(13, i+5, QString("%1 %2").arg(round(j)).arg(driver));
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -637,12 +637,12 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -847,7 +847,7 @@ void SessionGapsChart::findFirstAndLastLap(int &firstLap, int &lastLap, int &siz
 
 void SessionGapsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -856,19 +856,19 @@ void SessionGapsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(LTData::colors[LTData::WHITE]));
+    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     double yFactor = (double)((paintRect.height()-40)/9.0);
     double yFactor2 = (double)((tMax-tMin)/9.0);
     double j = tMin;
     for (double i = paintRect.bottom(); i >= 40; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString::number(j, 'f', 0));
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -877,16 +877,16 @@ void SessionGapsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
     if (tMax >= max)
     {
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         p->drawText(5, 15, ">1L");
-        QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+        QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
         pen.setStyle(Qt::DashLine);
         p->setPen(pen);
         p->drawLine(paintRect.left(), paintRect.top(), paintRect.right(), paintRect.top());
 
-        p->setPen(QColor(LTData::colors[LTData::WHITE]));
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
         p->drawText(5, 35, QString(">%1").arg(max));
-        pen.setColor(QColor(LTData::colors[LTData::DEFAULT]));
+        pen.setColor(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
         pen.setStyle(Qt::DashLine);
         p->setPen(pen);
         p->drawLine(paintRect.left(), 30, paintRect.right(), 30);
@@ -904,12 +904,12 @@ void SessionGapsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(LTData::colors[LTData::WHITE]));
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(LTData::colors[LTData::DEFAULT]));
+                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());

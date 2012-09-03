@@ -60,7 +60,7 @@ private slots:
 private:
 
     QTableWidgetItem* setItem(QTableWidget *table, int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
-                     QColor textColor = LTData::colors[LTData::DEFAULT], QBrush background = QBrush());
+                     QColor textColor = SeasonData::getInstance().getColor(LTPackets::DEFAULT), QBrush background = QBrush());
 
     Ui::SessionAnalysisWidgetClass ui;
     QList<QCheckBox*> driverCheckBoxes;
