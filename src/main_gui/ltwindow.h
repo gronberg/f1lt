@@ -6,6 +6,7 @@
 #include <QByteArray>
 #include <QIcon>
 #include <QList>
+#include <QProgressDialog>
 #include <QSettings>
 #include <QTimer>
 
@@ -51,6 +52,7 @@ public slots:
     void ltWidgetDriverSelected(int id);
 
 private slots:
+    void tryAuthorize();
     void authorized(QString);
     void authorizationError();
     void error(QAbstractSocket::SocketError);
@@ -129,6 +131,8 @@ private:
 
     EventData &eventData;
     SessionAnalysisWidget *saw;
+
+    QProgressDialog *connectionProgress;
 };
 
 #endif // LTWINDOW_H

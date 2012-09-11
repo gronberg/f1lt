@@ -77,7 +77,7 @@ private:
     int showDiff;	//1 - time (best, q1), 2 - q2, 3 - q3, 4 - interval
 
     LTModel *ltModel;
-    LTMainItemDelegate *itemDelegate;
+    LTMainItemDelegate *itemDelegate;    
 };
 
 #endif // LTWIDGET_H

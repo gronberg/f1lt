@@ -35,9 +35,11 @@ void SocketDataReader::openStream(QString host, int port)
 }
 
 void SocketDataReader::connectToHost()
-{
+{    
     socket->connectToHost(host, port, QIODevice::ReadWrite);
+    qDebug() << "connected";
     socket->waitForReadyRead();
+    qDebug() << "ready";
 }
 
 void SocketDataReader::disconnectFromHost()

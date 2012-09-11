@@ -24,6 +24,7 @@ LTWindow::LTWindow(QWidget *parent) :
 
 //    ui->trackStatusWidget->setupItems();
 
+    connect(streamReader, SIGNAL(tryAuthorize()), this, SLOT(tryAuthorize()));
     connect(streamReader, SIGNAL(authorized(QString)), this, SLOT(authorized(QString)));
     connect(streamReader, SIGNAL(eventDataChanged()), this, SLOT(eventDataChanged()));
     connect(streamReader, SIGNAL(driverDataChanged(int)), this, SLOT(driverDataChanged(int)));
@@ -44,6 +45,8 @@ LTWindow::LTWindow(QWidget *parent) :
     eventPlayerAction->setVisible(false);
     recording = false;
     playing = false;
+
+    connectionProgress = new QProgressDialog(this);
 
     connect(eventTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     connect(eventRecorder, SIGNAL(recordingStopped()), this, SLOT(autoStopRecording()));
@@ -583,8 +586,19 @@ bool LTWindow::close()
 
 //-------------------- connection with server ----------------------
 
+void LTWindow::tryAuthorize()
+{
+    connectionProgress->setWindowModality(Qt::WindowModal);
+    connectionProgress->setLabelText("Connecting...");
+    connectionProgress->setCancelButton(0);
+    connectionProgress->setRange(0,0);
+    connectionProgress->setMinimumDuration(0);
+    connectionProgress->show();
+}
+
 void LTWindow::authorized(QString)
 {
+    connectionProgress->cancel();
 }
 
 void LTWindow::authorizationError()

@@ -569,7 +569,7 @@ void EventRecorder::timeout()
     {
         if((eventData.getRemainingTime().toString("h:mm:ss") == "0:00:00" && eventData.getEventType() == LTPackets::PRACTICE_EVENT) ||
             (eventData.getRemainingTime().toString("h:mm:ss") == "0:00:00" && eventData.getEventType() == LTPackets::QUALI_EVENT && eventData.getQualiPeriod() == 3) ||
-            (eventData.getCompletedLaps() == eventData.getEventInfo().laps && eventData.getEventType() == LTPackets::RACE_EVENT))
+            ((eventData.getRemainingTime().toString("h:mm:ss") == "0:00:00" || eventData.getCompletedLaps() == eventData.getEventInfo().laps) && eventData.getEventType() == LTPackets::RACE_EVENT))
     		++elapsedTimeToStop;
 
 		if (elapsedTimeToStop >= (autoStopRecord * 60))
@@ -609,15 +609,15 @@ void EventRecorder::saveToFile(QString)
         if (no < 10)
             sNo = "0" + QString::number(no);
 
-        QString fName = QString("LTPackets/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg(session);
+        QString fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg(session);
 
         //since we have 3 practice session we have to choose the correct session number
         if (session == "fp1" && QFile::exists(fName))
         {
-            fName = QString("LTPackets/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp2");
+            fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp2");
 
             if (QFile::exists(fName))
-                fName = QString("LTPackets/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp3");
+                fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp3");
         }
         QDir dir(F1LTCore::ltDataHomeDir());
         if (!dir.exists())

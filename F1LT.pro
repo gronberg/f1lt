@@ -64,7 +64,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/models/speedrecordsmodel.cpp \
     src/main_gui/models/fastestlapsmodel.cpp \
     src/main_gui/models/pitstopsmodel.cpp \
-    src/core/seasondata.cpp
+    src/core/seasondata.cpp \
+    src/core/sessiontimer.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -103,7 +104,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/models/fastestlapsmodel.h \
     src/main_gui/models/pitstopsmodel.h \
     src/core/seasondata.h \
-    src/core/ltpackets.h
+    src/core/ltpackets.h \
+    src/core/sessiontimer.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
