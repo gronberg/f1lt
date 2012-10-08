@@ -12,7 +12,7 @@ class F1LTCore
 public:
     F1LTCore();
 
-    static QString programVersion() { return "1.3.1"; }
+    static QString programVersion() { return "1.4.0"; }
 
 
     static QString programHomeDir()
@@ -61,6 +61,16 @@ public:
         else
             return programHomeDir() + "/ltdata/";
 #endif
+    }
+
+    static QString ltDataUrl()
+    {
+        return "http://lt.f1lt.pl/";
+    }
+
+    static QString ltDataList()
+    {
+        return "http://lt.f1lt.pl/lis.php";
     }
 };
 

@@ -211,7 +211,7 @@ void DriverDataWidget::printDriverData(int id)
         return;
 
     printDriverChart(id);
-    printDriverMainEvents(id);
+    printDriverRelatedCommentary(id);
 
     currentDriver = id;
 
@@ -270,7 +270,7 @@ void DriverDataWidget::printDriverChart(int id)
     }
 }
 
-void DriverDataWidget::printDriverMainEvents(int id)
+void DriverDataWidget::printDriverRelatedCommentary(int id)
 {
     if (id <= 0)
         return;
@@ -301,10 +301,10 @@ void DriverDataWidget::printDriverMainEvents(int id)
         ui->textEdit->clear();
 
     const DriverData &driverData = eventData.getDriverDataById(id);
-    QString searchT = SeasonData::getInstance().getDriverLastName(driverData.getDriverName());
+    QRegExp searchT("[ ,.?!(]" + SeasonData::getInstance().getDriverLastName(driverData.getDriverName()) + "[ \',.?!);:]", Qt::CaseInsensitive);
     QString lastEvent;
 
-    idx = eventData.getCommentary().indexOf(searchT, idx, Qt::CaseInsensitive);
+    idx = eventData.getCommentary().indexOf(searchT, idx);
 
     while (idx != -1)
     {
@@ -318,7 +318,7 @@ void DriverDataWidget::printDriverMainEvents(int id)
             lastEvent = ev;
             ui->textEdit->append(ev + "\n");
         }
-        idx = eventData.getCommentary().indexOf(searchT, idx+1, Qt::CaseInsensitive);
+        idx = eventData.getCommentary().indexOf(searchT, idx+1);
     }
 }
 

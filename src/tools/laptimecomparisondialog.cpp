@@ -12,6 +12,8 @@
 #include <QScrollBar>
 #include <cmath>
 
+#include "../main_gui/ltitemdelegate.h"
+
 LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
     QDialog(parent, Qt::Window), ui(new Ui::LapTimeComparisonDialog), reversedOrder(rev), eventData(EventData::getInstance())
 {
@@ -35,6 +37,8 @@ LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
     connect(ui->comboBox2, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxValueChanged(int)));
     connect(ui->comboBox3, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxValueChanged(int)));
     connect(ui->comboBox4, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxValueChanged(int)));
+
+    ui->tableWidget->setItemDelegate(new LTItemDelegate(this));
 
     ui->tableWidget->setColumnWidth(0, 30);
     ui->tableWidget->setColumnWidth(1, 150);

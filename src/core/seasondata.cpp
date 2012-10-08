@@ -32,6 +32,7 @@ SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
     colors[LTPackets::BACKGROUND2] = QColor(27, 27, 27);
 
     ltTeams.clear();
+    fillEventNamesMap();
 }
 
 bool SeasonData::loadSeasonFile()
@@ -320,6 +321,17 @@ QStringList SeasonData::getDriversListShort()
     return list;
 }
 
+QString SeasonData::getEventNameFromShort(QString shortName)
+{
+    return eventNamesMap[shortName.toLower()] + " Grand Prix";
+//    for (int i = 0; i < ltEvents.size(); ++i)
+//    {
+//        if (ltEvents[i].eventShortName.toLower() == shortName.toLower())
+//            return ltEvents[i].eventName;
+//    }
+//    return shortName;
+}
+
 int SeasonData::timeToMins(QTime time)
 {
     int hour = time.hour();
@@ -396,6 +408,31 @@ int SeasonData::getQualiLength(int q)
 {
     if (q >= 1 && q <= 3)
         return qualiLengths[q-1];
+}
+
+void SeasonData::fillEventNamesMap()
+{
+    eventNamesMap.insert("aus", "Australian");
+    eventNamesMap.insert("mal", "Malaysian");
+    eventNamesMap.insert("chn", "Chinese");
+    eventNamesMap.insert("bah", "Bahrain");
+    eventNamesMap.insert("spa", "Spanish");
+    eventNamesMap.insert("mon", "Monaco");
+    eventNamesMap.insert("can", "Canadian");
+    eventNamesMap.insert("eur", "European");
+    eventNamesMap.insert("val", "European");
+    eventNamesMap.insert("gbr", "British");
+    eventNamesMap.insert("ger", "German");
+    eventNamesMap.insert("hun", "Hungarian");
+    eventNamesMap.insert("bel", "Belgian");
+    eventNamesMap.insert("ita", "Italian");
+    eventNamesMap.insert("sgp", "Singapore");
+    eventNamesMap.insert("jpn", "Japanese");
+    eventNamesMap.insert("kor", "Korean");
+    eventNamesMap.insert("ind", "Indian");
+    eventNamesMap.insert("abu", "Abu Dhabi");
+    eventNamesMap.insert("usa", "US");
+    eventNamesMap.insert("bra", "Brazilian");
 }
 
 

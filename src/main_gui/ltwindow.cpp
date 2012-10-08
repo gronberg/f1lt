@@ -20,7 +20,9 @@ LTWindow::LTWindow(QWidget *parent) :
     prefs = new PreferencesDialog(this);
     settings = new QSettings(F1LTCore::iniFile(), QSettings::IniFormat, this);
     loginDialog = new LoginDialog(this);
-    saw = new SessionAnalysisWidget();    
+    ltFilesManagerDialog = new LTFilesManagerDialog(this);
+    saw = new SessionAnalysisWidget();
+    aboutDialog = new AboutDialog(this);
 
 //    ui->trackStatusWidget->setupItems();
 
@@ -476,6 +478,8 @@ void LTWindow::loadSettings()
     eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
 
     saw->loadSettings(*settings);
+
+    ltFilesManagerDialog->loadSettings(settings);
 }
 
 void LTWindow::saveSettings()
@@ -491,6 +495,7 @@ void LTWindow::saveSettings()
         settings->setValue("ui/current_tab2", ui->sessionDataWidget->currentIndex());
 
     saw->saveSettings(*settings);
+    ltFilesManagerDialog->saveSettings(settings);
 
 //    settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
 //    settings->setValue("ui/alt_colors", prefs->isAlternatingRowColors());
@@ -700,7 +705,8 @@ void LTWindow::error(QNetworkReply::NetworkError er)
 
 void LTWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, "About F1LT", "<b>F1LT</b> v" + F1LTCore::programVersion()+"<br/>by Mariusz Pilarek, 2012<br/><a href=\"http://code.google.com/p/f1lt/\">Home site</a>");
+    aboutDialog->exec();
+    //QMessageBox::about(this, "About F1LT", "<b>F1LT</b> v" + F1LTCore::programVersion()+"<br/>by Mariusz Pilarek, 2012<br/><a href=\"http://f1lt.pl/\">Home site</a>");
 }
 
 void LTWindow::on_actionAbout_Qt_triggered()
@@ -748,51 +754,74 @@ void LTWindow::on_actionOpen_triggered()
     QString ltDir = settings->value("ui/ltdir").toString();
     if (ltDir == "")
         ltDir = F1LTCore::ltDataHomeDir();
-    QString fName = QFileDialog::getOpenFileName(this, "Select archive LT event file", ltDir, "*.lt");
 
-    if (recording)
-        on_actionRecord_triggered();
+    QString fName = QFileDialog::getOpenFileName(this, "Select archive LT event file", ltDir, "*.lt");
 
     if (!fName.isNull())
     {
         QFileInfo fi(fName);
         ltDir = fi.absolutePath();
+
         settings->setValue("ui/ltdir", ltDir);
-        if (eventPlayer->loadFromFile(fName) == false)
-        {
-            QMessageBox::critical(this, "Error opening file!", "Could not open specified file, or the file is corrupted.");
-            return;
-        }
 
-        QFileInfo fInfo(fName);
-        QString name = fInfo.fileName();
+        if (recording)
+            on_actionRecord_triggered();
 
-        showSessionBoard(false);
-
-        //ui->tableWidget->clear();
-        ui->textEdit->clear();
-        ui->driverDataWidget->clearData();
-        ui->sessionDataWidget->clearData();        
-
-        ui->ltWidget->loadCarImages();
-        for (int i = 0; i < h2hDialog.size(); ++i)
-            h2hDialog[i]->loadCarImages();
-
-        for (int i = 0; i < ltcDialog.size(); ++i)
-            ltcDialog[i]->loadCarImages();
-
-        ui->actionRecord->setVisible(false);
-        ui->actionStop_recording->setVisible(false);
-        eventPlayerAction->setVisible(true);
-
-        streamReader->disconnectFromLTServer();
-        streamReader->clearData();
-
-        playing = true;
-
-        eventPlayer->startPlaying();
-        saw->resetView();
+        eventPlayerOpenFile(fName);
     }
+}
+
+void LTWindow::on_actionLT_files_data_base_triggered()
+{
+    eventTimer->stop();
+    QString fName = ltFilesManagerDialog->exec();
+
+    //if (fName != "")
+    if (!fName.isNull())
+    {
+        if (recording)
+            on_actionRecord_triggered();
+
+        eventPlayerOpenFile(fName);
+    }
+}
+
+void LTWindow::eventPlayerOpenFile(QString fName)
+{
+    if (eventPlayer->loadFromFile(fName) == false)
+    {
+        QMessageBox::critical(this, "Error opening file!", "Could not open specified file, or the file is corrupted.");
+        return;
+    }
+
+    QFileInfo fInfo(fName);
+    QString name = fInfo.fileName();
+
+    showSessionBoard(false);
+
+    //ui->tableWidget->clear();
+    ui->textEdit->clear();
+    ui->driverDataWidget->clearData();
+    ui->sessionDataWidget->clearData();
+
+    ui->ltWidget->loadCarImages();
+    for (int i = 0; i < h2hDialog.size(); ++i)
+        h2hDialog[i]->loadCarImages();
+
+    for (int i = 0; i < ltcDialog.size(); ++i)
+        ltcDialog[i]->loadCarImages();
+
+    ui->actionRecord->setVisible(false);
+    ui->actionStop_recording->setVisible(false);
+    eventPlayerAction->setVisible(true);
+
+    streamReader->disconnectFromLTServer();
+    streamReader->clearData();
+
+    playing = true;
+
+    eventPlayer->startPlaying();
+    saw->resetView();
 }
 
 void LTWindow::eventPlayerPlayClicked(int interval)

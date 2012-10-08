@@ -29,7 +29,7 @@
       <bool>true</bool>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -1366,7 +1366,7 @@
      </widget>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
-       <string>Main events</string>
+       <string>Related commentary</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>

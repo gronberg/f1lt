@@ -1,6 +1,7 @@
 #ifndef SEASONDATA_H
 #define SEASONDATA_H
 
+#include <QMap>
 #include <QPixmap>
 #include <QString>
 #include <QTime>
@@ -79,6 +80,7 @@ public:
     QString getDriverLastName(QString);
     QString getDriverShortName(QString);
     QString getDriverNameFromShort(QString);
+    QString getEventNameFromShort(QString);
     int getDriverNo(QString name);
     QString getTeamName(int);
     QStringList getDriversList();
@@ -92,6 +94,8 @@ public:
 
     int timeToMins(QTime time);
     int timeToSecs(QTime time);
+
+    void fillEventNamesMap();
 
 private:
     SeasonData();
@@ -107,6 +111,8 @@ private:
     int baseEventInc;
 
     QList<QColor> colors;
+
+    QMap<QString, QString> eventNamesMap;
 };
 
 #endif // SEASONDATA_H

@@ -59,7 +59,7 @@
         <enum>QTabWidget::Rounded</enum>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <property name="iconSize">
         <size>
@@ -250,6 +250,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionConnect"/>
     <addaction name="actionOpen"/>
+    <addaction name="actionLT_files_data_base"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -296,6 +297,7 @@ p, li { white-space: pre-wrap; }
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionLT_files_data_base"/>
    <addaction name="actionOpen"/>
    <addaction name="actionConnect"/>
    <addaction name="separator"/>
@@ -419,6 +421,15 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Session analysis</string>
+   </property>
+  </action>
+  <action name="actionLT_files_data_base">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/ltdb.png</normaloff>:/ui_icons/ltdb.png</iconset>
+   </property>
+   <property name="text">
+    <string>LT files database</string>
    </property>
   </action>
  </widget>

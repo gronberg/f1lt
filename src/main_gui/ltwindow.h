@@ -10,13 +10,14 @@
 #include <QSettings>
 #include <QTimer>
 
+#include "aboutdialog.h"
 #include "../net/datastreamreader.h"
 #include "../player/eventplayer.h"
 #include "../player/eventrecorder.h"
 #include "../tools/headtoheaddialog.h"
 #include "../tools/laptimecomparisondialog.h"
+#include "../tools/ltfilesmanagerdialog.h"
 #include "logindialog.h"
-//#include "lttablewidget.h"
 #include "preferencesdialog.h"
 #include "../tools/sessionanalysiswidget.h"
 
@@ -42,6 +43,7 @@ public:
 public slots:
     bool close();
 
+    void eventPlayerOpenFile(QString);
     void eventPlayerPlayClicked(int);
     void eventPlayerPauseClicked();
     void eventPlayerRewindToStartClicked();
@@ -91,6 +93,8 @@ private slots:
 
     void on_actionSession_analysis_triggered();
 
+    void on_actionLT_files_data_base_triggered();
+
 private:
     Ui::LTWindow *ui;
     DataStreamReader *streamReader;
@@ -133,6 +137,10 @@ private:
     SessionAnalysisWidget *saw;
 
     QProgressDialog *connectionProgress;
+
+    LTFilesManagerDialog *ltFilesManagerDialog;
+
+    AboutDialog *aboutDialog;
 };
 
 #endif // LTWINDOW_H

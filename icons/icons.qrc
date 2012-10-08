@@ -35,5 +35,7 @@
         <file>weather_wind.png</file>
         <file>weather_wet.png</file>
         <file>sa.png</file>
+        <file>ltdb.png</file>
     </qresource>
+    <qresource prefix="/other"/>
 </RCC>

@@ -65,7 +65,10 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/models/fastestlapsmodel.cpp \
     src/main_gui/models/pitstopsmodel.cpp \
     src/core/seasondata.cpp \
-    src/core/sessiontimer.cpp
+    src/core/sessiontimer.cpp \
+    src/net/ltfilesmanager.cpp \
+    src/tools/ltfilesmanagerdialog.cpp \
+    src/main_gui/aboutdialog.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -105,7 +108,10 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/models/pitstopsmodel.h \
     src/core/seasondata.h \
     src/core/ltpackets.h \
-    src/core/sessiontimer.h
+    src/core/sessiontimer.h \
+    src/net/ltfilesmanager.h \
+    src/tools/ltfilesmanagerdialog.h \
+    src/main_gui/aboutdialog.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -120,6 +126,12 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/eventplayer.ui \
     ui/laptimecomparisondialog.ui \
     ui/eventstatuswidget.ui \
-    src/main_gui/ltwidget.ui
+    ui/ltwidget.ui \
+    ui/ltfilesmanagerdialog.ui \
+    ui/aboutdialog.ui
 INCLUDEPATH += src/
-RESOURCES += icons/icons.qrc
+RESOURCES += icons/icons.qrc \
+    other_files.qrc
+
+OTHER_FILES += \
+    CHANGELOG

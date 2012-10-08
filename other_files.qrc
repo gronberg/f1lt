@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/files">
+        <file>CHANGELOG</file>
+    </qresource>
+</RCC>

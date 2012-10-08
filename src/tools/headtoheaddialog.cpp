@@ -11,6 +11,8 @@
 #include <QScrollBar>
 #include <cmath>
 
+#include "../main_gui/ltitemdelegate.h"
+
 HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
     QDialog(parent, Qt::Window), ui(new Ui::HeadToHeadDialog), reversedOrder(rev), eventData(EventData::getInstance())
 {
@@ -111,6 +113,7 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
     ui->posChartTableWidget->setSpan(2, 0, 1, 4);
     ui->posChartTableWidget->setRowHeight(2, 500);
 
+    ui->tableWidget->setItemDelegate(new LTItemDelegate(this));
     ui->tableWidget->insertRow(0);
     QLabel *lab = new QLabel();
     lab->setAlignment(Qt::AlignCenter);

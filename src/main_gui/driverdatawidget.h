@@ -45,7 +45,7 @@ public slots:
 
     void printDriverData(int id);
     void printDriverChart(int id);
-    void printDriverMainEvents(int id);
+    void printDriverRelatedCommentary(int id);
 
     void updateDriverInfo(const DriverData &);
 

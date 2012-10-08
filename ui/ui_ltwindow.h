@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Sat Sep 8 10:37:44 2012
+** Created: Mon Oct 8 15:13:35 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -48,6 +48,7 @@ public:
     QAction *actionLap_time_comparison;
     QAction *actionStop_recording;
     QAction *actionSession_analysis;
+    QAction *actionLT_files_data_base;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_4;
     NoSessionBoardWidget *messageBoardWidget;
@@ -135,6 +136,11 @@ public:
         QIcon icon9;
         icon9.addFile(QString::fromUtf8(":/ui_icons/sa.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionSession_analysis->setIcon(icon9);
+        actionLT_files_data_base = new QAction(LTWindow);
+        actionLT_files_data_base->setObjectName(QString::fromUtf8("actionLT_files_data_base"));
+        QIcon icon10;
+        icon10.addFile(QString::fromUtf8(":/ui_icons/ltdb.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionLT_files_data_base->setIcon(icon10);
         centralWidget = new QWidget(LTWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
@@ -274,6 +280,7 @@ public:
         menuBar->addAction(menuHelp->menuAction());
         menuFile->addAction(actionConnect);
         menuFile->addAction(actionOpen);
+        menuFile->addAction(actionLT_files_data_base);
         menuFile->addSeparator();
         menuFile->addAction(actionExit);
         menuEdit->addAction(actionSession_analysis);
@@ -286,6 +293,7 @@ public:
         menuEdit->addAction(actionPreferences);
         menuHelp->addAction(actionAbout);
         menuHelp->addAction(actionAbout_Qt);
+        mainToolBar->addAction(actionLT_files_data_base);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionConnect);
         mainToolBar->addSeparator();
@@ -302,7 +310,7 @@ public:
         retranslateUi(LTWindow);
         QObject::connect(actionExit, SIGNAL(triggered(bool)), LTWindow, SLOT(close()));
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(LTWindow);
@@ -326,6 +334,7 @@ public:
         actionLap_time_comparison->setText(QApplication::translate("LTWindow", "Lap time comparison", 0, QApplication::UnicodeUTF8));
         actionStop_recording->setText(QApplication::translate("LTWindow", "Stop recording", 0, QApplication::UnicodeUTF8));
         actionSession_analysis->setText(QApplication::translate("LTWindow", "Session analysis", 0, QApplication::UnicodeUTF8));
+        actionLT_files_data_base->setText(QApplication::translate("LTWindow", "LT files database", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("LTWindow", "Driver data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("LTWindow", "Session data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("LTWindow", "Weather charts", 0, QApplication::UnicodeUTF8));
