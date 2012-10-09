@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'driverdatawidget.ui'
 **
-** Created: Mon Oct 8 15:13:35 2012
+** Created: Tue Oct 9 20:44:34 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -329,7 +329,7 @@ public:
         QBrush brush9(QColor(73, 73, 73, 255));
         brush9.setStyle(Qt::SolidPattern);
         palette17.setBrush(QPalette::Active, QPalette::Highlight, brush9);
-        QBrush brush10(QColor(27, 27, 27, 255));
+        QBrush brush10(QColor(30, 30, 30, 255));
         brush10.setStyle(Qt::SolidPattern);
         palette17.setBrush(QPalette::Active, QPalette::AlternateBase, brush10);
         palette17.setBrush(QPalette::Inactive, QPalette::Base, brush1);
@@ -471,7 +471,7 @@ public:
 
         retranslateUi(DriverDataWidget);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(DriverDataWidget);
@@ -495,7 +495,7 @@ public:
         driverNameLabel->setText(QString());
         pitStopsLabel->setText(QApplication::translate("DriverDataWidget", "Pit stops:", 0, QApplication::UnicodeUTF8));
         numPitsLabel->setText(QString());
-        label_6->setText(QApplication::translate("DriverDataWidget", "Theoretical:", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("DriverDataWidget", "Approximate:", 0, QApplication::UnicodeUTF8));
         approxLapLabel->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("DriverDataWidget", "Lap history", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("DriverDataWidget", "Lap time chart", 0, QApplication::UnicodeUTF8));

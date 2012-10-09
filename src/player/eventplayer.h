@@ -31,6 +31,7 @@ public slots:
     void timeout();
     void startPlaying();
     void stopPlaying();
+    void pausePlaying();
 
 signals:
     void rewindToStartClicked();

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Sat Sep 8 10:37:44 2012
+** Created: Tue Oct 9 20:44:34 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -366,7 +366,7 @@ public:
         QBrush brush9(QColor(73, 73, 73, 255));
         brush9.setStyle(Qt::SolidPattern);
         palette17.setBrush(QPalette::Active, QPalette::Highlight, brush9);
-        QBrush brush10(QColor(27, 27, 27, 255));
+        QBrush brush10(QColor(30, 30, 30, 255));
         brush10.setStyle(Qt::SolidPattern);
         palette17.setBrush(QPalette::Active, QPalette::AlternateBase, brush10);
         palette17.setBrush(QPalette::Inactive, QPalette::Base, brush);
@@ -468,7 +468,7 @@ public:
 
         retranslateUi(SessionDataWidget);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(SessionDataWidget);
@@ -494,7 +494,7 @@ public:
         s2DriverLabel->setText(QString());
         label_4->setText(QApplication::translate("SessionDataWidget", "Fastest S3:", 0, QApplication::UnicodeUTF8));
         flLapLabel->setText(QString());
-        label_5->setText(QApplication::translate("SessionDataWidget", "Theoretical:", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("SessionDataWidget", "Approximate:", 0, QApplication::UnicodeUTF8));
         s3TimeLabel->setText(QString());
         label_6->setText(QApplication::translate("SessionDataWidget", "Best laps", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("SessionDataWidget", "Fastest laps", 0, QApplication::UnicodeUTF8));

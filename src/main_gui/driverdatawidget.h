@@ -32,9 +32,6 @@ public:
     int currentIndex();
     void setCurrentIndex(int);
 
-    void setReversedOrder(bool rev) { reversedOrder = rev; }
-    bool isReversedOrder() { return reversedOrder; }
-
     void clearData();       
 
 public slots:
@@ -66,7 +63,6 @@ private:
 
     int currentDriver;
 
-    bool reversedOrder;     //print lap data rows in reverse?
     EventData &eventData;
 
     DriverLapHistoryModel *driverLapHistoryModel;

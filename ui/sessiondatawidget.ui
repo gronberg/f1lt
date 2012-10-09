@@ -57,7 +57,7 @@
       </palette>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -953,7 +953,7 @@
               <item row="5" column="0">
                <widget class="QLabel" name="label_5">
                 <property name="text">
-                 <string>Theoretical:</string>
+                 <string>Approximate:</string>
                 </property>
                </widget>
               </item>
@@ -1049,9 +1049,9 @@
                 <colorrole role="AlternateBase">
                  <brush brushstyle="SolidPattern">
                   <color alpha="255">
-                   <red>27</red>
-                   <green>27</green>
-                   <blue>27</blue>
+                   <red>30</red>
+                   <green>30</green>
+                   <blue>30</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -1078,9 +1078,9 @@
                 <colorrole role="AlternateBase">
                  <brush brushstyle="SolidPattern">
                   <color alpha="255">
-                   <red>27</red>
-                   <green>27</green>
-                   <blue>27</blue>
+                   <red>30</red>
+                   <green>30</green>
+                   <blue>30</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -1107,9 +1107,9 @@
                 <colorrole role="AlternateBase">
                  <brush brushstyle="SolidPattern">
                   <color alpha="255">
-                   <red>27</red>
-                   <green>27</green>
-                   <blue>27</blue>
+                   <red>30</red>
+                   <green>30</green>
+                   <blue>30</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -1191,9 +1191,9 @@
             <colorrole role="AlternateBase">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>27</red>
-               <green>27</green>
-               <blue>27</blue>
+               <red>30</red>
+               <green>30</green>
+               <blue>30</blue>
               </color>
              </brush>
             </colorrole>
@@ -1220,9 +1220,9 @@
             <colorrole role="AlternateBase">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>27</red>
-               <green>27</green>
-               <blue>27</blue>
+               <red>30</red>
+               <green>30</green>
+               <blue>30</blue>
               </color>
              </brush>
             </colorrole>
@@ -1249,9 +1249,9 @@
             <colorrole role="AlternateBase">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>27</red>
-               <green>27</green>
-               <blue>27</blue>
+               <red>30</red>
+               <green>30</green>
+               <blue>30</blue>
               </color>
              </brush>
             </colorrole>
@@ -1329,9 +1329,9 @@
             <colorrole role="AlternateBase">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>27</red>
-               <green>27</green>
-               <blue>27</blue>
+               <red>30</red>
+               <green>30</green>
+               <blue>30</blue>
               </color>
              </brush>
             </colorrole>
@@ -1358,9 +1358,9 @@
             <colorrole role="AlternateBase">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>27</red>
-               <green>27</green>
-               <blue>27</blue>
+               <red>30</red>
+               <green>30</green>
+               <blue>30</blue>
               </color>
              </brush>
             </colorrole>
@@ -1387,9 +1387,9 @@
             <colorrole role="AlternateBase">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>27</red>
-               <green>27</green>
-               <blue>27</blue>
+               <red>30</red>
+               <green>30</green>
+               <blue>30</blue>
               </color>
              </brush>
             </colorrole>

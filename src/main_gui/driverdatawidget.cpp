@@ -9,7 +9,7 @@
 #include "ltitemdelegate.h"
 
 DriverDataWidget::DriverDataWidget(QWidget *parent) :
-    QWidget(parent), ui(new Ui::DriverDataWidget), currentDriver(0), reversedOrder (false), eventData(EventData::getInstance())
+    QWidget(parent), ui(new Ui::DriverDataWidget), currentDriver(0), eventData(EventData::getInstance())
 {        
     ui->setupUi(this);
 

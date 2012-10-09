@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Sat Sep 8 10:37:44 2012
+** Created: Tue Oct 9 20:44:34 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -40,7 +40,6 @@ public:
     QLabel *label_2;
     QCheckBox *autoConnectBox;
     QCheckBox *ltCheckBox;
-    QCheckBox *altCheckBox;
     QCheckBox *autoRecordBox;
     QHBoxLayout *horizontalLayout;
     QCheckBox *autoStopRecordBox;
@@ -49,7 +48,6 @@ public:
     QCheckBox *thumbnailsCheckBox;
     QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout_2;
-    QCheckBox *revLHBox;
     QCheckBox *revH2HBox;
     QCheckBox *revLTCBox;
     QDialogButtonBox *buttonBox;
@@ -58,7 +56,7 @@ public:
     {
         if (PreferencesDialog->objectName().isEmpty())
             PreferencesDialog->setObjectName(QString::fromUtf8("PreferencesDialog"));
-        PreferencesDialog->resize(447, 397);
+        PreferencesDialog->resize(447, 371);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PreferencesDialog->setWindowIcon(icon);
@@ -103,11 +101,6 @@ public:
 
         verticalLayout->addWidget(ltCheckBox);
 
-        altCheckBox = new QCheckBox(PreferencesDialog);
-        altCheckBox->setObjectName(QString::fromUtf8("altCheckBox"));
-
-        verticalLayout->addWidget(altCheckBox);
-
         autoRecordBox = new QCheckBox(PreferencesDialog);
         autoRecordBox->setObjectName(QString::fromUtf8("autoRecordBox"));
 
@@ -151,11 +144,6 @@ public:
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
         verticalLayout_2 = new QVBoxLayout(groupBox_2);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        revLHBox = new QCheckBox(groupBox_2);
-        revLHBox->setObjectName(QString::fromUtf8("revLHBox"));
-
-        verticalLayout_2->addWidget(revLHBox);
-
         revH2HBox = new QCheckBox(groupBox_2);
         revH2HBox->setObjectName(QString::fromUtf8("revH2HBox"));
 
@@ -194,13 +182,11 @@ public:
         label_2->setText(QApplication::translate("PreferencesDialog", "Commentary font:", 0, QApplication::UnicodeUTF8));
         autoConnectBox->setText(QApplication::translate("PreferencesDialog", "Connect to LT serwer automatically after application start", 0, QApplication::UnicodeUTF8));
         ltCheckBox->setText(QApplication::translate("PreferencesDialog", "Show contents during LT window resize", 0, QApplication::UnicodeUTF8));
-        altCheckBox->setText(QApplication::translate("PreferencesDialog", "Alternate row colors in LT window", 0, QApplication::UnicodeUTF8));
         autoRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically start recording when session starts", 0, QApplication::UnicodeUTF8));
         autoStopRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically stop recording ", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("PreferencesDialog", "minutes after session ends", 0, QApplication::UnicodeUTF8));
         thumbnailsCheckBox->setText(QApplication::translate("PreferencesDialog", "Draw car thumbnails", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("PreferencesDialog", "Print laps in reverse order", 0, QApplication::UnicodeUTF8));
-        revLHBox->setText(QApplication::translate("PreferencesDialog", "In lap history", 0, QApplication::UnicodeUTF8));
         revH2HBox->setText(QApplication::translate("PreferencesDialog", "In head to head", 0, QApplication::UnicodeUTF8));
         revLTCBox->setText(QApplication::translate("PreferencesDialog", "In lap time comparison", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

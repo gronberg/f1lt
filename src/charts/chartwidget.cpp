@@ -346,8 +346,8 @@ void ChartWidget::drawLapDataXY(QPainter *p)
 
 void ChartWidget::drawSCLap(QPainter *p, const LapData &lapData, double xFactor)
 {
-    double sc_x1 = (double)(lapData.getLapNumber()-1 - first) * xFactor + (double)paintRect.left();
-    double sc_x2 = (double)(lapData.getLapNumber() - first) * xFactor + (double)paintRect.left();
+    double sc_x1 = (double)(lapData.getLapNumber() - first) * xFactor + (double)paintRect.left();
+    double sc_x2 = (double)(lapData.getLapNumber()+1 - first) * xFactor + (double)paintRect.left();
 
     if (sc_x1 < paintRect.left())
         sc_x1 = paintRect.left();

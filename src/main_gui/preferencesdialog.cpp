@@ -46,12 +46,10 @@ int PreferencesDialog::exec(QSettings *set)
     bbuf = settings->value("fonts/commentary_italic").toBool();
     commentaryFont.setItalic(bbuf);
 
-    setSplitterOpaqueResize(settings->value("ui/ltresize").toBool());
-    setAlternatingRowColors(settings->value("ui/alt_colors").toBool());
+    setSplitterOpaqueResize(settings->value("ui/ltresize").toBool());    
     setAutoRecord(settings->value("ui/auto_record").toBool());
     setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
 
-    setReverseOrderLapHistory(settings->value("ui/reversed_lap_history").toBool());
     setReverseOrderHeadToHead(settings->value("ui/reversed_head_to_head").toBool());
     setReverseOrderLapTimeComparison(settings->value("ui/reversed_lap_time_comparison").toBool());
     setAutoConnect(settings->value("ui/auto_connect").toBool());
@@ -76,11 +74,9 @@ void PreferencesDialog::on_buttonBox_accepted()
     settings->setValue("fonts/commentary_weight", QString::number(commentaryFont.weight()));
     settings->setValue("fonts/commentary_italic", QString::number(commentaryFont.italic()));
 
-    settings->setValue("ui/ltresize", isSplitterOpaqueResize());
-    settings->setValue("ui/alt_colors", isAlternatingRowColors());
+    settings->setValue("ui/ltresize", isSplitterOpaqueResize());    
     settings->setValue("ui/car_thumbnails", drawCarThumbnails());
 
-    settings->setValue("ui/reversed_lap_history", isReverseOrderLapHistory());
     settings->setValue("ui/reversed_head_to_head", isReverseOrderHeadToHead());
     settings->setValue("ui/reversed_lap_time_comparison", isReverseOrderLapTimeComparison());
     settings->setValue("ui/auto_record", isAutoRecord());    
@@ -136,16 +132,6 @@ void PreferencesDialog::setSplitterOpaqueResize(bool val)
     ui->ltCheckBox->setChecked(val);
 }
 
-bool PreferencesDialog::isAlternatingRowColors()
-{
-    return ui->altCheckBox->isChecked();
-}
-
-void PreferencesDialog::setAlternatingRowColors(bool val)
-{
-    ui->altCheckBox->setChecked(val);
-}
-
 
 bool PreferencesDialog::drawCarThumbnails()
 {
@@ -155,16 +141,6 @@ bool PreferencesDialog::drawCarThumbnails()
 void PreferencesDialog::setDrawCarThumbnails(bool val)
 {
     ui->thumbnailsCheckBox->setChecked(val);
-}
-
-void PreferencesDialog::setReverseOrderLapHistory(bool val)
-{
-    ui->revLHBox->setChecked(val);
-}
-
-bool PreferencesDialog::isReverseOrderLapHistory()
-{
-    return ui->revLHBox->isChecked();
 }
 
 void PreferencesDialog::setReverseOrderHeadToHead(bool val)

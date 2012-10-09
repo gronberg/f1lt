@@ -2,6 +2,7 @@
 #define LTMODEL_H
 
 #include <QAbstractTableModel>
+#include <QDebug>
 #include <QList>
 #include <QPixmap>
 #include "../../core/eventdata.h"

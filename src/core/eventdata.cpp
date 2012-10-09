@@ -58,6 +58,7 @@ void EventData::clear()
 
     commentary = "";
     driversData.clear();
+
     for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
     {
         driversData.append(DriverData());

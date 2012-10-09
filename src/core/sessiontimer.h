@@ -12,6 +12,7 @@ public:
     explicit SessionTimer(QObject *parent = 0);    
 
     bool isCounterMode() { return counterMode; }
+    bool isActive() { return timer.isActive(); }
     
 signals:
     void timeout();

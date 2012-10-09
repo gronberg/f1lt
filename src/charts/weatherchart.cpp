@@ -229,10 +229,16 @@ void WeatherChart::setMinMax()
         }
     }
 //	min -= min * 0.01;
-//	max += max * 0.01;
+//	max += max * 0.01;    
 
     if (min < allowedMin)
         min = allowedMin;
+
+    if ((max - min) < 0.6)
+    {
+        max += 0.3;
+        min -= 0.3;
+    }
 }
 
 void WeatherChart::resetZoom()

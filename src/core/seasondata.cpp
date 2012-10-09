@@ -29,7 +29,7 @@ SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
     colors[LTPackets::RED] = QColor(231, 31, 31);
     colors[LTPackets::PIT] = QColor(231, 31, 31);
     colors[LTPackets::BACKGROUND] = QColor(20, 20, 20);
-    colors[LTPackets::BACKGROUND2] = QColor(27, 27, 27);
+    colors[LTPackets::BACKGROUND2] = QColor(30, 30, 30);
 
     ltTeams.clear();
     fillEventNamesMap();
@@ -37,6 +37,7 @@ SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
 
 bool SeasonData::loadSeasonFile()
 {
+    ltTeams.clear();
     QString fName = F1LTCore::seasonDataFile();
     if (!fName.isNull())
     {

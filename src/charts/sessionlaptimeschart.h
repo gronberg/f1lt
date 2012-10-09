@@ -46,6 +46,7 @@ public:
     virtual void drawIntoImage(QImage &img);
     virtual void drawImage(QPainter *p);
     virtual void drawLegend(QPainter *) { }
+    virtual void drawRetire(QPainter *p, int x, int y, const LapData &ld, QColor color);
 //    virtual void drawScaleRect(QPainter *p);
 
     virtual void transform();
@@ -56,6 +57,7 @@ public:
 
     virtual void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
     QColor getCarColor(const LapData &ld);
+    QColor getCarColor(const DriverData &dd);
 
     virtual int findLapDataXY(int x, int y);
     virtual void drawLapDataXY(QPainter *p);  
@@ -124,15 +126,17 @@ public:
 
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
+    void drawDriversLegend(QPainter *p, const LapData &ld, double y);
 
-    void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);    
+    void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
+    virtual void transform();
 
 protected:
     void paintEvent(QPaintEvent *);
 
     virtual void resetPaintRect()
     {
-        paintRect = QRect(60, 10, width()-35, height()-35);
+        paintRect = QRect(60, 20, width()-65, height()-20);
     }
 
     struct DriverPosAtom
@@ -154,6 +158,7 @@ protected:
         }
     };
     QList<DriverPosAtom> getDriverStartingPositions();
+    int getDriverStartingPosition(const LapData &ld);
 };
 
 

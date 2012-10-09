@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>447</width>
-    <height>397</height>
+    <height>371</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -76,13 +76,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="altCheckBox">
-     <property name="text">
-      <string>Alternate row colors in LT window</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QCheckBox" name="autoRecordBox">
      <property name="text">
       <string>Automatically start recording when session starts</string>
@@ -145,13 +138,6 @@
       <string>Print laps in reverse order</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QCheckBox" name="revLHBox">
-        <property name="text">
-         <string>In lap history</string>
-        </property>
-       </widget>
-      </item>
       <item>
        <widget class="QCheckBox" name="revH2HBox">
         <property name="text">

@@ -8,7 +8,6 @@
 #include <QList>
 #include <QProgressDialog>
 #include <QSettings>
-#include <QTimer>
 
 #include "aboutdialog.h"
 #include "../net/datastreamreader.h"
@@ -20,6 +19,7 @@
 #include "logindialog.h"
 #include "preferencesdialog.h"
 #include "../tools/sessionanalysiswidget.h"
+#include "../core/sessiontimer.h"
 
 
 namespace Ui {
@@ -121,7 +121,7 @@ private:
 
     int currDriver;
 
-    QTimer *eventTimer;
+    SessionTimer *sessionTimer;
 
     EventRecorder *eventRecorder;
     EventPlayer *eventPlayer;

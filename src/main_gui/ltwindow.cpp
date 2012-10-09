@@ -37,7 +37,7 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
     connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(showNoSessionBoard(bool, QString)));
 
-    eventTimer = new QTimer(this);
+    sessionTimer = new SessionTimer(this);
     eventRecorder = new EventRecorder(this);
     eventPlayer = new EventPlayer(this);
 
@@ -50,7 +50,7 @@ LTWindow::LTWindow(QWidget *parent) :
 
     connectionProgress = new QProgressDialog(this);
 
-    connect(eventTimer, SIGNAL(timeout()), this, SLOT(timeout()));
+    connect(sessionTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     connect(eventRecorder, SIGNAL(recordingStopped()), this, SLOT(autoStopRecording()));
     connect(eventPlayer, SIGNAL(playClicked(int)), this, SLOT(eventPlayerPlayClicked(int)));
     connect(eventPlayer, SIGNAL(pauseClicked()), this, SLOT(eventPlayerPauseClicked()));
@@ -339,8 +339,8 @@ void LTWindow::on_actionHead_to_head_triggered()
 
 void LTWindow::sessionStarted()
 {
-    if (!eventTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))
-        eventTimer->start(1000);
+    if (!sessionTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))
+        sessionTimer->start(1000);
 }
 
 void LTWindow::showNoSessionBoard(bool show, QString msg)
@@ -377,44 +377,47 @@ void LTWindow::timeout()
     if (eventPlayer->isPlaying())
         eventPlayer->timeout();
 
+    ui->eventStatusWidget->updateEventStatus();
+
     //during quali timer is stopped when we have red flag
     if (eventData.isSessionStarted())
     {
-        if (!playing && settings->value("ui/auto_record").toBool() && !recording && eventRecorder->isEmpty())
+        if (!playing && settings->value("ui/auto_record").toBool() && !recording)
             on_actionRecord_triggered();
-
-        if (!(eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
-            !((eventData.getEventType() == LTPackets::QUALI_EVENT || eventData.getEventType() == LTPackets::RACE_EVENT) && eventData.getFlagStatus() == LTPackets::RED_FLAG))
-        {
-            int hours = eventData.getRemainingTime().hour();
-            int mins = eventData.getRemainingTime().minute();
-            int secs = eventData.getRemainingTime().second();
-            --secs;
-            if (secs < 0)
-            {
-                secs = 59;
-                --mins;
-                eventData.saveWeather();
-
-                if (mins < 0)
-                {
-                    --hours;
-                    mins = 59;
-
-                    if (hours < 0)
-                    {
-                        secs = mins = hours = 0;
-                        //we don't stop the timer here as it will be needed ie. for session recording, we only change the value of sessionStarted to false
-                        eventData.setSessionStarted(false);
-    //                    eventTimer->stop();
-                    }
-                }
-            }
-            eventData.setRemainingTime(QTime(hours, mins, secs));
-//            ui->trackStatusWidget->updateTrackStatus(eventData);
-            ui->eventStatusWidget->updateEventStatus();
-        }
     }
+
+//        if (!(eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
+//            !((eventData.getEventType() == LTPackets::QUALI_EVENT || eventData.getEventType() == LTPackets::RACE_EVENT) && eventData.getFlagStatus() == LTPackets::RED_FLAG))
+//        {
+//            int hours = eventData.getRemainingTime().hour();
+//            int mins = eventData.getRemainingTime().minute();
+//            int secs = eventData.getRemainingTime().second();
+//            --secs;
+//            if (secs < 0)
+//            {
+//                secs = 59;
+//                --mins;
+//                eventData.saveWeather();
+
+//                if (mins < 0)
+//                {
+//                    --hours;
+//                    mins = 59;
+
+//                    if (hours < 0)
+//                    {
+//                        secs = mins = hours = 0;
+//                        //we don't stop the timer here as it will be needed ie. for session recording, we only change the value of sessionStarted to false
+//                        eventData.setSessionStarted(false);
+//    //                    eventTimer->stop();
+//                    }
+//                }
+//            }
+//            eventData.setRemainingTime(QTime(hours, mins, secs));
+////            ui->trackStatusWidget->updateTrackStatus(eventData);
+//            ui->eventStatusWidget->updateEventStatus();
+//        }
+//    }
 }
 
 //-------------------- settings ----------------------------
@@ -472,7 +475,6 @@ void LTWindow::loadSettings()
 //    prefs->setReverseOrderHeadToHead(settings->value("ui/reversed_head_to_head").toBool());
 //    prefs->setReverseOrderLapTimeComparison(settings->value("ui/reversed_lap_time_comparison").toBool());
 
-    ui->driverDataWidget->setReversedOrder(settings->value("ui/reversed_lap_history").toBool());
     ui->ltWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
 
     eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
@@ -535,7 +537,6 @@ void LTWindow::on_actionPreferences_triggered()
 //        settings->setValue("ui/reversed_lap_time_comparison", prefs->isReverseOrderLapTimeComparison());
 //        settings->setValue("ui/auto_record", prefs->isAutoRecord());
 
-        ui->driverDataWidget->setReversedOrder(settings->value("ui/reversed_lap_history").toBool());
         for (int i = 0; i < h2hDialog.size(); ++i)
         {
             h2hDialog[i]->setReversedOrder(settings->value("ui/reversed_head_to_head").toBool());
@@ -721,6 +722,7 @@ void LTWindow::on_actionRecord_triggered()
     recording = true;
     ui->actionStop_recording->setEnabled(true);
     ui->actionRecord->setEnabled(false);
+    ui->actionLT_files_data_base->setEnabled(false);
 //        ui->actionRecord->setIcon(QIcon(":/ui_icons/stop.png"));
     ui->actionOpen->setEnabled(false);
     eventRecorder->startRecording();
@@ -732,6 +734,7 @@ void LTWindow::on_actionStop_recording_triggered()
     recording = false;
     ui->actionOpen->setEnabled(true);
     ui->actionRecord->setEnabled(true);
+    ui->actionLT_files_data_base->setEnabled(true);
     ui->actionStop_recording->setEnabled(false);
     eventRecorder->stopRecording();
     disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
@@ -742,6 +745,7 @@ void LTWindow::autoStopRecording()
 	recording = false;
 	ui->actionOpen->setEnabled(true);
 	ui->actionRecord->setEnabled(true);
+    ui->actionLT_files_data_base->setEnabled(true);
 	ui->actionStop_recording->setEnabled(false);
 	disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
 }
@@ -750,15 +754,18 @@ void LTWindow::autoStopRecording()
 
 void LTWindow::on_actionOpen_triggered()
 {
-    eventTimer->stop();
+    if (playing)
+        eventPlayer->pausePlaying();
+
     QString ltDir = settings->value("ui/ltdir").toString();
     if (ltDir == "")
         ltDir = F1LTCore::ltDataHomeDir();
 
-    QString fName = QFileDialog::getOpenFileName(this, "Select archive LT event file", ltDir, "*.lt");
+    QString fName = QFileDialog::getOpenFileName(this, "Select archive LT event file", ltDir, "*.lt");    
 
     if (!fName.isNull())
     {
+        sessionTimer->stop();
         QFileInfo fi(fName);
         ltDir = fi.absolutePath();
 
@@ -773,12 +780,14 @@ void LTWindow::on_actionOpen_triggered()
 
 void LTWindow::on_actionLT_files_data_base_triggered()
 {
-    eventTimer->stop();
-    QString fName = ltFilesManagerDialog->exec();
+    if (playing)
+        eventPlayer->pausePlaying();
 
-    //if (fName != "")
+    QString fName = ltFilesManagerDialog->exec();    
+
     if (!fName.isNull())
     {
+        sessionTimer->stop();
         if (recording)
             on_actionRecord_triggered();
 
@@ -826,17 +835,17 @@ void LTWindow::eventPlayerOpenFile(QString fName)
 
 void LTWindow::eventPlayerPlayClicked(int interval)
 {
-    eventTimer->start(interval);
+    sessionTimer->start(interval);
 }
 
 void LTWindow::eventPlayerPauseClicked()
 {
-    eventTimer->stop();
+    sessionTimer->stop();
 }
 
 void LTWindow::eventPlayerRewindToStartClicked()
 {
-    eventTimer->stop();
+    sessionTimer->stop();
     streamReader->clearData();
     ui->sessionDataWidget->clearData();
 
@@ -845,7 +854,7 @@ void LTWindow::eventPlayerRewindToStartClicked()
 
 void LTWindow::eventPlayerForwardToEndClicked()
 {
-    eventTimer->stop();
+    sessionTimer->stop();
 }
 
 void LTWindow::eventPlayerRewindClicked()

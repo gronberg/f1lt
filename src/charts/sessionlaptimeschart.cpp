@@ -228,8 +228,8 @@ void SessionLapTimesChart::drawChart(QPainter *p)
 
             if (lapDataArray[i].getRaceLapExtraData().isSCLap() && lapDataArray[i].getLapNumber() > lastPaintedSC)
             {
-                double sc_x1 = (double)(lapDataArray[i].getLapNumber()-1 - firstLap) * xFactor + (double)paintRect.left();
-                double sc_x2 = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x1 = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x2 = (double)(lapDataArray[i].getLapNumber()+1 - firstLap) * xFactor + (double)paintRect.left();
 
                 if (sc_x1 < paintRect.left())
                     sc_x1 = paintRect.left();
@@ -333,6 +333,33 @@ void SessionLapTimesChart::drawChart(QPainter *p)
         clearXYList(lapsInWindow);
 }
 
+void SessionLapTimesChart::drawRetire(QPainter *p, int x, int y, const LapData &ld, QColor color)
+{
+    if (ld.getCarID() > 0)
+    {
+        LapData ld2 = EventData::getInstance().getDriverDataById(ld.getCarID()).getLapData(ld.getLapNumber()+1);
+        LapData ld3 = EventData::getInstance().getDriverDataById(ld.getCarID()).getLapData(ld.getLapNumber()+2);
+
+        if (ld2.getCarID() == -1 && ld3.getCarID() == -1)
+        {
+            QPen pen;
+            pen.setWidth(3);
+            pen.setColor(QColor(255, 0, 0));
+            p->setPen(pen);
+
+            p->drawLine(x-5, y-5, x+5, y+5);
+            p->drawLine(x-5, y+5, x+5, y-5);
+
+            pen.setColor(QColor(255, 255, 255));
+            p->setPen(pen);
+            p->setBrush(QColor(255, 0, 0));
+            QPainterPath path;
+            path.addEllipse(QPoint(x, y), 7, 7);
+            p->drawPath(path);
+        }
+    }
+}
+
 int SessionLapTimesChart::findLapDataXY(int x, int y)
 {
     itemsInXY.clear();
@@ -384,15 +411,24 @@ void SessionLapTimesChart::drawLapDataXY(QPainter *p)
 
 QColor SessionLapTimesChart::getCarColor(const LapData &ld)
 {
-    QColor color = SeasonData::getInstance().getColor(LTPackets::BACKGROUND);
     if (ld.getCarID() > 0)
     {
-        int no = EventData::getInstance().getDriversData()[ld.getCarID()-1].getNumber();
+        DriverData dd = EventData::getInstance().getDriverDataById(ld.getCarID());
+        return getCarColor(dd);
+    }    
+    return SeasonData::getInstance().getColor(LTPackets::BACKGROUND);
+}
+
+QColor SessionLapTimesChart::getCarColor(const DriverData &dd)
+{
+    QColor color = SeasonData::getInstance().getColor(LTPackets::BACKGROUND);
+    if (dd.getCarID() > 0)
+    {
+        int no = dd.getNumber();
 
         if (no > 0 && no < colors.size()+2)
             color = colors[no <= 12 ? no-1 : no -2];
     }
-
     return color;
 }
 
@@ -501,8 +537,8 @@ void SessionLapTimesChart::transform()
 //		first = driverData.lapData.size() - 1;
 
     last = first + ceil((scaleRect.right() - scaleRect.left()) / xFactor);
-//	if (last >= driverData.lapData.size())
-//		last = driverData.lapData.size() - 1;
+    if (last > EventData::getInstance().getEventInfo().laps)
+        last = EventData::getInstance().getEventInfo().laps;
 
     tMin = tMin + ceil((paintRect.bottom() - scaleRect.bottom()) / yFactor)-1;
     if (tMin < min)
@@ -582,15 +618,24 @@ QList<SessionPositionsChart::DriverPosAtom> SessionPositionsChart::getDriverStar
     return positionList;
 }
 
+int SessionPositionsChart::getDriverStartingPosition(const LapData &ld)
+{
+    DriverData dd = EventData::getInstance().getDriverDataById(ld.getCarID());
+    if (dd.getCarID() > 0)
+        return dd.getStartingPos();
+
+    return 0;
+}
+
 void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
     p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
 
     //x axe
-    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
+    p->drawLine(paintRect.left(), paintRect.top(), paintRect.right(), paintRect.top());
 
     //y axe
-    p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
+    p->drawLine(paintRect.left(), paintRect.bottom()-10, paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
     p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
@@ -601,22 +646,24 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     double yFactor = (double)((paintRect.height())/(tMax-chartMin));
     double yFactor2 = 1.0;//(double)((tMax-chartMin)/12.0);
     double j = tMin;
-    for (double i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2, ++k)
+    for (double i = paintRect.top(); i <= paintRect.bottom(); i+= yFactor, j += yFactor2, ++k)
     {
-        DriverData dd;
-        int k = round(j)-1;
-        if (k >= 0 && k < positionList.size() && positionList[k].id-1 >= 0 && positionList[k].id-1 < EventData::getInstance().getDriversData().size())
-            dd = EventData::getInstance().getDriversData()[positionList[round(j)-1].id-1];
+        if (firstLap == 0)
+        {
+            DriverData dd;
+            int k = round(j)-1;
+            if (k >= 0 && k < positionList.size() && positionList[k].id-1 >= 0 && positionList[k].id-1 < EventData::getInstance().getDriversData().size())
+                dd = EventData::getInstance().getDriversData()[positionList[round(j)-1].id-1];
+            QColor color = getCarColor(dd.getLastLap());
+            p->setBrush(color);
+            p->setPen(color);
+            p->drawRect(5, i-6, 4, 11);
+            QString driver = SeasonData::getInstance().getDriverShortName(dd.getDriverName());
+            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+            p->drawText(13, i+5, QString("%1 %2").arg(round(j)).arg(driver));
+        }
 
-        QColor color = getCarColor(dd.getLastLap());
-        p->setBrush(color);
-        p->setPen(color);
-        p->drawRect(5, i-6, 4, 11);
-        QString driver = SeasonData::getInstance().getDriverShortName(dd.getDriverName());
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
-        p->drawText(13, i+5, QString("%1 %2").arg(round(j)).arg(driver));
-
-        if (i != paintRect.bottom())
+        if (i != paintRect.top())
         {
             QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
@@ -631,6 +678,7 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         double j = firstLap;
         double i = paintRect.left();
         int prevJ = firstLap;
+        bool lap1Line = false;
 
         double jFactor = (lastLap - firstLap) < 6 ? 1.0 : (double)((lastLap - firstLap) / 10.0);
         for (; i < width()-15.0 && round(j) < lastLap; /*i += xFactor,*/ j += jFactor)
@@ -638,14 +686,29 @@ void SessionPositionsChart::drawAxes(QPainter *p, int firstLap, int lastLap)
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
             p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
-            p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
+
+            QString lap = QString("L%1").arg(round(j));
+            if (lap == "L0")
+                lap = "S";
+            p->drawText(round(i)-5, 15, lap);
 
             if (i > paintRect.left())
             {
                 QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
-                p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
+                p->drawLine(round(i), paintRect.bottom()-10, round(i), paintRect.top());
+            }
+
+            if (firstLap == 0 && !lap1Line)
+            {
+                p->drawText(round(i)-5+xFactor, 15, "L1");
+
+                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+                pen.setStyle(Qt::DashLine);
+                p->setPen(pen);
+                p->drawLine(round(i) + xFactor, paintRect.bottom()-10, round(i) + xFactor, paintRect.top());
+                lap1Line = true;
             }
         }
     }
@@ -657,20 +720,27 @@ void SessionPositionsChart::drawChart(QPainter *p)
 
     int chartMin = tMin == 1 ? 0 : tMin;
 
-    double x = paintRect.left();
+    double left = paintRect.left();
+    double x = left;
     double y;
-    double yFactor = (((double)paintRect.height()) / (double)(tMax-chartMin));
+    double yFactor = (((double)paintRect.height()) / (double)(tMax-chartMin));    
 
     int size;
     findFirstAndLastLap(firstLap, lastLap, size);
     firstLap = first; lastLap = last;
+
+    double xFactor = ((double)paintRect.width()) / (double)(lastLap - firstLap);
+    if (firstLap == 1)
+    {
+        firstLap = 0;
+        xFactor = ((double)paintRect.width()) / (double)(lastLap);
+    }
 
     if (/*lastLap - firstLap == 0 ||*/ lapDataArray.isEmpty())
         return;
 
     drawAxes(p, firstLap, lastLap);
 
-    double xFactor = ((double)paintRect.width()) / (double)(lastLap - firstLap);
 
     p->setRenderHint(QPainter::Antialiasing);
 
@@ -681,12 +751,10 @@ void SessionPositionsChart::drawChart(QPainter *p)
     {
         if (lapDataArray[i].getLapNumber() >= firstLap && lapDataArray[i].getLapNumber() <= lastLap)// && lapDataArray[i].getTime().isValid())
         {
-
-
             if (lapDataArray[i].getRaceLapExtraData().isSCLap() && lapDataArray[i].getLapNumber() > lastPaintedSC)
             {
-                double sc_x1 = (double)(lapDataArray[i].getLapNumber()-1 - firstLap) * xFactor + (double)paintRect.left();
-                double sc_x2 = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
+                double sc_x1 = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + left;
+                double sc_x2 = (double)(lapDataArray[i].getLapNumber()+1 - firstLap) * xFactor + left;
 
                 if (sc_x1 < paintRect.left())
                     sc_x1 = paintRect.left();
@@ -702,14 +770,14 @@ void SessionPositionsChart::drawChart(QPainter *p)
                 p->setPen(QColor(255, 255, 0, 0));
                 p->setBrush(QBrush(QColor(255, 255, 0, 35)));
 
-                p->drawRect(round(sc_x1), paintRect.top(), round(sc_x2-sc_x1), paintRect.height());
+                p->drawRect(round(sc_x1), paintRect.top(), round(sc_x2-sc_x1), paintRect.height()-10);
                 lastPaintedSC = lapDataArray[i].getLapNumber();
 
 //                lastSCLap = lapDataArray[i].getLapNumber();
             }
 
-            y = (double)(paintRect.bottom() - (double)(lapDataArray[i].getPosition()-tMin) * yFactor);
-            x = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + (double)paintRect.left();
+            y = (double)(paintRect.top() + (double)(lapDataArray[i].getPosition()-tMin) * yFactor);
+            x = (double)(lapDataArray[i].getLapNumber() - firstLap) * xFactor + left;
 
             //int no = EventData::getInstance()lapDataArray[i].getCarID()
             QColor color = getCarColor(lapDataArray[i]);
@@ -731,11 +799,22 @@ void SessionPositionsChart::drawChart(QPainter *p)
 
             }
 
-            if (lapDataArray[i].getLapNumber()-1 >= firstLap && i > 0)
-            {
-                double x1 = (double)(lapDataArray[i].getLapNumber() - 1 - firstLap) * xFactor + (double)paintRect.left();
-                double y1 = (double)(paintRect.bottom() - (double)(lapDataArray[i-1].getPosition()-tMin) * yFactor);
+            if (lapDataArray[i].getLapNumber()-1 >= firstLap)//&& i > 0)
+            {                
+                double x1 = x;
+                double y1 = y;
 
+                if (firstLap == 0 && lapDataArray[i].getLapNumber() == 1)
+                {
+                    x1 = (double)(lapDataArray[i].getLapNumber() - 1) * xFactor + left;
+                    y1 = (double)(paintRect.top() + (double)(getDriverStartingPosition(lapDataArray[i])-tMin) * yFactor);
+                }
+
+                else if (i > 0)
+                {
+                    x1 = (double)(lapDataArray[i].getLapNumber() - 1 - firstLap) * xFactor + left;
+                    y1 = (double)(paintRect.top() + (double)(lapDataArray[i-1].getPosition()-tMin) * yFactor);
+                }
 
                 if ((y > paintRect.bottom() && y1 > paintRect.bottom()) || (y < paintRect.top() && y1 < paintRect.top()))
                     continue;
@@ -744,8 +823,27 @@ void SessionPositionsChart::drawChart(QPainter *p)
                 ChartWidget::checkX2(x1, y1, x, y);
 
                 p->drawLine(x1, y1, x, y);
+
+                if (i > 0 && x1 == left && firstLap != 0)
+                    drawDriversLegend(p, lapDataArray[i-1], y1);
             }
-        }
+//            drawRetire(p, x, y, lapDataArray[i], color);
+        }        
+    }
+}
+
+void SessionPositionsChart::drawDriversLegend(QPainter *p, const LapData &ld, double y)
+{
+    DriverData dd = EventData::getInstance().getDriverDataById(ld.getCarID());
+    if (dd.getCarID() > 0)
+    {
+        QColor color = getCarColor(dd.getLastLap());
+        p->setBrush(color);
+        p->setPen(color);
+        p->drawRect(5, y-6, 4, 11);
+        QString driver = SeasonData::getInstance().getDriverShortName(dd.getDriverName());
+        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+        p->drawText(13, y+5, QString("%1 %2").arg(ld.getPosition()).arg(driver));
     }
 }
 
@@ -772,6 +870,24 @@ void SessionPositionsChart::paintEvent(QPaintEvent *)
 //    drawLegend(&p, 35, 5);
 
     p.end();
+}
+
+void SessionPositionsChart::transform()
+{
+    if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
+        return;
+
+    double tmpMin = tMin;
+    double yFactor = (((double)paintRect.height()) / (double)(tMax - tmpMin));
+    SessionLapTimesChart::transform();
+
+    tMin = tmpMin + ceil((paintRect.top() + scaleRect.top()) / yFactor)-2;
+    tMax = tMin + ceil((scaleRect.bottom() - scaleRect.top()) / yFactor)+1;
+
+    if (tMax > max)
+        tMax = max;
+
+//    emit zoomChanged(first, last, tMin, tMax);
 }
 
 //=========================================================================

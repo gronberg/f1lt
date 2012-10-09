@@ -121,6 +121,13 @@ void EventPlayer::startPlaying()
     setTimeLabel();
 }
 
+void EventPlayer::pausePlaying()
+{
+    paused = true;
+    ui->playButton->setIcon(QIcon(":/ui_icons/play.png"));
+    emit pauseClicked();
+}
+
 void EventPlayer::on_playButton_clicked()
 {
     if (currentPos >= packets.size())
@@ -135,9 +142,7 @@ void EventPlayer::on_playButton_clicked()
     }
     else if (playing && !paused)
     {
-        paused = true;
-        ui->playButton->setIcon(QIcon(":/ui_icons/play.png"));
-        emit pauseClicked();
+        pausePlaying();
     }
     else if (playing && paused)
     {

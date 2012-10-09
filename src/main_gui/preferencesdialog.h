@@ -24,17 +24,11 @@ public:
     QFont getMainFont() { return mainFont; }
     QFont getCommentaryFont() { return commentaryFont; }
 
-    void setAlternatingRowColors(bool);
-    bool isAlternatingRowColors();
-
     void setSplitterOpaqueResize(bool);
     bool isSplitterOpaqueResize();
 
     void setDrawCarThumbnails(bool);
     bool drawCarThumbnails();
-
-    void setReverseOrderLapHistory(bool);
-    bool isReverseOrderLapHistory();
 
     void setReverseOrderHeadToHead(bool);
     bool isReverseOrderHeadToHead();
