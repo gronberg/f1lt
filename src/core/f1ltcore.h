@@ -29,7 +29,14 @@ public:
 #ifdef WIN32
         return programHomeDir() + "/f1lt.ini";
 #else
-        return QDir::homePath() + "/.f1lt";
+        QDir dir = QDir::homePath() + "/.f1lt";
+
+        if (!dir.exists())
+        {
+            if (!dir.mkpath(QDir::homePath() + "/.f1lt"))
+                return QDir::homePath() + "/.f1lt.ini";
+        }
+        return QDir::homePath() + "/.f1lt/f1lt.ini";
 #endif
     }
 
@@ -54,12 +61,14 @@ public:
 #ifdef WIN32
         return programHomeDir() + "/ltdata/";
 #else
-        QString prefix = STR(INSTALL_PREFIX);
-        QDir dir;
-        if (dir.exists(prefix))
-            return prefix + "/ltdata/";
-        else
-            return programHomeDir() + "/ltdata/";
+        QDir dir = QDir::homePath() + "/.f1lt/ltdata";
+        if (!dir.exists())
+        {
+            if (!dir.mkpath(QDir::homePath() + "/.f1lt/ltdata"))
+                return programHomeDir() + "/ltdata/";
+        }
+        return QDir::homePath() + "/.f1lt/ltdata/";
+
 #endif
     }
 
