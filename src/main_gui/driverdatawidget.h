@@ -9,7 +9,7 @@
 
 
 #include "../core/seasondata.h"
-#include "../charts/chartwidget.h"
+#include "../charts/driverdatachart.h"
 
 #include "models/driverlaphistorymodel.h"
 
@@ -57,7 +57,7 @@ private:
 
     Ui::DriverDataWidget *ui;
 
-    ChartWidget *posChart;
+    DriverDataChart *posChart;
     LapTimeChart *lapTimeChart;
     GapChart *gapChart;
 

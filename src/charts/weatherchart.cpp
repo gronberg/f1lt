@@ -250,26 +250,8 @@ void WeatherChart::resetZoom()
     tMax = max;
 }
 
-void WeatherChart::transform()
+void WeatherChart::calculateTransformFactors()
 {
-    if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-        return;
-
-    if (scaleRect == QRect())
-    {
-        first = 1;
-        last = driverData.getLapData().size();
-        tMin = min;
-        tMax = max;
-        return;
-    }
-
-    if (scaleRect.left() > scaleRect.right())
-        scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-    if (scaleRect.top() > scaleRect.bottom())
-        scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
     int sz = last-first+1;
     double xFactor = ((double)paintRect.width()) / ((double)sz);
     double yFactor = (((double)paintRect.height()-40) / (double)(tMax - tMin));
@@ -289,7 +271,6 @@ void WeatherChart::transform()
     if (tMin < min)
         tMin = min;
     tMax = tMin + ceil((scaleRect.bottom() - scaleRect.top()) / yFactor);
-
 }
 
 

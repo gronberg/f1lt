@@ -10,29 +10,22 @@ class FPLapTimesChart : public SessionLapTimesChart
 public:
     FPLapTimesChart(QWidget *parent) : SessionLapTimesChart(parent)
     {
+        popupBox = new PopupDriversLapTimesInfoBox();
+    }
+    virtual int getSessionLength()
+    {
+        return SeasonData::getInstance().getFPLength();
     }
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
 //    virtual void drawScaleRect(QPainter *p);
 
-    virtual void transform();
+    virtual void calculateTransformFactors();
     virtual void resetZoom();
 
     virtual void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
 
-    virtual int getSessionLength()
-    {
-        return SeasonData::getInstance().getFPLength();
-    }
-
-    virtual QString getLapInfoXY(const LapData &ld)
-    {
-        int minute = SeasonData::getInstance().getFPLength() - SeasonData::getInstance().timeToMins(ld.getPracticeLapExtraData().getSessionTime());
-        if (ld.getPracticeLapExtraData().getSessionTime().toString("h:mm:ss") == "")
-            minute = 0;
-
-        return QString::number(minute) + ". minute";
-    }
+    virtual int checkLapDataCoordinates(int x, int y);
 
 //signals:
 //    void zoomChanged(int, int, double, double);
@@ -66,14 +59,7 @@ public:
         return SeasonData::getInstance().getQualiLength(qualiPeriod);
     }
 
-    virtual QString getLapInfoXY(const LapData &ld)
-    {
-        int minute = getSessionLength() - SeasonData::getInstance().timeToMins(ld.getPracticeLapExtraData().getSessionTime());
-
-        if (ld.getPracticeLapExtraData().getSessionTime().toString("h:mm:ss") == "")
-            minute = 0;
-        return QString::number(minute) + ". minute";
-    }
+    virtual int checkLapDataCoordinates(int x, int y);
 
 //    virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
@@ -109,22 +95,7 @@ public:
     int getMin() { return tMin == min ? -1 : tMin; }
     int getMax() { return tMax == max ? -1 : tMax; }
 
-    virtual QString getLapInfoXY(const LapData &ld)
-    {
-        int sessTime = SeasonData::getInstance().getQualiLength(ld.getQualiLapExtraData().getQualiPeriod()) - SeasonData::getInstance().timeToMins(ld.getQualiLapExtraData().getSessionTime());
-
-        if (ld.getQualiLapExtraData().getSessionTime().toString("h:mm:ss") == "")
-            sessTime = 0;
-//        int sessTimeSecs = LTData::getQualiLength(lapDataArray[i].qualiPeriod) * 60 - LTData::timeToSecs(lapDataArray[i].sessionTime);
-
-//        for (int k = 0; k < lapDataArray[i].qualiPeriod-1; ++k)
-//        {
-//            sessTime += LTData::getQualiLength(k+1);
-//            sessTimeSecs += LTData::getQualiLength(k+1)*60;
-//        }
-
-        return "Q" + QString::number(ld.getQualiLapExtraData().getQualiPeriod()) + " " + QString::number(sessTime) + ". minute";
-    }
+    virtual int checkLapDataCoordinates(int x, int y);
 
 
     virtual void drawAxes(QPainter *p, int firstMin, int lastMin);

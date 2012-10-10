@@ -3,67 +3,6 @@
 #include <QPainter>
 
 
-bool PredXYTime::operator ()(int item1, int item2)
-{
-    int didx1 = chart.lapDataXYCompArray[item1].driverIdx;
-    int lidx1 = chart.lapDataXYCompArray[item1].idx;
-
-    int didx2 = chart.lapDataXYCompArray[item2].driverIdx;
-    int lidx2 = chart.lapDataXYCompArray[item2].idx;
-
-    LapData ld1 = chart.driverData[didx1].getLapData(lidx1);
-    LapData ld2 = chart.driverData[didx2].getLapData(lidx2);
-
-    if (ld1.getTime().isValid() && ld2.getTime().isValid())
-        return ld1.getTime() < ld2.getTime();
-
-    if (ld1.getTime().isValid() && !ld2.getTime().isValid())
-        return true;
-
-    return false;
-}
-
-bool PredXYGap::operator ()(int item1, int item2)
-{
-    return  chart.lapDataXYGapCompArray[item1].gap < chart.lapDataXYGapCompArray[item2].gap;
-//    LapData ld1 = chart.lapDataArray[item1];
-//    LapData ld2 = chart.lapDataArray[item2];
-
-//    QString sgap1 = ld1.gap;
-//    QString sgap2 = ld2.gap;
-
-//    if (sgap1 == "")
-//        sgap1 = "1L";
-
-//    if (sgap2 == "")
-//        sgap2 = "1L";
-
-//    bool ok1=true, ok2=true;
-//    double gap1 = sgap1.toDouble(&ok1);
-//    double gap2 = sgap2.toDouble(&ok2);
-
-//    if (ok1 && ok2)
-//        return gap1 < gap2;
-
-//    if (sgap1 == "LAP")
-//        return true;
-
-//    if (sgap2 == "LAP")
-//        return false;
-
-//    if (sgap1.size() > 1 && sgap1[sgap1.size()-1] == 'L' &&
-//        sgap2.size() > 1 && sgap2[sgap2.size()-1] == 'L')
-//    {
-//        gap1 = sgap1.left(sgap1.size()-1).toDouble();
-//        gap2 = sgap2.left(sgap2.size()-1).toDouble();
-
-//        return gap1 < gap2;
-//    }
-
-//    return false;
-}
-
-
 void LapCompChart::setData(DriverData *dd)
 {
     double lMin = 99999999.0, lMax = 0.0;
@@ -321,10 +260,10 @@ void LapCompChart::drawChart(QPainter *p)
 
                     if (!scaling)
                     {
-                        if (lapsInWindow >= lapDataXYCompArray.size())
-                            lapDataXYCompArray.append(LapDataXYComp(i, (int)dx2, (int)dy2, k));
+                        if (lapsInWindow >= lapDataCompCoordinates.size())
+                            lapDataCompCoordinates.append(LapDataCompCoordinates(i, (int)dx2, (int)dy2, k));
                         else
-                            lapDataXYCompArray[lapsInWindow] = LapDataXYComp(i, (int)dx2, (int)dy2, k);
+                            lapDataCompCoordinates[lapsInWindow] = LapDataCompCoordinates(i, (int)dx2, (int)dy2, k);
                     }
                     ++lapsInWindow;
 
@@ -347,6 +286,7 @@ void LapCompChart::drawChart(QPainter *p)
 
                         p->drawPath(path);
                     }
+                    drawRetire(p, dx2, dy2, 6, ld);
                 }
 
                 y1[k] = y2[k];
@@ -363,7 +303,7 @@ void LapCompChart::drawChart(QPainter *p)
             }
         }
     }
-    clearXYList(lapsInWindow);
+    clearLapDataCoordinates(lapsInWindow);
 
 }
 
@@ -385,9 +325,9 @@ void LapCompChart::paintEvent(QPaintEvent *)
     else
     {
         if (!repaintPopup)
-            findLapDataXY(mousePosX, mousePosY);
+            checkLapDataCoordinates(mousePosX, mousePosY);
 
-        drawLapDataXY(&p);
+        popupBox->paint(&p, mousePosX, mousePosY, paintRect);
     }
 
     p.end();
@@ -419,60 +359,24 @@ void LapCompChart::drawLegend(QPainter *p)
     }
 }
 
-int LapCompChart::findLapDataXY(int x, int y)
+int LapCompChart::checkLapDataCoordinates(int x, int y)
 {
-    itemsInXY.clear();
-    for (int i = 0; i < lapDataXYCompArray.size(); ++i)
+    if (popupBox != 0)
     {
-        if (abs(lapDataXYCompArray[i].x - x) <= 3 && abs(lapDataXYCompArray[i].y - y) <= 3)
-            itemsInXY.append(i);
+        popupBox->values.clear();
+        for (int i = 0; i < lapDataCompCoordinates.size(); ++i)
+        {
+            if (std::abs((float)(lapDataCompCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCompCoordinates[i].y - y)) <= 3)
+            {
+                LapData ld = driverData[lapDataCompCoordinates[i].driverIdx].getLapData(lapDataCompCoordinates[i].idx);
+                popupBox->values.append(ld);
+                popupBox->title = "LAP: " + QString::number(ld.getLapNumber());
+            }
+        }
+        popupBox->sortValues();
+        return popupBox->values.size();
     }
-    qSort(itemsInXY.begin(), itemsInXY.end(), PredXYTime(*this));
-    return itemsInXY.size();
-}
-
-void LapCompChart::drawLapDataXY(QPainter *p)
-{
-    if (itemsInXY.isEmpty())
-        return;
-
-//    p.setPen(QColor(232, 227, 185, 200));
-//    p.setBrush(QColor(232, 227, 185, 200));
-    p->setPen(QColor(50, 50, 50));
-    p->setBrush(QColor(50, 50, 50));
-
-    int x = mousePosX;
-    int y = mousePosY;
-
-    int height = 20 * (itemsInXY.size()+1);
-    int bottom = y + height;
-    int width = getPopupWidth()+20;
-    int right = x + width;
-
-    if (bottom > paintRect.bottom())
-        y = paintRect.bottom() - height;
-
-    if (right > paintRect.right())
-        x = paintRect.right() - width;
-
-    p->drawRect(x+20, y, getPopupWidth(), 20 * (itemsInXY.size()+1));
-
-
-    p->setFont(QFont("Arial", 10, QFont::Normal, true));
-    p->setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
-
-    int didx = lapDataXYCompArray[itemsInXY[0]].driverIdx;
-    int lidx = lapDataXYCompArray[itemsInXY[0]].idx;
-
-    p->drawText(x+25, y+15, getLapInfoXY(driverData[didx].getLapData(lidx)));
-
-    p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    for (int i = 0; i < itemsInXY.size(); ++i)
-    {
-        int didx = lapDataXYCompArray[itemsInXY[i]].driverIdx;
-        int lidx = lapDataXYCompArray[itemsInXY[i]].idx;
-        p->drawText(x+25, y+(i+1)*20+15, getDriverInfoXY(driverData[didx].getLapData(lidx)));
-    }
+    return 0;
 }
 
 void LapCompChart::drawIntoImage(QImage &img)
@@ -496,26 +400,8 @@ void LapCompChart::resetZoom()
     first = 1; last = 99;
 }
 
-void LapCompChart::transform()
-{
-    if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-        return;
-
-    if (scaleRect == QRect())
-    {
-        first = 1;
-        last = 99;
-        tMin = min;
-        tMax = max;
-        return;
-    }
-
-    if (scaleRect.left() > scaleRect.right())
-        scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-    if (scaleRect.top() > scaleRect.bottom())
-        scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
+void LapCompChart::calculateTransformFactors()
+{    
     int firstLap, lastLap;
     findFirstAndLastLap(firstLap, lastLap);
     int sz = lastLap-firstLap+1;
@@ -540,65 +426,65 @@ void LapCompChart::transform()
 
 //========================================================================
 
-double GapCompChart::calculateInterval(int lap)
-{
-    LapData ld1 = (driverIdx[0] >= 0) ? eventData.getDriversData()[driverIdx[0]].getLapData(lap) : LapData();
-    LapData ld2 = (driverIdx[1] >= 0) ? eventData.getDriversData()[driverIdx[1]].getLapData(lap) : LapData();
-    QString gap1 = ld1.getGap();
-    QString gap2 = ld2.getGap();
+//double GapCompChart::calculateInterval(int lap)
+//{
+//    LapData ld1 = (driverIdx[0] >= 0) ? eventData.getDriversData()[driverIdx[0]].getLapData(lap) : LapData();
+//    LapData ld2 = (driverIdx[1] >= 0) ? eventData.getDriversData()[driverIdx[1]].getLapData(lap) : LapData();
+//    QString gap1 = ld1.getGap();
+//    QString gap2 = ld2.getGap();
 
-    if ((ld1.getTime().toString() == "" && ld1.getGap() == "") || (ld2.getTime().toString() == "" && ld2.getGap() == ""))
-        return 0.0;
+//    if ((ld1.getTime().toString() == "" && ld1.getGap() == "") || (ld2.getTime().toString() == "" && ld2.getGap() == ""))
+//        return 0.0;
 
-    if ((gap1 != "" && gap2 != "" && gap1[gap1.size()-1] != 'L' && gap2[gap2.size()-1] != 'L') ||
-        ((ld1.getPosition() == 1 && gap1.isNull()) || (ld2.getPosition() == 1 && gap2.isNull())))
-    {
-        double interval = gap1.toDouble() - gap2.toDouble();
-        return interval;
-    }
-    else if ((gap1 != "" && gap1[gap1.size()-1] == 'L') || (gap2 != "" && gap2[gap2.size()-1] == 'L'))
-    {
-        int pos1 = ld1.getPosition();
-        int pos2 = ld2.getPosition();
+//    if ((gap1 != "" && gap2 != "" && gap1[gap1.size()-1] != 'L' && gap2[gap2.size()-1] != 'L') ||
+//        ((ld1.getPosition() == 1 && gap1.isNull()) || (ld2.getPosition() == 1 && gap2.isNull())))
+//    {
+//        double interval = gap1.toDouble() - gap2.toDouble();
+//        return interval;
+//    }
+//    else if ((gap1 != "" && gap1[gap1.size()-1] == 'L') || (gap2 != "" && gap2[gap2.size()-1] == 'L'))
+//    {
+//        int pos1 = ld1.getPosition();
+//        int pos2 = ld2.getPosition();
 
-        bool neg = true;
-        if (pos2 < pos1)
-        {
-            int tmp = pos1;
-            pos1 = pos2;
-            pos2 = tmp;
-            neg = false;
-        }
+//        bool neg = true;
+//        if (pos2 < pos1)
+//        {
+//            int tmp = pos1;
+//            pos1 = pos2;
+//            pos2 = tmp;
+//            neg = false;
+//        }
 
-        QList<QString> intervals;
-//        intervals.reserve(pos2 - pos1);
-        for (int i = 0; i < eventData.getDriversData().size(); ++i)
-        {
-            LapData ld = eventData.getDriversData()[i].getLapData(lap);
-            int pos = ld.getPosition();
-            if (pos > pos1 && pos <= pos2)
-            {
-                if (ld.getInterval() != "" && ld.getInterval()[ld.getInterval().size()-1] == 'L')
-                    return neg ? -1000.0 : 1000.0;
+//        QList<QString> intervals;
+////        intervals.reserve(pos2 - pos1);
+//        for (int i = 0; i < eventData.getDriversData().size(); ++i)
+//        {
+//            LapData ld = eventData.getDriversData()[i].getLapData(lap);
+//            int pos = ld.getPosition();
+//            if (pos > pos1 && pos <= pos2)
+//            {
+//                if (ld.getInterval() != "" && ld.getInterval()[ld.getInterval().size()-1] == 'L')
+//                    return neg ? -1000.0 : 1000.0;
 
-                intervals.append(ld.getInterval());
-            }
-        }
-        double interval = 0.0;
-        for (int i = 0; i < intervals.size(); ++i)
-            interval += intervals[i].toDouble();
+//                intervals.append(ld.getInterval());
+//            }
+//        }
+//        double interval = 0.0;
+//        for (int i = 0; i < intervals.size(); ++i)
+//            interval += intervals[i].toDouble();
 
-        if (neg && ld1.getTime().isValid() && interval > ld1.getTime().toDouble())
-            return -1000.0;
-        if (!neg && ld2.getTime().isValid() && interval > ld2.getTime().toDouble())
-            return 1000.0;
+//        if (neg && ld1.getTime().isValid() && interval > ld1.getTime().toDouble())
+//            return -1000.0;
+//        if (!neg && ld2.getTime().isValid() && interval > ld2.getTime().toDouble())
+//            return 1000.0;
 
 
-        return neg ? -interval : interval;
-    }
+//        return neg ? -interval : interval;
+//    }
 
-    return 0.0;
-}
+//    return 0.0;
+//}
 
 
 void GapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
@@ -705,12 +591,25 @@ void GapCompChart::drawChart(QPainter *p)
     findFirstAndLastLap(firstLap, lastLap);
     int index[2] = {0,0};
     min = 0.0; max = 0.0;
-    QList<double> intervals;
+    QList<QString> intervals;
 
     for (int i = firstLap; i <= lastLap; ++i)
     {
-        intervals.append(calculateInterval(i));
-        double interval = fabs(intervals.last());
+        DriverData dd1 = (driverIdx[0] >= 0) ? eventData.getDriversData()[driverIdx[0]] : DriverData();
+        DriverData dd2 = (driverIdx[1] >= 0) ? eventData.getDriversData()[driverIdx[1]] : DriverData();
+
+        intervals.append(eventData.calculateInterval(dd1, dd2, i));
+
+        if (intervals.last() == "-1L <")
+            intervals.last() = "-1000.0";
+
+        else if (intervals.last() == "+1L <")
+            intervals.last() = "1000.0";
+
+        else if (intervals.last() == "")
+            intervals.last() = "0.0";
+
+        double interval = fabs(intervals.last().toDouble());
 
         if (interval > max)
         {
@@ -758,18 +657,18 @@ void GapCompChart::drawChart(QPainter *p)
                 pen.setColor(colors[k]);
                 p->setPen(pen);
 
-                double driverY = fabs(intervals[i-firstLap]);
+                double driverY = fabs(intervals[i-firstLap].toDouble());
                 double gap = driverY;
 
                 int idx = i - firstLap;
                 if (driverY == 0 && (i+1-firstLap) < intervals.size())
                 {
                     idx = i + 1 - firstLap;
-                    driverY = fabs(intervals[idx]);
+                    driverY = fabs(intervals[idx].toDouble());
                 }
 
 
-                if ((k == 0 && intervals[idx] < 0) || (k == 1 && intervals[idx] > 0))
+                if ((k == 0 && intervals[idx].toDouble() < 0) || (k == 1 && intervals[idx].toDouble() > 0))
                 {
                     gap = 0;
                     driverY = 0;
@@ -810,13 +709,14 @@ void GapCompChart::drawChart(QPainter *p)
 
                         if (!scaling)
                         {
-                            if (lapsInWindow >= lapDataXYGapCompArray.size())
-                                lapDataXYGapCompArray.append(LapDataXYGapComp(i, (int)dx2, (int)dy2, k, gap));
+                            if (lapsInWindow >= lapDataGapCompCoordinates.size())
+                                lapDataGapCompCoordinates.append(LapDataGapCompCoordinates(i, (int)dx2, (int)dy2, k, gap));
                             else
-                                lapDataXYGapCompArray[lapsInWindow] = LapDataXYGapComp(i, (int)dx2, (int)dy2, k, gap);
+                                lapDataGapCompCoordinates[lapsInWindow] = LapDataGapCompCoordinates(i, (int)dx2, (int)dy2, k, gap);
                         }
                         ++lapsInWindow;
                     }
+                    drawRetire(p, dx2, dy2, 6, ld);
                 }
 
 
@@ -834,7 +734,7 @@ void GapCompChart::drawChart(QPainter *p)
             }
         }
     }
-    clearXYList(lapsInWindow);
+    clearLapDataCoordinates(lapsInWindow);
 
 }
 
@@ -857,9 +757,9 @@ void GapCompChart::paintEvent(QPaintEvent *)
     else
     {
         if (!repaintPopup)
-            findLapDataXY(mousePosX, mousePosY);
+            checkLapDataCoordinates(mousePosX, mousePosY);
 
-        drawLapDataXY(&p);
+        popupBox->paint(&p, mousePosX, mousePosY, paintRect);
     }
 
     p.end();
@@ -886,63 +786,32 @@ void GapCompChart::drawLegend(QPainter *p)
     }
 }
 
-int GapCompChart::findLapDataXY(int x, int y)
-{
-    itemsInXY.clear();
-    for (int i = 0; i < lapDataXYGapCompArray.size(); ++i)
+int GapCompChart::checkLapDataCoordinates(int x, int y)
+{    
+    if (popupBox != 0)
     {
-        if (abs(lapDataXYGapCompArray[i].x - x) <= 3 && abs(lapDataXYGapCompArray[i].y - y) <= 3)
-            itemsInXY.append(i);
+        PopupGapCompInfoBox *box = static_cast<PopupGapCompInfoBox*>(popupBox);
+        box->values.clear();
+        box->gapValues.clear();
+        for (int i = 0; i < lapDataGapCompCoordinates.size(); ++i)
+        {
+            if (std::abs((float)(lapDataGapCompCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataGapCompCoordinates[i].y - y)) <= 3)
+            {
+                DriverData dd = EventData::getInstance().getDriversData()[driverIdx[lapDataGapCompCoordinates[i].driverIdx]];
+
+                if (dd.getCarID() != -1)
+                {
+                    LapData ld = dd.getLapData(lapDataGapCompCoordinates[i].idx);
+                    box->values.append(ld);
+                    box->gapValues.append(lapDataGapCompCoordinates[i].gap);
+                    box->title = "LAP: " + QString::number(ld.getLapNumber());
+                }
+            }
+        }
+        box->sortValues();
+        return box->values.size();
     }
-    qSort(itemsInXY.begin(), itemsInXY.end(), PredXYGap(*this));
-    return itemsInXY.size();
-}
-
-void GapCompChart::drawLapDataXY(QPainter *p)
-{
-    if (itemsInXY.isEmpty())
-        return;
-
-//    p.setPen(QColor(232, 227, 185, 200));
-//    p.setBrush(QColor(232, 227, 185, 200));
-    p->setPen(QColor(50, 50, 50));
-    p->setBrush(QColor(50, 50, 50));
-
-    int x = mousePosX;
-    int y = mousePosY;
-
-    int height = 20 * (itemsInXY.size()+1);
-    int bottom = y + height;
-    int width = getPopupWidth()+20;
-    int right = x + width;
-
-    if (bottom > paintRect.bottom())
-        y = paintRect.bottom() - height;
-
-    if (right > paintRect.right())
-        x = paintRect.right() - width;
-
-    p->drawRect(x+20, y, getPopupWidth(), 20 * (itemsInXY.size()+1));
-
-
-    p->setFont(QFont("Arial", 10, QFont::Normal, true));
-    p->setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
-
-    int didx = lapDataXYGapCompArray[itemsInXY[0]].driverIdx;
-    int lidx = lapDataXYGapCompArray[itemsInXY[0]].idx;
-
-    DriverData dd = (driverIdx[didx] >= 0) ? eventData.getDriversData()[driverIdx[didx]] : DriverData();
-    p->drawText(x+25, y+15, getLapInfoXY(dd.getLapData(lidx)));
-
-    p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    for (int i = 0; i < itemsInXY.size(); ++i)
-    {
-        int didx = lapDataXYGapCompArray[itemsInXY[i]].driverIdx;
-        int lidx = lapDataXYGapCompArray[itemsInXY[i]].idx;
-
-        DriverData dd = (driverIdx[didx] >= 0) ? eventData.getDriversData()[driverIdx[didx]] : DriverData();
-        p->drawText(x+25, y+(i+1)*20+15, getDriverInfoXY(dd.getLapData(lidx), lapDataXYGapCompArray[itemsInXY[i]].gap));
-    }
+    return 0;
 }
 
 void GapCompChart::drawIntoImage(QImage &img)
@@ -966,26 +835,8 @@ void GapCompChart::resetZoom()
     first = 1; last = 99;
 }
 
-void GapCompChart::transform()
+void GapCompChart::calculateTransformFactors()
 {
-    if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-        return;
-
-    if (scaleRect == QRect())
-    {
-        first = 1;
-        last = 99;
-        tMin = min;
-        tMax = max;
-        return;
-    }
-
-    if (scaleRect.left() > scaleRect.right())
-        scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-    if (scaleRect.top() > scaleRect.bottom())
-        scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
     int firstLap, lastLap;
     findFirstAndLastLap(firstLap, lastLap);
     int sz = lastLap-firstLap+1;
@@ -1187,6 +1038,7 @@ void PosCompChart::drawChart(QPainter *p)
                         path.addEllipse(QPoint(j[k], y2[k]), 3, 3);
 
                     p->drawPath(path);
+                    drawRetire(p, dx2, dy2, 6, ld);
                 }
 
                 y1[k] = y2[k];
@@ -1266,26 +1118,8 @@ void PosCompChart::resetZoom()
     first = 1; last = 99;
 }
 
-void PosCompChart::transform()
+void PosCompChart::calculateTransformFactors()
 {
-    if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-        return;
-
-    if (scaleRect == QRect())
-    {
-        first = 1;
-        last = 99;
-        tMin = min;
-        tMax = max;
-        return;
-    }
-
-    if (scaleRect.left() > scaleRect.right())
-        scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-    if (scaleRect.top() > scaleRect.bottom())
-        scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
     int firstLap, lastLap;
     findFirstAndLastLap(firstLap, lastLap);
     int sz = lastLap-firstLap+1;

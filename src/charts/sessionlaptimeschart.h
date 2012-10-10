@@ -4,36 +4,58 @@
 #include <QColor>
 #include <QList>
 
-#include "chartwidget.h"
+#include "driverdatachart.h"
 #include "../core/driverdata.h"
 
 
 extern bool lessThan(LapData ld1, LapData ld2);
 
-class SessionLapTimesChart;
-
-class PredXYPos
+struct PopupDriversGapsInfoBox : public PopupInfoBox
 {
-public:
-    PredXYPos (SessionLapTimesChart &sltc) : chart(sltc) { }
-    bool operator()(int item1, int item2);
+    PopupDriversGapsInfoBox() : PopupInfoBox() { width = 200; }
+    virtual QString getInfo(int i)
+    {
+        QString gap = values[i].getGap();
+        if (values[i].getPosition() == 1)
+            gap = "Leader";
+        if (gap == "")
+            gap = "+1L";
 
-protected:
-    SessionLapTimesChart &chart;
+        DriverData dd = EventData::getInstance().getDriverDataById(values[i].getCarID());
+
+        if (dd.getCarID() > 0)
+            return QString("%1. %2: %3").arg(values[i].getPosition()).arg(dd.getDriverName()).arg(gap);
+
+        return QString();
+    }
 };
 
-class SessionLapTimesChart : public ChartWidget
+struct PopupDriversLapTimesInfoBox : public PopupInfoBox
+{
+    PopupDriversLapTimesInfoBox() : PopupInfoBox() { width = 200; }
+    virtual QString getInfo(int i)
+    {
+        DriverData dd = EventData::getInstance().getDriverDataById(values[i].getCarID());
+
+        if (dd.getCarID() > 0)
+            return QString("%1. %2: %3").arg(values[i].getPosition()).arg(dd.getDriverName()).arg(values[i].getTime().toString());
+    }
+};
+
+class SessionLapTimesChart : public DriverDataChart
 {
 
     Q_OBJECT
 
 public:
-    SessionLapTimesChart(QWidget *parent) : ChartWidget(0, 180, QColor(), parent)
+    SessionLapTimesChart(QWidget *parent) : DriverDataChart(0, 180, QColor(), parent)
     {
         setMouseTracking(true);
         mousePosX = 0;
         mousePosY = 0;
         repaintPopup = false;
+
+        popupBox = new PopupDriversLapTimesInfoBox();
     }
 
     virtual void setData(const QList<LapData> ld) { lapDataArray = ld; qSort(lapDataArray.begin(), lapDataArray.end(), lessThan);}
@@ -46,40 +68,18 @@ public:
     virtual void drawIntoImage(QImage &img);
     virtual void drawImage(QPainter *p);
     virtual void drawLegend(QPainter *) { }
-    virtual void drawRetire(QPainter *p, int x, int y, const LapData &ld, QColor color);
+//    virtual void drawRetire(QPainter *p, int x, int y, const LapData &ld, QColor color);
 //    virtual void drawScaleRect(QPainter *p);
 
-    virtual void transform();
+    virtual void calculateTransformFactors();
     virtual void resetZoom();
-
-    void checkX1(double &x1, double &y1, double x2, double y2);
-    void checkX2(double x1, double y1, double &x2, double &y2);
 
     virtual void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
     QColor getCarColor(const LapData &ld);
     QColor getCarColor(const DriverData &dd);
 
-    virtual int findLapDataXY(int x, int y);
-    virtual void drawLapDataXY(QPainter *p);  
+    virtual int checkLapDataCoordinates(int x, int y);
 
-    virtual QString getLapInfoXY(const LapData &ld)
-    {
-        return "LAP " + QString::number(ld.getLapNumber());
-    }
-    virtual QString getDriverInfoXY(const LapData &ld)
-    {
-        if (ld.getCarID() > 0)
-        {
-            DriverData dd = EventData::getInstance().getDriversData()[ld.getCarID()-1];
-            return QString::number(ld.getPosition()) + ". " +  dd.getDriverName() + ": " + ld.getTime().toString();
-        }
-        return "";
-    }
-    void clearXYList(int to)
-    {
-        for (int i = lapDataXYArray.size()-1; i >= to; --i)
-            lapDataXYArray.removeAt(i);
-    }
     virtual int getPopupWidth()
     {
         return 200;
@@ -100,8 +100,6 @@ signals:
     void zoomChanged(int, int, double, double);
 
 public slots:
-//    virtual void onCopy();
-//    virtual void onSave();
     virtual void onZoomOut();
 
 protected:
@@ -129,7 +127,7 @@ public:
     void drawDriversLegend(QPainter *p, const LapData &ld, double y);
 
     void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
-    virtual void transform();
+    virtual void calculateTransformFactors();
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -169,30 +167,14 @@ public:
     {
         min = 0;
         max = 90;
+
+        popupBox = new PopupDriversGapsInfoBox();
     }
 
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
 
     void findFirstAndLastLap(int &firstLap, int &lastLap, int &size);
-
-    virtual QString getDriverInfoXY(const LapData &ld)
-    {
-        if (ld.getCarID() > 0)
-        {
-            DriverData dd = EventData::getInstance().getDriversData()[ld.getCarID()-1];
-            if (ld.getPosition() == 1)
-                return QString::number(ld.getPosition()) + ". " + dd.getDriverName() + ": Leader";
-
-            QString gap = ld.getGap();
-            if (gap == "")
-                gap = "1L";
-            return QString::number(ld.getPosition()) + ". " +  dd.getDriverName() + ": +" + gap;
-        }
-        return "";
-    }
-
-    virtual int findLapDataXY(int x, int y);
 
 protected:
     void paintEvent(QPaintEvent *);

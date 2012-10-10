@@ -68,7 +68,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/core/sessiontimer.cpp \
     src/net/ltfilesmanager.cpp \
     src/tools/ltfilesmanagerdialog.cpp \
-    src/main_gui/aboutdialog.cpp
+    src/main_gui/aboutdialog.cpp \
+    src/charts/driverdatachart.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -111,7 +112,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/core/sessiontimer.h \
     src/net/ltfilesmanager.h \
     src/tools/ltfilesmanagerdialog.h \
-    src/main_gui/aboutdialog.h
+    src/main_gui/aboutdialog.h \
+    src/charts/driverdatachart.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

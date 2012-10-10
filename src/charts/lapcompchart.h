@@ -1,57 +1,88 @@
 #ifndef LAPCOMPCHART_H
 #define LAPCOMPCHART_H
 
-#include "chartwidget.h"
+#include "driverdatachart.h"
+
+#include <QPair>
 
 
-struct LapDataXYComp : public LapDataXY
+struct LapDataCompCoordinates : public LapDataCoordinates
 {
     int driverIdx;
 
-    LapDataXYComp() : LapDataXY(), driverIdx(0) { }
-    LapDataXYComp(int a, int b, int c, int d) : LapDataXY(a, b, c), driverIdx(d) { }
+    LapDataCompCoordinates() : LapDataCoordinates(), driverIdx(0) { }
+    LapDataCompCoordinates(int a, int b, int c, int d) : LapDataCoordinates(a, b, c), driverIdx(d) { }
 };
 
-struct LapDataXYGapComp : public LapDataXYComp
+struct LapDataGapCompCoordinates : public LapDataCompCoordinates
 {
     double gap;
 
-    LapDataXYGapComp() : LapDataXYComp(), gap(0.0) { }
-    LapDataXYGapComp(int a, int b, int c, int d, double g) : LapDataXYComp(a, b, c, d), gap(g) { }
+    LapDataGapCompCoordinates() : LapDataCompCoordinates(), gap(0.0) { }
+    LapDataGapCompCoordinates(int a, int b, int c, int d, double g) : LapDataCompCoordinates(a, b, c, d), gap(g) { }
 };
 
-class LapCompChart;
-class GapCompChart;
+//------------------------------------------------
 
-class PredXYTime
+struct PopupLapTimeCompInfoBox : public PopupInfoBox
 {
-public:
-    PredXYTime (LapCompChart &sltc) : chart(sltc) { }
-    bool operator()(int item1, int item2);
+    PopupLapTimeCompInfoBox() : PopupInfoBox() { width = 180; }
 
-protected:
-    LapCompChart &chart;
+    virtual QString getInfo(int i)
+    {
+        DriverData dd = EventData::getInstance().getDriverDataById(values[i].getCarID());
+        if (dd.getCarID() > 0)
+            return QString("%1: %2").arg(dd.getDriverName()).arg(values[i].getTime().toString());
+
+        return QString();
+    }
+
+    virtual bool sortPred(LapData &ld1, LapData &ld2)
+    {
+        return ld1.getTime() < ld2.getTime();
+    }
 };
 
-class PredXYGap
+struct PopupGapCompInfoBox : public PopupInfoBox
 {
-public:
-    PredXYGap (GapCompChart &sltc) : chart(sltc) { }
-    bool operator()(int item1, int item2);
+    PopupGapCompInfoBox() : PopupInfoBox() { width = 180; }
 
-protected:
-    GapCompChart &chart;
+    virtual int getSize()
+    {
+        return gapValues.size();
+    }
+
+    virtual QString getInfo(int i)
+    {
+        DriverData dd = EventData::getInstance().getDriverDataById(values[i].getCarID());
+        if (dd.getCarID() > 0)
+        {
+            if (gapValues[i] == 0.0)
+                return dd.getDriverName();
+
+            if (gapValues[i] == 1000.0)
+                return dd.getDriverName() + ": +1L <";
+
+            return dd.getDriverName() + ": +" + QString::number(gapValues[i], 'f', 1);
+        }
+        return QString();
+    }
+    QList< double > gapValues;
 };
 
-class LapCompChart : public ChartWidget
+//----------------------------------------------
+
+class LapCompChart : public DriverDataChart
 {
     Q_OBJECT
 
 public:
-    explicit LapCompChart(QColor *col, QWidget *parent = 0) : ChartWidget(0, 180, col[0], parent)
+    explicit LapCompChart(QColor *col, QWidget *parent = 0) : DriverDataChart(0, 180, col[0], parent)
     {
         for (int i = 0; i < 4; ++i)
             colors[i] = col[i];
+
+        popupBox = new PopupLapTimeCompInfoBox();
     }
 
     void setData(DriverData *ld);
@@ -62,33 +93,17 @@ public:
 
     void findFirstAndLastLap(int &firstLap, int &lastLap);
 
-    void transform();
+    void calculateTransformFactors();
     void resetZoom();
 
-    virtual QString getLapInfoXY(const LapData &ld)
-    {
-        return "LAP " + QString::number(ld.getLapNumber());
-    }
-    virtual QString getDriverInfoXY(const LapData &ld)
-    {
-        DriverData dd = EventData::getInstance().getDriversData()[ld.getCarID()-1];
-        return dd.getDriverName() + ": " + ld.getTime().toString();
-    }
-    virtual int getPopupWidth()
-    {
-        return 200;
-    }
 
-    virtual int findLapDataXY(int x, int y);
-    virtual void drawLapDataXY(QPainter *p);
+    virtual int checkLapDataCoordinates(int x, int y);
 
-    virtual void clearXYList(int to)
+    virtual void clearLapDataCoordinates(int to)
     {
-        for (int i = lapDataXYCompArray.size()-1; i >= to; --i)
-            lapDataXYCompArray.removeAt(i);
+        for (int i = lapDataCompCoordinates.size()-1; i >= to; --i)
+            lapDataCompCoordinates.removeAt(i);
     }
-
-    friend class PredXYTime;
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -102,20 +117,22 @@ private:
     DriverData driverData[4];
     QColor colors[4];
 
-    QList<LapDataXYComp> lapDataXYCompArray;
+    QList<LapDataCompCoordinates> lapDataCompCoordinates;
 };
 
 
 
-class GapCompChart : public ChartWidget
+class GapCompChart : public DriverDataChart
 {
     Q_OBJECT
 
 public:
-    explicit GapCompChart(QColor *col, QWidget *parent = 0) : ChartWidget(0, 0, col[0], parent), eventData(EventData::getInstance())
+    explicit GapCompChart(QColor *col, QWidget *parent = 0) : DriverDataChart(0, 0, col[0], parent), eventData(EventData::getInstance())
     {
         for (int i = 0; i < 2; ++i)
             colors[i] = col[i];
+
+        popupBox = new PopupGapCompInfoBox();
     }
 
     void setData(int *idx) { driverIdx[0] = idx[0]; driverIdx[1] = idx[1]; }
@@ -124,43 +141,18 @@ public:
     void drawLegend(QPainter *p);
     void drawIntoImage(QImage &img);
 
-    double calculateInterval(int lap);
-
     void findFirstAndLastLap(int &firstLap, int &lastLap);
 
-    virtual int findLapDataXY(int x, int y);
-    virtual void drawLapDataXY(QPainter *p);
+    virtual int checkLapDataCoordinates(int x, int y);
 
-    virtual void clearXYList(int to)
+    virtual void clearLapDataCoordinates(int to)
     {
-        for (int i = lapDataXYGapCompArray.size()-1; i >= to; --i)
-            lapDataXYGapCompArray.removeAt(i);
+        for (int i = lapDataGapCompCoordinates.size()-1; i >= to; --i)
+            lapDataGapCompCoordinates.removeAt(i);
     }
 
-    virtual QString getLapInfoXY(const LapData &ld)
-    {
-        return "LAP " + QString::number(ld.getLapNumber());
-    }
-    virtual QString getDriverInfoXY(const LapData &ld, double gap)
-    {
-        DriverData dd = EventData::getInstance().getDriversData()[ld.getCarID()-1];
-        if (gap == 0.0)
-            return dd.getDriverName();
 
-        if (gap == 1000.0)
-            return dd.getDriverName() + ": +1L <";
-
-        return dd.getDriverName() + ": +" + QString::number(gap, 'f', 1);
-    }
-    virtual int getPopupWidth()
-    {
-        return 150;
-    }
-
-    friend class PredXYGap;
-
-
-    void transform();
+    void calculateTransformFactors();
     void resetZoom();
 
 protected:
@@ -176,15 +168,15 @@ private:
     int driverIdx[2];
     QColor colors[2];
 
-    QList<LapDataXYGapComp> lapDataXYGapCompArray;
+    QList<LapDataGapCompCoordinates> lapDataGapCompCoordinates;
 };
 
-class PosCompChart : public ChartWidget
+class PosCompChart : public DriverDataChart
 {
     Q_OBJECT
 
 public:
-    explicit PosCompChart(QColor *col, QWidget *parent = 0) : ChartWidget(0, 180, col[0], parent)
+    explicit PosCompChart(QColor *col, QWidget *parent = 0) : DriverDataChart(0, 180, col[0], parent)
     {
         for (int i = 0; i < 2; ++i)
             colors[i] = col[i];
@@ -203,7 +195,7 @@ public:
 
     void findFirstAndLastLap(int &firstLap, int &lastLap);
 
-    void transform();
+    void calculateTransformFactors();
     void resetZoom();
 
 protected:

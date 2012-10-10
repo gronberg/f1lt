@@ -41,6 +41,27 @@ void FPLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &size
     }
 }
 
+int FPLapTimesChart::checkLapDataCoordinates(int x, int y)
+{
+    if (popupBox != 0)
+    {
+        popupBox->values.clear();
+        for (int i = 0; i < lapDataCoordinates.size(); ++i)
+        {
+            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3)
+            {
+                LapData ld = lapDataArray[lapDataCoordinates[i].idx];
+                popupBox->values.append(ld);
+                int min = SeasonData::getInstance().timeToMins(SeasonData::getInstance().correctFPTime(ld.getPracticeLapExtraData().getSessionTime()));
+                popupBox->title = QString("%1. minute").arg(min);
+            }
+        }
+        popupBox->sortValues();
+        return popupBox->values.size();
+    }
+    return 0;
+}
+
 void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
     p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
@@ -159,10 +180,10 @@ void FPLapTimesChart::drawChart(QPainter *p)
             pen.setColor(color);
             p->setPen(pen);
 
-            if (lapsInWindow >= lapDataXYArray.size())
-                lapDataXYArray.append(LapDataXY(i, (int)x, (int)y));
+            if (lapsInWindow >= lapDataCoordinates.size())
+                lapDataCoordinates.append(LapDataCoordinates(i, (int)x, (int)y));
             else
-                lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
+                lapDataCoordinates[lapsInWindow] = LapDataCoordinates(i, (int)x, (int)y);
 
             QPainterPath path;
             p->setBrush(QBrush(color));
@@ -176,7 +197,7 @@ void FPLapTimesChart::drawChart(QPainter *p)
             ++lapsInWindow;
         }
     }
-    clearXYList(lapsInWindow);
+    clearLapDataCoordinates(lapsInWindow);
 }
 
 void FPLapTimesChart::paintEvent(QPaintEvent *)
@@ -205,8 +226,8 @@ void FPLapTimesChart::paintEvent(QPaintEvent *)
     if (!scaling && !repaintPopup)
     {
         drawImage(&p);
-        findLapDataXY(mousePosX, mousePosY);
-        drawLapDataXY(&p);
+        checkLapDataCoordinates(mousePosX, mousePosY);
+        popupBox->paint(&p, mousePosX, mousePosY, paintRect);
     }
     if (scaling)
     {
@@ -216,7 +237,7 @@ void FPLapTimesChart::paintEvent(QPaintEvent *)
     if (repaintPopup)
     {
         drawImage(&p);
-        drawLapDataXY(&p);
+        popupBox->paint(&p, mousePosX, mousePosY, paintRect);
     }
 
 //    QPainter p;
@@ -251,26 +272,8 @@ void FPLapTimesChart::resetZoom()
     tMax = max;
 }
 
-void FPLapTimesChart::transform()
+void FPLapTimesChart::calculateTransformFactors()
 {
-    if (scaling || scaleRect == paintRect || (abs(scaleRect.width()) < 20 || abs(scaleRect.height()) < 20))
-        return;
-
-    if (scaleRect == QRect())
-    {
-        first = 0;
-        last = getSessionLength();
-        tMin = min;
-        tMax = max;
-        return;
-    }
-
-    if (scaleRect.left() > scaleRect.right())
-        scaleRect = QRect(scaleRect.right(), scaleRect.top(), -scaleRect.width(), scaleRect.height());
-
-    if (scaleRect.top() > scaleRect.bottom())
-        scaleRect = QRect(scaleRect.left(), scaleRect.bottom(), scaleRect.width(), -scaleRect.height());
-
     int firstLap, lastLap, size;
     findFirstAndLastLap(firstLap, lastLap, size);
 //    int sz = lastLap-firstLap+1;
@@ -343,6 +346,27 @@ void QualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int &s
     }
 }
 
+int QualiLapTimesChart::checkLapDataCoordinates(int x, int y)
+{
+    if (popupBox != 0)
+    {
+        popupBox->values.clear();
+        for (int i = 0; i < lapDataCoordinates.size(); ++i)
+        {
+            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3)
+            {
+                LapData ld = lapDataArray[lapDataCoordinates[i].idx];
+                popupBox->values.append(ld);
+                int min = SeasonData::getInstance().timeToMins(SeasonData::getInstance().correctQualiTime(ld.getQualiLapExtraData().getSessionTime(), ld.getQualiLapExtraData().getQualiPeriod()));
+                popupBox->title = QString("%1. minute").arg(min);
+            }
+        }
+        popupBox->sortValues();
+        return popupBox->values.size();
+    }
+    return 0;
+}
+
 void QualiLapTimesChart::drawChart(QPainter *p)
 {
     int firstMin = getSessionLength(), lastMin = 0;
@@ -398,10 +422,10 @@ void QualiLapTimesChart::drawChart(QPainter *p)
             p->setPen(pen);
 
 
-            if (lapsInWindow >= lapDataXYArray.size())
-                lapDataXYArray.append(LapDataXY(i, (int)x, (int)y));
+            if (lapsInWindow >= lapDataCoordinates.size())
+                lapDataCoordinates.append(LapDataCoordinates(i, (int)x, (int)y));
             else
-                lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
+                lapDataCoordinates[lapsInWindow] = LapDataCoordinates(i, (int)x, (int)y);
 
             QPainterPath path;
 //            p->setBrush(QBrush(SeasonData::getInstance().getColor(LTPackets::BACKGROUND]));
@@ -416,7 +440,7 @@ void QualiLapTimesChart::drawChart(QPainter *p)
             ++lapsInWindow;
         }
     }
-    clearXYList(lapsInWindow);
+    clearLapDataCoordinates(lapsInWindow);
 }
 
 //=======================================
@@ -461,6 +485,28 @@ void AllQualiLapTimesChart::findFirstAndLastLap(int &firstMin, int &lastMin, int
         if (min < 0)
            min = 0;
     }
+}
+
+int AllQualiLapTimesChart::checkLapDataCoordinates(int x, int y)
+{
+    if (popupBox != 0)
+    {
+        popupBox->values.clear();
+        for (int i = 0; i < lapDataCoordinates.size(); ++i)
+        {
+            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3)
+            {
+                LapData ld = lapDataArray[lapDataCoordinates[i].idx];
+                popupBox->values.append(ld);
+                int q = ld.getQualiLapExtraData().getQualiPeriod();
+                int min = SeasonData::getInstance().timeToMins(SeasonData::getInstance().correctQualiTime(ld.getQualiLapExtraData().getSessionTime(), q));
+                popupBox->title = QString("Q%1 %2. minute").arg(q).arg(min);
+            }
+        }
+        popupBox->sortValues();
+        return popupBox->values.size();
+    }
+    return 0;
 }
 
 void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
@@ -673,10 +719,10 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
             pen.setColor(color);
             p->setPen(pen);
 
-            if (lapsInWindow >= lapDataXYArray.size())
-                lapDataXYArray.append(LapDataXY(i, (int)x, (int)y));
+            if (lapsInWindow >= lapDataCoordinates.size())
+                lapDataCoordinates.append(LapDataCoordinates(i, (int)x, (int)y));
             else
-                lapDataXYArray[lapsInWindow] = LapDataXY(i, (int)x, (int)y);
+                lapDataCoordinates[lapsInWindow] = LapDataCoordinates(i, (int)x, (int)y);
 
             QPainterPath path;
             p->setBrush(QBrush(color));
@@ -690,5 +736,5 @@ void AllQualiLapTimesChart::drawChart(QPainter *p)
             ++lapsInWindow;
         }
     }
-    clearXYList(lapsInWindow);
+    clearLapDataCoordinates(lapsInWindow);
 }

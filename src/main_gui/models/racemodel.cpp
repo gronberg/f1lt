@@ -40,8 +40,10 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
     switch (index.column())
     {
         case 0:
-            if (role == Qt::DisplayRole && dd.getPosition() > 0)
+            if (role == Qt::DisplayRole && dd.getPosition() > 0 && !dd.isRetired())
+            {
                 return QString("%1.").arg(dd.getPosition());
+            }
 
             if (role == Qt::ForegroundRole)
                 return SeasonData::getInstance().getColor(dd.getColorData().positionColor());

@@ -13,7 +13,7 @@ DriverDataWidget::DriverDataWidget(QWidget *parent) :
 {        
     ui->setupUi(this);
 
-    posChart = new ChartWidget(1, 24, SeasonData::getInstance().getColor(LTPackets::CYAN), this);
+    posChart = new DriverDataChart(1, 24, SeasonData::getInstance().getColor(LTPackets::CYAN), this);
 
     QColor colors[5];
     colors[0] = SeasonData::getInstance().getColor(LTPackets::RED);

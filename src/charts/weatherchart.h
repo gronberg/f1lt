@@ -2,6 +2,7 @@
 #define WEATHERCHART_H
 
 #include "chartwidget.h"
+#include "../core/eventdata.h"
 
 class WeatherChart : public ChartWidget
 {
@@ -18,16 +19,13 @@ public:
 
     virtual void drawAxes(QPainter *p);
     virtual void drawChart(QPainter *p);
+    virtual void drawLegend(QPainter *p) { }
     void drawLine(QPainter *p, int x1, int y1, int x2, int y2);
     virtual void setMinMax();
     virtual void setAllowedMin(int am) { allowedMin = am; }
 
-//    virtual void mouseMoveEvent(QMouseEvent *) {}
-//    virtual void mouseReleaseEvent(QMouseEvent *) {}
-//    virtual void mouseDoubleClickEvent (QMouseEvent *) {}
-
-    void transform();
     void resetZoom();
+    virtual void calculateTransformFactors();
 
     QString getSessionTime(const WeatherData &wd)
     {
