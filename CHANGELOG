@@ -1,0 +1,72 @@
+v1.4.0:
+- added .lt files database connected to the online server - it is now possible to get the access to online .lt files from the application
+- quali results can now be sorted out by the selected quali part - first click on an appropriate column (Q1, Q2 or Q3) will sort the results using appropriate lap times, second click will trigger display time gaps to the leader instead of lap times, third click restores the original view
+- added "related commentary" tab in the driver data
+- the drivers order in the session analisys positions chart is reversed and starting postitions are also drawn on the chart
+- added "retired" mark on the charts
+- few changes in the main interface
+- rewritten some parts of the code (main tables are now implemented using model/view framework)
+
+
+v1.3.2 (28-07-2012):
+- weather charts scaling
+- session lap/time info added into weather charts
+- added starting grid into position chart in session analysis
+- corrected bugs related to refreshing data in h2h and ltc tools
+
+v1.3.1 (22-07-2012):
+- the app should now correctly switch from one session into another one
+- race charts in session analisys now always displays data from 0 to total race laps if zooming is not applied
+- session time of a moment when a lap time has been set during FP and quali is now shown as the time that has passed since the start of the session
+- bug fixes
+
+v1.3.0 (18-07-2012):
+- added auto-stop recording - it can be configured in preferences how many minutes after the end of the session the recoring will be stopped
+- in preferences added possibility to disable auto-connection with lt server, instead welcome board will be shown
+- added possibility to display other drivers gaps to the selected one after clicking on his time (during the race you can also see intervals between the selected driver and the others by clicking on his "interval" column)
+- added weather icons and charts
+- fixed gathering lap data during FP and quali - the app should now always print laps in the correct order on driver data tab
+- during friday free practice sessions, the driver list in h2h and ltc dialogs contains now the eventual test drivers that may appear instead of the regular drivers
+- during FP and quali, charts in h2h and ltc are now printed with dots instead of lines
+- the app correctly detects the current FP number now and shows the appropriate information in the status (this also affects naming of the recorded session files)
+- quali period number is now shown in the status
+- during the race, the actuall lap number is printed in the status instead of the completed laps
+- between 15-5 minutes before start of the session, when lt server sends no data, the app shows now the appropriate message board
+- added option to retry attempt to auto-reconnect before lost connection error message is shown
+- autoscaling track map
+- charts scaling
+- added session analisys tool
+- bug fixes
+
+v1.2.1 (27-05-2012):
+- fixed bug causing the app to crash (mostly on WinXP)
+
+
+v1.2.0 (26-05-2012):
+- corrected decryption, the app will now print no data when encryption fails
+- corrected handling new lines in commentary
+- corrected bug with printing wrong session time when the driver set his lap time during quali and FP
+- added option to disable car thumbnails in the preferences
+- printing the personal best sector times in green in the driver data tab
+- other bug fixes
+
+
+v1.1.0 (11-05-2012):
+- fixed bug with logging into lt server (due login url has changed)
+- properly displaying gaps in the gap chart during FP and quali
+- some optimizations made
+
+
+v.1.0.0 (04-05-2012):
+- added session recording and replaying
+- reimplementation of the Head 2 Head tool, the old tool is now called Lap Time Comparison
+- added option to print lap data in driver data tab in the reverse order (from newest to oldest)
+- added pit stop length next to the "IN PIT" info in the driver data tab
+- added current event name in the window title
+- added session timer next to the completed/total laps info in the race status
+- added "session finished" icon
+- bug fixes
+
+
+v.0.5.0 (21-04-2012):
+- initial version
