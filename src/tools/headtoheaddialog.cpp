@@ -764,15 +764,13 @@ void HeadToHeadDialog::keyPressEvent(QKeyEvent *event)
             {
                 QVariant data = ui->tableWidget->model()->data(previous);
                 QString text = data.toString();
-                // At this point `text` contains the text in one cell
+
                 selected_text.append(text);
-                // If you are at the start of the row the row number of the previous index
-                // isn't the same.  Text is followed by a row separator, which is a newline.
+
                 if (current.row() != previous.row())
                 {
                     selected_text.append(QLatin1Char('\n'));
-                }
-                // Otherwise it's the same row, so append a column separator, which is a tab.
+                }                
                 else
                 {
                     selected_text.append(QLatin1Char('\t'));
@@ -782,20 +780,7 @@ void HeadToHeadDialog::keyPressEvent(QKeyEvent *event)
             selected_text.append(ui->tableWidget->model()->data(current).toString());
             selected_text.append(QLatin1Char('\n'));
             qApp->clipboard()->setText(selected_text);
-//        QList<QTableWidgetItem *> items = ui->tableWidget->selectedItems();
-//        QString text;
-//        int prevRow = items.size() > 0 ? items[0]->row() : 0;
-//        for (int i = 0; i < items.size(); ++i)
-//        {
-//            if (i > 0 && prevRow == items[i]->row())
-//                text += "\t";
-//            else  if (i > 0 && prevRow != items[i]->row())
-//                text += "\n";
 
-//            text += items[i]->text();
-//            prevRow = items[i]->row();
-//        }
-//        qApp->clipboard()->setText(text);
     }
     if (event->key() == Qt::Key_Escape)
         close();

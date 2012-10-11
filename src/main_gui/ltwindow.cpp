@@ -611,6 +611,9 @@ void LTWindow::authorizationError()
 {
     if (!playing)
     {
+        if (connectionProgress->isVisible())
+            connectionProgress->cancel();
+
         QMessageBox::critical(this, tr("Login error!"), tr("Could not login to the server!\nCheck your email and password"));
 
         on_actionConnect_triggered();
@@ -747,7 +750,7 @@ void LTWindow::autoStopRecording()
 	ui->actionRecord->setEnabled(true);
     ui->actionLT_files_data_base->setEnabled(true);
 	ui->actionStop_recording->setEnabled(false);
-	disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+    disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
 }
 
 //-------------------- event player ----------------------------

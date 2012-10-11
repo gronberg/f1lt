@@ -301,7 +301,7 @@ void DriverDataWidget::printDriverRelatedCommentary(int id)
         ui->textEdit->clear();
 
     const DriverData &driverData = eventData.getDriverDataById(id);
-    QRegExp searchT("[ ,.?!(]" + SeasonData::getInstance().getDriverLastName(driverData.getDriverName()) + "[ \',.?!);:]", Qt::CaseInsensitive);
+    QRegExp searchT(/*"[ ,.?!(]" +*/ SeasonData::getInstance().getDriverLastName(driverData.getDriverName()) + "[ \',.?!);:]", Qt::CaseInsensitive);
     QString lastEvent;
 
     idx = eventData.getCommentary().indexOf(searchT, idx);

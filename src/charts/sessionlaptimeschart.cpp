@@ -320,7 +320,8 @@ int SessionLapTimesChart::checkLapDataCoordinates(int x, int y)
         popupBox->values.clear();
         for (int i = 0; i < lapDataCoordinates.size(); ++i)
         {
-            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3)
+            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3 &&
+                    lapDataCoordinates[i].idx < lapDataArray.size())
             {
                 LapData ld = lapDataArray[lapDataCoordinates[i].idx];
                 popupBox->values.append(ld);
@@ -415,6 +416,9 @@ void SessionLapTimesChart::paintEvent(QPaintEvent *)
         popupBox->paint(&p, mousePosX, mousePosY, paintRect);
     }    
     p.end();
+
+    if (lapDataArray.isEmpty())
+        clearLapDataCoordinates(0);
 }
 
 void SessionLapTimesChart::resetZoom()
@@ -789,6 +793,9 @@ void SessionPositionsChart::paintEvent(QPaintEvent *)
 //    drawLegend(&p, 35, 5);
 
     p.end();
+
+    if (lapDataArray.isEmpty())
+        clearLapDataCoordinates(0);
 }
 
 void SessionPositionsChart::calculateTransformFactors()
@@ -1170,4 +1177,7 @@ void SessionGapsChart::paintEvent(QPaintEvent *)
 //    drawLegend(&p, 35, 5);
 
     p.end();
+
+    if (lapDataArray.isEmpty())
+        clearLapDataCoordinates(0);
 }

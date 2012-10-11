@@ -48,7 +48,8 @@ int FPLapTimesChart::checkLapDataCoordinates(int x, int y)
         popupBox->values.clear();
         for (int i = 0; i < lapDataCoordinates.size(); ++i)
         {
-            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3)
+            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3 &&
+                lapDataCoordinates[i].idx < lapDataArray.size())
             {
                 LapData ld = lapDataArray[lapDataCoordinates[i].idx];
                 popupBox->values.append(ld);
@@ -261,6 +262,9 @@ void FPLapTimesChart::paintEvent(QPaintEvent *)
 //    drawLegend(&p, 35, 5);
 
     p.end();
+
+    if (lapDataArray.isEmpty())
+        clearLapDataCoordinates(0);
 }
 
 void FPLapTimesChart::resetZoom()
@@ -353,7 +357,8 @@ int QualiLapTimesChart::checkLapDataCoordinates(int x, int y)
         popupBox->values.clear();
         for (int i = 0; i < lapDataCoordinates.size(); ++i)
         {
-            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3)
+            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3 &&
+                    lapDataCoordinates[i].idx < lapDataArray.size())
             {
                 LapData ld = lapDataArray[lapDataCoordinates[i].idx];
                 popupBox->values.append(ld);
@@ -494,7 +499,8 @@ int AllQualiLapTimesChart::checkLapDataCoordinates(int x, int y)
         popupBox->values.clear();
         for (int i = 0; i < lapDataCoordinates.size(); ++i)
         {
-            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3)
+            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3 &&
+                    lapDataCoordinates[i].idx < lapDataArray.size())
             {
                 LapData ld = lapDataArray[lapDataCoordinates[i].idx];
                 popupBox->values.append(ld);

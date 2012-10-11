@@ -1,10 +1,13 @@
 #include "sessionanalysiswidget.h"
 
+#include <QClipboard>
 #include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QTableWidgetItem>
+
+#include "../main_gui/ltitemdelegate.h"
 
 
 SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
@@ -34,6 +37,13 @@ SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
         colors.append(lab->palette().window().color());
 	}
     setupTables();
+    ui.lapTimeTableWidget->setItemDelegate(new LTItemDelegate);
+    ui.lapTimeTableWidgetFP->setItemDelegate(new LTItemDelegate);
+    ui.lapTimeTableWidgetQuali->setItemDelegate(new LTItemDelegate);
+    ui.lapTimeTableWidgetQ1->setItemDelegate(new LTItemDelegate);
+    ui.lapTimeTableWidgetQ2->setItemDelegate(new LTItemDelegate);
+    ui.lapTimeTableWidgetQ3->setItemDelegate(new LTItemDelegate);
+
     setupIcons(colors);
     ui.sessionLapTimesChart->setColors(colors);
     ui.sessionPositionsChart->setColors(colors);
@@ -78,6 +88,7 @@ SessionAnalysisWidget::~SessionAnalysisWidget()
 
 void SessionAnalysisWidget::resetView()
 {
+    lapDataArray.clear();
     setWindowTitle("Session analysis: " + EventData::getInstance().getEventInfo().eventName);
     setupBoxes();
     switch(EventData::getInstance().getEventType())
@@ -116,6 +127,8 @@ void SessionAnalysisWidget::resetView()
     last = 99;
     min = -1;
     max = -1;
+
+    update();
 }
 
 void SessionAnalysisWidget::resizeTables()
@@ -125,7 +138,7 @@ void SessionAnalysisWidget::resizeTables()
     ui.lapTimeTableWidget->setColumnWidth(1, 0.35*w);
     ui.lapTimeTableWidget->setColumnWidth(2, 0.2*w);
     ui.lapTimeTableWidget->setColumnWidth(3, 0.2*w);
-    ui.lapTimeTableWidget->setColumnWidth(4, 0.1*w);
+    ui.lapTimeTableWidget->setColumnWidth(4, 0.1*w);    
 
     w = ui.lapTimeTableWidgetFP->width()-20;//sizes[0]-20;
     ui.lapTimeTableWidgetFP->setColumnWidth(0, 0.15*w);
@@ -172,67 +185,67 @@ void SessionAnalysisWidget::setupTables()
 //    QList<int> sizes = ui.splitter->sizes();
 
     SeasonData &sd = SeasonData::getInstance();
-    setItem(ui.lapTimeTableWidget, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidget, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidget, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidget, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidget, 0, 4, "Lap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 0, "P", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 1, "Driver", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 2, "Time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 3, "Gap", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidget, 0, 4, "Lap", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidget->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetFP->rowCount() == 0)
         ui.lapTimeTableWidgetFP->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetFP, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetFP, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetFP, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetFP, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetFP, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 0, "P", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 1, "Driver", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 2, "Time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 3, "Gap", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetFP, 0, 4, "S. time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQuali->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetQuali->rowCount() == 0)
         ui.lapTimeTableWidgetQuali->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetQuali, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQuali, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQuali, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQuali, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQuali, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQuali, 0, 5, "Period", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 0, "P", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 1, "Driver", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 2, "Time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 3, "Gap", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 4, "S. time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQuali, 0, 5, "Period", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQuali->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetQ1->rowCount() == 0)
         ui.lapTimeTableWidgetQ1->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetQ1, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ1, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ1, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ1, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ1, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 0, "P", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 1, "Driver", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 2, "Time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 3, "Gap", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ1, 0, 4, "S. time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQ1->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetQ2->rowCount() == 0)
         ui.lapTimeTableWidgetQ2->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetQ2, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ2, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ2, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ2, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ2, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 0, "P", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 1, "Driver", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 2, "Time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 3, "Gap", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ2, 0, 4, "S. time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQ2->setRowHeight(0, 22);
 
     if (ui.lapTimeTableWidgetQ3->rowCount() == 0)
         ui.lapTimeTableWidgetQ3->insertRow(0);
 
-    setItem(ui.lapTimeTableWidgetQ3, 0, 0, "P", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ3, 0, 1, "Driver", Qt::NoItemFlags, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ3, 0, 2, "Time", Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ3, 0, 3, "Gap", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
-    setItem(ui.lapTimeTableWidgetQ3, 0, 4, "S. time", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 0, "P", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 1, "Driver", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 2, "Time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 3, "Gap", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
+    setItem(ui.lapTimeTableWidgetQ3, 0, 4, "S. time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
 
     ui.lapTimeTableWidgetQ3->setRowHeight(0, 22);
 
@@ -476,17 +489,17 @@ void SessionAnalysisWidget::update(bool repaintCharts)
                 continue;
 
             SeasonData &sd = SeasonData::getInstance();
-            setItem(table, rows+1, 0, QString::number(rows+1)+".", Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::CYAN));
+            setItem(table, rows+1, 0, QString::number(rows+1)+".", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::CYAN));
 
             QString s = EventData::getInstance().getDriversData()[lapDataArray[i].getCarID()-1].getDriverName();
-            QTableWidgetItem *item = setItem(table, rows+1, 1, s, Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
+            QTableWidgetItem *item = setItem(table, rows+1, 1, s, Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
             item->setIcon(getDriverIcon(EventData::getInstance().getDriversData()[lapDataArray[i].getCarID()-1].getNumber()));
 
 
-            setItem(table, rows+1, 2, lapDataArray[i].getTime().toString(), Qt::NoItemFlags, Qt::AlignCenter, sd.getColor(LTPackets::WHITE));
+            setItem(table, rows+1, 2, lapDataArray[i].getTime().toString(), Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignCenter, sd.getColor(LTPackets::WHITE));
 
             s = (rows == 0 || !lapDataArray[i].getTime().isValid()) ? "" : "+" + DriverData::calculateGap(lapDataArray[i].getTime(), lapDataArray[firstPlace].getTime());
-            setItem(table, rows+1, 3, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::YELLOW));
+            setItem(table, rows+1, 3, s, Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::YELLOW));
 
             s = QString::number(lapDataArray[i].getLapNumber());
             if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
@@ -495,10 +508,10 @@ void SessionAnalysisWidget::update(bool repaintCharts)
             else if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
                 s = sd.correctQualiTime(lapDataArray[i].getQualiLapExtraData().getSessionTime(), lapDataArray[i].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
 
-            setItem(table, rows+1, 4, s, Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
+            setItem(table, rows+1, 4, s, Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
 
             if (ui.qualiTabWidget->currentIndex() == 0)
-                setItem(table, rows+1, 5, QString::number(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()), Qt::NoItemFlags, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
+                setItem(table, rows+1, 5, QString::number(lapDataArray[i].getQualiLapExtraData().getQualiPeriod()), Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
 
             ++rows;
         }
@@ -625,6 +638,60 @@ void SessionAnalysisWidget::keyPressEvent(QKeyEvent *k)
 {
     if (k->key() == Qt::Key_Escape)
         close();
+
+    if (k->key() == Qt::Key_C && k->modifiers() == Qt::ControlModifier)
+    {
+        QTableWidget *table = ui.lapTimeTableWidget;
+        if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
+            table = ui.lapTimeTableWidgetFP;
+
+        if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
+        {
+            switch (ui.qualiTabWidget->currentIndex())
+            {
+                case 0: table = ui.lapTimeTableWidgetQuali; break;
+                case 1: table = ui.lapTimeTableWidgetQ1; break;
+                case 2: table = ui.lapTimeTableWidgetQ2; break;
+                case 3: table = ui.lapTimeTableWidgetQ3; break;
+            }
+        }
+        QItemSelectionModel * selection = table->selectionModel();
+        QModelIndexList indexes = selection->selectedIndexes();
+
+        if(indexes.size() < 1)
+            return;
+
+        // QModelIndex::operator < sorts first by row, then by column.
+        // this is what we need
+        qSort(indexes.begin(), indexes.end());
+
+        // You need a pair of indexes to find the row changes
+        QModelIndex previous = indexes.first();
+        indexes.removeFirst();
+        QString selected_text;
+        QModelIndex current;
+        Q_FOREACH(current, indexes)
+        {
+            QVariant data = table->model()->data(previous);
+            QString text = data.toString();
+
+            selected_text.append(text);
+
+            if (current.row() != previous.row())
+            {
+                selected_text.append(QLatin1Char('\n'));
+            }
+            else
+            {
+                selected_text.append(QLatin1Char('\t'));
+            }
+            previous = current;
+        }
+        selected_text.append(table->model()->data(current).toString());
+        selected_text.append(QLatin1Char('\n'));
+        qApp->clipboard()->setText(selected_text);
+
+    }
 
     QWidget::keyPressEvent(k);
 }

@@ -50,10 +50,14 @@ void SocketDataReader::disconnectFromHost()
     timer->stop();
     connectionOpened = false;
 
-    QObject::disconnect(socket, SIGNAL(connected()), this, SLOT(connected()));
-    QObject::disconnect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectionError(QAbstractSocket::SocketError)));
-    QObject::disconnect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
-    QObject::disconnect(reconnectTimer, SIGNAL(timeout()), this, SLOT(reconnect()));
+    if (socket)
+    {
+        QObject::disconnect(socket, SIGNAL(connected()), this, SLOT(connected()));
+        QObject::disconnect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectionError(QAbstractSocket::SocketError)));
+        QObject::disconnect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    }
+    if (reconnectTimer)
+        QObject::disconnect(reconnectTimer, SIGNAL(timeout()), this, SLOT(reconnect()));
 }
 
 void SocketDataReader::wakeUpServer()
