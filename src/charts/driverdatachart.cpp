@@ -230,7 +230,8 @@ int DriverDataChart::checkLapDataCoordinates(int x, int y)
         popupBox->values.clear();
         for (int i = 0; i < lapDataCoordinates.size(); ++i)
         {
-            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3)
+            if (std::abs((float)(lapDataCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCoordinates[i].y - y)) <= 3 &&
+                    lapDataCoordinates[i].idx < driverData.getLapData().size())
             {
                 LapData ld = driverData.getLapData()[lapDataCoordinates[i].idx];
                 popupBox->values.append(ld);

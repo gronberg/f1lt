@@ -259,6 +259,7 @@ p, li { white-space: pre-wrap; }
      <string>Tools</string>
     </property>
     <addaction name="actionSession_analysis"/>
+    <addaction name="actionFollow_a_driver"/>
     <addaction name="actionHead_to_head"/>
     <addaction name="actionLap_time_comparison"/>
     <addaction name="separator"/>
@@ -301,6 +302,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionOpen"/>
    <addaction name="actionConnect"/>
    <addaction name="separator"/>
+   <addaction name="actionFollow_a_driver"/>
    <addaction name="actionHead_to_head"/>
    <addaction name="actionLap_time_comparison"/>
    <addaction name="actionSession_analysis"/>
@@ -430,6 +432,15 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>LT files database</string>
+   </property>
+  </action>
+  <action name="actionFollow_a_driver">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/fad.png</normaloff>:/ui_icons/fad.png</iconset>
+   </property>
+   <property name="text">
+    <string>Follow a driver</string>
    </property>
   </action>
  </widget>

@@ -1,9 +1,13 @@
-v1.4.0:
+v1.4.0 (12-10-2012):
 - added .lt files database connected to the online server - it is now possible to get the access to online .lt files from the application
+- added new tool - "Follow a driver", which combines functionalities of both head to head and lap time comparison - for a selected driver this tool compares his lap and sectors times with 2 drivers in front and 2 behind him
+- for all "driver tools", that is - follow a driver, head 2 head and lap time comparison, data of the current driver, selected in the main view, is automatically loaded and displayed whenever one of those tools is launched
 - quali results can now be sorted out by the selected quali part - first click on an appropriate column (Q1, Q2 or Q3) will sort the results using appropriate lap times, second click will trigger display time gaps to the leader instead of lap times, third click restores the original view
 - added "related commentary" tab in the driver data
 - the drivers order in the session analisys positions chart is reversed and starting postitions are also drawn on the chart
 - added "retired" mark on the charts
+- laps in driver data tab are now displayed in reverse order by default
+- added connection progress bar
 - few changes in the main interface
 - rewritten some parts of the code (main tables are now implemented using model/view framework)
 

@@ -179,7 +179,9 @@ public:
     int getDriverId(QString) const;
     int getDriverId(int no) const;
     DriverData getDriverData(int no) const;
+    DriverData *getDriverDataPtr(int no);
     DriverData getDriverDataByPos(int pos) const;
+    DriverData *getDriverDataByPosPtr(int pos);
     DriverData getDriverDataById(int id) const;
     QString calculateInterval(DriverData d1, DriverData d2, int lap) const;
 

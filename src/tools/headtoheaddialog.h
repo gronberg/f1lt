@@ -28,10 +28,13 @@ public:
     void loadCarImages();
 
     int getNumber(int);
+    void setCurrentDriver(int id);
+
+    QPixmap getCarImage(int no);    
 
 public slots:
-    int exec();
-    void show();
+    int exec(int currentDriverId = 0);
+    void show(int currentDriverId = 0);
     void comboBoxValueChanged(int);
     void updateData();
     void updateCharts();

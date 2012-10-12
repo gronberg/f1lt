@@ -94,6 +94,16 @@ DriverData EventData::getDriverData(int no) const
 
     return DriverData();
 }
+
+DriverData *EventData::getDriverDataPtr(int no)
+{
+    int id = getDriverId(no);
+    if (id > 0 && id <= driversData.size())
+        return &driversData[id-1];
+
+    return 0;
+}
+
 DriverData EventData::getDriverDataByPos(int pos) const
 {
 	for (int i = 0; i < driversData.size(); ++i)
@@ -103,6 +113,17 @@ DriverData EventData::getDriverDataByPos(int pos) const
 	}
 
     return DriverData();
+}
+
+DriverData *EventData::getDriverDataByPosPtr(int pos)
+{
+    for (int i = 0; i < driversData.size(); ++i)
+    {
+        if (driversData[i].getPosition() == pos)
+            return &driversData[i];
+    }
+
+    return 0;
 }
 
 DriverData EventData::getDriverDataById(int id) const

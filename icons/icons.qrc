@@ -3,11 +3,11 @@
         <file>green-light.png</file>
         <file>red-light.png</file>
         <file>sc.png</file>
-        <file>yellow-light.png</file>
         <file>down-arrow.png</file>
         <file>up-arrow.png</file>
         <file>flag.png</file>
         <file>red-lights.png</file>
+        <file>yellow-light.png</file>
     </qresource>
     <qresource prefix="/ui_icons">
         <file>exit.png</file>
@@ -36,6 +36,7 @@
         <file>weather_wet.png</file>
         <file>sa.png</file>
         <file>ltdb.png</file>
+        <file>fad.png</file>
     </qresource>
     <qresource prefix="/other"/>
 </RCC>

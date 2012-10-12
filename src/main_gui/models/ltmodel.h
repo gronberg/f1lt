@@ -72,6 +72,10 @@ public:
     {
 
     }
+    void clearData()
+    {
+        driversData.clear();
+    }
     
 signals:
     

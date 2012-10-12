@@ -106,6 +106,7 @@ public:
             bestSectors[i] = sr.bestSectors[i];
             bestQLaps[i] = sr.bestQLaps[i];
         }
+        return *this;
     }
 
     QPair<LapTime, int> getBestSector(int idx)
@@ -135,8 +136,8 @@ public:
 
     LapData getBestQualiLap(int idx)
     {
-        if (idx >= 0 && idx < 3)
-            return bestQLaps[idx];
+        if (idx >= 1 && idx <= 3)
+            return bestQLaps[idx-1];
 
         return LapData();
     }

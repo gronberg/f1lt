@@ -186,6 +186,9 @@ void LTWindow::driverDataChanged(int carID)
         for (int i = 0; i < h2hDialog.size(); ++i)
             h2hDialog[i]->driverUpdated(eventData.getDriversData()[carID-1]);
 
+        for (int i = 0; i < fadDialog.size(); ++i)
+            fadDialog[i]->driverUpdated(eventData.getDriversData()[carID-1]);
+
         if (saw->isVisible())
             saw->update();
 //        if (recording)
@@ -228,6 +231,11 @@ void LTWindow::dataChanged()
     {
         h2hDialog[i]->updateData();
         h2hDialog[i]->updateCharts();
+    }
+
+    for (int i = 0; i < fadDialog.size(); ++i)
+    {
+        fadDialog[i]->updateData();
     }
 
     ui->ltWidget->updateLT();
@@ -302,14 +310,14 @@ void LTWindow::on_actionLap_time_comparison_triggered()
     {
         if (!ltcDialog[i]->isVisible())
         {
-            ltcDialog[i]->show();
+            ltcDialog[i]->show(ui->ltWidget->getCurrentDriverId());
             return;
         }
     }
     if (ltcDialog.size() < 30)
     {
         LapTimeComparisonDialog *ltc = new LapTimeComparisonDialog(settings->value("ui/reversed_lap_time_comparison").toBool());
-        ltc->show();
+        ltc->show(ui->ltWidget->getCurrentDriverId());
         ltc->setFont(prefs->getMainFont());
         ltcDialog.append(ltc);
     }
@@ -321,7 +329,7 @@ void LTWindow::on_actionHead_to_head_triggered()
     {
         if (!h2hDialog[i]->isVisible())
         {
-            h2hDialog[i]->show();
+            h2hDialog[i]->show(ui->ltWidget->getCurrentDriverId());
             return;
         }
 
@@ -329,12 +337,32 @@ void LTWindow::on_actionHead_to_head_triggered()
     if (h2hDialog.size() < 30)
     {
         HeadToHeadDialog *h2h = new HeadToHeadDialog(settings->value("ui/reversed_head_to_head").toBool());
-        h2h->show();
+        h2h->show(ui->ltWidget->getCurrentDriverId());
         h2h->setFont(prefs->getMainFont());
         h2hDialog.append(h2h);
     }
 //    h2hDialog->raise();
 //    h2hDialog->activateWindow();
+}
+
+void LTWindow::on_actionFollow_a_driver_triggered()
+{
+    for (int i = 0; i < fadDialog.size(); ++i)
+    {
+        if (!fadDialog[i]->isVisible())
+        {
+            fadDialog[i]->show(ui->ltWidget->getCurrentDriverId());
+            return;
+        }
+
+    }
+    if (fadDialog.size() < eventData.getDriversData().size())
+    {
+        FollowADriverDialog *fad = new FollowADriverDialog();
+        fad->show(ui->ltWidget->getCurrentDriverId());
+        fad->setFont(prefs->getMainFont());
+        fadDialog.append(fad);
+    }
 }
 
 void LTWindow::sessionStarted()
@@ -570,6 +598,9 @@ void LTWindow::setFonts(const QFont &mainFont, const QFont &commentaryFont)
     for (int i = 0; i < ltcDialog.size(); ++i)
         ltcDialog[i]->setFont(mainFont);
 
+    for (int i = 0; i < fadDialog.size(); ++i)
+        fadDialog[i]->setFont(mainFont);
+
     ui->textEdit->setFont(commentaryFont);
 //    ui->trackStatusWidget->setFont(mainFont);
     ui->eventStatusWidget->setFont(mainFont);
@@ -583,6 +614,9 @@ bool LTWindow::close()
 
     for (int i = 0; i < ltcDialog.size(); ++i)
         ltcDialog[i]->close();
+
+    for (int i = 0; i < fadDialog.size(); ++i)
+        fadDialog[i]->close();
 
     if (saw->isVisible())
         saw->close();
@@ -823,6 +857,9 @@ void LTWindow::eventPlayerOpenFile(QString fName)
     for (int i = 0; i < ltcDialog.size(); ++i)
         ltcDialog[i]->loadCarImages();
 
+    for (int i = 0; i < fadDialog.size(); ++i)
+        fadDialog[i]->loadCarImages();
+
     ui->actionRecord->setVisible(false);
     ui->actionStop_recording->setVisible(false);
     eventPlayerAction->setVisible(true);
@@ -864,6 +901,7 @@ void LTWindow::eventPlayerRewindClicked()
 {
     //clear all data
     ui->sessionDataWidget->clearFastestLaps();
+    ui->ltWidget->clearModelsData();
     streamReader->clearData();
 }
 
@@ -889,6 +927,9 @@ void LTWindow::eventPlayerStopClicked(bool connect)
 
     for (int i = 0; i < ltcDialog.size(); ++i)
         ltcDialog[i]->loadCarImages();
+
+    for (int i = 0; i < fadDialog.size(); ++i)
+        fadDialog[i]->loadCarImages();
 
     if (connect)
     {
@@ -919,6 +960,7 @@ void LTWindow::showSessionBoard(bool show)
 	ui->actionRecord->setEnabled(!show);
     ui->actionHead_to_head->setEnabled(!show);
     ui->actionLap_time_comparison->setEnabled(!show);
+    ui->actionFollow_a_driver->setEnabled(!show);
     ui->actionSession_analysis->setEnabled(!show);
 }
 
@@ -926,3 +968,5 @@ void LTWindow::on_actionSession_analysis_triggered()
 {
     saw->exec();
 }
+
+

@@ -260,10 +260,9 @@ void HeadToHeadDialog::updateData()
 						lastLap++;
 				}
         	}
-            DriverData &dd = eventData.getDriversData()[idx-1];
-            int idx = (dd.getNumber() > 13 ? dd.getNumber()-2 : dd.getNumber()-1) / 2;
+            DriverData &dd = eventData.getDriversData()[idx-1];            
 			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
-			lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+            lab->setPixmap(getCarImage(dd.getNumber()));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
         }
         else
         {
@@ -570,9 +569,9 @@ void HeadToHeadDialog::updateCharts()
         {
             driver = eventData.getDriversData()[idx-1].getDriverName();
             driverData[i] = eventData.getDriversData()[idx-1];
-            carIdx = (eventData.getDriversData()[idx-1].getNumber() > 13 ?
-                             eventData.getDriversData()[idx-1].getNumber() - 2 :
-                             eventData.getDriversData()[idx-1].getNumber() - 1) / 2;
+//            carIdx = (eventData.getDriversData()[idx-1].getNumber() > 13 ?
+//                             eventData.getDriversData()[idx-1].getNumber() - 2 :
+//                             eventData.getDriversData()[idx-1].getNumber() - 1) / 2;
 
             QTableWidgetItem *item = ui->chartsTableWidget->item(0, i);
             item->setText(driver);
@@ -586,40 +585,40 @@ void HeadToHeadDialog::updateCharts()
             item->setText(driver);
             item->setTextColor(color[i]);
 
-            if (carIdx >= 0)
+//            if (carIdx >= 0)
             {
                 QLabel *lab = qobject_cast<QLabel*>(ui->chartsTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(smallCarImg[carIdx]);//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->chartsTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(smallCarImg[carIdx]);//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
 
                 lab = qobject_cast<QLabel*>(ui->gapChartTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(smallCarImg[carIdx]);//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->gapChartTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(smallCarImg[carIdx]);
+                    lab->setPixmap(getCarImage(driverData[i].getNumber()));
 
                 lab = qobject_cast<QLabel*>(ui->posChartTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(smallCarImg[carIdx]);//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->posChartTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(smallCarImg[carIdx]);
+                    lab->setPixmap(getCarImage(driverData[i].getNumber()));
             }
         }
         else
@@ -657,13 +656,14 @@ void HeadToHeadDialog::updateCharts()
     posCompChart->repaint();
 }
 
-void HeadToHeadDialog::show()
+void HeadToHeadDialog::show(int currentDriverId)
 {
     if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
     {
         comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
         comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
     }
+    setCurrentDriver(currentDriverId);
 
 //    if (j == 0)
     {
@@ -682,13 +682,14 @@ void HeadToHeadDialog::show()
     QDialog::show();
 }
 
-int HeadToHeadDialog::exec()
+int HeadToHeadDialog::exec(int currentDriverId)
 {
     if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
     {
         comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
         comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
     }
+    setCurrentDriver(currentDriverId);
 
     updateData();
     updateCharts();
@@ -745,41 +746,41 @@ void HeadToHeadDialog::keyPressEvent(QKeyEvent *event)
 {
     if (ui->tabWidget->currentIndex() == 0 && event->key() == Qt::Key_C && event->modifiers() == Qt::ControlModifier)
     {
-            QItemSelectionModel * selection = ui->tableWidget->selectionModel();
-            QModelIndexList indexes = selection->selectedIndexes();
+        QItemSelectionModel * selection = ui->tableWidget->selectionModel();
+        QModelIndexList indexes = selection->selectedIndexes();
 
-            if(indexes.size() < 1)
-                return;
+        if(indexes.size() < 1)
+            return;
 
-            // QModelIndex::operator < sorts first by row, then by column.
-            // this is what we need
-            qSort(indexes.begin(), indexes.end());
+        // QModelIndex::operator < sorts first by row, then by column.
+        // this is what we need
+        qSort(indexes.begin(), indexes.end());
 
-            // You need a pair of indexes to find the row changes
-            QModelIndex previous = indexes.first();
-            indexes.removeFirst();
-            QString selected_text;
-            QModelIndex current;
-            Q_FOREACH(current, indexes)
+        // You need a pair of indexes to find the row changes
+        QModelIndex previous = indexes.first();
+        indexes.removeFirst();
+        QString selected_text;
+        QModelIndex current;
+        Q_FOREACH(current, indexes)
+        {
+            QVariant data = ui->tableWidget->model()->data(previous);
+            QString text = data.toString();
+
+            selected_text.append(text);
+
+            if (current.row() != previous.row())
             {
-                QVariant data = ui->tableWidget->model()->data(previous);
-                QString text = data.toString();
-
-                selected_text.append(text);
-
-                if (current.row() != previous.row())
-                {
-                    selected_text.append(QLatin1Char('\n'));
-                }                
-                else
-                {
-                    selected_text.append(QLatin1Char('\t'));
-                }
-                previous = current;
+                selected_text.append(QLatin1Char('\n'));
             }
-            selected_text.append(ui->tableWidget->model()->data(current).toString());
-            selected_text.append(QLatin1Char('\n'));
-            qApp->clipboard()->setText(selected_text);
+            else
+            {
+                selected_text.append(QLatin1Char('\t'));
+            }
+            previous = current;
+        }
+        selected_text.append(ui->tableWidget->model()->data(current).toString());
+        selected_text.append(QLatin1Char('\n'));
+        qApp->clipboard()->setText(selected_text);
 
     }
     if (event->key() == Qt::Key_Escape)
@@ -789,6 +790,20 @@ void HeadToHeadDialog::keyPressEvent(QKeyEvent *event)
 void HeadToHeadDialog::setFont(const QFont &font)
 {
     ui->tableWidget->setFont(font);
+}
+
+void HeadToHeadDialog::setCurrentDriver(int id)
+{
+    if (id != 0)
+    {
+        DriverData dd = eventData.getDriverDataById(id);
+        if (dd.getCarID() > 0)
+        {
+            int idx = comboBox[0]->findText(QString("%1 %2").arg(dd.getNumber()).arg(dd.getDriverName()));
+            if (idx != -1)
+                comboBox[0]->setCurrentIndex(idx);
+        }
+    }
 }
 
 int HeadToHeadDialog::getNumber(int i)
@@ -806,4 +821,10 @@ int HeadToHeadDialog::getNumber(int i)
 			no = -1;
 	}
 	return no;
+}
+
+QPixmap HeadToHeadDialog::getCarImage(int no)
+{
+    int idx = (no > 13 ? no-2 : no-1) / 2;
+    return smallCarImg[idx];
 }

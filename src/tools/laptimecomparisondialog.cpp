@@ -152,9 +152,8 @@ void LapTimeComparisonDialog::updateData()
             }
 
             DriverData &dd = eventData.getDriversData()[idx-1];
-            int idx = (dd.getNumber() > 13 ? dd.getNumber() - 2 : dd.getNumber() - 1) / 2;
 			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
-			lab->setPixmap(smallCarImg[idx]);//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+            lab->setPixmap(getCarImage(dd.getNumber()));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
         }
         else
         {
@@ -316,26 +315,26 @@ void LapTimeComparisonDialog::updateCharts()
         {
             driver = eventData.getDriversData()[idx-1].getDriverName();
             driverData[i] = eventData.getDriversData()[idx-1];
-            carIdx = (eventData.getDriversData()[idx-1].getNumber() > 13 ?
-                             eventData.getDriversData()[idx-1].getNumber() - 2 :
-                             eventData.getDriversData()[idx-1].getNumber() - 1) / 2;
+//            carIdx = (eventData.getDriversData()[idx-1].getNumber() > 13 ?
+//                             eventData.getDriversData()[idx-1].getNumber() - 2 :
+//                             eventData.getDriversData()[idx-1].getNumber() - 1) / 2;
 
             QTableWidgetItem *item = ui->chartsTableWidget->item(0, i);
             item->setText(driver);
             item->setTextColor(color[i]);
 
-            if (carIdx >= 0)
+//            if (carIdx >= 0)
             {
                 QLabel *lab = qobject_cast<QLabel*>(ui->chartsTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(smallCarImg[carIdx]);//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->chartsTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(smallCarImg[carIdx]);//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
             }
         }
         else
@@ -352,7 +351,7 @@ void LapTimeComparisonDialog::updateCharts()
     lapCompChart->repaint();
 }
 
-void LapTimeComparisonDialog::show()
+void LapTimeComparisonDialog::show(int currentCarId)
 {
     if (comboBox[0]->itemText(1) == "")
     {
@@ -361,6 +360,7 @@ void LapTimeComparisonDialog::show()
         comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
         comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
     }
+    setCurrentDriver(currentCarId);
     for (int i = 0; i < 4; ++i)
     {
         QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
@@ -374,7 +374,7 @@ void LapTimeComparisonDialog::show()
     QDialog::show();
 }
 
-int LapTimeComparisonDialog::exec()
+int LapTimeComparisonDialog::exec(int currentCarId)
 {
     if (comboBox[0]->itemText(1) == "")
     {
@@ -383,6 +383,7 @@ int LapTimeComparisonDialog::exec()
         comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
         comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
     }
+    setCurrentDriver(currentCarId);
 
     updateData();
     updateCharts();
@@ -462,6 +463,20 @@ void LapTimeComparisonDialog::setFont(const QFont &font)
     ui->tableWidget->setFont(font);
 }
 
+void LapTimeComparisonDialog::setCurrentDriver(int id)
+{
+    if (id != 0)
+    {
+        DriverData dd = eventData.getDriverDataById(id);
+        if (dd.getCarID() > 0)
+        {
+            int idx = comboBox[0]->findText(QString("%1 %2").arg(dd.getNumber()).arg(dd.getDriverName()));
+            if (idx != -1)
+                comboBox[0]->setCurrentIndex(idx);
+        }
+    }
+}
+
 int LapTimeComparisonDialog::getNumber(int i)
 {
 	QString text = comboBox[i]->currentText();
@@ -477,5 +492,11 @@ int LapTimeComparisonDialog::getNumber(int i)
 			no = -1;
 	}
 	return no;
+}
+
+QPixmap LapTimeComparisonDialog::getCarImage(int no)
+{
+    int idx = (no > 13 ? no-2 : no-1) / 2;
+    return smallCarImg[idx];
 }
 

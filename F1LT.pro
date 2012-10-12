@@ -21,7 +21,7 @@ INSTALLS += target \
 DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/
 
-#DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
@@ -65,7 +65,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/net/ltfilesmanager.cpp \
     src/tools/ltfilesmanagerdialog.cpp \
     src/main_gui/aboutdialog.cpp \
-    src/charts/driverdatachart.cpp
+    src/charts/driverdatachart.cpp \
+    src/tools/followadriverdialog.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -109,7 +110,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/net/ltfilesmanager.h \
     src/tools/ltfilesmanagerdialog.h \
     src/main_gui/aboutdialog.h \
-    src/charts/driverdatachart.h
+    src/charts/driverdatachart.h \
+    src/tools/followadriverdialog.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -126,7 +128,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/eventstatuswidget.ui \
     ui/ltwidget.ui \
     ui/ltfilesmanagerdialog.ui \
-    ui/aboutdialog.ui
+    ui/aboutdialog.ui \
+    ui/followadriverdialog.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

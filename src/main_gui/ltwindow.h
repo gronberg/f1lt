@@ -13,6 +13,7 @@
 #include "../net/datastreamreader.h"
 #include "../player/eventplayer.h"
 #include "../player/eventrecorder.h"
+#include "../tools/followadriverdialog.h"
 #include "../tools/headtoheaddialog.h"
 #include "../tools/laptimecomparisondialog.h"
 #include "../tools/ltfilesmanagerdialog.h"
@@ -95,6 +96,8 @@ private slots:
 
     void on_actionLT_files_data_base_triggered();
 
+    void on_actionFollow_a_driver_triggered();
+
 private:
     Ui::LTWindow *ui;
     DataStreamReader *streamReader;
@@ -117,6 +120,7 @@ private:
     QSettings *settings;
 
     QList<HeadToHeadDialog*> h2hDialog;
+    QList<FollowADriverDialog*> fadDialog;
     QList<LapTimeComparisonDialog*> ltcDialog;
 
     int currDriver;

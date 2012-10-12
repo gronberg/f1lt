@@ -273,8 +273,9 @@ void DriverData::addLap(const EventData &ed)
                 }
                 else if (ed.getEventType() == LTPackets::QUALI_EVENT)
                 {
-                    if (lastLap < sessionRecords.bestQLaps[lastLap.qualiLapExtraData.qualiPeriod-1])
-                    {
+                    if (lastLap < sessionRecords.bestQLaps[lastLap.qualiLapExtraData.qualiPeriod-1] ||
+                            !sessionRecords.bestQLaps[lastLap.qualiLapExtraData.qualiPeriod-1].getTime().isValid())
+                    {                        
                         sessionRecords.bestQLaps[lastLap.qualiLapExtraData.qualiPeriod-1] = lapData.last();
 
                         if (sessionRecords.bestQLaps[lastLap.qualiLapExtraData.qualiPeriod-1] < sessionRecords.bestLap)

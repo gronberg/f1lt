@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'driverdatawidget.ui'
 **
-** Created: Thu Oct 11 14:54:05 2012
+** Created: Fri Oct 12 17:13:41 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -471,7 +471,7 @@ public:
 
         retranslateUi(DriverDataWidget);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(DriverDataWidget);

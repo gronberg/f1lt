@@ -24,7 +24,7 @@ void LTModel::updateLT()
 DriverData LTModel::getDriverData(const QModelIndex &index) const
 {
     int row = index.row();
-    if (row >= 1 && row <= EventData::getInstance().getDriversData().size())
+    if (row >= 1 && row <= EventData::getInstance().getDriversData().size() && (row - 1) < driversData.size())
     {
         return *driversData[row-1];
     }

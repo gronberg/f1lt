@@ -50,6 +50,13 @@ public:
 
     void clearData();
 
+    void clearModelsData()
+    {
+        if (ltModel != 0)
+            ltModel->clearData();
+    }
+    int getCurrentDriverId() { return currDriverId; }
+
 
 protected:
     virtual void resizeEvent(QResizeEvent *);
