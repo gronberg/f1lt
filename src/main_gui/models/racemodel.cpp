@@ -283,7 +283,7 @@ QVariant RaceModel::getIcon(const DriverData &dd) const
 {
     if (!dd.isRetired() && dd.getNumber() > 0)
     {
-        int lastPos, prevPos;
+        int lastPos = 0, prevPos = 0;
         if (dd.getLapData().size() > 1)
         {
             lastPos = dd.getLastLap().getPosition();

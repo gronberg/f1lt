@@ -19,7 +19,7 @@ public:
 
     virtual void drawAxes(QPainter *p);
     virtual void drawChart(QPainter *p);
-    virtual void drawLegend(QPainter *p) { }
+    virtual void drawLegend(QPainter *) { }
     void drawLine(QPainter *p, int x1, int y1, int x2, int y2);
     virtual void setMinMax();
     virtual void setAllowedMin(int am) { allowedMin = am; }

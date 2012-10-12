@@ -18,7 +18,7 @@ bool PacketDecrypter::checkDecryption(QString stream)
 
 //=============================================================
 
-PacketParser::PacketParser(QObject *parent) : QObject(parent), eventData(EventData::getInstance()), parsing(false), packetNo(0), noSession(false)
+PacketParser::PacketParser(QObject *parent) : QObject(parent), parsing(false), packetNo(0), eventData(EventData::getInstance()), noSession(false)
 {
 }
 
@@ -217,7 +217,6 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
     //return;
     QString s;
     DriverData dd;
-    int lap;
     int ibuf;
     bool ok;
     PitData pd;

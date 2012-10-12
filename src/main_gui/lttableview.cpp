@@ -75,7 +75,7 @@ void LTTableView::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void LTTableView::resizeEvent(QResizeEvent *event)
+void LTTableView::resizeEvent(QResizeEvent *)
 {
 
 }

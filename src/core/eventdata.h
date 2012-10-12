@@ -142,6 +142,8 @@ public:
     {
         if (idx >= 1 && idx <= 3)
             return secRecord[idx-1];
+
+        return SectorRecordData();
     }
 
     friend class EventData;

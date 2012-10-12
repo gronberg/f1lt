@@ -576,21 +576,18 @@ void FollowADriverDialog::on_rightButton_clicked()
     }
 }
 
-void FollowADriverDialog::on_dataTableWidget_cellDoubleClicked(int row, int column)
+void FollowADriverDialog::on_dataTableWidget_cellDoubleClicked(int row, int)
 {
-//    if (column == 1)
+    QTableWidgetItem *item = ui->dataTableWidget->item(row, 0);
+    if (item)
     {
-        QTableWidgetItem *item = ui->dataTableWidget->item(row, 0);
-        if (item)
+        DriverData *dd = eventData.getDriverDataByPosPtr(item->text().toInt());
+        if (dd)
         {
-            DriverData *dd = eventData.getDriverDataByPosPtr(item->text().toInt());
-            if (dd)
-            {
-                setCurrentDriver(dd->getCarID());
-                QList<QTableWidgetItem *> items = ui->dataTableWidget->findItems(dd->getDriverName(), Qt::MatchExactly);
-                if (!items.isEmpty())
-                    ui->dataTableWidget->setCurrentItem(items.first());
-            }
+            setCurrentDriver(dd->getCarID());
+            QList<QTableWidgetItem *> items = ui->dataTableWidget->findItems(dd->getDriverName(), Qt::MatchExactly);
+            if (!items.isEmpty())
+                ui->dataTableWidget->setCurrentItem(items.first());
         }
     }
 }

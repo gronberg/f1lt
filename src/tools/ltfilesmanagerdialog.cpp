@@ -190,7 +190,7 @@ QString LTFilesManagerDialog::getSessionType(QString session)
     return array[0].toUpper();
 }
 
-void LTFilesManagerDialog::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
+void LTFilesManagerDialog::on_treeWidget_itemClicked(QTreeWidgetItem *item, int)
 {
     if (item->childCount() == 0)
     {
@@ -200,7 +200,7 @@ void LTFilesManagerDialog::on_treeWidget_itemClicked(QTreeWidgetItem *item, int 
         ui->playButton->setEnabled(false);
 }
 
-void LTFilesManagerDialog::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
+void LTFilesManagerDialog::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int)
 {
     if (item->childCount() == 0)
     {

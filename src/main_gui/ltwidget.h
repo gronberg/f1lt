@@ -46,8 +46,6 @@ public:
         updateLT();
     }
 
-    bool printDiff(int row, int col) { }
-
     void clearData();
 
     void clearModelsData()

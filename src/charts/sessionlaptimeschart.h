@@ -39,6 +39,8 @@ struct PopupDriversLapTimesInfoBox : public PopupInfoBox
 
         if (dd.getCarID() > 0)
             return QString("%1. %2: %3").arg(values[i].getPosition()).arg(dd.getDriverName()).arg(values[i].getTime().toString());
+
+        return QString();
     }
 };
 

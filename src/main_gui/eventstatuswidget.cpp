@@ -56,6 +56,9 @@ void EventStatusWidget::updateEventStatus()
             case LTPackets::SAFETY_CAR_DEPLOYED:
 				ui->statusLabelIcon->setPixmap(icons[3]);
 				break;
+
+            case LTPackets::SAFETY_CAR_STANDBY:
+                break;
         }
     }
     else

@@ -409,6 +409,8 @@ int SeasonData::getQualiLength(int q)
 {
     if (q >= 1 && q <= 3)
         return qualiLengths[q-1];
+
+    return 0;
 }
 
 void SeasonData::fillEventNamesMap()

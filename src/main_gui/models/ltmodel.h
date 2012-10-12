@@ -68,7 +68,7 @@ public:
         }
         return true;
     }
-    virtual void headerClicked(int column)
+    virtual void headerClicked(int)
     {
 
     }

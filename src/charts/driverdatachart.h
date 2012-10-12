@@ -12,6 +12,7 @@ struct PopupInfoBox
 {
     PopupInfoBox() : width(0) { }
     PopupInfoBox(int w) : width(w) { }
+    virtual ~PopupInfoBox() { }
     void paint(QPainter *p, int x, int y, const QRect &paintRect);
 
     virtual int getSize()

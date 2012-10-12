@@ -307,7 +307,6 @@ void LapTimeComparisonDialog::updateCharts()
 {
     DriverData driverData[4];
     QString driver;
-    int carIdx;
     for (int i = 0; i < 4; ++i)
     {
         int idx = eventData.getDriverId(getNumber(i));

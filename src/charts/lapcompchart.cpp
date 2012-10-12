@@ -154,7 +154,7 @@ void LapCompChart::drawChart(QPainter *p)
 {
     int firstLap = 99, lastLap = 0;
 
-    double x[4] = {paintRect.left(), paintRect.left(), paintRect.left(), paintRect.left()};
+    double x[4] = {(double)paintRect.left(), (double)paintRect.left(), (double)paintRect.left(), (double)paintRect.left()};
     double y1[4];
     double y2[4];
     double yFactor = (((double)paintRect.height()) / (double)(tMax-tMin));
@@ -584,7 +584,7 @@ void GapCompChart::drawChart(QPainter *p)
 {
     int firstLap = 99, lastLap = 0;
 
-    double x[2] = {(int)paintRect.left(), (int)paintRect.left()};
+    double x[2] = {(double)paintRect.left(), (double)paintRect.left()};
     double y1[2];
     double y2[2];
 
@@ -975,7 +975,7 @@ void PosCompChart::drawChart(QPainter *p)
 {
     int firstLap = 99, lastLap = 0;
 
-    double x[2] = {paintRect.left(), paintRect.left()};
+    double x[2] = {(double)paintRect.left(), (double)paintRect.left()};
     double y1[2];
     double y2[2];
     double yFactor = ((double)paintRect.height() / (double)(tMax-tMin));
