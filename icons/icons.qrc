@@ -6,7 +6,6 @@
         <file>down-arrow.png</file>
         <file>up-arrow.png</file>
         <file>flag.png</file>
-        <file>red-lights.png</file>
         <file>yellow-light.png</file>
     </qresource>
     <qresource prefix="/ui_icons">
