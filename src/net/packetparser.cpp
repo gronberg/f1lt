@@ -1190,7 +1190,7 @@ void PacketParser::decryptionKeyObtained(unsigned int key)
 
 void PacketParser::savePacket(const QByteArray &buf)
 {
-    QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
-    if (file.open(QIODevice::WriteOnly))
-        file.write(buf);
+    //QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
+    //if (file.open(QIODevice::WriteOnly))
+        //file.write(buf);
 }
