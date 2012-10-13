@@ -81,11 +81,13 @@ QVariant QualiModel::driverRowData(const DriverData &dd, const QModelIndex &inde
     switch (index.column())
     {
         case 0:
-            if (role == Qt::DisplayRole)
+            if (role == Qt::DisplayRole)                            
                 return QString("%1.").arg(index.row());//dd.getPosition());
+
 
             if (role == Qt::ForegroundRole)
                 return SeasonData::getInstance().getColor(dd.getColorData().positionColor());
+
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);

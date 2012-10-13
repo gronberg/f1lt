@@ -367,7 +367,7 @@ void LTWindow::on_actionFollow_a_driver_triggered()
 
 void LTWindow::sessionStarted()
 {
-    if (!sessionTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))
+    if (!sessionTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))        
         sessionTimer->start(1000);
 }
 

@@ -10,7 +10,7 @@ SessionTimer::SessionTimer(QObject *parent) :
 
 void SessionTimer::timerTimeout()
 {
-    if (!counterMode)
+//    if (!counterMode)
     {
         EventData &eventData = EventData::getInstance();
         if (eventData.isSessionStarted())
@@ -37,7 +37,7 @@ void SessionTimer::timerTimeout()
                         {
                             secs = mins = hours = 0;
                             eventData.setSessionStarted(false);
-                            counterMode = true;
+//                            counterMode = true;
                         }
                     }
                 }

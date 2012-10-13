@@ -109,10 +109,10 @@ void LapTimeComparisonDialog::loadCarImages()
     comboBox[2]->clear();
     comboBox[3]->clear();
 
-    comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
-    comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
-    comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
-    comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
+//    comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+//    comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
+//    comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
+//    comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
 
     smallCarImg.clear();
     for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)

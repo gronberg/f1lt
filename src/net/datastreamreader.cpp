@@ -43,8 +43,7 @@ void DataStreamReader::disconnectFromLTServer()
 }
 
 void DataStreamReader::onCookieReceived(QString cookie)
-{
-    qDebug() << "got cookie";
+{    
     eventData.cookie = cookie;
     socketReader.openStream(host, port);
 //    socketReader.openStream("localhost", 6666);

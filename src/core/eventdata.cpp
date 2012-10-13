@@ -237,6 +237,25 @@ QString EventData::calculateInterval(DriverData d1, DriverData d2, int lap) cons
 	return "";
 }
 
+int EventData::correctPosition(const LapTime &ld) const
+{
+    QList<LapTime> timeList;
+    timeList << ld;
+
+    for (int i = 0; i < driversData.size(); ++i)
+    {
+        LapTime lt = driversData[i].getQualiTime(qualiPeriod);
+        if (!lt.isValid())
+            lt = driversData[i].getSessionRecords().getBestLap().getTime();
+
+        if (lt != ld)
+            timeList << lt;
+    }
+    qSort(timeList);
+
+    return timeList.indexOf(ld) + 1;
+}
+
 /*
 
 EventData eventData;*/

@@ -171,7 +171,7 @@ public:
             return sectorTimes[idx];
     }
 
-    bool operator!=(const LapData ld)
+    bool operator!=(const LapData &ld)
     {
         if (gap != ld.gap ||
             interval != ld.interval ||
@@ -185,9 +185,14 @@ public:
         return false;
     }
 
-    bool operator<(const LapData ld) const
+    bool operator<(const LapData &ld) const
     {
         return lapTime < ld.lapTime;
+    }
+
+    bool operator==(const LapData &ld) const
+    {
+        return lapTime == ld.lapTime;
     }
 
     static QString sumSectors(QString s1, QString s2, QString s3)

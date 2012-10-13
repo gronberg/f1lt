@@ -222,9 +222,12 @@ public:
         return 0;
     }
 
-    void addLap(const EventData &ed);       
+    void addLap(const EventData &ed);
+    void addRaceLap(const EventData &ed);
+    void addFPQLap(const EventData &ed);
 
     void correctNumLap(int raceNumLap);
+    void correctPosition(const EventData &ed);
     void updateLastLap();
     void updateInPit();
     void updateGaps(const EventData &ed);

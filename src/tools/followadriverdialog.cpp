@@ -33,7 +33,8 @@ void FollowADriverDialog::loadCarImages()
         smallCarImg.append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(180, Qt::SmoothTransformation));
 
     ui->comboBox->clear();
-    ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
+//    ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
+
     clearData();
 }
 
@@ -131,7 +132,7 @@ void FollowADriverDialog::updateData()
 }
 
 void FollowADriverDialog::printDriverInfo(const DriverData &dd)
-{
+{    
     ui->carImageLabel->setPixmap(getCarImage(dd.getNumber()));
     ui->bestLapLabel->setText(dd.getSessionRecords().getBestLap().getTime().toString() + QString(" (L%1)").arg(dd.getSessionRecords().getBestLap().getLapNumber()));
 
@@ -206,7 +207,6 @@ void FollowADriverDialog::printDataTable(const DriverData &dd, const QList<Drive
                 if (drivers[i]->getSessionRecords().getBestQualiLap(eventData.getQualiPeriod()).getTime().isValid())
                     ld = drivers[i]->getSessionRecords().getBestQualiLap(eventData.getQualiPeriod());
 
-                qDebug() << dd.getSessionRecords().getBestQualiLap(eventData.getQualiPeriod()).getTime().toString() << eventData.getQualiPeriod();
                 if (dd.getSessionRecords().getBestQualiLap(eventData.getQualiPeriod()).getTime().isValid())
                     ldCurr = dd.getSessionRecords().getBestQualiLap(eventData.getQualiPeriod());
             }
@@ -364,12 +364,12 @@ void FollowADriverDialog::printLapTimesTable(const DriverData &dd, const QList<D
             if (ld.getCarID() == drivers[j]->getCarID())
                 setItem(ui->lapTimesTableWidget, i+1, j+1, time, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color);
             else
-                setItem(ui->lapTimesTableWidget, i+1, j+1, "");
+                setItem(ui->lapTimesTableWidget, i+1, j+1, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         }
     }
     for (; i < 5; ++i)
         for (j = 0; j < 6; ++j)
-            setItem(ui->lapTimesTableWidget, i+1, j, "");
+            setItem(ui->lapTimesTableWidget, i+1, j, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 void FollowADriverDialog::clearData()
@@ -382,7 +382,7 @@ void FollowADriverDialog::clearData()
         for (int j = 0; j < 6; ++j)
         {
             if (i > 0 || (i == 0 && j > 0))
-                setItem(ui->lapTimesTableWidget, i, j, "");
+                setItem(ui->lapTimesTableWidget, i, j, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         }
         ui->carImageLabel->setPixmap(QPixmap());
         ui->bestLapLabel->setText("");
@@ -392,13 +392,12 @@ void FollowADriverDialog::clearData()
         if (eventData.getEventType() != LTPackets::RACE_EVENT)
             ui->pitStopsLabel->setText("");
     }
-
 }
 
 void FollowADriverDialog::clearRow(int row)
 {
     for (int i = 0; i < 7; ++i)
-        setItem(ui->dataTableWidget, row, i, "");
+        setItem(ui->dataTableWidget, row, i, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 void FollowADriverDialog::comboBoxValueChanged(int)
@@ -492,7 +491,7 @@ int FollowADriverDialog::getNumber()
 
     int no = -1;
     int idx = text.indexOf(" ");
-    if (idx != 0)
+    if (idx != -1)
     {
         bool ok;
         no = text.left(idx).toInt(&ok);
@@ -520,6 +519,9 @@ void FollowADriverDialog::updateButtonsState(const DriverData &dd)
 
 QPixmap FollowADriverDialog::getCarImage(int no)
 {
+    if (no < 1)
+        return QPixmap();
+
     int idx = (no > 13 ? no-2 : no-1) / 2;
     return smallCarImg[idx];
 }

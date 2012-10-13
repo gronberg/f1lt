@@ -215,11 +215,8 @@ void HeadToHeadDialog::loadCarImages()
     comboBox[0]->clear();
     comboBox[1]->clear();
 
-    comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
-    comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
-
-//    comboBox[0]->addItems(LTPackets::getDriversList());
-//    comboBox[1]->addItems(LTPackets::getDriversList());
+//    comboBox[0]->addItem("");
+//    comboBox[1]->addItem("");
 }
 
 void HeadToHeadDialog::updateData()

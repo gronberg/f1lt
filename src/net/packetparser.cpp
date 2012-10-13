@@ -248,6 +248,16 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
             {
                     eventData.driversData[packet.carID-1].pos = eventData.driversData[packet.carID-1].lastLap.pos = ibuf;
                     eventData.driversData[packet.carID-1].retired = false;
+
+                    if ((eventData.eventType == LTPackets::PRACTICE_EVENT || eventData.eventType == LTPackets::QUALI_EVENT) &&
+                            !eventData.driversData[packet.carID-1].lapData.isEmpty())
+                    {
+                        eventData.driversData[packet.carID-1].lapData.last().pos = ibuf;
+
+                        if (!eventData.driversData[packet.carID-1].posHistory.isEmpty())
+                            eventData.driversData[packet.carID-1].posHistory.last() = ibuf;
+
+                    }
             }
             else
                 if ((eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString() == "STOP" ||
@@ -261,13 +271,6 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
 //            if (!ok)
 //                eventData.frame = 0;
 
-            if ((eventData.eventType == LTPackets::PRACTICE_EVENT || eventData.eventType == LTPackets::QUALI_EVENT) && !eventData.driversData[packet.carID-1].lapData.isEmpty())
-            {
-                eventData.driversData[packet.carID-1].lapData.last().pos = ibuf;
-
-                if (!eventData.driversData[packet.carID-1].posHistory.isEmpty())
-                    eventData.driversData[packet.carID-1].posHistory.last() = ibuf;
-            }
             eventData.driversData[packet.carID-1].colorData.positionColor() = (LTPackets::Colors)packet.data;
             break;
 
@@ -557,6 +560,16 @@ void PacketParser::handleQualiEvent(const Packet &packet)
 
                 }
                 eventData.qualiPeriod = 1;
+            }
+
+            //correction of positions of drivers with time worse than 107%
+            if (eventData.eventType == LTPackets::QUALI_EVENT && eventData.qualiPeriod == 1)
+            {
+                for (int i = 0; i < eventData.driversData.size(); ++i)
+                {
+                    if (eventData.driversData[i].carID != packet.carID)
+                        eventData.driversData[i].correctPosition(eventData);
+                }
             }
 
 

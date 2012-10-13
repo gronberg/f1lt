@@ -609,21 +609,21 @@ void EventRecorder::saveToFile(QString)
         if (no < 10)
             sNo = "0" + QString::number(no);
 
-        QString fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg(session);
+        QString fName = QString("%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg(session);
 
         //since we have 3 practice session we have to choose the correct session number
         if (session == "fp1" && QFile::exists(fName))
         {
-            fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp2");
+            fName = QString("%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp2");
 
             if (QFile::exists(fName))
-                fName = QString("ltdata/%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp3");
+                fName = QString("%1-%2-%3-%4.lt").arg(year).arg(sNo).arg(shortName).arg("fp3");
         }
         QDir dir(F1LTCore::ltDataHomeDir());
         if (!dir.exists())
             dir.mkpath(F1LTCore::ltDataHomeDir());
 
-        QFile f(fName);
+        QFile f(F1LTCore::ltDataHomeDir()+fName);
         if (f.open(QIODevice::WriteOnly))
         {
             QDataStream stream(&f);

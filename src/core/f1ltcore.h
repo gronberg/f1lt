@@ -6,6 +6,7 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QDebug>
 
 class F1LTCore
 {
@@ -65,7 +66,9 @@ public:
         if (!dir.exists())
         {
             if (!dir.mkpath(QDir::homePath() + "/.f1lt/ltdata"))
+            {
                 return programHomeDir() + "/ltdata/";
+            }
         }
         return QDir::homePath() + "/.f1lt/ltdata/";
 

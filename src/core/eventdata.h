@@ -187,6 +187,8 @@ public:
     DriverData getDriverDataById(int id) const;
     QString calculateInterval(DriverData d1, DriverData d2, int lap) const;
 
+    int correctPosition(const LapTime &ld) const;
+
     LTEvent getEventInfo()              const { return eventInfo; }
     void setEventInfo(LTEvent ev)       { eventInfo = ev; }
     int getEventId()                    const { return eventId; }
