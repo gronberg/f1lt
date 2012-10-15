@@ -14,11 +14,12 @@ LTWidget::LTWidget(QWidget *parent) :
     eventData(EventData::getInstance()),
     eventType((LTPackets::EventType)0),
     currDriverId(0),
-    ltModel(0)
+    ltModel(0),
+    thumbnailsSize(75)
 {
     ui->setupUi(this);
     loadCarImages();
-    itemDelegate = new LTMainItemDelegate(ui->tableView, &carImg, drawCarThumbnails);
+    itemDelegate = new LTMainItemDelegate(ui->tableView, drawCarThumbnails, thumbnailsSize);
     ui->tableView->setItemDelegate(itemDelegate);        
     //connect(ui->tableView, SIGNAL(headerClicked(int)), this, SLOT(on_tableView_headerClicked(int)));
 }
@@ -44,9 +45,7 @@ void LTWidget::loadCarImages()
     showDiff = 0;
     currDriverId = 0;
 
-    carImg.clear();
-    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
-        carImg.append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(75, Qt::SmoothTransformation));
+    SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 }
 
 void LTWidget::setFont(const QFont &font)

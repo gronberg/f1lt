@@ -13,8 +13,10 @@
 
 #include "../main_gui/ltitemdelegate.h"
 
+
+
 HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
-    QDialog(parent, Qt::Window), ui(new Ui::HeadToHeadDialog), reversedOrder(rev), eventData(EventData::getInstance())
+    QDialog(parent, Qt::Window), ui(new Ui::HeadToHeadDialog), reversedOrder(rev), eventData(EventData::getInstance()), thumbnailsSize(150)
 {
     ui->setupUi(this);
 
@@ -208,9 +210,7 @@ HeadToHeadDialog::~HeadToHeadDialog()
 
 void HeadToHeadDialog::loadCarImages()
 {
-    smallCarImg.clear();
-    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
-        smallCarImg.append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(150, Qt::SmoothTransformation));
+    smallCarImg = SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 
     comboBox[0]->clear();
     comboBox[1]->clear();
@@ -259,7 +259,7 @@ void HeadToHeadDialog::updateData()
         	}
             DriverData &dd = eventData.getDriversData()[idx-1];            
 			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
-            lab->setPixmap(getCarImage(dd.getNumber()));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+            lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
         }
         else
         {
@@ -588,33 +588,33 @@ void HeadToHeadDialog::updateCharts()
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->chartsTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
 
                 lab = qobject_cast<QLabel*>(ui->gapChartTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->gapChartTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(getCarImage(driverData[i].getNumber()));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));
 
                 lab = qobject_cast<QLabel*>(ui->posChartTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->posChartTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(getCarImage(driverData[i].getNumber()));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));
             }
         }
         else
@@ -817,10 +817,4 @@ int HeadToHeadDialog::getNumber(int i)
 			no = -1;
 	}
 	return no;
-}
-
-QPixmap HeadToHeadDialog::getCarImage(int no)
-{
-    int idx = (no > 13 ? no-2 : no-1) / 2;
-    return smallCarImg[idx];
 }

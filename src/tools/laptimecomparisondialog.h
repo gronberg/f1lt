@@ -29,7 +29,6 @@ public:
 
     int getNumber(int);
     void setCurrentDriver(int id);
-    QPixmap getCarImage(int no);
 
 public slots:
     int exec(int currentCarId = 0);
@@ -60,11 +59,12 @@ private:
     QComboBox *comboBox[4];
     LapCompChart *lapCompChart;
     QColor color[4];
-    QList<QPixmap> smallCarImg;
+    QList<QPixmap> *smallCarImg;
 
     bool reversedOrder;
 
     EventData &eventData;
+    int thumbnailsSize;
 };
 
 #endif // LAPTIMECOMPARISONDIALOG_H

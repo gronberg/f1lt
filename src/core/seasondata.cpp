@@ -6,6 +6,35 @@
 
 #include "eventdata.h"
 
+
+QList<QPixmap> *CarThumbnailsFactory::loadCarThumbnails(int size, bool clear)
+{
+    QList<QPixmap> *images = &carThumbnails[size];
+
+    if (!images->isEmpty() && clear)
+        images->clear();
+
+    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
+        images->append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(size, Qt::SmoothTransformation));
+
+    return images;
+}
+
+QPixmap CarThumbnailsFactory::getCarThumbnail(int no, int size)
+{
+    if (no < 1)
+        return QPixmap();
+
+    const QList<QPixmap> *images = loadCarThumbnails(size, false);
+
+    int idx = (no > 13 ? no-2 : no-1) / 2;
+
+    if (idx >= 0 && idx < images->size())
+        return (*images)[idx];
+
+    return QPixmap();
+}
+
 SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
 {
     fpLengths[0] = 90;
@@ -137,7 +166,7 @@ QPixmap SeasonData::getCarImg(int no)
     return QPixmap();
 }
 
-QString SeasonData::getDriverName(QString name)
+QString SeasonData::getDriverName(QString &name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -160,7 +189,7 @@ QString SeasonData::getDriverName(QString name)
     return name;
 }
 
-QString SeasonData::getDriverLastName(QString name)
+QString SeasonData::getDriverLastName(const QString &name)
 {
     if (name.size() > 3)
         return name.right(name.size()-3);
@@ -168,7 +197,7 @@ QString SeasonData::getDriverLastName(QString name)
     return name;
 }
 
-QString SeasonData::getDriverShortName(QString name)
+QString SeasonData::getDriverShortName(const QString &name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -184,7 +213,7 @@ QString SeasonData::getDriverShortName(QString name)
     return name.toUpper().mid(3, 3);
 }
 
-QString SeasonData::getDriverNameFromShort(QString name)
+QString SeasonData::getDriverNameFromShort(const QString &name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -230,7 +259,7 @@ int SeasonData::getEventNo(QDate date)
     return 1;
 }
 
-LTEvent SeasonData::getEvent(QDate date)
+LTEvent SeasonData::getEvent(const QDate &date)
 {
     for (int i = 1; i < ltEvents.size(); ++i)
     {
@@ -260,7 +289,7 @@ LTEvent SeasonData::getNextEvent()
     return ltEvents[0];
 }
 
-int SeasonData::getDriverNo(QString name)
+int SeasonData::getDriverNo(const QString &name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
@@ -322,7 +351,7 @@ QStringList SeasonData::getDriversListShort()
     return list;
 }
 
-QString SeasonData::getEventNameFromShort(QString shortName)
+QString SeasonData::getEventNameFromShort(const QString &shortName)
 {
     return eventNamesMap[shortName.toLower()] + " Grand Prix";
 //    for (int i = 0; i < ltEvents.size(); ++i)
@@ -333,7 +362,7 @@ QString SeasonData::getEventNameFromShort(QString shortName)
 //    return shortName;
 }
 
-int SeasonData::timeToMins(QTime time)
+int SeasonData::timeToMins(const QTime &time)
 {
     int hour = time.hour();
     int min = time.minute();
@@ -341,7 +370,7 @@ int SeasonData::timeToMins(QTime time)
     return hour * 60 + min;
 }
 
-int SeasonData::timeToSecs(QTime time)
+int SeasonData::timeToSecs(const QTime &time)
 {
     int hour = time.hour();
     int min = time.minute();
@@ -372,7 +401,7 @@ int SeasonData::getFPLength(int fp)
     return 0;
 }
 
-QTime SeasonData::correctFPTime(QTime time)
+QTime SeasonData::correctFPTime(const QTime &time)
 {
     int hour = time.hour();
     int min = time.minute();
@@ -387,7 +416,7 @@ QTime SeasonData::correctFPTime(QTime time)
     return newTime;
 }
 
-QTime SeasonData::correctQualiTime(QTime time, int qualiPeriod)
+QTime SeasonData::correctQualiTime(const QTime &time, int qualiPeriod)
 {
     int hour = time.hour();
     int min = time.minute();

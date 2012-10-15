@@ -15,7 +15,7 @@
 #include "../main_gui/ltitemdelegate.h"
 
 LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
-    QDialog(parent, Qt::Window), ui(new Ui::LapTimeComparisonDialog), reversedOrder(rev), eventData(EventData::getInstance())
+    QDialog(parent, Qt::Window), ui(new Ui::LapTimeComparisonDialog), reversedOrder(rev), eventData(EventData::getInstance()), thumbnailsSize(150)
 {
     ui->setupUi(this);
 
@@ -114,9 +114,7 @@ void LapTimeComparisonDialog::loadCarImages()
 //    comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
 //    comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
 
-    smallCarImg.clear();
-    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
-        smallCarImg.append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(150, Qt::SmoothTransformation));
+    smallCarImg = SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 }
 
 void LapTimeComparisonDialog::updateData()
@@ -153,7 +151,7 @@ void LapTimeComparisonDialog::updateData()
 
             DriverData &dd = eventData.getDriversData()[idx-1];
 			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
-            lab->setPixmap(getCarImage(dd.getNumber()));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+            lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
         }
         else
         {
@@ -329,11 +327,11 @@ void LapTimeComparisonDialog::updateCharts()
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->chartsTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(getCarImage(driverData[i].getNumber()));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
             }
         }
         else
@@ -491,11 +489,5 @@ int LapTimeComparisonDialog::getNumber(int i)
 			no = -1;
 	}
 	return no;
-}
-
-QPixmap LapTimeComparisonDialog::getCarImage(int no)
-{
-    int idx = (no > 13 ? no-2 : no-1) / 2;
-    return smallCarImg[idx];
 }
 

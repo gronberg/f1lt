@@ -34,14 +34,20 @@ public:
 
     QVariant headerData(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
-    void update(const DriverData &dd);
+    void update(DriverData *dd);
+    void clear()
+    {
+        driverData = 0;
+        rows = 0;
+        reset();
+    }
     
 signals:
     
 public slots:
 
 private:
-    DriverData driverData;
+    DriverData *driverData;
     int rows;
     
 };

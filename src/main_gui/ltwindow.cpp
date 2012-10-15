@@ -386,7 +386,9 @@ void LTWindow::showNoSessionBoard(bool show, QString msg)
 	}
 	else
 	{
+        //here the new session is started
 		showSessionBoard(false);
+        eventRecorder->setSessionRecorded(false);
         ui->ltWidget->updateLT();
 	}
 }
@@ -411,7 +413,7 @@ void LTWindow::timeout()
     if (eventData.isSessionStarted())
     {
         if (!playing && settings->value("ui/auto_record").toBool() && !recording)
-            on_actionRecord_triggered();
+            startRecording(true);
     }
 
 //        if (!(eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
@@ -754,8 +756,12 @@ void LTWindow::on_actionAbout_Qt_triggered()
 
 //-------------------- event recorder ----------------------------
 
-void LTWindow::on_actionRecord_triggered()
+void LTWindow::startRecording(bool autoRecord)
 {
+    //if the current session is recorded while auto record has turned on we don't do anything
+    if (autoRecord == eventRecorder->isSessionRecorded())
+        return;
+
     recording = true;
     ui->actionStop_recording->setEnabled(true);
     ui->actionRecord->setEnabled(false);
@@ -766,25 +772,33 @@ void LTWindow::on_actionRecord_triggered()
     connect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
 }
 
-void LTWindow::on_actionStop_recording_triggered()
+void LTWindow::stopRecording(bool autoStop)
 {
     recording = false;
     ui->actionOpen->setEnabled(true);
     ui->actionRecord->setEnabled(true);
     ui->actionLT_files_data_base->setEnabled(true);
     ui->actionStop_recording->setEnabled(false);
-    eventRecorder->stopRecording();
+
+    if (!autoStop)
+        eventRecorder->stopRecording();
+
     disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+}
+
+void LTWindow::on_actionRecord_triggered()
+{
+    startRecording(false);
+}
+
+void LTWindow::on_actionStop_recording_triggered()
+{
+    stopRecording(false);
 }
 
 void LTWindow::autoStopRecording()
 {
-	recording = false;
-	ui->actionOpen->setEnabled(true);
-	ui->actionRecord->setEnabled(true);
-    ui->actionLT_files_data_base->setEnabled(true);
-	ui->actionStop_recording->setEnabled(false);
-    disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+    stopRecording(true);
 }
 
 //-------------------- event player ----------------------------
@@ -809,7 +823,7 @@ void LTWindow::on_actionOpen_triggered()
         settings->setValue("ui/ltdir", ltDir);
 
         if (recording)
-            on_actionRecord_triggered();
+            stopRecording(false);
 
         eventPlayerOpenFile(fName);
     }
@@ -826,7 +840,7 @@ void LTWindow::on_actionLT_files_data_base_triggered()
     {
         sessionTimer->stop();
         if (recording)
-            on_actionRecord_triggered();
+            stopRecording(false);
 
         eventPlayerOpenFile(fName);
     }

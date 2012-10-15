@@ -11,12 +11,12 @@ class PitData
 {
 public:
     PitData() : pitLap (-1) { }
-    PitData(QString t, int p) : pitTime(t), pitLap(p) {}
+    PitData(const QString &t, int p) : pitTime(t), pitLap(p) {}
 
-    QString getPitTime() { return pitTime; }
-    void setPitTime (QString pt) { pitTime = pt; }
+    const QString &getPitTime() const { return pitTime; }
+    void setPitTime (const QString &pt) { pitTime = pt; }
 
-    int getPitLap() { return pitLap; }
+    int getPitLap() const { return pitLap; }
     void setPitLap(int pl) { pitLap = pl; }
 
     bool operator < (const PitData pd) const
@@ -109,7 +109,7 @@ public:
         return *this;
     }
 
-    QPair<LapTime, int> getBestSector(int idx)
+    QPair<LapTime, int> getBestSector(int idx) const
     {
         if (idx >= 1 && idx <= 3)
             return bestSectors[idx-1];
@@ -117,14 +117,14 @@ public:
         return QPair<LapTime, int>();
     }
 
-    int getBestSectorLapNumber(int idx)
+    int getBestSectorLapNumber(int idx) const
     {
         if (idx >= 1 && idx <= 3)
             return bestSectors[idx-1].second;
 
         return 0;
     }
-    LapTime getBestSectorTime(int idx)
+    LapTime getBestSectorTime(int idx) const
     {
         if (idx >= 1 && idx <= 3)
             return bestSectors[idx-1].first;
@@ -132,9 +132,9 @@ public:
         return LapTime();
     }
 
-    LapData getBestLap() { return bestLap; }
+    const LapData &getBestLap() const { return bestLap; }
 
-    LapData getBestQualiLap(int idx)
+    LapData getBestQualiLap(int idx) const
     {
         if (idx >= 1 && idx <= 3)
             return bestQLaps[idx-1];
@@ -162,17 +162,17 @@ public:
         lastLap.setCarID(carID);
     }
 
-    int getCarID()              const { return carID; }
-    QString getDriverName()     const { return driver; }
-    int getNumber()             const { return number; }
-    int getPosition()           const { return pos; }
+    int getCarID()                  const { return carID; }
+    const QString &getDriverName()  const { return driver; }
+    int getNumber()                 const { return number; }
+    int getPosition()               const { return pos; }
 
-    const QList<LapData> &getLapData() const { return lapData; }
+    const QList<LapData> &getLapData()      const { return lapData; }
     const QList<int> &getPositionHistory()  const { return posHistory; }
-    QList<PitData> getPitStops() const { return pitData; }
+    const QList<PitData> &getPitStops()     const { return pitData; }
 
     ColorData getColorData()    const { return colorData; }
-    LapData getLastLap()        const { return lastLap; }
+    const LapData &getLastLap()        const { return lastLap; }
 
     LapTime getQualiTime(int idx) const
     {
@@ -181,7 +181,7 @@ public:
 
         return LapTime();
     }
-    DriverRecords getSessionRecords() const { return sessionRecords; }
+    const DriverRecords &getSessionRecords() const { return sessionRecords; }
     int getNumPits()            const { return numPits; }
 
     bool isRetired()            const { return retired; }
@@ -199,7 +199,7 @@ public:
 
         return (pos < dd.pos) ? true : false;
     }
-    static QString calculateGap(LapTime lap1, LapTime lap2)
+    static QString calculateGap(const LapTime &lap1, const LapTime &lap2)
     {
         if (lap1.isValid() && lap2.isValid())
         {
@@ -245,7 +245,7 @@ public:
         return LapData();
     }
 
-    void setFastestLap(LapTime lapTime, int lapNo)
+    void setFastestLap(const LapTime &lapTime, int lapNo)
     {
         if (lapNo == sessionRecords.bestLap.lapNum && lapTime == sessionRecords.bestLap.lapTime)
             return;

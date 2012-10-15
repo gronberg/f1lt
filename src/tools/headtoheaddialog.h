@@ -28,9 +28,7 @@ public:
     void loadCarImages();
 
     int getNumber(int);
-    void setCurrentDriver(int id);
-
-    QPixmap getCarImage(int no);    
+    void setCurrentDriver(int id);  
 
 public slots:
     int exec(int currentDriverId = 0);
@@ -66,11 +64,12 @@ private:
     GapCompChart *gapCompChart;
     PosCompChart *posCompChart;
     QColor color[2];
-    QList<QPixmap> smallCarImg;
+    QList<QPixmap> *smallCarImg;
 
     bool reversedOrder;
 
     EventData &eventData;
+    int thumbnailsSize;
 };
 
 #endif // HEADTOHEADDIALOG_H

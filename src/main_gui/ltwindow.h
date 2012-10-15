@@ -40,6 +40,8 @@ public:
     void setFonts(const QFont &mainFont, const QFont &commentaryFont);
 
     void connectToServer();
+    void startRecording(bool autoRecord = false);
+    void stopRecording(bool autoStop = false);
 
 public slots:
     bool close();

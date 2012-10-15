@@ -215,16 +215,18 @@ void DriverDataWidget::printDriverData(int id)
 
     currentDriver = id;
 
-    const DriverData &driverData = eventData.getDriverDataById(id);
+    DriverData *driverData = eventData.getDriverDataByIdPtr(id);
 
-    updateDriverInfo(driverData);
-    driverLapHistoryModel->update(driverData);    
+    if (driverData != 0)
+    {
+        updateDriverInfo(*driverData);
+        driverLapHistoryModel->update(driverData);
 
-    for (int i = 0; i < driverLapHistoryModel->rowCount(); ++i)
-        ui->tableView->setRowHeight(i, 22);
+        for (int i = 0; i < driverLapHistoryModel->rowCount(); ++i)
+            ui->tableView->setRowHeight(i, 22);
 
-    ui->tableView->setMinimumSize(QSize(ui->tableView->minimumWidth(), driverLapHistoryModel->rowCount() * 22));
-    return;
+        ui->tableView->setMinimumSize(QSize(ui->tableView->minimumWidth(), driverLapHistoryModel->rowCount() * 22));
+    }
 }
 
 void DriverDataWidget::printDriverChart(int id)
@@ -448,4 +450,31 @@ void DriverDataWidget::keyPressEvent(QKeyEvent *event)
 void DriverDataWidget::clearData()
 {
     ui->textEdit->clear();
+
+    ui->driverNameLabel->clear();
+    ui->carImageLabel->clear();
+    ui->gridLabel->setText("Grid position");
+    ui->gridPositionLabel->clear();
+
+    ui->currentPositionLabel->clear();
+    ui->gapLabel->clear();
+
+    ui->lastLapLabel->clear();
+    ui->bestLapLabel->clear();
+    ui->approxLapLabel->clear();
+
+
+    ui->numPitsLabel->clear();
+    ui->pitStopsLabel->setText("Pit stops:");
+    QPalette palette = ui->pitStopsLabel->palette();
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    ui->pitStopsLabel->setPalette(palette);
+
+    gapChart->clearData();
+    posChart->clearData();
+    lapTimeChart->clearData();
+
+    driverLapHistoryModel->clear();
+    currentDriver = 0;
+
 }

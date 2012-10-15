@@ -18,6 +18,8 @@ public:
     void gatherDriverData();
 
     bool isEmpty() { return packets.isEmpty(); }
+    bool isSessionRecorded() { return sessionRecorded; }
+    void setSessionRecorded(bool rec) { sessionRecorded = rec; }
 
     void setAutoStopRecord(int x)
     {
@@ -54,6 +56,7 @@ private:
     int elapsedSeconds;
     int autoStopRecord;
     int elapsedTimeToStop;
+    bool sessionRecorded;
 };
 
 #endif // EVENTRECORDER_H

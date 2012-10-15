@@ -83,6 +83,7 @@ public:
     virtual ~DriverDataChart() { if (popupBox != 0) delete popupBox; }
     
     virtual void setData(const DriverData &d) { driverData = d; }
+    virtual void clearData() { driverData = DriverData(); }
     void setMinMax(double min, double max) { this->min = min, this->max = max; }
 
     virtual void drawAxes(QPainter *p);

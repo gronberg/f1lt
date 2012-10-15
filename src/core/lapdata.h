@@ -17,7 +17,7 @@ class LapTime
 {
 public:
     LapTime() { }
-    LapTime(QString t) { time = t; }
+    LapTime(const QString &t) { time = t; }
     LapTime(int msecs);
     LapTime(int m, int s, int ms)
     {
@@ -28,7 +28,7 @@ public:
         time = strM + (s < 10 ? ":0": ":") + strS + (ms < 100 ? (ms < 10 ? ".00" : ".0") : ".")  + strMS;
     }
 
-    QString toString() const { return time; }
+    const QString &toString() const { return time; }
     int toMsecs() const;
     QString toSecs() const;
     double toDouble() const
@@ -39,7 +39,7 @@ public:
         return 0.0;
     }
 
-    LapTime calc107p()
+    LapTime calc107p() const
     {
         double msecs = toMsecs();
         msecs = msecs * 1.07;
@@ -74,7 +74,7 @@ class PracticeLapExtraData
 public:
     PracticeLapExtraData() : approxLap(false) { }
 
-    QTime getSessionTime() const { return sessionTime; }
+    const QTime &getSessionTime() const { return sessionTime; }
     void setSessionTime(QTime s) { sessionTime = s; }
 
     bool isApproxLap() const { return approxLap; }
@@ -138,13 +138,13 @@ public:
     int getLapNumber() const { return lapNum; }
     void setLapNumber(int lap) { lapNum = lap; }
 
-    LapTime getTime() const { return lapTime; }
+    const LapTime &getTime() const { return lapTime; }
     void setTime(const LapTime &lt) { lapTime = lt; }
 
-    QString getGap() const { return gap; }
+    const QString &getGap() const { return gap; }
     void setGap(QString g) { gap = g; }
 
-    QString getInterval() const { return interval; }
+    const QString &getInterval() const { return interval; }
     void setInterval(QString i) { interval = i; }
 
     LapTime getSectorTime(int idx) const
@@ -156,14 +156,14 @@ public:
     }
 
 
-    PracticeLapExtraData getPracticeLapExtraData() const { return practiceLapExtraData; }
-    void setPracticeLapExtraData(PracticeLapExtraData ed) { practiceLapExtraData = ed; }
+    const PracticeLapExtraData &getPracticeLapExtraData() const { return practiceLapExtraData; }
+    void setPracticeLapExtraData(const PracticeLapExtraData &ed) { practiceLapExtraData = ed; }
 
-    QualiLapExtraData getQualiLapExtraData() const { return qualiLapExtraData; }
-    void setQualiLapExtraData(QualiLapExtraData ed) { qualiLapExtraData = ed; }
+    const QualiLapExtraData &getQualiLapExtraData() const { return qualiLapExtraData; }
+    void setQualiLapExtraData(const QualiLapExtraData &ed) { qualiLapExtraData = ed; }
 
-    RaceLapExtraData getRaceLapExtraData() const { return raceLapExtraData; }
-    void setRaceLapExtraData(RaceLapExtraData ed) { raceLapExtraData = ed; }
+    const RaceLapExtraData &getRaceLapExtraData() const { return raceLapExtraData; }
+    void setRaceLapExtraData(const RaceLapExtraData &ed) { raceLapExtraData = ed; }
 
     LapTime &operator[](int idx)
     {
@@ -195,7 +195,7 @@ public:
         return lapTime == ld.lapTime;
     }
 
-    static QString sumSectors(QString s1, QString s2, QString s3)
+    static QString sumSectors(const QString &s1, const QString &s2, const QString &s3)
     {
         LapTime ls1(s1);
         LapTime ls2(s2);

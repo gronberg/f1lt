@@ -19,7 +19,7 @@ signals:
     
 public slots:
 
-    void setTime(QTime t)
+    void setTime(const QTime &t)
     {
         sessionTime = t;
     }

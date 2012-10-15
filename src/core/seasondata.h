@@ -1,6 +1,7 @@
 #ifndef SEASONDATA_H
 #define SEASONDATA_H
 
+#include <QList>
 #include <QMap>
 #include <QPixmap>
 #include <QString>
@@ -13,7 +14,7 @@
 struct LTTeam
 {
     //used for sorting
-    bool operator < (const LTTeam lt) const
+    bool operator < (const LTTeam &lt) const
     {
         return driver1No < lt.driver1No;
     }
@@ -50,6 +51,16 @@ struct LTEvent
     }
 };
 
+class CarThumbnailsFactory
+{
+public:
+    QList<QPixmap> *loadCarThumbnails(int size, bool clear = true);
+    QPixmap getCarThumbnail(int no, int size);
+
+private:
+    QMap<int, QList<QPixmap> > carThumbnails;
+};
+
 //this class contains all the basic informations about the season, like quali and fp lengths, etc.
 class SeasonData
 {
@@ -69,19 +80,19 @@ public:
     int getQualiLength(int q);
 
     LTEvent getEvent(int);
-    LTEvent getEvent(QDate);
+    LTEvent getEvent(const QDate&);
     LTEvent getCurrentEvent();
     LTEvent getNextEvent();
 
-    QTime correctFPTime(QTime time);
-    QTime correctQualiTime(QTime time, int qualiPeriod);
+    QTime correctFPTime(const QTime &time);
+    QTime correctQualiTime(const QTime &time, int qualiPeriod);
 
-    QString getDriverName(QString);
-    QString getDriverLastName(QString);
-    QString getDriverShortName(QString);
-    QString getDriverNameFromShort(QString);
-    QString getEventNameFromShort(QString);
-    int getDriverNo(QString name);
+    QString getDriverName(QString &);
+    QString getDriverLastName(const QString&);
+    QString getDriverShortName(const QString&);
+    QString getDriverNameFromShort(const QString&);
+    QString getEventNameFromShort(const QString&);
+    int getDriverNo(const QString &name);
     QString getTeamName(int);
     QStringList getDriversList();
     QStringList getDriversListShort();
@@ -89,13 +100,15 @@ public:
     QColor getColor(LTPackets::Colors color) { return colors[color]; }
 
     QList<LTTeam> &getTeams() { return ltTeams; }
-    void setTeams(QList<LTTeam> teams) { ltTeams = teams; }
+    void setTeams(const QList<LTTeam> &teams) { ltTeams = teams; }
     QList<LTEvent> &getEvents() { return ltEvents; }
 
-    int timeToMins(QTime time);
-    int timeToSecs(QTime time);
+    int timeToMins(const QTime &time);
+    int timeToSecs(const QTime &time);
 
     void fillEventNamesMap();
+
+    CarThumbnailsFactory &getCarThumbnailsFactory() { return carThumbnailsFactory; }
 
 private:
     SeasonData();
@@ -113,6 +126,7 @@ private:
     QList<QColor> colors;
 
     QMap<QString, QString> eventNamesMap;
+    CarThumbnailsFactory carThumbnailsFactory;
 };
 
 #endif // SEASONDATA_H

@@ -4,12 +4,13 @@
 
 
 EventRecorder::EventRecorder(QObject *parent) :
-    QObject(parent), eventData(EventData::getInstance()), elapsedSeconds(0)
+    QObject(parent), eventData(EventData::getInstance()), elapsedSeconds(0), sessionRecorded(false)
 {
 }
 
 void EventRecorder::startRecording()
 {
+    sessionRecorded = false;
     //prepare everyting for record, clear old records and store the LTTeam and LTEvent data
     ltTeamList = SeasonData::getInstance().getTeams();
     ltEvent = eventData.getEventInfo();
@@ -482,6 +483,7 @@ void EventRecorder::gatherDriverData()
 
 void EventRecorder::stopRecording()
 {
+    sessionRecorded = true;
     saveToFile("");
     //store the last eventData
 //    eventDataList.append(eventData);

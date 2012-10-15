@@ -16,7 +16,7 @@ public:
 
     double getValue() const { return value; }
     int getLap() const { return lap; }
-    QTime getSessionTime() const { return sessionTime; }
+    const QTime &getSessionTime() const { return sessionTime; }
     int getQualiPeriod() const { return qPeriod; }
 
     friend class Weather;
@@ -34,13 +34,13 @@ class Weather
 {
 public:
 
-    WeatherData getAirTemp()        const { return currentWeather[0]; }
-    WeatherData getTrackTemp()      const { return currentWeather[1]; }
-    WeatherData getWindSpeed()      const { return currentWeather[2]; }
-    WeatherData getPressure()       const { return currentWeather[3]; }
-    WeatherData getHumidity()       const { return currentWeather[4]; }
-    WeatherData getWetDry()         const { return currentWeather[5]; }
-    WeatherData getWindDirection()  const { return currentWeather[6]; }
+    const WeatherData &getAirTemp()        const { return currentWeather[0]; }
+    const WeatherData &getTrackTemp()      const { return currentWeather[1]; }
+    const WeatherData &getWindSpeed()      const { return currentWeather[2]; }
+    const WeatherData &getPressure()       const { return currentWeather[3]; }
+    const WeatherData &getHumidity()       const { return currentWeather[4]; }
+    const WeatherData &getWetDry()         const { return currentWeather[5]; }
+    const WeatherData &getWindDirection()  const { return currentWeather[6]; }
 
     void setAirTemp(double val)         { currentWeather[0].value = val; }
     void setTrackTemp(double val)       { currentWeather[1].value = val; }
@@ -83,12 +83,12 @@ class SectorRecordData
 {
 public:
 
-    QString getDriverName()     const { return driver; }
-    int getNumber()         const { return number; }
-    LapTime getTime()       const { return lapTime; }
-    int getLapNumber()      const { return lapNum; }
-    QTime getSessionTime()  const { return sessionTime; }
-    int getQualiPeriod()    const { return qPeriod; }
+    const QString &getDriverName()  const { return driver; }
+    int getNumber()                 const { return number; }
+    const LapTime &getTime()        const { return lapTime; }
+    int getLapNumber()              const { return lapNum; }
+    const QTime &getSessionTime()   const { return sessionTime; }
+    int getQualiPeriod()            const { return qPeriod; }
 
     friend class EventData;
     friend class PacketParser;
@@ -105,7 +105,7 @@ private:
 class SpeedRecordData
 {    
 public:
-    QString getDriverName() const { return driver; }
+    const QString &getDriverName() const { return driver; }
     double getSpeed()   const { return speed; }
 
     friend class EventData;
@@ -136,7 +136,7 @@ public:
         return SpeedRecordData();
     }
 
-    SectorRecordData getFastestLap() const { return fastestLap; }
+    const SectorRecordData &getFastestLap() const { return fastestLap; }
 
     SectorRecordData getSectorRecord(int idx) const
     {
@@ -178,36 +178,41 @@ public:
 
     void clear();    
 
-    int getDriverId(QString) const;
+    int getDriverId(const QString&) const;
     int getDriverId(int no) const;
+
     DriverData getDriverData(int no) const;
     DriverData *getDriverDataPtr(int no);
+
     DriverData getDriverDataByPos(int pos) const;
     DriverData *getDriverDataByPosPtr(int pos);
+
     DriverData getDriverDataById(int id) const;
-    QString calculateInterval(DriverData d1, DriverData d2, int lap) const;
+    DriverData *getDriverDataByIdPtr(int id);
+
+    QString calculateInterval(const DriverData &d1, const DriverData &d2, int lap) const;
 
     int correctPosition(const LapTime &ld) const;
 
-    LTEvent getEventInfo()              const { return eventInfo; }
-    void setEventInfo(LTEvent ev)       { eventInfo = ev; }
+    const LTEvent &getEventInfo()              const { return eventInfo; }
+    void setEventInfo(const LTEvent &ev)       { eventInfo = ev; }
     int getEventId()                    const { return eventId; }
     LTPackets::EventType getEventType()    const { return eventType; }
     LTPackets::FlagStatus getFlagStatus()  const { return flagStatus; }
 
-    QTime getRemainingTime()            const { return remainingTime; }
-    void setRemainingTime(QTime t)       { remainingTime = t; }
+    const QTime &getRemainingTime()            const { return remainingTime; }
+    void setRemainingTime(const QTime &t)       { remainingTime = t; }
     int getCompletedLaps()              const { return lapsCompleted; }
-    Weather getWeather()                const { return weather; }
+    const Weather &getWeather()                const { return weather; }
     void saveWeather()                  { weather.saveWeatherData(*this); }
 
     bool isSessionStarted()             const { return sessionStarted; }
     void setSessionStarted(bool st)     { sessionStarted = st; }
 
-    QString getCommentary()             const { return commentary; }
+    const QString &getCommentary()             const { return commentary; }
     int getQualiPeriod()                const { return qualiPeriod; }
 
-    SessionRecords getSessionRecords()  const { return sessionRecords; }
+    const SessionRecords &getSessionRecords()  const { return sessionRecords; }
 
     QList<DriverData> &getDriversData()        { return driversData; }
 
@@ -245,6 +250,81 @@ private:
     QList<DriverData> driversData;
     int qualiPeriod;           
 };
+
+inline int EventData::getDriverId(const QString &name) const
+{
+    for (int i = 0; i < driversData.size(); ++i)
+    {
+        if (driversData[i].getDriverName() == name)
+            return driversData[i].getCarID();
+    }
+    return -1;
+}
+
+inline int EventData::getDriverId(int no) const
+{
+    for (int i = 0; i < driversData.size(); ++i)
+    {
+        if (driversData[i].getNumber() == no)
+            return driversData[i].getCarID();
+    }
+    return -1;
+}
+
+inline DriverData EventData::getDriverData(int no) const
+{
+    int id = getDriverId(no);
+    if (id > 0 && id <= driversData.size())
+        return driversData[id-1];
+
+    return DriverData();
+}
+
+inline DriverData *EventData::getDriverDataPtr(int no)
+{
+    int id = getDriverId(no);
+    if (id > 0 && id <= driversData.size())
+        return &driversData[id-1];
+
+    return 0;
+}
+
+inline DriverData EventData::getDriverDataByPos(int pos) const
+{
+    for (int i = 0; i < driversData.size(); ++i)
+    {
+        if (driversData[i].getPosition() == pos)
+            return driversData[i];
+    }
+    return DriverData();
+}
+
+inline DriverData *EventData::getDriverDataByPosPtr(int pos)
+{
+    for (int i = 0; i < driversData.size(); ++i)
+    {
+        if (driversData[i].getPosition() == pos)
+            return &driversData[i];
+    }
+
+    return 0;
+}
+
+inline DriverData EventData::getDriverDataById(int id) const
+{
+    if (id > 0 && id <= driversData.size())
+        return driversData[id-1];
+
+    return DriverData();
+}
+
+inline DriverData *EventData::getDriverDataByIdPtr(int id)
+{
+    if (id > 0 && id <= driversData.size())
+        return &driversData[id-1];
+
+    return 0;
+}
 
 //extern EventData eventData;
 

@@ -8,7 +8,7 @@
 
 FollowADriverDialog::FollowADriverDialog(QWidget *parent) :
     QDialog(parent, Qt::Window),
-    ui(new Ui::FollowADriverDialog), eventData(EventData::getInstance())
+    ui(new Ui::FollowADriverDialog), eventData(EventData::getInstance()), thumbnailsSize(180)
 {
     ui->setupUi(this);
 
@@ -28,9 +28,7 @@ FollowADriverDialog::~FollowADriverDialog()
 
 void FollowADriverDialog::loadCarImages()
 {
-    smallCarImg.clear();
-    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
-        smallCarImg.append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(180, Qt::SmoothTransformation));
+    smallCarImg = SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 
     ui->comboBox->clear();
 //    ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
@@ -133,7 +131,7 @@ void FollowADriverDialog::updateData()
 
 void FollowADriverDialog::printDriverInfo(const DriverData &dd)
 {    
-    ui->carImageLabel->setPixmap(getCarImage(dd.getNumber()));
+    ui->carImageLabel->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));
     ui->bestLapLabel->setText(dd.getSessionRecords().getBestLap().getTime().toString() + QString(" (L%1)").arg(dd.getSessionRecords().getBestLap().getLapNumber()));
 
     if (eventData.getEventType() == LTPackets::RACE_EVENT)
@@ -515,15 +513,6 @@ void FollowADriverDialog::updateButtonsState(const DriverData &dd)
 
     else if (dd.getPosition() < eventData.getDriversData().size() && !ui->rightButton->isEnabled())
         ui->rightButton->setEnabled(true);
-}
-
-QPixmap FollowADriverDialog::getCarImage(int no)
-{
-    if (no < 1)
-        return QPixmap();
-
-    int idx = (no > 13 ? no-2 : no-1) / 2;
-    return smallCarImg[idx];
 }
 
 void FollowADriverDialog::resizeEvent(QResizeEvent *)

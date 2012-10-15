@@ -71,8 +71,6 @@ private slots:
 private:
     Ui::LTWidget *ui;
 
-    QList<QPixmap> carImg;
-
     EventData &eventData;
     LTPackets::EventType eventType;
 
@@ -82,7 +80,8 @@ private:
     int showDiff;	//1 - time (best, q1), 2 - q2, 3 - q3, 4 - interval
 
     LTModel *ltModel;
-    LTMainItemDelegate *itemDelegate;    
+    LTMainItemDelegate *itemDelegate;
+    int thumbnailsSize;
 };
 
 #endif // LTWIDGET_H

@@ -57,6 +57,7 @@ void EventData::clear()
     qualiPeriod = 0;
 
     commentary = "";
+
     driversData.clear();
 
     for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
@@ -66,75 +67,9 @@ void EventData::clear()
     }
 }
 
-int EventData::getDriverId(QString name) const
-{
-    for (int i = 0; i < driversData.size(); ++i)
-    {
-        if (driversData[i].getDriverName() == name)
-            return driversData[i].getCarID();
-    }
-    return -1;
-}
 
-int EventData::getDriverId(int no) const
-{
-    for (int i = 0; i < driversData.size(); ++i)
-    {
-        if (driversData[i].getNumber() == no)
-            return driversData[i].getCarID();
-    }
-    return -1;
-}
 
-DriverData EventData::getDriverData(int no) const
-{
-	int id = getDriverId(no);
-	if (id > 0 && id <= driversData.size())
-		return driversData[id-1];
-
-    return DriverData();
-}
-
-DriverData *EventData::getDriverDataPtr(int no)
-{
-    int id = getDriverId(no);
-    if (id > 0 && id <= driversData.size())
-        return &driversData[id-1];
-
-    return 0;
-}
-
-DriverData EventData::getDriverDataByPos(int pos) const
-{
-	for (int i = 0; i < driversData.size(); ++i)
-	{
-        if (driversData[i].getPosition() == pos)
-			return driversData[i];
-	}
-
-    return DriverData();
-}
-
-DriverData *EventData::getDriverDataByPosPtr(int pos)
-{
-    for (int i = 0; i < driversData.size(); ++i)
-    {
-        if (driversData[i].getPosition() == pos)
-            return &driversData[i];
-    }
-
-    return 0;
-}
-
-DriverData EventData::getDriverDataById(int id) const
-{
-    if (id > 0 && id <= driversData.size())
-        return driversData[id-1];
-
-    return DriverData();
-}
-
-QString EventData::calculateInterval(DriverData d1, DriverData d2, int lap) const
+QString EventData::calculateInterval(const DriverData &d1, const DriverData &d2, int lap) const
 {
 	LapData ld1 = d1.getLapData(lap);
 	LapData ld2 = d2.getLapData(lap);

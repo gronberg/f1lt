@@ -21,7 +21,6 @@ public:
 
     int getNumber();
     void setFont(const QFont &);
-    QPixmap getCarImage(int no);
     void printDriverInfo(const DriverData &dd);
     void printDataTable(const DriverData &dd, const QList<DriverData*> &drivers);
     void printLapTimesTable(const DriverData &dd, const QList<DriverData*> &drivers);
@@ -69,8 +68,9 @@ private:
 
     Ui::FollowADriverDialog *ui;
 
-    QList<QPixmap> smallCarImg;
+    QList<QPixmap> *smallCarImg;
     EventData &eventData;
+    int thumbnailsSize;
 };
 
 #endif // FOLLOWADRIVERDIALOG_H

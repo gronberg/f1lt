@@ -8,7 +8,7 @@ DriverLapHistoryModel::DriverLapHistoryModel(QObject *parent) :
 
 int DriverLapHistoryModel::rowCount(const QModelIndex &) const
 {
-//    int rows = driverData.getLapData().size() + 1;
+//    int rows = driverData->getLapData().size() + 1;
 //    qDebug() << "rows=" << rows;
 
     return rows; //EventData::getInstance().getDriversData().size()+1;
@@ -19,10 +19,10 @@ int DriverLapHistoryModel::columnCount(const QModelIndex &) const
     return 8;
 }
 
-void DriverLapHistoryModel::update(const DriverData &dd)
+void DriverLapHistoryModel::update(DriverData *dd)
 {    
     driverData = dd;
-    int laps = dd.getLapData().size();    
+    int laps = dd->getLapData().size();
 
     if (laps >= rows)
     {
@@ -43,13 +43,16 @@ void DriverLapHistoryModel::update(const DriverData &dd)
 
 QVariant DriverLapHistoryModel::data(const QModelIndex & index, int role) const
 {
+    if (driverData == 0)
+        return QVariant();
+
     if (index.row() == 0)
         return headerData(index, role);
 
-    if (index.row() > driverData.getLapData().size())
+    if (index.row() > driverData->getLapData().size())
         return QVariant();
 
-    LapData ld = driverData.getLapData()[driverData.getLapData().size() - index.row()];
+    const LapData &ld = driverData->getLapData()[driverData->getLapData().size() - index.row()];
     switch (index.column())
     {
         case 0:
@@ -99,8 +102,8 @@ QVariant DriverLapHistoryModel::data(const QModelIndex & index, int role) const
         case 4:
             if (role == Qt::DisplayRole)
             {
-                if (ld.getTime() != driverData.getSessionRecords().getBestLap().getTime() && ld.getTime().isValid())
-                   return DriverData::calculateGap(ld.getTime(), driverData.getSessionRecords().getBestLap().getTime());
+                if (ld.getTime() != driverData->getSessionRecords().getBestLap().getTime() && ld.getTime().isValid())
+                   return DriverData::calculateGap(ld.getTime(), driverData->getSessionRecords().getBestLap().getTime());
 
                 return "";
             }
@@ -128,17 +131,17 @@ QVariant DriverLapHistoryModel::getLapTime(const LapData &ld, int role) const
     QColor color = SeasonData::getInstance().getColor(LTPackets::WHITE);
     QString s = ld.getTime().toString();
 
-    if (ld.getLapNumber() == driverData.getSessionRecords().getBestLap().getLapNumber())
+    if (ld.getLapNumber() == driverData->getSessionRecords().getBestLap().getLapNumber())
         color = SeasonData::getInstance().getColor(LTPackets::GREEN);
 
     if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getFastestLap().getLapNumber() &&
-        driverData.getDriverName() == EventData::getInstance().getSessionRecords().getFastestLap().getDriverName())
+        driverData->getDriverName() == EventData::getInstance().getSessionRecords().getFastestLap().getDriverName())
         color = SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
     if (ld.getTime().toString() == "IN PIT")
     {
         color = SeasonData::getInstance().getColor(LTPackets::PIT);
-        s = QString("IN PIT (%1)").arg(driverData.getPitTime(ld.getLapNumber()));
+        s = QString("IN PIT (%1)").arg(driverData->getPitTime(ld.getLapNumber()));
     }
 
     else if (ld.getTime().toString() == "RETIRED")
@@ -168,13 +171,13 @@ QVariant DriverLapHistoryModel::getSectorTime(const LapData &ld, int role, int s
     QColor color = SeasonData::getInstance().getColor(LTPackets::WHITE);
     QString s = ld.getSectorTime(sector).toString();
 
-    if (ld.getLapNumber() == driverData.getSessionRecords().getBestSectorLapNumber(sector))
+    if (ld.getLapNumber() == driverData->getSessionRecords().getBestSectorLapNumber(sector))
     {
         color = SeasonData::getInstance().getColor(LTPackets::GREEN);
     }
 
     if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(sector).getLapNumber() &&
-        driverData.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(sector).getDriverName())
+        driverData->getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(sector).getDriverName())
         color = SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
     if (role == Qt::DisplayRole)

@@ -18,7 +18,7 @@ public:
 class LTMainItemDelegate : public LTItemDelegate
 {
 public:
-    LTMainItemDelegate(QObject* parent = 0, QList<QPixmap> *img = 0, bool draw = true) : LTItemDelegate(parent), carImg(img), drawCars(draw)
+    LTMainItemDelegate(QObject* parent = 0, bool draw = true, int size = 75) : LTItemDelegate(parent), drawCars(draw), thumbnailsSize(size)
     {
     }
 
@@ -29,11 +29,10 @@ public:
 
     void paint(QPainter* painter, const QStyleOptionViewItem& rOption, const QModelIndex& rIndex) const;
 
-    QPixmap getCarImage(const DriverData &dd) const;
 
 private:
-    QList<QPixmap> *carImg;
     bool drawCars;
+    int thumbnailsSize;
 };
 
 #endif // LTITEMDELEGATE_H
