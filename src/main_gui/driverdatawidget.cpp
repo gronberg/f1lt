@@ -234,14 +234,14 @@ void DriverDataWidget::printDriverChart(int id)
     if (id <= 0)
         return;
 
-    const DriverData &driverData = eventData.getDriverDataById(id);
+    DriverData *driverData = eventData.getDriverDataByIdPtr(id);
 
     QList<double> pos;
-    for (int i = 0; i < driverData.getPositionHistory().size(); ++i)
+    for (int i = 0; i < driverData->getPositionHistory().size(); ++i)
     {
-        int iPos = driverData.getPositionHistory()[i];
+        int iPos = driverData->getPositionHistory()[i];
         if (i > 0 && iPos == 0)
-            iPos = driverData.getPositionHistory()[i-1];
+            iPos = driverData->getPositionHistory()[i-1];
 
         pos.append((double)(iPos));
     }
@@ -302,8 +302,8 @@ void DriverDataWidget::printDriverRelatedCommentary(int id)
     else
         ui->textEdit->clear();
 
-    const DriverData &driverData = eventData.getDriverDataById(id);
-    QRegExp searchT(/*"[ ,.?!(]" +*/ SeasonData::getInstance().getDriverLastName(driverData.getDriverName()) + "[ \',.?!);:]", Qt::CaseInsensitive);
+    DriverData *driverData = eventData.getDriverDataByIdPtr(id);
+    QRegExp searchT(/*"[ ,.?!(]" +*/ SeasonData::getInstance().getDriverLastName(driverData->getDriverName()) + "[ \',.?!);:]", Qt::CaseInsensitive);
     QString lastEvent;
 
     idx = eventData.getCommentary().indexOf(searchT, idx);

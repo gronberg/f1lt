@@ -3,7 +3,7 @@
 #include "seasondata.h"
 
 #include <QDebug>
-
+int DriverData::cnt = 0;
 //==================================================================
 
 DriverData &DriverData::operator=(const DriverData &dd)

@@ -56,7 +56,7 @@ public slots:
 
     void onCookieReceived(QString);
 
-    void parsePackets(const QList<Packet> &);
+    void parsePackets(const QVector<Packet> &);
 
 private:
     SocketDataReader socketReader;

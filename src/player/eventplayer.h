@@ -41,7 +41,7 @@ signals:
     void rewindClicked();
     void stopClicked();
 
-    void nextPackets(const QList<Packet> &);
+    void nextPackets(const QVector<Packet> &);
     
 private slots:
     void on_playButton_clicked();
@@ -64,10 +64,10 @@ private slots:
 
 private:
     Ui::EventPlayer *ui;
-    QList< QPair<int, Packet> > packets;
+    QVector< QPair<int, Packet> > packets;
 
     LTEvent ltEvent;
-    QList<LTTeam> ltTeamList;
+    QVector<LTTeam> ltTeamList;
 
     int currentPos;
     bool playing;

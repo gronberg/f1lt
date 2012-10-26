@@ -26,11 +26,18 @@ void LTMainItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
 
     if (index.column() == 2 && drawCars)
     {
-        DriverData dd = static_cast<const LTModel*>(index.model())->getDriverData(index);
-        QPixmap pix = SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize);//getCarImage(dd);
+        const DriverData *dd = static_cast<const LTModel*>(index.model())->getDriverData(index);
 
-        int x = option.rect.x() + (option.rect.width() - pix.rect().width())/2;
-        int y = option.rect.y() + (option.rect.height() - pix.rect().height())/2;
-        painter->drawPixmap(x, y, pix.width(), pix.height(), pix);
+        if (dd == 0 || dd->getCarID() <= 0)
+            return;
+
+        QPixmap &pix = SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd->getNumber(), thumbnailsSize);//getCarImage(dd);
+
+        if (!pix.isNull())
+        {
+            int x = option.rect.x() + (option.rect.width() - pix.rect().width())/2;
+            int y = option.rect.y() + (option.rect.height() - pix.rect().height())/2;
+            painter->drawPixmap(x, y, pix.width(), pix.height(), pix);
+        }
     }
 }

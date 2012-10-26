@@ -21,14 +21,14 @@ void LTModel::updateLT()
     emit dataChanged(topLeft, bottomRight);
 }
 
-DriverData LTModel::getDriverData(const QModelIndex &index) const
+const DriverData *LTModel::getDriverData(const QModelIndex &index) const
 {
     int row = index.row();
     if (row >= 1 && row <= EventData::getInstance().getDriversData().size() && (row - 1) < driversData.size())
     {
-        return *driversData[row-1];
+        return driversData[row-1];
     }
-    return DriverData();
+    return 0;
 }
 
 bool LTModel::indexInDriverRowsData(const QModelIndex &index) const

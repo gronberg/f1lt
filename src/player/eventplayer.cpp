@@ -68,36 +68,29 @@ bool EventPlayer::loadFromFile(QString fName)
         eventData.setEventInfo(ltEvent);
         int size;
         stream >> size;
-
+        ltTeamList.resize(size);
         for (int i = 0; i < size; ++i)
         {
-            LTTeam team;
-            stream >> sbuf; team.teamName = sbuf;
-            stream >> sbuf; team.driver1Name = sbuf;
-            stream >> sbuf; team.driver1ShortName = sbuf;
-            stream >> ibuf; team.driver1No = ibuf;
-            stream >> sbuf; team.driver2Name = sbuf;
-            stream >> sbuf; team.driver2ShortName = sbuf;
-            stream >> ibuf; team.driver2No = ibuf;
-            stream >> pixBuf; team.carImg = pixBuf;
-
-            ltTeamList.append(team);
+            stream >> sbuf; ltTeamList[i].teamName = sbuf;
+            stream >> sbuf; ltTeamList[i].driver1Name = sbuf;
+            stream >> sbuf; ltTeamList[i].driver1ShortName = sbuf;
+            stream >> ibuf; ltTeamList[i].driver1No = ibuf;
+            stream >> sbuf; ltTeamList[i].driver2Name = sbuf;
+            stream >> sbuf; ltTeamList[i].driver2ShortName = sbuf;
+            stream >> ibuf; ltTeamList[i].driver2No = ibuf;
+            stream >> ltTeamList[i].carImg;
         }
-        SeasonData::getInstance().setTeams(ltTeamList);
 
         stream >> size;
-
+        packets.resize(size);
         for (int i = 0; i < size; ++i)
         {
-            QPair< int, Packet> packetAtom;
-            stream >> packetAtom.first;
-            stream >> packetAtom.second.type;
-            stream >> packetAtom.second.carID;
-            stream >> packetAtom.second.data;
-            stream >> packetAtom.second.length;
-            stream >> packetAtom.second.longData;
-
-            packets.append(packetAtom);
+            stream >> packets[i].first;
+            stream >> packets[i].second.type;
+            stream >> packets[i].second.carID;
+            stream >> packets[i].second.data;
+            stream >> packets[i].second.length;
+            stream >> packets[i].second.longData;
         }   
         return true;
     }
@@ -161,7 +154,7 @@ void EventPlayer::timeout()
     }
 
 //    QTime prevTime = packets[currentPos].first;
-    QList<Packet> LTpackets;
+    QVector<Packet> LTpackets;
 
 //    LTpackets.append(packets[currentPos].second);
 //    bool appendPacket = true;
@@ -205,7 +198,7 @@ void EventPlayer::on_rewindToStartButton_clicked()
 
 void EventPlayer::on_forwardToEndButton_clicked()
 {
-    QList<Packet> LTpackets;
+    QVector<Packet> LTpackets;
     while (currentPos < packets.size())
     {
         LTpackets.append(packets[currentPos].second);
@@ -227,7 +220,7 @@ void EventPlayer::on_forwardButton_clicked()
         if (elapsedSeconds > packets.last().first)
             elapsedSeconds = packets.last().first;
 
-        QList<Packet> LTpackets;
+        QVector<Packet> LTpackets;
 
         while (currentPos < packets.size() && packets[currentPos].first <= elapsedSeconds)
         {
@@ -252,7 +245,7 @@ void EventPlayer::on_rewindButton_clicked()
 
         //we have to back to the begining and re-emit all packets
         currentPos = 0;
-        QList<Packet> LTpackets;
+        QVector<Packet> LTpackets;
 
         while (currentPos < packets.size() && packets[currentPos].first <= elapsedSeconds)
         {
@@ -326,7 +319,7 @@ void EventPlayer::on_seekSlider_sliderMoved(int position)
 
     if (value > elapsedSeconds)//packets[currentPos].first)
     {
-        QList<Packet> LTpackets;
+        QVector<Packet> LTpackets;
         while (elapsedSeconds <= value && currentPos < packets.size()-1)
         {
             LTpackets.append(packets[currentPos].second);
@@ -342,7 +335,7 @@ void EventPlayer::on_seekSlider_sliderMoved(int position)
         //we have to back to the begining and re-emit all packets
         currentPos = 0;
         elapsedSeconds = 0;
-        QList<Packet> LTpackets;
+        QVector<Packet> LTpackets;
 
         while (elapsedSeconds <= value)
         {

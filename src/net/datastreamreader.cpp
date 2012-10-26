@@ -63,7 +63,7 @@ void DataStreamReader::clearData()
     parser.clearData();
 }
 
-void DataStreamReader::parsePackets(const QList<Packet> &packets)
+void DataStreamReader::parsePackets(const QVector<Packet> &packets)
 {
     parser.parsePackets(packets);
 }

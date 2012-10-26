@@ -159,7 +159,9 @@ public:
 
     DriverData() : carID(-1), number(-1), pos(-1), numPits(0), retired(false), releasedFromPits(false)
     {
+        ++cnt;
         lastLap.setCarID(carID);
+        lapData.reserve(80);
     }
 
     int getCarID()                  const { return carID; }
@@ -167,9 +169,9 @@ public:
     int getNumber()                 const { return number; }
     int getPosition()               const { return pos; }
 
-    const QList<LapData> &getLapData()      const { return lapData; }
-    const QList<int> &getPositionHistory()  const { return posHistory; }
-    const QList<PitData> &getPitStops()     const { return pitData; }
+    const QVector<LapData> &getLapData()      const { return lapData; }
+    const QVector<int> &getPositionHistory()  const { return posHistory; }
+    const QVector<PitData> &getPitStops()     const { return pitData; }
 
     ColorData getColorData()    const { return colorData; }
     const LapData &getLastLap()        const { return lastLap; }
@@ -271,15 +273,17 @@ public:
     friend class PacketParser;
 
 private:
+    static int cnt;
+
     int carID;
     QString driver;
     int number;
     int pos;
 
-    QList<LapData> lapData;
-    QList<int> posHistory;
+    QVector<LapData> lapData;
+    QVector<int> posHistory;
 
-    QList<PitData> pitData;
+    QVector<PitData> pitData;
     ColorData colorData;
 
     LapData lastLap;
@@ -292,6 +296,8 @@ private:
     bool retired;
     bool releasedFromPits;
 };
+
+
 
 
 #endif // DRIVERDATA_H

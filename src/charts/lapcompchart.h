@@ -80,12 +80,15 @@ public:
     explicit LapCompChart(QColor *col, QWidget *parent = 0) : DriverDataChart(0, 180, col[0], parent)
     {
         for (int i = 0; i < 4; ++i)
+        {
+            driverData[i] = 0;
             colors[i] = col[i];
+        }
 
         popupBox = new PopupLapTimeCompInfoBox();
     }
 
-    void setData(DriverData *ld);
+    void setData(DriverData **ld);
     void drawAxes(QPainter *p, int, int);
     void drawChart(QPainter *p);
     void drawLegend(QPainter *p);
@@ -114,7 +117,7 @@ protected:
     }
 
 private:
-    DriverData driverData[4];
+    DriverData *driverData[4];
     QColor colors[4];
 
     QList<LapDataCompCoordinates> lapDataCompCoordinates;
@@ -131,6 +134,7 @@ public:
     {
         for (int i = 0; i < 2; ++i)
             colors[i] = col[i];
+
 
         popupBox = new PopupGapCompInfoBox();
     }
@@ -179,10 +183,13 @@ public:
     explicit PosCompChart(QColor *col, QWidget *parent = 0) : DriverDataChart(0, 180, col[0], parent)
     {
         for (int i = 0; i < 2; ++i)
+        {
+            driverData[i] = 0;
             colors[i] = col[i];
+        }
     }
 
-    void setData(DriverData *ld)
+    void setData(DriverData **ld)
     {
         for (int i = 0; i < 2; ++i)
             driverData[i] = ld[i];
@@ -207,7 +214,7 @@ protected:
     void paintEvent(QPaintEvent *);
 
 private:
-    DriverData driverData[2];
+    DriverData *driverData[2];
     QColor colors[2];
 };
 

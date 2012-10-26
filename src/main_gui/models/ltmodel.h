@@ -33,7 +33,7 @@ public:
     virtual void updateLT();
 
 
-    virtual DriverData getDriverData(const QModelIndex &index) const;
+    virtual const DriverData *getDriverData(const QModelIndex &index) const;
     virtual bool indexInDriverRowsData(const QModelIndex &index) const;
     virtual int firstRow() const
     {

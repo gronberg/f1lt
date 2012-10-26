@@ -166,7 +166,11 @@ void SessionDataWidget::updateFastestLaps()
 
     str = eventData.getSessionRecords().getFastestLap().getDriverName();
     if (eventData.getEventType() != LTPackets::RACE_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getCarID() != -1)
-        str = eventData.getDriverDataById(fastestLaps[0].getCarID()).getDriverName();
+    {
+        DriverData *dd = eventData.getDriverDataByIdPtr(fastestLaps[0].getCarID());
+        if (dd  != 0)
+            str = dd->getDriverName();
+    }
 
     ui->flDriverLabel->setText(str);
 

@@ -28,7 +28,7 @@ FollowADriverDialog::~FollowADriverDialog()
 
 void FollowADriverDialog::loadCarImages()
 {
-    smallCarImg = SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
+    /*smallCarImg = */SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 
     ui->comboBox->clear();
 //    ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
@@ -113,17 +113,17 @@ void FollowADriverDialog::show(int currentDriverId)
 void FollowADriverDialog::updateData()
 {
     int no = getNumber();
-    DriverData dd = eventData.getDriverData(no);
+    DriverData *dd = eventData.getDriverDataPtr(no);
     setWindowTitle("Follow a driver");
-    if (dd.getCarID() > 0)
+    if (dd != 0 && dd->getCarID() > 0)
     {        
-        setWindowTitle("Follow a driver - " + dd.getDriverName());
-        updateButtonsState(dd);
-        printDriverInfo(dd);
+        setWindowTitle("Follow a driver - " + dd->getDriverName());
+        updateButtonsState(*dd);
+        printDriverInfo(*dd);
 
-        QList<DriverData*> drivers = getDriversArray(dd.getPosition());
-        printDataTable(dd, drivers);
-        printLapTimesTable(dd, drivers);
+        QList<DriverData*> drivers = getDriversArray(dd->getPosition());
+        printDataTable(*dd, drivers);
+        printLapTimesTable(*dd, drivers);
     }
     else
         clearData();
@@ -540,10 +540,10 @@ void FollowADriverDialog::resizeEvent(QResizeEvent *)
 void FollowADriverDialog::on_leftButton_clicked()
 {
     int no = getNumber();
-    DriverData dd = eventData.getDriverData(no);
-    if (dd.getPosition() > 1)
+    DriverData *dd = eventData.getDriverDataPtr(no);
+    if (dd != 0 && dd->getPosition() > 1)
     {
-        DriverData *ddPtr = eventData.getDriverDataByPosPtr(dd.getPosition()-1);
+        DriverData *ddPtr = eventData.getDriverDataByPosPtr(dd->getPosition()-1);
         if (ddPtr)
         {
             setCurrentDriver(ddPtr->getCarID());
@@ -555,10 +555,10 @@ void FollowADriverDialog::on_leftButton_clicked()
 void FollowADriverDialog::on_rightButton_clicked()
 {
     int no = getNumber();
-    DriverData dd = eventData.getDriverData(no);
-    if (dd.getPosition() < eventData.getDriversData().size())
+    DriverData *dd = eventData.getDriverDataPtr(no);
+    if (dd->getPosition() < eventData.getDriversData().size())
     {
-        DriverData *ddPtr = eventData.getDriverDataByPosPtr(dd.getPosition()+1);
+        DriverData *ddPtr = eventData.getDriverDataByPosPtr(dd->getPosition()+1);
         if (ddPtr)
         {
             setCurrentDriver(ddPtr->getCarID());

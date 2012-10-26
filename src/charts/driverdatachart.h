@@ -82,8 +82,8 @@ public:
     DriverDataChart(double, double, QColor, QWidget *parent = 0);
     virtual ~DriverDataChart() { if (popupBox != 0) delete popupBox; }
     
-    virtual void setData(const DriverData &d) { driverData = d; }
-    virtual void clearData() { driverData = DriverData(); }
+    virtual void setData(DriverData *d) { driverData = d; }
+    virtual void clearData() { driverData = 0; }
     void setMinMax(double min, double max) { this->min = min, this->max = max; }
 
     virtual void drawAxes(QPainter *p);
@@ -117,7 +117,7 @@ protected:
         paintRect = QRect(27, 10, width()-32, height()-35);
     }
 
-    DriverData driverData;    
+    DriverData *driverData;
 
     QList<LapDataCoordinates> lapDataCoordinates;
 
@@ -144,7 +144,7 @@ public:
     void drawChart(QPainter *p);
     void drawLegend(QPainter *p);
 
-    void setData(const DriverData &dd);
+    void setData(DriverData *dd);
 
     void resetZoom();
 

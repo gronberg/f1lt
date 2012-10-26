@@ -24,7 +24,7 @@ QVariant RaceModel::data(const QModelIndex &index, int role) const
 
     if (row >= 0 && row < driversData.size() && driversData[row] != 0)
     {
-        DriverData dd = *driversData[row];//eventData.getDriverDataByPos(row);
+        DriverData &dd = *driversData[row];//eventData.getDriverDataByPos(row);
         return driverRowData(dd, index, role);
 
     }

@@ -158,7 +158,7 @@ protected:
         }
     };
     QList<DriverPosAtom> getDriverStartingPositions();
-    int getDriverStartingPosition(const LapData &ld);
+    int getDriverStartingPosition(const LapData &ld);    
 };
 
 

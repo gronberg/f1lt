@@ -48,7 +48,7 @@ private:
 //    //drivers lap data will be stored here, in a 2-dimensional array
 //    QList< QList<LapData> > lapDataList;
     QList< QPair<int, Packet> > packets;
-    QList<LTTeam> ltTeamList;
+    QVector<LTTeam> ltTeamList;
     LTEvent ltEvent;
 
     EventData &eventData;

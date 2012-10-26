@@ -1,6 +1,7 @@
 #ifndef LAPDATA_H
 #define LAPDATA_H
 
+#include <QDebug>
 #include <QPair>
 #include <QTime>
 

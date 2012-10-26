@@ -40,7 +40,10 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
         return headerData(index, role);
 
     LapData ld = fastestLaps[index.row() - 1];
-    DriverData dd = EventData::getInstance().getDriverDataById(ld.getCarID());
+    DriverData *dd = EventData::getInstance().getDriverDataByIdPtr(ld.getCarID());
+    if (dd == 0)
+        return QVariant();
+
     switch (index.column())
     {
         case 0:
@@ -60,7 +63,7 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
 
         case 1:
             if (role == Qt::DisplayRole)
-                return dd.getDriverName();
+                return dd->getDriverName();
 
             if (role == Qt::ForegroundRole)
             {
@@ -107,11 +110,11 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             if (role == Qt::ForegroundRole)
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getLapNumber() &&
-                    dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getDriverName())
+                    dd->getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getDriverName())
                     return SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
 
-                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(1))
+                if (ld.getLapNumber() == dd->getSessionRecords().getBestSectorLapNumber(1))
                     return SeasonData::getInstance().getColor(LTPackets::GREEN);
 
                 return SeasonData::getInstance().getColor(LTPackets::WHITE);
@@ -127,10 +130,10 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             if (role == Qt::ForegroundRole)
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getLapNumber() &&
-                    dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getDriverName())
+                    dd->getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getDriverName())
                     return SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
-                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(2))
+                if (ld.getLapNumber() == dd->getSessionRecords().getBestSectorLapNumber(2))
                     return SeasonData::getInstance().getColor(LTPackets::GREEN);
 
                 return SeasonData::getInstance().getColor(LTPackets::WHITE);
@@ -146,10 +149,10 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             if (role == Qt::ForegroundRole)
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getLapNumber() &&
-                    dd.getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getDriverName())
+                    dd->getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getDriverName())
                     return SeasonData::getInstance().getColor(LTPackets::VIOLET);
 
-                if (ld.getLapNumber() == dd.getSessionRecords().getBestSectorLapNumber(3))
+                if (ld.getLapNumber() == dd->getSessionRecords().getBestSectorLapNumber(3))
                     return SeasonData::getInstance().getColor(LTPackets::GREEN);
 
                 return SeasonData::getInstance().getColor(LTPackets::WHITE);

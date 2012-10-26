@@ -58,7 +58,7 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(eventPlayer, SIGNAL(forwardToEndClicked()), this, SLOT(eventPlayerForwardToEndClicked()));
     connect(eventPlayer, SIGNAL(rewindClicked()), this, SLOT(eventPlayerRewindClicked()));
     connect(eventPlayer, SIGNAL(stopClicked()), this, SLOT(eventPlayerStopClicked()));
-    connect(eventPlayer, SIGNAL(nextPackets(QList<Packet>)), streamReader, SLOT(parsePackets(QList<Packet>)));
+    connect(eventPlayer, SIGNAL(nextPackets(QVector<Packet>)), streamReader, SLOT(parsePackets(QVector<Packet>)));
 
     connect(ui->ltWidget, SIGNAL(driverSelected(int)), ui->driverDataWidget, SLOT(printDriverData(int)));
     connect(ui->ltWidget, SIGNAL(driverDoubleClicked(int)), this, SLOT(ltWidgetDriverSelected(int)));
@@ -947,13 +947,13 @@ void LTWindow::eventPlayerStopClicked(bool connect)
 
     if (connect)
     {
-    	if (settings->value("ui/auto_connect").toBool())
-    		connectToServer();
-    	else
-    	{
-    		ui->messageBoardWidget->showStartupBoard();
-			showSessionBoard(true);
-    	}
+        if (settings->value("ui/auto_connect").toBool())
+            connectToServer();
+        else
+        {
+            ui->messageBoardWidget->showStartupBoard();
+            showSessionBoard(true);
+        }
     }
 }
 

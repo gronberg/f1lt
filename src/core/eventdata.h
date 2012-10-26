@@ -166,10 +166,12 @@ public:
 
         if (ed.driversData.isEmpty())
         {
-            for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
+            ed.driversData = QVector<DriverData>(SeasonData::getInstance().getTeams().size()*2);
+            for (int i = 0; i < ed.driversData.size(); ++i)
             {
-                ed.driversData.append(DriverData());
-                ed.driversData.append(DriverData());
+                ed.driversData[i] = DriverData();
+//                ed.driversData.append(DriverData());
+//                ed.driversData.append(DriverData());
             }
         }
 
@@ -214,7 +216,7 @@ public:
 
     const SessionRecords &getSessionRecords()  const { return sessionRecords; }
 
-    QList<DriverData> &getDriversData()        { return driversData; }
+    QVector<DriverData> &getDriversData()        { return driversData; }
 
     friend class PacketParser;
     friend class DataStreamReader;
@@ -247,7 +249,7 @@ private:
 
     SessionRecords sessionRecords;
 
-    QList<DriverData> driversData;
+    QVector<DriverData> driversData;
     int qualiPeriod;           
 };
 

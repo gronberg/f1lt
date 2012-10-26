@@ -3,35 +3,38 @@
 #include <QPainter>
 
 
-void LapCompChart::setData(DriverData *dd)
+void LapCompChart::setData(DriverData **dd)
 {
     double lMin = 99999999.0, lMax = 0.0;
     for (int i = 0; i < 4; ++i)
     {
         driverData[i] = dd[i];
 
-        for (int j = 0; j < driverData[i].getLapData().size(); ++j)
+        if (driverData[i] != 0)
         {
-            double secs = driverData[i].getLapData()[j].getTime().toDouble();//-QTime::fromString(driverData[i].getLapData()[j].getTime(), "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-
-            if (secs == 0 && j > 0)
-                secs = driverData[i].getLapData()[j-1].getTime().toDouble();//-QTime::fromString(driverData[i].getLapData()[j-1].getTime(), "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-
-            if (secs == 0 && j < driverData[i].getLapData().size()-1)
+            for (int j = 0; j < driverData[i]->getLapData().size(); ++j)
             {
-                secs = driverData[i].getLapData()[j+1].getTime().toDouble();//-QTime::fromString(driverData[i].getLapData()[j+1].getTime(), "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
-                if (driverData[i].getLapData()[j].getTime().toString() == "IN PIT")
+                double secs = driverData[i]->getLapData()[j].getTime().toDouble();//-QTime::fromString(driverData[i].getLapData()[j].getTime(), "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
+
+                if (secs == 0 && j > 0)
+                    secs = driverData[i]->getLapData()[j-1].getTime().toDouble();//-QTime::fromString(driverData[i].getLapData()[j-1].getTime(), "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
+
+                if (secs == 0 && j < driverData[i]->getLapData().size()-1)
                 {
-                    LapTime pl(driverData[i].getPitTime(driverData[i].getLapData()[j].getLapNumber()));
-                    secs = (driverData[i].getLapData()[j+1].getTime() - pl + LapTime(5000)).toDouble();
+                    secs = driverData[i]->getLapData()[j+1].getTime().toDouble();//-QTime::fromString(driverData[i].getLapData()[j+1].getTime(), "m:ss.zzz").secsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
+                    if (driverData[i]->getLapData()[j].getTime().toString() == "IN PIT")
+                    {
+                        LapTime pl(driverData[i]->getPitTime(driverData[i]->getLapData()[j].getLapNumber()));
+                        secs = (driverData[i]->getLapData()[j+1].getTime() - pl + LapTime(5000)).toDouble();
+                    }
                 }
+
+                if (secs < lMin)
+                    lMin = secs;
+
+                if (secs > lMax)
+                    lMax = secs;
             }
-
-            if (secs < lMin)
-                lMin = secs;
-
-            if (secs > lMax)
-                lMax = secs;
         }
     }
     if (lMax != 0)
@@ -130,15 +133,15 @@ void LapCompChart::findFirstAndLastLap(int &firstLap, int &lastLap)
 
     for (int i = 0; i < 4; ++i)
     {
-        if (!driverData[i].getLapData().isEmpty())
+        if (driverData[i] != 0 && !driverData[i]->getLapData().isEmpty())
         {
-            for (int j = 0; j < driverData[i].getLapData().size(); ++j)
+            for (int j = 0; j < driverData[i]->getLapData().size(); ++j)
             {
-                if (driverData[i].getLapData()[j].getLapNumber() < firstLap && driverData[i].getLapData()[j].getLapNumber() >= first)
-                    firstLap = driverData[i].getLapData()[j].getLapNumber();
+                if (driverData[i]->getLapData()[j].getLapNumber() < firstLap && driverData[i]->getLapData()[j].getLapNumber() >= first)
+                    firstLap = driverData[i]->getLapData()[j].getLapNumber();
 
-                if (driverData[i].getLapData()[j].getLapNumber() > lastLap && driverData[i].getLapData()[j].getLapNumber() <= last)
-                    lastLap = driverData[i].getLapData()[j].getLapNumber();
+                if (driverData[i]->getLapData()[j].getLapNumber() > lastLap && driverData[i]->getLapData()[j].getLapNumber() <= last)
+                    lastLap = driverData[i]->getLapData()[j].getLapNumber();
 
             }
 //			msecs = -QTime::fromString(driverData[i].getLapData()[0].getTime(), "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
@@ -163,7 +166,7 @@ void LapCompChart::drawChart(QPainter *p)
 
     for (int i = 0; i < 4; ++i)
     {
-        if (!driverData[i].getLapData().isEmpty())
+        if (driverData[i] != 0 && !driverData[i]->getLapData().isEmpty())
         {
 //            if (driverData[i].getLapData()[0].getLapNumber() < firstLap)
 //                firstLap = driverData[i].getLapData()[0].getLapNumber();
@@ -171,7 +174,7 @@ void LapCompChart::drawChart(QPainter *p)
 //            if (driverData[i].lapData.last().getLapNumber() > lastLap)
 //                lastLap = driverData[i].lapData.last().getLapNumber();
 //
-            msecs = -QTime::fromString(driverData[i].getLapData()[0].getTime(), "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
+            msecs = -QTime::fromString(driverData[i]->getLapData()[0].getTime(), "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
             secs = (double)(msecs / 1000.0);
 
             if (secs > max) secs = max;
@@ -194,14 +197,17 @@ void LapCompChart::drawChart(QPainter *p)
     int lapsInWindow = 0;
     int lastPaintedSC = 0;
     for (int i = firstLap; i <= lastLap; ++i)
-    {
+    {        
         for (int k = 0; k < 4; ++k)
         {
-            LapData ld = driverData[k].getLapData(i);
-//            if (!driverData[k].lapData.empty() && index[k] < driverData[k].lapData.size() && driverData[k].getLapData()[index[k]].getLapNumber() == i)
-            if (ld.getCarID() == driverData[k].getCarID() && ld.getLapNumber() == i)
+            if (driverData[k] == 0)
+                continue;
+
+            LapData ld = driverData[k]->getLapData(i);
+//            if (!driverData[k]->lapData.empty() && index[k] < driverData[k]->lapData.size() && driverData[k]->getLapData()[index[k]].getLapNumber() == i)
+            if (ld.getCarID() == driverData[k]->getCarID() && ld.getLapNumber() == i)
             {
-                LapTime lapTime = ld.getTime();//driverData[k].getLapData()[index[k]].getTime();
+                LapTime lapTime = ld.getTime();//driverData[k]->getLapData()[index[k]].getTime();
 
                 if (ld.getRaceLapExtraData().isSCLap() && ld.getLapNumber() > lastPaintedSC)
                 {
@@ -216,25 +222,25 @@ void LapCompChart::drawChart(QPainter *p)
 
                 if (lapTime.toString() == "IN PIT")
                 {
-                    LapData ldtmp = driverData[k].getLapData(i-1);
-                    if (ldtmp.getCarID() == driverData[k].getCarID())
+                    LapData ldtmp = driverData[k]->getLapData(i-1);
+                    if (ldtmp.getCarID() == driverData[k]->getCarID())
                         lapTime = ldtmp.getTime();
 
                     else
                     {
-                        ldtmp = driverData[k].getLapData(i+1);
-                        if (ldtmp.getCarID() == driverData[k].getCarID())
+                        ldtmp = driverData[k]->getLapData(i+1);
+                        if (ldtmp.getCarID() == driverData[k]->getCarID())
                         {
-                            LapTime pl(driverData[k].getPitTime(ld.getLapNumber()));
+                            LapTime pl(driverData[k]->getPitTime(ld.getLapNumber()));
                             lapTime = lapTime - pl + LapTime(5000);
                         }
 
                         if (lapTime.toString() == "IN PIT")
                         {
-                            ldtmp = driverData[k].getLapData(i+2);
-                            if (ldtmp.getCarID() == driverData[k].getCarID())
+                            ldtmp = driverData[k]->getLapData(i+2);
+                            if (ldtmp.getCarID() == driverData[k]->getCarID())
                             {
-                                LapTime pl(driverData[k].getPitTime(ld.getLapNumber()+1));
+                                LapTime pl(driverData[k]->getPitTime(ld.getLapNumber()+1));
                                 lapTime = lapTime - pl + LapTime(5000);
                             }
                         }
@@ -341,13 +347,13 @@ void LapCompChart::drawLegend(QPainter *p)
     int yy = 0;
     for (int i = 0; i < 4; ++i)
     {
-        if (driverData[i].getCarID() > 0)
+        if (driverData[i] != 0 && driverData[i]->getCarID() > 0)
         {
             p->setPen(QColor(20, 20, 20));
             p->drawRect(40, yy, 115, 20);
 
             p->setPen(colors[i]);
-            p->drawText(45, yy+20, driverData[i].getDriverName());
+            p->drawText(45, yy+20, driverData[i]->getDriverName());
             yy += 20;
         }
     }
@@ -366,9 +372,10 @@ int LapCompChart::checkLapDataCoordinates(int x, int y)
         popupBox->values.clear();
         for (int i = 0; i < lapDataCompCoordinates.size(); ++i)
         {
-            if (std::abs((float)(lapDataCompCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCompCoordinates[i].y - y)) <= 3)
+            if (std::abs((float)(lapDataCompCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataCompCoordinates[i].y - y)) <= 3 &&
+                    driverData[lapDataCompCoordinates[i].driverIdx]  != 0)
             {
-                LapData ld = driverData[lapDataCompCoordinates[i].driverIdx].getLapData(lapDataCompCoordinates[i].idx);
+                LapData ld = driverData[lapDataCompCoordinates[i].driverIdx]->getLapData(lapDataCompCoordinates[i].idx);
                 popupBox->values.append(ld);
                 popupBox->title = "LAP: " + QString::number(ld.getLapNumber());
             }
@@ -564,16 +571,16 @@ void GapCompChart::findFirstAndLastLap(int &firstLap, int &lastLap)
     firstLap = 99, lastLap = 0;
     for (int i = 0; i < 4; ++i)
     {
-        DriverData dd = driverIdx[i] >= 0 ? eventData.getDriversData()[driverIdx[i]] : DriverData();
-        if (!dd.getLapData().isEmpty())
+        DriverData *dd = driverIdx[i] >= 0 ? &eventData.getDriversData()[driverIdx[i]] : 0;
+        if (dd != 0 && !dd->getLapData().isEmpty())
         {
-            for (int j = 0; j < dd.getLapData().size(); ++j)
+            for (int j = 0; j < dd->getLapData().size(); ++j)
             {
-                if (dd.getLapData()[j].getLapNumber() < firstLap && dd.getLapData()[j].getLapNumber() >= first)
-                    firstLap = dd.getLapData()[j].getLapNumber();
+                if (dd->getLapData()[j].getLapNumber() < firstLap && dd->getLapData()[j].getLapNumber() >= first)
+                    firstLap = dd->getLapData()[j].getLapNumber();
 
-                if (dd.getLapData()[j].getLapNumber() > lastLap && dd.getLapData()[j].getLapNumber() <= last)
-                    lastLap = dd.getLapData()[j].getLapNumber();
+                if (dd->getLapData()[j].getLapNumber() > lastLap && dd->getLapData()[j].getLapNumber() <= last)
+                    lastLap = dd->getLapData()[j].getLapNumber();
 
             }
         }
@@ -595,26 +602,30 @@ void GapCompChart::drawChart(QPainter *p)
 
     for (int i = firstLap; i <= lastLap; ++i)
     {
-        DriverData dd1 = (driverIdx[0] >= 0) ? eventData.getDriversData()[driverIdx[0]] : DriverData();
-        DriverData dd2 = (driverIdx[1] >= 0) ? eventData.getDriversData()[driverIdx[1]] : DriverData();
+        DriverData *dd1 = (driverIdx[0] >= 0) ? &eventData.getDriversData()[driverIdx[0]] : 0;
+        DriverData *dd2 = (driverIdx[1] >= 0) ? &eventData.getDriversData()[driverIdx[1]] : 0;
 
-        intervals.append(eventData.calculateInterval(dd1, dd2, i));
-
-        if (intervals.last() == "-1L <")
-            intervals.last() = "-1000.0";
-
-        else if (intervals.last() == "+1L <")
-            intervals.last() = "1000.0";
-
-        else if (intervals.last() == "")
-            intervals.last() = "0.0";
-
-        double interval = fabs(intervals.last().toDouble());
-
-        if (interval > max)
+        if (dd1 != 0 && dd2 != 0)
         {
-            max = interval;
-            tMax = max;
+
+            intervals.append(eventData.calculateInterval(*dd1, *dd2, i));
+
+            if (intervals.last() == "-1L <")
+                intervals.last() = "-1000.0";
+
+            else if (intervals.last() == "+1L <")
+                intervals.last() = "1000.0";
+
+            else if (intervals.last() == "")
+                intervals.last() = "0.0";
+
+            double interval = fabs(intervals.last().toDouble());
+
+            if (interval > max)
+            {
+                max = interval;
+                tMax = max;
+            }
         }
     }
 
@@ -640,10 +651,13 @@ void GapCompChart::drawChart(QPainter *p)
     {
         for (int k = 0; k < 2; ++k)
         {
-            DriverData dd = (driverIdx[k] >= 0) ? eventData.getDriversData()[driverIdx[k]] : DriverData();
-            LapData ld = dd.getLapData(i);
+            DriverData *dd = (driverIdx[k] >= 0) ? &eventData.getDriversData()[driverIdx[k]] : 0;
+            if (dd == 0)
+                continue;
+
+            LapData ld = dd->getLapData(i);
 //            if (!dd.lapData.empty() && index[k] < dd.lapData.size() && dd.getLapData()[index[k]].getLapNumber() == i)
-            if (ld.getCarID() == dd.getCarID() && ld.getLapNumber() == i)
+            if (ld.getCarID() == dd->getCarID() && ld.getLapNumber() == i)
             {
 
                 if (ld.getRaceLapExtraData().isSCLap() && ld.getLapNumber() > lastPaintedSC)
@@ -776,11 +790,11 @@ void GapCompChart::drawLegend(QPainter *p)
     double yy = 0.0;
     for (int i = 0; i < 2; ++i)
     {
-        DriverData dd = driverIdx[i] >= 0 ? eventData.getDriversData()[driverIdx[i]] : DriverData();
-        if (dd.getCarID() > 0)
+        DriverData *dd = driverIdx[i] >= 0 ? &eventData.getDriversData()[driverIdx[i]] : 0;
+        if (dd != 0 && dd->getCarID() > 0)
         {
             p->setPen(colors[i]);
-            p->drawText(45, yy+20, dd.getDriverName());
+            p->drawText(45, yy+20, dd->getDriverName());
             yy += 20;
         }
     }
@@ -797,11 +811,12 @@ int GapCompChart::checkLapDataCoordinates(int x, int y)
         {
             if (std::abs((float)(lapDataGapCompCoordinates[i].x - x)) <= 3 && std::abs((float)(lapDataGapCompCoordinates[i].y - y)) <= 3)
             {
-                DriverData dd = EventData::getInstance().getDriversData()[driverIdx[lapDataGapCompCoordinates[i].driverIdx]];
+                DriverData *dd = driverIdx[lapDataGapCompCoordinates[i].driverIdx] >= 0 ?
+                            &EventData::getInstance().getDriversData()[driverIdx[lapDataGapCompCoordinates[i].driverIdx]] : 0;
 
-                if (dd.getCarID() != -1)
+                if (dd != 0 && dd->getCarID() != -1)
                 {
-                    LapData ld = dd.getLapData(lapDataGapCompCoordinates[i].idx);
+                    LapData ld = dd->getLapData(lapDataGapCompCoordinates[i].idx);
                     box->values.append(ld);
                     box->gapValues.append(lapDataGapCompCoordinates[i].gap);
                     box->title = "LAP: " + QString::number(ld.getLapNumber());
@@ -951,15 +966,15 @@ void PosCompChart::findFirstAndLastLap(int &firstLap, int &lastLap)
     firstLap = 99, lastLap = 0;
     for (int i = 0; i < 2; ++i)
     {
-        if (!driverData[i].getLapData().isEmpty())
+        if (driverData[i] != 0 && !driverData[i]->getLapData().isEmpty())
         {
-            for (int j = 0; j < driverData[i].getLapData().size(); ++j)
+            for (int j = 0; j < driverData[i]->getLapData().size(); ++j)
             {
-                if (driverData[i].getLapData()[j].getLapNumber() < firstLap && driverData[i].getLapData()[j].getLapNumber() >= first)
-                    firstLap = driverData[i].getLapData()[j].getLapNumber();
+                if (driverData[i]->getLapData()[j].getLapNumber() < firstLap && driverData[i]->getLapData()[j].getLapNumber() >= first)
+                    firstLap = driverData[i]->getLapData()[j].getLapNumber();
 
-                if (driverData[i].getLapData()[j].getLapNumber() > lastLap && driverData[i].getLapData()[j].getLapNumber() <= last)
-                    lastLap = driverData[i].getLapData()[j].getLapNumber();
+                if (driverData[i]->getLapData()[j].getLapNumber() > lastLap && driverData[i]->getLapData()[j].getLapNumber() <= last)
+                    lastLap = driverData[i]->getLapData()[j].getLapNumber();
 
             }
 //			msecs = -QTime::fromString(driverData[i].getLapData()[0].getTime(), "m:ss.zzz").msecsTo(QTime::fromString("0:00.000", "m:ss.zzz"));
@@ -996,9 +1011,12 @@ void PosCompChart::drawChart(QPainter *p)
     {
         for (int k = 0; k < 2; ++k)
         {
-            LapData ld = driverData[k].getLapData(i);
-//            if (!driverData[k].lapData.empty() && index[k] < driverData[k].lapData.size() && driverData[k].getLapData()[index[k]].getLapNumber() == i)
-            if (ld.getCarID() == driverData[k].getCarID() && ld.getLapNumber() == i)
+            if (driverData[k] == 0)
+                continue;
+
+            LapData ld = driverData[k]->getLapData(i);
+//            if (!driverData[k]->lapData.empty() && index[k] < driverData[k]->lapData.size() && driverData[k]->getLapData()[index[k]].getLapNumber() == i)
+            if (ld.getCarID() == driverData[k]->getCarID() && ld.getLapNumber() == i)
             {
 
                 if (ld.getRaceLapExtraData().isSCLap() && ld.getLapNumber() > lastPaintedSC)
@@ -1012,7 +1030,7 @@ void PosCompChart::drawChart(QPainter *p)
                 pen.setColor(colors[k]);
                 p->setPen(pen);
 
-                int pos = ld.getPosition();//driverData[k].getLapData()[index[k]].pos;
+                int pos = ld.getPosition();//driverData[k]->getLapData()[index[k]].pos;
 
                 y2[k] = (double)(paintRect.bottom() - (double)(pos-tMin) * yFactor);
 
@@ -1088,10 +1106,10 @@ void PosCompChart::drawLegend(QPainter *p)
     double yy = 0.0;
     for (int i = 0; i < 2; ++i)
     {
-        if (driverData[i].getCarID() > 0)
+        if (driverData[i] != 0 && driverData[i]->getCarID() > 0)
         {
             p->setPen(colors[i]);
-            p->drawText(45, yy+20, driverData[i].getDriverName());
+            p->drawText(45, yy+20, driverData[i]->getDriverName());
             yy += 20;
         }
     }

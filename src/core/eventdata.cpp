@@ -56,15 +56,18 @@ void EventData::clear()
     sessionStarted = false;
     qualiPeriod = 0;
 
-    commentary = "";
+    commentary = "";    
 
-    driversData.clear();
+    driversData.resize(SeasonData::getInstance().getTeams().size()*2);
+    for (int i = 0; i < driversData.size(); ++i)
+        driversData[i] = DriverData();
 
-    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
-    {
-        driversData.append(DriverData());
-        driversData.append(DriverData());        
-    }
+//    driversData.clear();
+//    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
+//    {
+//        driversData.append(DriverData());
+//        driversData.append(DriverData());
+//    }
 }
 
 

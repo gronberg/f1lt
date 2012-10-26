@@ -216,19 +216,19 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
 
     //return;
     QString s;
-    DriverData dd;
+//    DriverData dd;
     int ibuf;
     bool ok;
     PitData pd;
     switch(packet.type)
     {
         case LTPackets::CAR_POSITION_UPDATE:
-            dd.carID = packet.carID;
-            dd.pos = packet.data;
-            dd.numPits = 0;
-            dd.colorData.positionColor() = LTPackets::RED;
+//            dd.carID = packet.carID;
+//            dd.pos = packet.data;
+//            dd.numPits = 0;
+//            dd.colorData.positionColor() = LTPackets::RED;
 
-            dd.colorData = ColorData();
+//            dd.colorData = ColorData();
 
             if ((packet.carID-1) < eventData.driversData.size() && (packet.carID-1) >= 0 && eventData.driversData[packet.carID - 1].lapData.isEmpty())
             {
@@ -1130,7 +1130,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
         emit eventDataChanged();
 }
 
-void PacketParser::parsePackets(const QList<Packet> &packets)
+void PacketParser::parsePackets(const QVector<Packet> &packets)
 {
     for (int i = 0; i < packets.size(); ++i)
     {

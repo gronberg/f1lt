@@ -153,7 +153,7 @@ QVariant PitStopsModel::headerData(const QModelIndex & index, int role) const
     return QVariant();
 }
 
-void PitStopsModel::getPitstops(const QList<DriverData> &driversData)
+void PitStopsModel::getPitstops(const QVector<DriverData> &driversData)
 {
     pitStops.clear();
     for (int i = 0; i < driversData.size(); ++i)

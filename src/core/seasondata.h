@@ -1,11 +1,11 @@
 #ifndef SEASONDATA_H
 #define SEASONDATA_H
 
-#include <QList>
 #include <QMap>
 #include <QPixmap>
 #include <QString>
 #include <QTime>
+#include <QVector>
 
 #include "f1ltcore.h"
 #include "ltpackets.h"
@@ -54,11 +54,13 @@ struct LTEvent
 class CarThumbnailsFactory
 {
 public:
-    QList<QPixmap> *loadCarThumbnails(int size, bool clear = true);
-    QPixmap getCarThumbnail(int no, int size);
+    ~CarThumbnailsFactory();
+    QList<QPixmap*> *loadCarThumbnails(int size, bool clear = true);
+    QPixmap &getCarThumbnail(int no, int size);
 
 private:
-    QMap<int, QList<QPixmap> > carThumbnails;
+    QMap<int, QList<QPixmap*> > carThumbnails;
+    QPixmap nullPixmap;
 };
 
 //this class contains all the basic informations about the season, like quali and fp lengths, etc.
@@ -80,9 +82,9 @@ public:
     int getQualiLength(int q);
 
     LTEvent getEvent(int);
-    LTEvent getEvent(const QDate&);
-    LTEvent getCurrentEvent();
-    LTEvent getNextEvent();
+    const LTEvent &getEvent(const QDate&) const;
+    const LTEvent &getCurrentEvent() const;
+    const LTEvent &getNextEvent() const;
 
     QTime correctFPTime(const QTime &time);
     QTime correctQualiTime(const QTime &time, int qualiPeriod);
@@ -99,9 +101,9 @@ public:
 
     QColor getColor(LTPackets::Colors color) { return colors[color]; }
 
-    QList<LTTeam> &getTeams() { return ltTeams; }
-    void setTeams(const QList<LTTeam> &teams) { ltTeams = teams; }
-    QList<LTEvent> &getEvents() { return ltEvents; }
+    QVector<LTTeam> &getTeams() { return ltTeams; }
+    void setTeams(const QVector<LTTeam> &teams) { ltTeams = teams; }
+    QVector<LTEvent> &getEvents() { return ltEvents; }
 
     int timeToMins(const QTime &time);
     int timeToSecs(const QTime &time);
@@ -117,8 +119,8 @@ private:
     int fpLengths[3];
     int qualiLengths[3];
 
-    QList<LTTeam> ltTeams;
-    QList<LTEvent> ltEvents;
+    QVector<LTTeam> ltTeams;
+    QVector<LTEvent> ltEvents;
 
     int baseEventId;
     int baseEventInc;

@@ -203,8 +203,8 @@ void LTWidget::on_tableView_clicked(const QModelIndex &index)
     {
         if (ltModel->indexInDriverRowsData(index))
         {
-            DriverData dd = ltModel->getDriverData(index);
-            currDriverId = dd.getCarID();
+            const DriverData *dd = ltModel->getDriverData(index);
+            currDriverId = dd->getCarID();
 
             ltModel->selectDriver(currDriverId, index.column());
 
@@ -218,8 +218,8 @@ void LTWidget::on_tableView_doubleClicked(const QModelIndex &index)
 {
     if (ltModel && ltModel->indexInDriverRowsData(index))
     {
-        DriverData dd = ltModel->getDriverData(index);
-        currDriverId = dd.getCarID();
+        const DriverData *dd = ltModel->getDriverData(index);
+        currDriverId = dd->getCarID();
         emit driverDoubleClicked(currDriverId);
     }
 }

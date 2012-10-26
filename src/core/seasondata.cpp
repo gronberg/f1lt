@@ -6,33 +6,61 @@
 
 #include "eventdata.h"
 
-
-QList<QPixmap> *CarThumbnailsFactory::loadCarThumbnails(int size, bool clear)
+CarThumbnailsFactory::~CarThumbnailsFactory()
 {
-    QList<QPixmap> *images = &carThumbnails[size];
+    QMap<int, QList<QPixmap*> >::Iterator iter = carThumbnails.begin();
+    while (iter != carThumbnails.end())
+    {
+        QList<QPixmap*> *images = &iter.value();
 
-    if (!images->isEmpty() && clear)
-        images->clear();
+        while (!images->isEmpty())
+        {
+            delete images->takeFirst();
+        }
+        ++iter;
+    }
+}
+
+QList<QPixmap*> *CarThumbnailsFactory::loadCarThumbnails(int size, bool clear)
+{
+    QList<QPixmap*> *images = &carThumbnails[size];
+
+    if (!images->isEmpty())
+    {
+        if (clear)
+        {
+            for (int i = 0; i < images->size(); ++i)
+            {
+                delete (*images)[i];
+            }
+
+            images->clear();
+        }
+        else
+            return images;
+    }
 
     for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
-        images->append(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(size, Qt::SmoothTransformation));
+    {
+        images->append(new QPixmap(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(size, Qt::SmoothTransformation)));
+    }
 
     return images;
 }
 
-QPixmap CarThumbnailsFactory::getCarThumbnail(int no, int size)
+QPixmap &CarThumbnailsFactory::getCarThumbnail(int no, int size)
 {
     if (no < 1)
-        return QPixmap();
+        return nullPixmap;
 
-    const QList<QPixmap> *images = loadCarThumbnails(size, false);
+    const QList<QPixmap*> *images = loadCarThumbnails(size, false);
 
     int idx = (no > 13 ? no-2 : no-1) / 2;
 
     if (idx >= 0 && idx < images->size())
-        return (*images)[idx];
+        return *(*images)[idx];
 
-    return QPixmap();
+    return nullPixmap;
 }
 
 SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
@@ -74,75 +102,43 @@ bool SeasonData::loadSeasonFile()
         if (f.open(QIODevice::ReadOnly))
         {
             QDataStream stream(&f);
-            int ibuf, size;
+            int size;
             QString sbuf;
-            QPixmap pixBuf;
 
-            stream >> ibuf;
-            season = ibuf;
+            stream >> season;
 //            ui->spinBox->setValue(ibuf);
 
             stream >> size;
+            ltEvents.resize(size);
             for (int i = 0; i < size; ++i)
             {
-                LTEvent ltev;
-
-                stream >> ibuf;
-                ltev.eventNo = ibuf;
-
-                stream >> sbuf;
-                ltev.eventName = sbuf;
+                stream >> ltEvents[i].eventNo;
+                stream >> ltEvents[i].eventName;
+                stream >> ltEvents[i].eventShortName;
+                stream >> ltEvents[i].eventPlace;
+                stream >> ltEvents[i].laps;
 
                 stream >> sbuf;
-                ltev.eventShortName = sbuf;
+                ltEvents[i].fpDate = QDate::fromString(sbuf, "dd-MM-yyyy");
 
                 stream >> sbuf;
-                ltev.eventPlace = sbuf;
+                ltEvents[i].raceDate = QDate::fromString(sbuf, "dd-MM-yyyy");
 
-                stream >> ibuf;
-                ltev.laps = ibuf;
+                stream >> ltEvents[i].trackImg;
 
-                stream >> sbuf;
-                ltev.fpDate = QDate::fromString(sbuf, "dd-MM-yyyy");
-
-                stream >> sbuf;
-                ltev.raceDate = QDate::fromString(sbuf, "dd-MM-yyyy");
-
-                stream >> pixBuf;
-                ltev.trackImg = pixBuf;
-
-                ltEvents.append(ltev);
             }
             stream >> size;
+            ltTeams.resize(size);
             for (int i = 0; i < size; ++i)
             {
-                LTTeam ltteam;
-
-                stream >> sbuf;
-                ltteam.teamName = sbuf;
-
-                stream >> sbuf;
-                ltteam.driver1Name = sbuf;
-
-                stream >> sbuf;
-                ltteam.driver1ShortName = sbuf;
-
-                stream >> ibuf;
-                ltteam.driver1No = ibuf;
-
-                stream >> sbuf;
-                ltteam.driver2Name = sbuf;
-
-                stream >> sbuf;
-                ltteam.driver2ShortName = sbuf;
-
-                stream >> ibuf;
-                ltteam.driver2No = ibuf;
-
-                stream >> pixBuf;
-                ltteam.carImg = pixBuf;
-
-                ltTeams.append(ltteam);
+                stream >> ltTeams[i].teamName;
+                stream >> ltTeams[i].driver1Name;
+                stream >> ltTeams[i].driver1ShortName;
+                stream >> ltTeams[i].driver1No;
+                stream >> ltTeams[i].driver2Name;
+                stream >> ltTeams[i].driver2ShortName;
+                stream >> ltTeams[i].driver2No;
+                stream >> ltTeams[i].carImg;
             }
         }
         else
@@ -259,7 +255,7 @@ int SeasonData::getEventNo(QDate date)
     return 1;
 }
 
-LTEvent SeasonData::getEvent(const QDate &date)
+const LTEvent &SeasonData::getEvent(const QDate &date) const
 {
     for (int i = 1; i < ltEvents.size(); ++i)
     {
@@ -272,12 +268,12 @@ LTEvent SeasonData::getEvent(const QDate &date)
     return ltEvents[0];
 }
 
-LTEvent SeasonData::getCurrentEvent()
+const LTEvent &SeasonData::getCurrentEvent()const
 {
     return getEvent(QDate::currentDate());
 }
 
-LTEvent SeasonData::getNextEvent()
+const LTEvent &SeasonData::getNextEvent() const
 {
     QDate date = QDate::currentDate();
     for (int i = 1; i < ltEvents.size(); ++i)

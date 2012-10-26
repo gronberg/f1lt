@@ -34,8 +34,8 @@ void NoSessionBoardWidget::showSessionBoard(QString msg)
         (day < 10 ? "0" + QString::number(day) : QString::number(day)) + " - " + QString::number(hour) + ":00 GMT";*/
 
 	ui.sessionLabel->setText(str);
-	QPixmap pix = event.trackImg.height() > 600 ? event.trackImg.scaledToHeight(600, Qt::SmoothTransformation) : event.trackImg;
-	ui.trackMapLabel->setPixmap(pix);
+    QPixmap pix = event.trackImg.height() > 600 ? event.trackImg.scaledToHeight(600, Qt::SmoothTransformation) : event.trackImg;
+    ui.trackMapLabel->setPixmap(pix);
 
 }
 
@@ -48,7 +48,7 @@ void NoSessionBoardWidget::showStartupBoard()
 	QString str = event.eventName;
 
 	ui.sessionLabel2->setText(str);
-	QPixmap pix = event.trackImg.height() > 600 ? event.trackImg.scaledToHeight(600, Qt::SmoothTransformation) : event.trackImg;
-	ui.trackMapLabel->setPixmap(pix);
+    QPixmap pix = event.trackImg.height() > 600 ? event.trackImg.scaledToHeight(600, Qt::SmoothTransformation) : event.trackImg;
+    ui.trackMapLabel->setPixmap(pix);
 
 }

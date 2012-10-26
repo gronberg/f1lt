@@ -114,7 +114,7 @@ void LapTimeComparisonDialog::loadCarImages()
 //    comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
 //    comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
 
-    smallCarImg = SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
+    /*smallCarImg = */SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 }
 
 void LapTimeComparisonDialog::updateData()
@@ -193,7 +193,7 @@ void LapTimeComparisonDialog::updateData()
             if (idx > 0 && !eventData.getDriversData()[idx-1].getLapData().isEmpty())
             {
                 //int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
-                DriverData dd = eventData.getDriversData()[idx-1];
+                DriverData &dd = eventData.getDriversData()[idx-1];
                 LapData ld = dd.getLapData(lapNo);
 
 //                if (j == 0)
@@ -303,7 +303,7 @@ void LapTimeComparisonDialog::updateData()
 
 void LapTimeComparisonDialog::updateCharts()
 {
-    DriverData driverData[4];
+    DriverData *driverData[4] = {0, 0, 0, 0};
     QString driver;
     for (int i = 0; i < 4; ++i)
     {
@@ -311,7 +311,7 @@ void LapTimeComparisonDialog::updateCharts()
         if (idx > 0)
         {
             driver = eventData.getDriversData()[idx-1].getDriverName();
-            driverData[i] = eventData.getDriversData()[idx-1];
+            driverData[i] = &eventData.getDriversData()[idx-1];
 //            carIdx = (eventData.getDriversData()[idx-1].getNumber() > 13 ?
 //                             eventData.getDriversData()[idx-1].getNumber() - 2 :
 //                             eventData.getDriversData()[idx-1].getNumber() - 1) / 2;
@@ -327,11 +327,11 @@ void LapTimeComparisonDialog::updateCharts()
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->chartsTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
             }
         }
         else
@@ -464,10 +464,10 @@ void LapTimeComparisonDialog::setCurrentDriver(int id)
 {
     if (id != 0)
     {
-        DriverData dd = eventData.getDriverDataById(id);
-        if (dd.getCarID() > 0)
+        DriverData *dd = eventData.getDriverDataByIdPtr(id);
+        if (dd != 0 && dd->getCarID() > 0)
         {
-            int idx = comboBox[0]->findText(QString("%1 %2").arg(dd.getNumber()).arg(dd.getDriverName()));
+            int idx = comboBox[0]->findText(QString("%1 %2").arg(dd->getNumber()).arg(dd->getDriverName()));
             if (idx != -1)
                 comboBox[0]->setCurrentIndex(idx);
         }

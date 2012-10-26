@@ -21,7 +21,7 @@ QVariant PracticeModel::data(const QModelIndex &index, int role) const
 
     if (row >= 0 && row < driversData.size())
     {
-        DriverData dd = *driversData[row];//eventData.getDriverDataByPos(row);
+        DriverData &dd = *driversData[row];//eventData.getDriverDataByPos(row);
         return driverRowData(dd, index, role);
 
     }

@@ -210,7 +210,7 @@ HeadToHeadDialog::~HeadToHeadDialog()
 
 void HeadToHeadDialog::loadCarImages()
 {
-    smallCarImg = SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
+    /*smallCarImg = */SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 
     comboBox[0]->clear();
     comboBox[1]->clear();
@@ -302,7 +302,7 @@ void HeadToHeadDialog::updateData()
             if (idx > 0 && !eventData.getDriversData()[idx-1].getLapData().isEmpty())
             {
 //                int lapIndex = (reversedOrder ? eventData.driversData[idx-1].lapData.size() - index[i] - 1 : index[i]);
-                DriverData dd = eventData.getDriversData()[idx-1];
+                DriverData &dd = eventData.getDriversData()[idx-1];
                 LapData ld = dd.getLapData(lapNo);
                 if (ld.getCarID() == -1)
                     ld = dd.getLapData().last();
@@ -556,7 +556,7 @@ void HeadToHeadDialog::updateData()
 
 void HeadToHeadDialog::updateCharts()
 {
-    DriverData driverData[4];
+    DriverData *driverData[4] = {0, 0, 0, 0};
     QString driver;
     for (int i = 0; i < 2; ++i)
     {
@@ -564,7 +564,7 @@ void HeadToHeadDialog::updateCharts()
         if (idx > 0)
         {
             driver = eventData.getDriversData()[idx-1].getDriverName();
-            driverData[i] = eventData.getDriversData()[idx-1];
+            driverData[i] = &eventData.getDriversData()[idx-1];
 //            carIdx = (eventData.getDriversData()[idx-1].getNumber() > 13 ?
 //                             eventData.getDriversData()[idx-1].getNumber() - 2 :
 //                             eventData.getDriversData()[idx-1].getNumber() - 1) / 2;
@@ -588,33 +588,33 @@ void HeadToHeadDialog::updateCharts()
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->chartsTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
 
                 lab = qobject_cast<QLabel*>(ui->gapChartTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->gapChartTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));
 
                 lab = qobject_cast<QLabel*>(ui->posChartTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->posChartTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i].getNumber(), thumbnailsSize));
+                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));
             }
         }
         else
@@ -644,7 +644,13 @@ void HeadToHeadDialog::updateCharts()
     lapCompChart->setData(driverData);
     lapCompChart->repaint();
 
-    int tab[2] = {driverData[0].getCarID()-1, driverData[1].getCarID()-1};
+    int tab[2] = {0, 0};
+
+    for (int i = 0; i < 2; ++i)
+    {
+        if (driverData[i] != 0)
+            tab[i] = driverData[i]->getCarID()-1;
+    }
     gapCompChart->setData(tab);
     gapCompChart->repaint();
 
@@ -792,10 +798,10 @@ void HeadToHeadDialog::setCurrentDriver(int id)
 {
     if (id != 0)
     {
-        DriverData dd = eventData.getDriverDataById(id);
-        if (dd.getCarID() > 0)
+        DriverData *dd = eventData.getDriverDataByIdPtr(id);
+        if (dd != 0 && dd->getCarID() > 0)
         {
-            int idx = comboBox[0]->findText(QString("%1 %2").arg(dd.getNumber()).arg(dd.getDriverName()));
+            int idx = comboBox[0]->findText(QString("%1 %2").arg(dd->getNumber()).arg(dd->getDriverName()));
             if (idx != -1)
                 comboBox[0]->setCurrentIndex(idx);
         }

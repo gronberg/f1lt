@@ -53,7 +53,7 @@ private:
         }
     };
 
-    void getPitstops(const QList<DriverData> &driversData);
+    void getPitstops(const QVector<DriverData> &driversData);
     QList< PitStopAtom > pitStops;
     
 };
