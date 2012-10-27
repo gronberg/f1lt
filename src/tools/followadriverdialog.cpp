@@ -12,7 +12,7 @@ FollowADriverDialog::FollowADriverDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    loadCarImages();
+    loadDriversList();
     setupTables();
 
     ui->lapTimesTableWidget->setItemDelegate(new LTItemDelegate());
@@ -26,14 +26,21 @@ FollowADriverDialog::~FollowADriverDialog()
     delete ui;
 }
 
-void FollowADriverDialog::loadCarImages()
+void FollowADriverDialog::loadDriversList()
 {
     /*smallCarImg = */SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 
-    ui->comboBox->clear();
-//    ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
+//    ui->comboBox->clear();
 
     clearData();
+    if (ui->comboBox->itemText(1) == "")
+    {
+        QStringList list = SeasonData::getInstance().getDriversList();
+
+        qDebug() << "loading drivers" << list.size();
+        if (list.size() > 1)
+            ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
+    }
 }
 
 void FollowADriverDialog::setupTables()
@@ -86,10 +93,11 @@ QTableWidgetItem* FollowADriverDialog::setItem(QTableWidget *table, int row, int
 
 int FollowADriverDialog::exec(int currentDriverId)
 {
-    if (ui->comboBox->itemText(1) == "")// && eventData.driversData[0].driver != "")
-    {
-        ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
-    }
+//    loadDriversData();
+//    if (ui->comboBox->itemText(1) == "")// && eventData.driversData[0].driver != "")
+//    {
+//        ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
+//    }
     setCurrentDriver(currentDriverId);
 
     updateData();
@@ -99,10 +107,11 @@ int FollowADriverDialog::exec(int currentDriverId)
 
 void FollowADriverDialog::show(int currentDriverId)
 {
-    if (ui->comboBox->itemText(1) == "")// && eventData.driversData[0].driver != "")
-    {
-        ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
-    }
+//    loadDriversData();
+//    if (ui->comboBox->itemText(1) == "")// && eventData.driversData[0].driver != "")
+//    {
+//        ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
+//    }
     setCurrentDriver(currentDriverId);
 
     updateData();
@@ -126,7 +135,7 @@ void FollowADriverDialog::updateData()
         printLapTimesTable(*dd, drivers);
     }
     else
-        clearData();
+        clearData(false);
 }
 
 void FollowADriverDialog::printDriverInfo(const DriverData &dd)
@@ -370,7 +379,7 @@ void FollowADriverDialog::printLapTimesTable(const DriverData &dd, const QList<D
             setItem(ui->lapTimesTableWidget, i+1, j, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
-void FollowADriverDialog::clearData()
+void FollowADriverDialog::clearData(bool clearDriverList)
 {
     for (int i = 0; i <= 5; ++i)
     {
@@ -390,6 +399,8 @@ void FollowADriverDialog::clearData()
         if (eventData.getEventType() != LTPackets::RACE_EVENT)
             ui->pitStopsLabel->setText("");
     }
+    if (clearDriverList)
+        ui->comboBox->clear();
 }
 
 void FollowADriverDialog::clearRow(int row)

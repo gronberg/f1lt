@@ -34,7 +34,7 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
 //        comboBox[i]->setCurrentIndex(0);
 //    }
 
-    loadCarImages();
+    loadDriversList();
 
     color[0] = SeasonData::getInstance().getColor(LTPackets::YELLOW);
     color[1] = SeasonData::getInstance().getColor(LTPackets::CYAN);
@@ -208,12 +208,22 @@ HeadToHeadDialog::~HeadToHeadDialog()
     delete ui;
 }
 
-void HeadToHeadDialog::loadCarImages()
+void HeadToHeadDialog::loadDriversList()
 {
     /*smallCarImg = */SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 
     comboBox[0]->clear();
     comboBox[1]->clear();
+
+    if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
+    {
+        QStringList list = SeasonData::getInstance().getDriversList();
+        if (list.size() > 1)
+        {
+            comboBox[0]->addItems(list);
+            comboBox[1]->addItems(list);
+        }
+    }
 
 //    comboBox[0]->addItem("");
 //    comboBox[1]->addItem("");
@@ -660,11 +670,11 @@ void HeadToHeadDialog::updateCharts()
 
 void HeadToHeadDialog::show(int currentDriverId)
 {
-    if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
-    {
-        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
-        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
-    }
+//    if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
+//    {
+//        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+//        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
+//    }
     setCurrentDriver(currentDriverId);
 
 //    if (j == 0)
@@ -686,11 +696,11 @@ void HeadToHeadDialog::show(int currentDriverId)
 
 int HeadToHeadDialog::exec(int currentDriverId)
 {
-    if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
-    {
-        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
-        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
-    }
+//    if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
+//    {
+//        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+//        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
+//    }
     setCurrentDriver(currentDriverId);
 
     updateData();

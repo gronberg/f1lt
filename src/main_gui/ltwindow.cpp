@@ -412,9 +412,12 @@ void LTWindow::timeout()
     //during quali timer is stopped when we have red flag
     if (eventData.isSessionStarted())
     {
-        if (!playing && settings->value("ui/auto_record").toBool() && !recording)
+        if (!playing && settings->value("ui/auto_record").toBool() && !recording && !eventRecorder->isSessionRecorded())
             startRecording(true);
     }
+
+    if (!recording && !playing && !eventData.isSessionStarted())
+        sessionTimer->stop();
 
 //        if (!(eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
 //            !((eventData.getEventType() == LTPackets::QUALI_EVENT || eventData.getEventType() == LTPackets::RACE_EVENT) && eventData.getFlagStatus() == LTPackets::RED_FLAG))
@@ -626,6 +629,18 @@ bool LTWindow::close()
     return QMainWindow::close();
 }
 
+void LTWindow::setupDialogs()
+{
+    for (int i = 0; i < h2hDialog.size(); ++i)
+        h2hDialog[i]->loadDriversList();
+
+    for (int i = 0; i < ltcDialog.size(); ++i)
+        ltcDialog[i]->loadDriversList();
+
+    for (int i = 0; i < fadDialog.size(); ++i)
+        fadDialog[i]->loadDriversList();
+}
+
 //-------------------- connection with server ----------------------
 
 void LTWindow::tryAuthorize()
@@ -663,7 +678,10 @@ void LTWindow::on_actionConnect_triggered()
     if (loginDialog->exec(settings->value("login/email").toString(), passwd) == QDialog::Accepted)
     {
         if (playing)
-            eventPlayerStopClicked(false);
+        {
+            eventPlayer->stopPlaying();
+            eventPlayerStopClicked(false);                        
+        }
 
         streamReader->disconnectFromLTServer();
         QString email = loginDialog->getEmail();
@@ -676,6 +694,8 @@ void LTWindow::on_actionConnect_triggered()
         settings->setValue("login/passwd", encPasswd);
 
         showSessionBoard(false);
+
+        setupDialogs();
     }
 }
 
@@ -759,7 +779,8 @@ void LTWindow::on_actionAbout_Qt_triggered()
 void LTWindow::startRecording(bool autoRecord)
 {
     //if the current session is recorded while auto record has turned on we don't do anything
-    if (autoRecord == eventRecorder->isSessionRecorded())
+    if (autoRecord == true &&
+        eventRecorder->isSessionRecorded() == true)
         return;
 
     recording = true;
@@ -770,6 +791,9 @@ void LTWindow::startRecording(bool autoRecord)
     ui->actionOpen->setEnabled(false);
     eventRecorder->startRecording();
     connect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+
+    if (!sessionTimer->isActive())
+        sessionTimer->start();
 }
 
 void LTWindow::stopRecording(bool autoStop)
@@ -865,14 +889,6 @@ void LTWindow::eventPlayerOpenFile(QString fName)
     ui->sessionDataWidget->clearData();
 
     ui->ltWidget->loadCarImages();
-    for (int i = 0; i < h2hDialog.size(); ++i)
-        h2hDialog[i]->loadCarImages();
-
-    for (int i = 0; i < ltcDialog.size(); ++i)
-        ltcDialog[i]->loadCarImages();
-
-    for (int i = 0; i < fadDialog.size(); ++i)
-        fadDialog[i]->loadCarImages();
 
     ui->actionRecord->setVisible(false);
     ui->actionStop_recording->setVisible(false);
@@ -880,6 +896,8 @@ void LTWindow::eventPlayerOpenFile(QString fName)
 
     streamReader->disconnectFromLTServer();
     streamReader->clearData();
+
+    setupDialogs();
 
     playing = true;
 
@@ -931,19 +949,15 @@ void LTWindow::eventPlayerStopClicked(bool connect)
     ui->sessionDataWidget->clearData();
     ui->textEdit->clear();
     saw->resetView();
+    eventRecorder->setSessionRecorded(false);
+    sessionTimer->stop();
 
     playing = false;
     SeasonData::getInstance().loadSeasonFile();
 
     ui->ltWidget->loadCarImages();
-    for (int i = 0; i < h2hDialog.size(); ++i)
-        h2hDialog[i]->loadCarImages();
 
-    for (int i = 0; i < ltcDialog.size(); ++i)
-        ltcDialog[i]->loadCarImages();
-
-    for (int i = 0; i < fadDialog.size(); ++i)
-        fadDialog[i]->loadCarImages();
+    setupDialogs();
 
     if (connect)
     {

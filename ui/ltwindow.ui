@@ -329,6 +329,9 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Head to head</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
   </action>
   <action name="actionConnect">
    <property name="icon">
@@ -340,6 +343,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="toolTip">
     <string>Login</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actionRecord">
@@ -353,6 +359,9 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Record</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
+   </property>
   </action>
   <action name="actionPreferences">
    <property name="icon">
@@ -362,6 +371,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Preferences</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
   <action name="actionExit">
@@ -394,6 +406,9 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Open</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="actionLap_time_comparison">
    <property name="icon">
@@ -402,6 +417,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Lap time comparison</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionStop_recording">
@@ -415,6 +433,9 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Stop recording</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
   </action>
   <action name="actionSession_analysis">
    <property name="icon">
@@ -423,6 +444,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Session analysis</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionLT_files_data_base">
@@ -433,6 +457,9 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>LT files database</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
   </action>
   <action name="actionFollow_a_driver">
    <property name="icon">
@@ -441,6 +468,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Follow a driver</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>

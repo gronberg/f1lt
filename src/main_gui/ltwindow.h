@@ -43,6 +43,8 @@ public:
     void startRecording(bool autoRecord = false);
     void stopRecording(bool autoStop = false);
 
+    void setupDialogs();
+
 public slots:
     bool close();
 

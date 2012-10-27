@@ -24,7 +24,7 @@ LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
     comboBox[2] = ui->comboBox3;
     comboBox[3] = ui->comboBox4;
 
-    loadCarImages();
+    loadDriversList();
 
     color[0] = SeasonData::getInstance().getColor(LTPackets::GREEN);
     color[1] = SeasonData::getInstance().getColor(LTPackets::CYAN);
@@ -102,12 +102,24 @@ LapTimeComparisonDialog::~LapTimeComparisonDialog()
     delete ui;
 }
 
-void LapTimeComparisonDialog::loadCarImages()
+void LapTimeComparisonDialog::loadDriversList()
 {
     comboBox[0]->clear();
     comboBox[1]->clear();
     comboBox[2]->clear();
     comboBox[3]->clear();
+
+    if (comboBox[0]->itemText(1) == "")// && eventData.driversData[0].driver != "")
+    {
+        QStringList list = SeasonData::getInstance().getDriversList();
+        if (list.size() > 1)
+        {
+            comboBox[0]->addItems(list);
+            comboBox[1]->addItems(list);
+            comboBox[2]->addItems(list);
+            comboBox[3]->addItems(list);
+        }
+    }
 
 //    comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
 //    comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
@@ -350,13 +362,13 @@ void LapTimeComparisonDialog::updateCharts()
 
 void LapTimeComparisonDialog::show(int currentCarId)
 {
-    if (comboBox[0]->itemText(1) == "")
-    {
-        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
-        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
-        comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
-        comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
-    }
+//    if (comboBox[0]->itemText(1) == "")
+//    {
+//        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+//        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
+//        comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
+//        comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
+//    }
     setCurrentDriver(currentCarId);
     for (int i = 0; i < 4; ++i)
     {
@@ -373,13 +385,13 @@ void LapTimeComparisonDialog::show(int currentCarId)
 
 int LapTimeComparisonDialog::exec(int currentCarId)
 {
-    if (comboBox[0]->itemText(1) == "")
-    {
-        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
-        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
-        comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
-        comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
-    }
+//    if (comboBox[0]->itemText(1) == "")
+//    {
+//        comboBox[0]->addItems(SeasonData::getInstance().getDriversList());
+//        comboBox[1]->addItems(SeasonData::getInstance().getDriversList());
+//        comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
+//        comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
+//    }
     setCurrentDriver(currentCarId);
 
     updateData();

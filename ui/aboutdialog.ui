@@ -29,7 +29,7 @@
       <number>0</number>
      </property>
      <item row="0" column="1">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="versionLabel">
        <property name="font">
         <font>
          <pointsize>8</pointsize>
@@ -92,7 +92,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../../icons/icons.qrc">:/ui_icons/icon.png</pixmap>
+        <pixmap resource="../icons/icons.qrc">:/ui_icons/icon.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -139,7 +139,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../icons/icons.qrc"/>
+  <include location="../icons/icons.qrc"/>
  </resources>
  <connections>
   <connection>

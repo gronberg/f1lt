@@ -311,7 +311,7 @@ QStringList SeasonData::getDriversList()
             list.append(QString::number(dd.getNumber()) + " " + dd.getDriverName());
         }
     }
-    if (list.isEmpty())
+    if (list.size() == 1)
     {
         for (int i = 0; i < ltTeams.size(); ++i)
         {

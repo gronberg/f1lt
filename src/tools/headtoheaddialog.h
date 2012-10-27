@@ -25,7 +25,7 @@ public:
     void setReversedOrder(bool rev) { reversedOrder = rev; }
     bool isReversedOrder() { return reversedOrder; }
 
-    void loadCarImages();
+    void loadDriversList();
 
     int getNumber(int);
     void setCurrentDriver(int id);  

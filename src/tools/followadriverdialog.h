@@ -27,12 +27,13 @@ public:
 
     QList<DriverData*> getDriversArray(int pos);
 
-    void loadCarImages();
+    void loadDriversList();
+//    void loadCarImages();
 
     void setupTables();
     void setCurrentDriver(int id);
 
-    void clearData();
+    void clearData(bool clearDriverList = true);
     void clearRow(int row);
 
     bool driverInRange(const DriverData &dd);

@@ -80,6 +80,7 @@ bool EventPlayer::loadFromFile(QString fName)
             stream >> ibuf; ltTeamList[i].driver2No = ibuf;
             stream >> ltTeamList[i].carImg;
         }
+        SeasonData::getInstance().setTeams(ltTeamList);
 
         stream >> size;
         packets.resize(size);

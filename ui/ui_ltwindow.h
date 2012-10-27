@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Fri Oct 26 21:17:10 2012
+** Created: Sat Oct 27 21:03:50 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -328,22 +328,32 @@ public:
     {
         LTWindow->setWindowTitle(QApplication::translate("LTWindow", "F1LT", 0, QApplication::UnicodeUTF8));
         actionHead_to_head->setText(QApplication::translate("LTWindow", "Head to head", 0, QApplication::UnicodeUTF8));
+        actionHead_to_head->setShortcut(QApplication::translate("LTWindow", "Ctrl+H", 0, QApplication::UnicodeUTF8));
         actionConnect->setText(QApplication::translate("LTWindow", "Login", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         actionConnect->setToolTip(QApplication::translate("LTWindow", "Login", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
+        actionConnect->setShortcut(QApplication::translate("LTWindow", "Ctrl+L", 0, QApplication::UnicodeUTF8));
         actionRecord->setText(QApplication::translate("LTWindow", "Record", 0, QApplication::UnicodeUTF8));
+        actionRecord->setShortcut(QApplication::translate("LTWindow", "Ctrl+Shift+R", 0, QApplication::UnicodeUTF8));
         actionPreferences->setText(QApplication::translate("LTWindow", "Preferences", 0, QApplication::UnicodeUTF8));
+        actionPreferences->setShortcut(QApplication::translate("LTWindow", "Ctrl+P", 0, QApplication::UnicodeUTF8));
         actionExit->setText(QApplication::translate("LTWindow", "Exit", 0, QApplication::UnicodeUTF8));
         actionExit->setShortcut(QApplication::translate("LTWindow", "Ctrl+Q", 0, QApplication::UnicodeUTF8));
         actionAbout->setText(QApplication::translate("LTWindow", "About", 0, QApplication::UnicodeUTF8));
         actionAbout_Qt->setText(QApplication::translate("LTWindow", "About Qt", 0, QApplication::UnicodeUTF8));
         actionOpen->setText(QApplication::translate("LTWindow", "Open", 0, QApplication::UnicodeUTF8));
+        actionOpen->setShortcut(QApplication::translate("LTWindow", "Ctrl+O", 0, QApplication::UnicodeUTF8));
         actionLap_time_comparison->setText(QApplication::translate("LTWindow", "Lap time comparison", 0, QApplication::UnicodeUTF8));
+        actionLap_time_comparison->setShortcut(QApplication::translate("LTWindow", "Ctrl+T", 0, QApplication::UnicodeUTF8));
         actionStop_recording->setText(QApplication::translate("LTWindow", "Stop recording", 0, QApplication::UnicodeUTF8));
+        actionStop_recording->setShortcut(QApplication::translate("LTWindow", "Ctrl+Shift+S", 0, QApplication::UnicodeUTF8));
         actionSession_analysis->setText(QApplication::translate("LTWindow", "Session analysis", 0, QApplication::UnicodeUTF8));
+        actionSession_analysis->setShortcut(QApplication::translate("LTWindow", "Ctrl+A", 0, QApplication::UnicodeUTF8));
         actionLT_files_data_base->setText(QApplication::translate("LTWindow", "LT files database", 0, QApplication::UnicodeUTF8));
+        actionLT_files_data_base->setShortcut(QApplication::translate("LTWindow", "Ctrl+B", 0, QApplication::UnicodeUTF8));
         actionFollow_a_driver->setText(QApplication::translate("LTWindow", "Follow a driver", 0, QApplication::UnicodeUTF8));
+        actionFollow_a_driver->setShortcut(QApplication::translate("LTWindow", "Ctrl+F", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("LTWindow", "Driver data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("LTWindow", "Session data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("LTWindow", "Weather charts", 0, QApplication::UnicodeUTF8));

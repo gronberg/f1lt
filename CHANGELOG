@@ -1,3 +1,10 @@
+v1.4.1 (27-10-2012):
+- fixed bug with recording
+- fixed bug with session timer stopping during quali
+- done some memory optimizations
+- fixed sorting drivers with lap times over 107% during Q1
+- added keyboard shortcuts
+
 v1.4.0 (12-10-2012):
 - added .lt files database connected to the online server - it is now possible to get the access to online .lt files from the application
 - added new tool - "Follow a driver", which combines functionalities of both head to head and lap time comparison - for a selected driver this tool compares his lap and sectors times with 2 drivers in front and 2 behind him
