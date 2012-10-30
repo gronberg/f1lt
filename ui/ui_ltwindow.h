@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Sat Oct 27 21:03:50 2012
+** Created: Tue Oct 30 18:50:48 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -50,6 +50,7 @@ public:
     QAction *actionSession_analysis;
     QAction *actionLT_files_data_base;
     QAction *actionFollow_a_driver;
+    QAction *actionSession_times;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_4;
     NoSessionBoardWidget *messageBoardWidget;
@@ -147,6 +148,11 @@ public:
         QIcon icon11;
         icon11.addFile(QString::fromUtf8(":/ui_icons/fad.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionFollow_a_driver->setIcon(icon11);
+        actionSession_times = new QAction(LTWindow);
+        actionSession_times->setObjectName(QString::fromUtf8("actionSession_times"));
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/ui_icons/st.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSession_times->setIcon(icon12);
         centralWidget = new QWidget(LTWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
@@ -290,6 +296,7 @@ public:
         menuFile->addSeparator();
         menuFile->addAction(actionExit);
         menuEdit->addAction(actionSession_analysis);
+        menuEdit->addAction(actionSession_times);
         menuEdit->addAction(actionFollow_a_driver);
         menuEdit->addAction(actionHead_to_head);
         menuEdit->addAction(actionLap_time_comparison);
@@ -308,6 +315,7 @@ public:
         mainToolBar->addAction(actionHead_to_head);
         mainToolBar->addAction(actionLap_time_comparison);
         mainToolBar->addAction(actionSession_analysis);
+        mainToolBar->addAction(actionSession_times);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionPreferences);
         mainToolBar->addAction(actionExit);
@@ -354,6 +362,8 @@ public:
         actionLT_files_data_base->setShortcut(QApplication::translate("LTWindow", "Ctrl+B", 0, QApplication::UnicodeUTF8));
         actionFollow_a_driver->setText(QApplication::translate("LTWindow", "Follow a driver", 0, QApplication::UnicodeUTF8));
         actionFollow_a_driver->setShortcut(QApplication::translate("LTWindow", "Ctrl+F", 0, QApplication::UnicodeUTF8));
+        actionSession_times->setText(QApplication::translate("LTWindow", "Session times", 0, QApplication::UnicodeUTF8));
+        actionSession_times->setShortcut(QApplication::translate("LTWindow", "Ctrl+I", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("LTWindow", "Driver data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("LTWindow", "Session data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("LTWindow", "Weather charts", 0, QApplication::UnicodeUTF8));

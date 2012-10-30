@@ -66,7 +66,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/tools/ltfilesmanagerdialog.cpp \
     src/main_gui/aboutdialog.cpp \
     src/charts/driverdatachart.cpp \
-    src/tools/followadriverdialog.cpp
+    src/tools/followadriverdialog.cpp \
+    src/tools/sessiontimeswidget.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -111,7 +112,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/tools/ltfilesmanagerdialog.h \
     src/main_gui/aboutdialog.h \
     src/charts/driverdatachart.h \
-    src/tools/followadriverdialog.h
+    src/tools/followadriverdialog.h \
+    src/tools/sessiontimeswidget.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -129,7 +131,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/ltwidget.ui \
     ui/ltfilesmanagerdialog.ui \
     ui/aboutdialog.ui \
-    ui/followadriverdialog.ui
+    ui/followadriverdialog.ui \
+    src/tools/sessiontimeswidget.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

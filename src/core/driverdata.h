@@ -247,6 +247,35 @@ public:
         return LapData();
     }
 
+    LapData getFPLapData(int min) const
+    {
+        for (int i = 0; i < lapData.size(); ++i)
+        {
+            SeasonData &sd = SeasonData::getInstance();
+            int lapMin = sd.timeToMins(sd.correctFPTime(lapData[i].getPracticeLapExtraData().getSessionTime()));
+
+            if (min == lapMin)
+                return lapData[i];
+        }
+        return LapData();
+    }
+
+    LapData getQLapData(int min, int qPeriod) const
+    {
+        for (int i = 0; i < lapData.size(); ++i)
+        {
+            SeasonData &sd = SeasonData::getInstance();
+            if (qPeriod == lapData[i].getQualiLapExtraData().getQualiPeriod())
+            {
+                int lapMin = sd.timeToMins(sd.correctQualiTime(lapData[i].getQualiLapExtraData().getSessionTime(), qPeriod));
+
+                if (min == lapMin)
+                    return lapData[i];
+            }
+        }
+        return LapData();
+    }
+
     void setFastestLap(const LapTime &lapTime, int lapNo)
     {
         if (lapNo == sessionRecords.bestLap.lapNum && lapTime == sessionRecords.bestLap.lapTime)

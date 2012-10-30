@@ -259,6 +259,7 @@ p, li { white-space: pre-wrap; }
      <string>Tools</string>
     </property>
     <addaction name="actionSession_analysis"/>
+    <addaction name="actionSession_times"/>
     <addaction name="actionFollow_a_driver"/>
     <addaction name="actionHead_to_head"/>
     <addaction name="actionLap_time_comparison"/>
@@ -306,6 +307,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionHead_to_head"/>
    <addaction name="actionLap_time_comparison"/>
    <addaction name="actionSession_analysis"/>
+   <addaction name="actionSession_times"/>
    <addaction name="separator"/>
    <addaction name="actionPreferences"/>
    <addaction name="actionExit"/>
@@ -471,6 +473,18 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionSession_times">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/st.png</normaloff>:/ui_icons/st.png</iconset>
+   </property>
+   <property name="text">
+    <string>Session times</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
  </widget>

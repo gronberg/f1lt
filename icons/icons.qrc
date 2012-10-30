@@ -36,6 +36,6 @@
         <file>sa.png</file>
         <file>ltdb.png</file>
         <file>fad.png</file>
+        <file>st.png</file>
     </qresource>
-    <qresource prefix="/other"/>
 </RCC>

@@ -20,6 +20,7 @@
 #include "logindialog.h"
 #include "preferencesdialog.h"
 #include "../tools/sessionanalysiswidget.h"
+#include "../tools/sessiontimeswidget.h"
 #include "../core/sessiontimer.h"
 
 
@@ -102,6 +103,8 @@ private slots:
 
     void on_actionFollow_a_driver_triggered();
 
+    void on_actionSession_times_triggered();
+
 private:
     Ui::LTWindow *ui;
     DataStreamReader *streamReader;
@@ -143,6 +146,7 @@ private:
 
     EventData &eventData;
     SessionAnalysisWidget *saw;
+    SessionTimesWidget *stw;
 
     QProgressDialog *connectionProgress;
 

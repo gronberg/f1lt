@@ -22,6 +22,7 @@ LTWindow::LTWindow(QWidget *parent) :
     loginDialog = new LoginDialog(this);
     ltFilesManagerDialog = new LTFilesManagerDialog(this);
     saw = new SessionAnalysisWidget();
+    stw = new SessionTimesWidget();
     aboutDialog = new AboutDialog(this);
 
 //    ui->trackStatusWidget->setupItems();
@@ -191,6 +192,9 @@ void LTWindow::driverDataChanged(int carID)
 
         if (saw->isVisible())
             saw->update();
+
+        if (stw->isVisible())
+            stw->update();
 //        if (recording)
 //            eventRecorder->updateDriverData(eventData.driversData[carID-1]);
     }
@@ -255,6 +259,9 @@ void LTWindow::dataChanged()
 
     if (saw->isVisible())
         saw->update();
+
+    if (stw->isVisible())
+        stw->update();
 }
 
 //void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
@@ -513,6 +520,7 @@ void LTWindow::loadSettings()
     eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
 
     saw->loadSettings(*settings);
+    stw->loadSettings(*settings);
 
     ltFilesManagerDialog->loadSettings(settings);
 }
@@ -530,6 +538,7 @@ void LTWindow::saveSettings()
         settings->setValue("ui/current_tab2", ui->sessionDataWidget->currentIndex());
 
     saw->saveSettings(*settings);
+    stw->saveSettings(*settings);
     ltFilesManagerDialog->saveSettings(settings);
 
 //    settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
@@ -610,6 +619,8 @@ void LTWindow::setFonts(const QFont &mainFont, const QFont &commentaryFont)
 //    ui->trackStatusWidget->setFont(mainFont);
     ui->eventStatusWidget->setFont(mainFont);
     prefs->setFonts(mainFont, commentaryFont);
+
+    stw->setFont(mainFont);
 }
 
 bool LTWindow::close()
@@ -626,6 +637,9 @@ bool LTWindow::close()
     if (saw->isVisible())
         saw->close();
 
+    if (stw->isVisible())
+        stw->close();
+
     return QMainWindow::close();
 }
 
@@ -639,6 +653,9 @@ void LTWindow::setupDialogs()
 
     for (int i = 0; i < fadDialog.size(); ++i)
         fadDialog[i]->loadDriversList();
+
+    if (stw->isVisible())
+        stw->loadDriversList();
 }
 
 //-------------------- connection with server ----------------------
@@ -990,6 +1007,7 @@ void LTWindow::showSessionBoard(bool show)
     ui->actionLap_time_comparison->setEnabled(!show);
     ui->actionFollow_a_driver->setEnabled(!show);
     ui->actionSession_analysis->setEnabled(!show);
+    ui->actionSession_times->setEnabled(!show);
 }
 
 void LTWindow::on_actionSession_analysis_triggered()
@@ -998,3 +1016,8 @@ void LTWindow::on_actionSession_analysis_triggered()
 }
 
 
+
+void LTWindow::on_actionSession_times_triggered()
+{
+    stw->exec();
+}
