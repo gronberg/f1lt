@@ -415,6 +415,7 @@ void LTWindow::timeout()
         eventPlayer->timeout();
 
     ui->eventStatusWidget->updateEventStatus();
+    ui->sessionDataWidget->updateRadar();
 
     //during quali timer is stopped when we have red flag
     if (eventData.isSessionStarted())
@@ -920,6 +921,7 @@ void LTWindow::eventPlayerOpenFile(QString fName)
 
     eventPlayer->startPlaying();
     saw->resetView();
+    ui->sessionDataWidget->setupRadar();
 }
 
 void LTWindow::eventPlayerPlayClicked(int interval)

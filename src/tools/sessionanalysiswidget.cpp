@@ -26,6 +26,7 @@ SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
 		driverCheckBoxes.append(box);
 
         colors.append(lab->palette().window().color());
+        qDebug() << colors.last().red() << colors.last().green() << colors.last().blue();
 
         lab = (QLabel*)ui.gridLayout->itemAtPosition(1, i)->widget();
         box = (QCheckBox*)ui.gridLayout->itemAtPosition(1, i+1)->widget();
@@ -35,6 +36,7 @@ SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
 		driverCheckBoxes.append(box);
 
         colors.append(lab->palette().window().color());
+        qDebug() << colors.last().red() << colors.last().green() << colors.last().blue();
 	}
     setupTables();
     ui.lapTimeTableWidget->setItemDelegate(new LTItemDelegate);

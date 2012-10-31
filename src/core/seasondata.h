@@ -10,6 +10,8 @@
 #include "f1ltcore.h"
 #include "ltpackets.h"
 
+class DriverData;
+
 //Two additional stuctures that hold the basic info about all teams and events. Data is loaded from the file.
 struct LTTeam
 {
@@ -100,6 +102,7 @@ public:
     QStringList getDriversListShort();
 
     QColor getColor(LTPackets::Colors color) { return colors[color]; }
+    QColor getCarColor(const DriverData &dd);
 
     QVector<LTTeam> &getTeams() { return ltTeams; }
     void setTeams(const QVector<LTTeam> &teams) { ltTeams = teams; }
@@ -126,6 +129,7 @@ private:
     int baseEventInc;
 
     QList<QColor> colors;
+    QList<QColor> driverColors;
 
     QMap<QString, QString> eventNamesMap;
     CarThumbnailsFactory carThumbnailsFactory;

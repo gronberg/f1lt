@@ -176,6 +176,14 @@ public:
     ColorData getColorData()    const { return colorData; }
     const LapData &getLastLap()        const { return lastLap; }
 
+    bool isInPits() const
+    {
+        if (lastLap.getTime().toString() == "IN PIT" || getColorData().numberColor() == LTPackets::PIT)
+            return true;
+
+        return false;
+    }
+
     LapTime getQualiTime(int idx) const
     {
         if (idx >= 1 && idx <= 3)

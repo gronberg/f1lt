@@ -188,7 +188,7 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
     else
     {
         palette = ui->pitStopsLabel->palette();
-        if (driverData.getColorData().numberColor() == LTPackets::PIT)
+        if (driverData.isInPits())
         {
             ui->pitStopsLabel->setText("In pits");
             palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::PIT));

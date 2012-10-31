@@ -259,7 +259,7 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
 
                     }
             }
-            else
+//            else
                 if ((eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString() == "STOP" ||
                     eventData.driversData[packet.carID-1].lastLap.sectorTimes[1].toString() == "STOP" ||
                     eventData.driversData[packet.carID-1].lastLap.sectorTimes[2].toString() == "STOP" ||
