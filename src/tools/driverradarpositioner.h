@@ -32,9 +32,9 @@ public:
 
 private:
     DriverData *driverData;
-    int avgTime;
-    int avgSectorTimes[2];
-    int sectorPositions[2];
+    double avgTime;
+    double avgSectorTimes[2];
+    double sectorPositions[2];
     int currSector;
 
     double currentDeg;

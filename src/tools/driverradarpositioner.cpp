@@ -8,10 +8,10 @@ DriverRadarPositioner::DriverRadarPositioner(DriverData *dd, int x, int y, doubl
     driverData(dd), radarX(x), radarY(y), radarR(r), radarPitR(r1), radarLappedR(rL), currentDeg(0.0),
     avgTime(100), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false)
 {
-    avgSectorTimes[0] = 0;
-    avgSectorTimes[1] = 0;
-    sectorPositions[0] = 0;
-    sectorPositions[1] = 0;
+    avgSectorTimes[0] = 0.0;
+    avgSectorTimes[1] = 0.0;
+    sectorPositions[0] = 0.0;
+    sectorPositions[1] = 0.0;
 }
 
 void DriverRadarPositioner::setDriverData(DriverData *dd)
@@ -146,7 +146,7 @@ void DriverRadarPositioner::calculatePosition()
 //                    currentLapTime = sumSectors;
 //            }
 
-            currentDeg += 360.0 / (double)avgTime; //(360 * currentLapTime) / avgTime;
+            currentDeg += 360.0 / avgTime; //(360 * currentLapTime) / avgTime;
         }
     }
     else
@@ -155,7 +155,7 @@ void DriverRadarPositioner::calculatePosition()
 //            currentDeg = (360 * (avgTime + currentLapTime)) / avgTime;
 
 //        else
-            currentDeg += 360.0 / (double)avgTime;
+            currentDeg += 360.0 / avgTime;
 //            currentDeg = (360 * currentLapTime) / avgTime;
     }
 }
@@ -194,35 +194,35 @@ void DriverRadarPositioner::calculateAvgs()
         {
             avgTime = EventData::getInstance().getSessionRecords().getFastestLap().getTime().toDouble();
 
-//            int drvNo = EventData::getInstance().getSessionRecords().getFastestLap().getNumber();
-//            int lapNo = EventData::getInstance().getSessionRecords().getFastestLap().getLapNumber();
-//            DriverData *dd = EventData::getInstance().getDriverDataPtr(drvNo);
-//            if (dd)
-//            {
-//                LapData ld = dd->getLapData(lapNo);
+            int drvNo = EventData::getInstance().getSessionRecords().getFastestLap().getNumber();
+            int lapNo = EventData::getInstance().getSessionRecords().getFastestLap().getLapNumber();
+            DriverData *dd = EventData::getInstance().getDriverDataPtr(drvNo);
+            if (dd)
+            {
+                LapData ld = dd->getLapData(lapNo);
 
-//                double s1 = ld.getSectorTime(1).toDouble();
-//                double s2 = ld.getSectorTime(2).toDouble();
+                double s1 = ld.getSectorTime(1).toDouble();
+                double s2 = ld.getSectorTime(2).toDouble();
 
-//                if (s1 != 0 && s2 != 0)
-//                {
-//                    sectorPositions[0] = (360 * s1) / avgTime;
-//                    sectorPositions[1] = (360 * (s1 + s2)) / avgTime;
-//                }
-//            }
+                if (s1 != 0 && s2 != 0)
+                {
+                    sectorPositions[0] = (360 * s1) / avgTime;
+                    sectorPositions[1] = (360 * (s1 + s2)) / avgTime;
+                }
+            }
         }
         if (sumT != 0 && k > 0)
             avgTime = sumT / k;
 
-        if (sumS1 != 0 && k > 0 && sumS2 != 0 && k > 0)
-        {
+//        if (sumS1 != 0 && k > 0 && sumS2 != 0 && k > 0)
+//        {
 
-            avgSectorTimes[0] = sumS1 / k;
-            sectorPositions[0] = (360 * avgSectorTimes[0]) / avgTime;
+//            avgSectorTimes[0] = sumS1 / k;
+//            sectorPositions[0] = (360.0 * avgSectorTimes[0]) / avgTime;
 
-            avgSectorTimes[1] = sumS2 / k;
-            sectorPositions[1] = (360 * (avgSectorTimes[1] + avgSectorTimes[0])) / avgTime;
-        }
+//            avgSectorTimes[1] = sumS2 / k;
+//            sectorPositions[1] = (360.0 * (avgSectorTimes[1] + avgSectorTimes[0])) / avgTime;
+//        }
 
         if (driverData->getPosition() != 1 && driverData->getLastLap().getGap().contains("L"))
             lapped = true;
@@ -276,6 +276,11 @@ void DriverRadarPositioner::paint(QPainter *p)
         if (driverData->getPosition() == 1)
         {
             pen.setColor(QColor(255, 255, 0));
+            pen.setWidth(2);
+        }
+        if (driverData->isRetired())
+        {
+            pen.setColor(QColor(255, 0, 0));
             pen.setWidth(2);
         }
         p->setPen(pen);
