@@ -51,6 +51,10 @@ LTWindow::LTWindow(QWidget *parent) :
 
     connectionProgress = new QProgressDialog(this);
 
+    driverRadar = new DriverRadar(this);
+    ui->radarLayout->addWidget(driverRadar);
+    driverRadar->setGeometry(driverRadar->x(), driverRadar->y(), driverRadar->width(), 200);
+
     connect(sessionTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     connect(eventRecorder, SIGNAL(recordingStopped()), this, SLOT(autoStopRecording()));
     connect(eventPlayer, SIGNAL(playClicked(int)), this, SLOT(eventPlayerPlayClicked(int)));
@@ -415,7 +419,7 @@ void LTWindow::timeout()
         eventPlayer->timeout();
 
     ui->eventStatusWidget->updateEventStatus();
-    ui->sessionDataWidget->updateRadar();
+    updateRadar();
 
     //during quali timer is stopped when we have red flag
     if (eventData.isSessionStarted())
@@ -497,14 +501,19 @@ void LTWindow::loadSettings()
 //    prefs->setAlternatingRowColors(settings->value("ui/alt_colors").toBool());
 //    prefs->setAutoRecord(settings->value("ui/auto_record").toBool());
 
-    ui->splitter->setOpaqueResize(settings->value("ui/ltresize").toBool());
+    ui->splitter->setOpaqueResize(settings->value("ui/ltresize").toBool());    
     //ui->tableWidget->setAlternatingRowColors(settings->value("ui/alt_colors").toBool());
 
     setFonts(mainFont, commentaryFont);
 
     restoreGeometry(settings->value("ui/window_geometry").toByteArray());
 
+    QList<int> sizes;
+    sizes << ui->verticalLayout_5->geometry().height() / 2 << ui->verticalLayout_5->geometry().height() / 2;
+    ui->radarSplitter->setSizes(sizes);
+
     ui->splitter->restoreState(settings->value("ui/splitter_pos").toByteArray());
+    ui->radarSplitter->restoreState(settings->value("ui/radar_splitter_pos").toByteArray());
     ui->tabWidget->setCurrentIndex(settings->value("ui/current_tab1").toInt());
 
     if (ui->tabWidget->currentIndex() == 0)
@@ -532,6 +541,7 @@ void LTWindow::saveSettings()
     encodePasswd(passwd);
     settings->setValue("ui/window_geometry", saveGeometry());
     settings->setValue("ui/splitter_pos", ui->splitter->saveState());
+    settings->setValue("ui/radar_splitter_pos", ui->radarSplitter->saveState());
     settings->setValue("ui/current_tab1", ui->tabWidget->currentIndex());
     if (ui->tabWidget->currentIndex() == 0)
         settings->setValue("ui/current_tab2", ui->driverDataWidget->currentIndex());
@@ -921,7 +931,7 @@ void LTWindow::eventPlayerOpenFile(QString fName)
 
     eventPlayer->startPlaying();
     saw->resetView();
-    ui->sessionDataWidget->setupRadar();
+    setupRadar();
 }
 
 void LTWindow::eventPlayerPlayClicked(int interval)

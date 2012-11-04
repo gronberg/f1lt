@@ -10,6 +10,16 @@
 #include "../main_gui/ltitemdelegate.h"
 
 
+class stringCmp
+{
+public:
+    bool operator()(QString ls1, QString ls2)
+    {
+        return !(ls1 < ls2);
+    }
+};
+
+
 LTFilesManagerDialog::LTFilesManagerDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LTFilesManagerDialog)
@@ -117,7 +127,7 @@ void LTFilesManagerDialog::updateTree(const QStringList &onlineList)
     ui->treeWidget->clear();
 
     QList<QString> list = ltList.toList();
-    qSort(list);
+    qSort(list.begin(), list.end(), stringCmp());
 
     QTreeWidgetItem *parent = 0;
     QListIterator<QString> iter(list);

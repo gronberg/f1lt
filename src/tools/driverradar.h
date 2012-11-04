@@ -1,10 +1,13 @@
 #ifndef DRIVERRADAR_H
 #define DRIVERRADAR_H
 
+#include <QDebug>
 #include <QVector>
 #include <QWidget>
 
 #include "driverradarpositioner.h"
+
+#include "../core/eventdata.h"
 
 class DriverRadar : public QWidget
 {
@@ -14,11 +17,7 @@ public:
            
     void update();
     void loadDriversList();
-    void setupDrivers()
-    {
-        for (int i = 0; i < drp.size(); ++i)
-            drp[i].setStartupPosition();
-    }
+    void setupDrivers();
 
 signals:
     
@@ -35,6 +34,7 @@ private:
     double radarPitR;
     double radarLappedR;
     
+    QPixmap trackMap;
 };
 
 #endif // DRIVERRADAR_H

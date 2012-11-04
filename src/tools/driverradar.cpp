@@ -1,7 +1,5 @@
 #include "driverradar.h"
 
-#include "../core/eventdata.h"
-
 DriverRadar::DriverRadar(QWidget *parent) :
     QWidget(parent), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0)
 {
@@ -13,7 +11,19 @@ void DriverRadar::loadDriversList()
     drp.resize(EventData::getInstance().getDriversData().size());
 
     for (int i = 0; i < drp.size(); ++i)
-        drp[i].setDriverData(&EventData::getInstance().getDriversData()[i]);
+        drp[i].setDriverData(&EventData::getInstance().getDriversData()[i]);    
+}
+
+void DriverRadar::setupDrivers()
+{
+    trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToWidth(radarPitR*1.4, Qt::SmoothTransformation);
+    if (trackMap.height() > trackMap.width())
+        trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToHeight(radarPitR*1.4, Qt::SmoothTransformation);
+
+    for (int i = 0; i < drp.size(); ++i)
+        drp[i].setStartupPosition();
+
+    repaint();
 }
 
 void DriverRadar::update()
@@ -35,6 +45,10 @@ void DriverRadar::resizeEvent(QResizeEvent *)
 
     for (int i = 0; i < drp.size(); ++i)
         drp[i].setRadarCoords(radarX, radarY, radarR, radarPitR, radarLappedR);
+
+    trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToWidth(radarPitR*1.4, Qt::SmoothTransformation);
+    if (trackMap.height() > trackMap.width())
+        trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToHeight(radarPitR*1.4, Qt::SmoothTransformation);
 }
 
 void DriverRadar::paintEvent(QPaintEvent *)
@@ -69,15 +83,17 @@ void DriverRadar::paintEvent(QPaintEvent *)
     int y = radarY - radarPitR;
     int w = radarX + radarPitR - x;
     int h = radarY + radarPitR - y;
-    p.drawArc(x, y, w, h, 30*16, 120*16);
+    p.drawArc(x, y, w, h, 270*16, 180*16);
 //    p.drawPath(path);
 
     pen.setWidth(2);
     p.setPen(pen);
     p.drawLine(radarX, radarY - radarR - 10, radarX, radarY - radarLappedR + 10);
 
+    p.drawPixmap(radarX - trackMap.width()/2, radarY - trackMap.height()/2, trackMap);
+
     for (int i = drp.size() - 1; i >= 0; --i)
-        drp[i].paint(&p);
+        drp[i].paint(&p);    
 
     p.end();
 }

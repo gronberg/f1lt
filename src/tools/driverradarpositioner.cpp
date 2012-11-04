@@ -6,7 +6,7 @@
 
 DriverRadarPositioner::DriverRadarPositioner(DriverData *dd, int x, int y, double r, double r1, double rL) :
     driverData(dd), radarX(x), radarY(y), radarR(r), radarPitR(r1), radarLappedR(rL), currentDeg(0.0),
-    avgTime(100), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false)
+    avgTime(100), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false), finished(false), qualiOut(false)
 {
     avgSectorTimes[0] = 0.0;
     avgSectorTimes[1] = 0.0;
@@ -23,6 +23,9 @@ void DriverRadarPositioner::setStartupPosition()
 {
     int laps = EventData::getInstance().getEventInfo().laps;
     lapped = false;
+    qualiOut = false;
+    inPits = false;
+    finished = false;
 
     sectorPositions[0] = 0;
     sectorPositions[1] = 0;
@@ -72,26 +75,34 @@ void DriverRadarPositioner::update()
         currentLapTime = 0;
         currentDeg = 0;
         calculateAvgs();
-        startingNewLap = false;
-
-        if (inPits)
-            currentDeg = (360.0 / (double)avgTime) * 5;
+        startingNewLap = false;                
     }
-    else
+//    else
     {        
-        if (driverData->isInPits() || driverData->isRetired() ||
+        if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT && driverData->getLastLap().getSectorTime(3).isValid() &&
+                EventData::getInstance().getCompletedLaps() == EventData::getInstance().getEventInfo().laps && (finished || currentDeg > 360))
+        {
+            currentDeg = 0;
+            finished = true;
+            inPits = true;
+            calculatePitPosition();
+        }
+
+        else if (driverData->isInPits() || driverData->isRetired() ||
             (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT && EventData::getInstance().getFlagStatus() == LTPackets::RED_FLAG))
         {
             inPits = true;
+            finished = false;
             calculatePitPosition();
         }
 
         else
         {
             if (inPits)
-                currentDeg = (360.0 / (double)avgTime) * 5;
+                currentDeg = 0;
 
             inPits = false;
+            finished = false;
             calculatePosition();
         }
     }
@@ -103,13 +114,15 @@ void DriverRadarPositioner::update()
 
 void DriverRadarPositioner::calculatePosition()
 {
-    if (!EventData::getInstance().isSessionStarted())
+    EventData &ev = EventData::getInstance();
+    if (!ev.isSessionStarted())
         return;
 
     if (driverData->getLastLap().getTime().toString() != "OUT" && currentDeg > 0)
     {
-        if (driverData->getLastLap().getSectorTime(1).isValid() && !driverData->getLastLap().getSectorTime(2).isValid()
-                && !driverData->getLastLap().getSectorTime(3).isValid() &&
+        if (driverData->getLastLap().getSectorTime(1).isValid() &&
+                ((ev.getEventType() == LTPackets::RACE_EVENT && driverData->getColorData().lapTimeColor() == LTPackets::YELLOW) ||
+                 (!driverData->getLastLap().getSectorTime(2).isValid() && !driverData->getLastLap().getSectorTime(3).isValid())) &&
                 currSector == 1)
         {
             currSector = 2;
@@ -162,12 +175,23 @@ void DriverRadarPositioner::calculatePosition()
 
 void DriverRadarPositioner::calculatePitPosition()
 {
-    int halfDrv = EventData::getInstance().getDriversData().size() / 2;
+//    int halfDrv = EventData::getInstance().getDriversData().size() / 2;
 
-    if (driverData->getCarID()-1 < halfDrv)
-        currentDeg = (halfDrv - driverData->getCarID()-1) * 5;
-    else
-        currentDeg = 360 - (driverData->getCarID()-1-halfDrv) * 5;
+//    if (driverData->getCarID()-1 < halfDrv)
+//        currentDeg = (halfDrv - driverData->getCarID()-1) * 5;
+//    else
+//        currentDeg = 360 - (driverData->getCarID()-1-halfDrv) * 5;
+
+    int no = driverData->getNumber() - 1;
+    if (no > 12)
+        no -= 1;
+    currentDeg = no * 7.75;
+
+    EventData &ev = EventData::getInstance();
+    if (ev.getEventType() == LTPackets::QUALI_EVENT &&
+        ((ev.getQualiPeriod() == 2 && driverData->getPosition() > 17) ||
+         (ev.getQualiPeriod() == 3 && driverData->getPosition() > 10)))
+         qualiOut = true;
 }
 
 void DriverRadarPositioner::calculateAvgs()
@@ -175,54 +199,70 @@ void DriverRadarPositioner::calculateAvgs()
     if (driverData)
     {
         double sumT = 0, sumS1 = 0, sumS2 = 0;
-        int k = 0;
+        int k = 0, ks1=0, ks2=0;
         for (int i = driverData->getLapData().size()-1; i >= driverData->getLapData().size()-4 && i >= 0; --i)
         {
             LapData ld = driverData->getLapData()[i];
             LapData last = driverData->getLapData().last();
+
+            if (EventData::getInstance().getEventType() != LTPackets::RACE_EVENT)
+                last = driverData->getSessionRecords().getBestLap();
+
             if (ld.getTime().isValid() &&
                (ld.getRaceLapExtraData().isSCLap() == last.getRaceLapExtraData().isSCLap()) &&
                     (fabs(ld.getTime().toDouble() - last.getTime().toDouble()) < 5))
             {
-                sumT += ld.getTime().toDouble();
-                sumS1 += ld.getSectorTime(1).toDouble();
-                sumS2 += ld.getSectorTime(2).toDouble();
+                sumT += ld.getTime().toDouble();                
                 ++k;
             }
-        }
-        if (EventData::getInstance().getSessionRecords().getFastestLap().getTime().isValid())
-        {
-            avgTime = EventData::getInstance().getSessionRecords().getFastestLap().getTime().toDouble();
 
-            int drvNo = EventData::getInstance().getSessionRecords().getFastestLap().getNumber();
-            int lapNo = EventData::getInstance().getSessionRecords().getFastestLap().getLapNumber();
-            DriverData *dd = EventData::getInstance().getDriverDataPtr(drvNo);
-            if (dd)
+            if (ld.getSectorTime(1).isValid() &&
+                fabs(ld.getSectorTime(1).toDouble()-last.getSectorTime(1).toDouble()) < 5)
             {
-                LapData ld = dd->getLapData(lapNo);
+                sumS1 += ld.getSectorTime(1).toDouble();
+                ++ks1;
+            }
 
-                double s1 = ld.getSectorTime(1).toDouble();
-                double s2 = ld.getSectorTime(2).toDouble();
-
-                if (s1 != 0 && s2 != 0)
-                {
-                    sectorPositions[0] = (360 * s1) / avgTime;
-                    sectorPositions[1] = (360 * (s1 + s2)) / avgTime;
-                }
+            if (ld.getSectorTime(2).isValid() &&
+                fabs(ld.getSectorTime(2).toDouble()-last.getSectorTime(2).toDouble()) < 5)
+            {
+                sumS2 += ld.getSectorTime(2).toDouble();
+                ++ks2;
             }
         }
+//        if (EventData::getInstance().getSessionRecords().getFastestLap().getTime().isValid())
+//        {
+//            avgTime = EventData::getInstance().getSessionRecords().getFastestLap().getTime().toDouble();
+
+//            int drvNo = EventData::getInstance().getSessionRecords().getFastestLap().getNumber();
+//            int lapNo = EventData::getInstance().getSessionRecords().getFastestLap().getLapNumber();
+//            DriverData *dd = EventData::getInstance().getDriverDataPtr(drvNo);
+//            if (dd)
+//            {
+//                LapData ld = dd->getLapData(lapNo);
+
+//                double s1 = ld.getSectorTime(1).toDouble();
+//                double s2 = ld.getSectorTime(2).toDouble();
+
+//                if (s1 != 0 && s2 != 0)
+//                {
+//                    sectorPositions[0] = (360 * s1) / avgTime;
+//                    sectorPositions[1] = (360 * (s1 + s2)) / avgTime;
+//                }
+//            }
+//        }
         if (sumT != 0 && k > 0)
             avgTime = sumT / k;
 
-//        if (sumS1 != 0 && k > 0 && sumS2 != 0 && k > 0)
-//        {
+        if (sumS1 != 0 && ks1 > 0 && sumS2 != 0 && ks2 > 0)
+        {
 
-//            avgSectorTimes[0] = sumS1 / k;
-//            sectorPositions[0] = (360.0 * avgSectorTimes[0]) / avgTime;
+            avgSectorTimes[0] = sumS1 / ks1;
+            sectorPositions[0] = (360.0 * avgSectorTimes[0]) / avgTime;
 
-//            avgSectorTimes[1] = sumS2 / k;
-//            sectorPositions[1] = (360.0 * (avgSectorTimes[1] + avgSectorTimes[0])) / avgTime;
-//        }
+            avgSectorTimes[1] = sumS2 / ks2;
+            sectorPositions[1] = (360.0 * (avgSectorTimes[1] + avgSectorTimes[0])) / avgTime;
+        }
 
         if (driverData->getPosition() != 1 && driverData->getLastLap().getGap().contains("L"))
             lapped = true;
@@ -232,11 +272,13 @@ void DriverRadarPositioner::calculateAvgs()
 
         if (driverData->getLastLap().getTime().toString() == "IN PIT" || driverData->isRetired())
             inPits = true;
-        else
-        {
+        else        
             inPits = false;
-        }
 
+
+        if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT && driverData->getLastLap().getSectorTime(3).isValid() &&
+                        EventData::getInstance().getCompletedLaps() == EventData::getInstance().getEventInfo().laps)
+            avgTime += 20;
 
     }
 }
@@ -247,10 +289,10 @@ void DriverRadarPositioner::paint(QPainter *p)
     {
         double r = radarR;
 
-        if (inPits)
+        if (inPits/* && !qualiOut*/)
             r = radarPitR;
 
-        else if (lapped)
+        else if (lapped/* || qualiOut*/)
             r = radarLappedR;
 
         double x = radarX, y = radarY - r;
@@ -265,24 +307,24 @@ void DriverRadarPositioner::paint(QPainter *p)
         }
 
 
-        p->setRenderHint(QPainter::Antialiasing);
         QPainterPath path;
         path.addEllipse(QPoint(x, y), 12, 12);
         QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
-        p->setBrush(QBrush(drvColor));
+        p->setBrush(QBrush(drvColor));        
 
         QPen pen(drvColor);
 
         if (driverData->getPosition() == 1)
         {
             pen.setColor(QColor(255, 255, 0));
-            pen.setWidth(2);
+            pen.setWidth(3);
         }
-        if (driverData->isRetired())
+        if (driverData->isRetired() || qualiOut)
         {
             pen.setColor(QColor(255, 0, 0));
-            pen.setWidth(2);
-        }
+            pen.setWidth(3);
+        }        
+
         p->setPen(pen);
 
         p->drawPath(path);
@@ -297,7 +339,8 @@ void DriverRadarPositioner::paint(QPainter *p)
 
         p->setFont(QFont("Arial", 12, 75));
 
-        p->setRenderHint(QPainter::Antialiasing);
         p->drawText(numX, numY, number);
+
+//        p->drawPixmap(x-12, y-12, light);
     }
 }

@@ -35,10 +35,7 @@ SessionDataWidget::SessionDataWidget(QWidget *parent) :
         ui->fastestLapsTable->setRowHeight(i, 22);
 
     for (int i = 0; i < pitStopsModel.rowCount(); ++i)
-        ui->pitStopsTable->setRowHeight(i, 22);
-
-    driverRadar = new DriverRadar(this);
-    ui->radarLayout->addWidget(driverRadar);
+        ui->pitStopsTable->setRowHeight(i, 22);    
 
     setupContents();    
 }
@@ -68,9 +65,7 @@ QTableWidgetItem* SessionDataWidget::setItem(QTableWidget *table, int row, int c
 }
 
 void SessionDataWidget::setupContents()
-{
-    driverRadar->setupDrivers();
-    driverRadar->repaint();
+{    
     ui->tableWidget_5->setColumnWidth(0, ui->tableWidget_5->width());
 
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
@@ -281,10 +276,6 @@ void SessionDataWidget::updatePitStops(bool clear)
         ui->pitStopsTable->setRowHeight(i, 22);
 }
 
-void SessionDataWidget::updateRadar()
-{
-    driverRadar->update();
-}
 
 void SessionDataWidget::on_tabWidget_currentChanged(int index)
 {

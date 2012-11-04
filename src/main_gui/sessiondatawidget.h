@@ -11,7 +11,7 @@
 #include "models/fastestlapsmodel.h"
 #include "models/pitstopsmodel.h"
 #include "models/speedrecordsmodel.h"
-#include "tools/driverradar.h"
+
 
 namespace Ui {
 class SessionDataWidget;
@@ -37,11 +37,6 @@ public:
     void updatePitStops(bool clear = false);
     void updateEventInfo();
 
-    void updateRadar();
-    void setupRadar()
-    {
-        driverRadar->setupDrivers();
-    }
 
     void clearData();
     void clearFastestLaps();
@@ -66,8 +61,6 @@ private:
     SpeedRecordsModel speedRecordsModel;
     FastestLapsModel fastestLapsModel;
     PitStopsModel pitStopsModel;
-
-    DriverRadar *driverRadar;
 };
 
 #endif // SESSIONDATAWIDGET_H

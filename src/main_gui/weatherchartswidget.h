@@ -5,6 +5,7 @@
 #include "ui_weatherchartswidget.h"
 
 #include "../charts/weatherchart.h"
+#include "tools/driverradar.h"
 
 class WeatherChartsWidget : public QWidget
 {

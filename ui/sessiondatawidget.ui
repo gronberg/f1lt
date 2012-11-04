@@ -57,7 +57,7 @@
       </palette>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>3</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -1427,19 +1427,6 @@
           <bool>false</bool>
          </attribute>
         </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_5">
-      <attribute name="title">
-       <string>Driver radar</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
-       <property name="margin">
-        <number>4</number>
-       </property>
-       <item>
-        <layout class="QVBoxLayout" name="radarLayout"/>
        </item>
       </layout>
      </widget>

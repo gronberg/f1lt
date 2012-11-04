@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Thu Nov 1 13:17:13 2012
+** Created: Sun Nov 4 12:50:30 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -67,9 +67,6 @@ public:
     QWidget *tab_3;
     QVBoxLayout *verticalLayout_4;
     QTableView *pitStopsTable;
-    QWidget *tab_5;
-    QVBoxLayout *verticalLayout_8;
-    QVBoxLayout *radarLayout;
 
     void setupUi(QWidget *SessionDataWidget)
     {
@@ -465,24 +462,13 @@ public:
         verticalLayout_4->addWidget(pitStopsTable);
 
         tabWidget->addTab(tab_3, QString());
-        tab_5 = new QWidget();
-        tab_5->setObjectName(QString::fromUtf8("tab_5"));
-        verticalLayout_8 = new QVBoxLayout(tab_5);
-        verticalLayout_8->setContentsMargins(4, 4, 4, 4);
-        verticalLayout_8->setObjectName(QString::fromUtf8("verticalLayout_8"));
-        radarLayout = new QVBoxLayout();
-        radarLayout->setObjectName(QString::fromUtf8("radarLayout"));
-
-        verticalLayout_8->addLayout(radarLayout);
-
-        tabWidget->addTab(tab_5, QString());
 
         verticalLayout->addWidget(tabWidget);
 
 
         retranslateUi(SessionDataWidget);
 
-        tabWidget->setCurrentIndex(4);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(SessionDataWidget);
@@ -514,7 +500,6 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("SessionDataWidget", "Fastest laps", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("SessionDataWidget", "Speed records", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("SessionDataWidget", "Fastest pit stops", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tab_5), QApplication::translate("SessionDataWidget", "Driver radar", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

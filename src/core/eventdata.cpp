@@ -36,6 +36,7 @@ EventData::EventData()
     qualiPeriod = 0;
 
     sessionStarted = false;
+    sessionFinished = false;
 }
 
 void EventData::clear()
@@ -54,6 +55,7 @@ void EventData::clear()
     flagStatus = LTPackets::GREEN_FLAG;
 
     sessionStarted = false;
+    sessionFinished = false;
     qualiPeriod = 0;
 
     commentary = "";    

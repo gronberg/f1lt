@@ -46,6 +46,8 @@ private:
 
     bool inPits;
     bool lapped;
+    bool finished;
+    bool qualiOut;
 };
 
 #endif // DRIVERRADARPOSITIONER_H

@@ -211,6 +211,9 @@ public:
     bool isSessionStarted()             const { return sessionStarted; }
     void setSessionStarted(bool st)     { sessionStarted = st; }
 
+    bool isSessionFinished()             const { return sessionFinished; }
+    void setSessionFinished(bool st)     { sessionFinished = st; }
+
     const QString &getCommentary()             const { return commentary; }
     int getQualiPeriod()                const { return qualiPeriod; }
 
@@ -244,6 +247,7 @@ private:
     Weather weather;
 
     bool sessionStarted;
+    bool sessionFinished;
 
     QString commentary;
 

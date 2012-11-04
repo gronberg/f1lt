@@ -36,7 +36,7 @@ void SessionTimer::timerTimeout()
                         if (hours < 0)
                         {
                             secs = mins = hours = 0;
-                            eventData.setSessionStarted(false);
+                            eventData.setSessionFinished(true);
 //                            counterMode = true;
                         }
                     }

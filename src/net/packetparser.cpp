@@ -938,6 +938,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                         (eventData.eventType == LTPackets::RACE_EVENT && eventData.lapsCompleted < eventData.eventInfo.laps)))
                     {
                         eventData.sessionStarted = true;
+                        eventData.sessionFinished = false;
                         if (eventData.eventType == LTPackets::QUALI_EVENT)
                             ++eventData.qualiPeriod;
                     }

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Thu Nov 1 13:17:13 2012
+** Created: Sun Nov 4 12:50:30 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -67,8 +67,11 @@ public:
     QWidget *tab_3;
     QVBoxLayout *verticalLayout_6;
     WeatherChartsWidget *weatherChartsWidget;
-    QWidget *tab_4;
-    QVBoxLayout *verticalLayout;
+    QWidget *tab_5;
+    QVBoxLayout *verticalLayout_5;
+    QSplitter *radarSplitter;
+    QWidget *verticalLayoutWidget;
+    QVBoxLayout *radarLayout;
     QTextEdit *textEdit;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -223,43 +226,67 @@ public:
         verticalLayout_6->addWidget(weatherChartsWidget);
 
         tabWidget->addTab(tab_3, QString());
-        tab_4 = new QWidget();
-        tab_4->setObjectName(QString::fromUtf8("tab_4"));
-        verticalLayout = new QVBoxLayout(tab_4);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        textEdit = new QTextEdit(tab_4);
-        textEdit->setObjectName(QString::fromUtf8("textEdit"));
+        tab_5 = new QWidget();
+        tab_5->setObjectName(QString::fromUtf8("tab_5"));
         QPalette palette;
-        QBrush brush(QColor(220, 220, 220, 255));
+        QBrush brush(QColor(240, 240, 240, 255));
         brush.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Text, brush);
+        palette.setBrush(QPalette::Active, QPalette::Base, brush);
         QBrush brush1(QColor(20, 20, 20, 255));
         brush1.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Base, brush1);
-        QBrush brush2(QColor(159, 159, 159, 255));
+        palette.setBrush(QPalette::Active, QPalette::Window, brush1);
+        palette.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette.setBrush(QPalette::Inactive, QPalette::Window, brush1);
+        palette.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette.setBrush(QPalette::Disabled, QPalette::Window, brush1);
+        tab_5->setPalette(palette);
+        verticalLayout_5 = new QVBoxLayout(tab_5);
+        verticalLayout_5->setSpacing(6);
+        verticalLayout_5->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        radarSplitter = new QSplitter(tab_5);
+        radarSplitter->setObjectName(QString::fromUtf8("radarSplitter"));
+        radarSplitter->setAutoFillBackground(true);
+        radarSplitter->setFrameShape(QFrame::NoFrame);
+        radarSplitter->setOrientation(Qt::Vertical);
+        radarSplitter->setHandleWidth(3);
+        verticalLayoutWidget = new QWidget(radarSplitter);
+        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
+        radarLayout = new QVBoxLayout(verticalLayoutWidget);
+        radarLayout->setSpacing(6);
+        radarLayout->setContentsMargins(11, 11, 11, 11);
+        radarLayout->setObjectName(QString::fromUtf8("radarLayout"));
+        radarLayout->setSizeConstraint(QLayout::SetMaximumSize);
+        radarLayout->setContentsMargins(0, 0, 0, 0);
+        radarSplitter->addWidget(verticalLayoutWidget);
+        textEdit = new QTextEdit(radarSplitter);
+        textEdit->setObjectName(QString::fromUtf8("textEdit"));
+        QPalette palette1;
+        QBrush brush2(QColor(220, 220, 220, 255));
         brush2.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Highlight, brush2);
-        palette.setBrush(QPalette::Inactive, QPalette::Text, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::Base, brush1);
-        palette.setBrush(QPalette::Inactive, QPalette::Highlight, brush2);
-        QBrush brush3(QColor(130, 130, 130, 255));
+        palette1.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette1.setBrush(QPalette::Active, QPalette::Base, brush1);
+        QBrush brush3(QColor(159, 159, 159, 255));
         brush3.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        QBrush brush4(QColor(240, 240, 240, 255));
+        palette1.setBrush(QPalette::Active, QPalette::Highlight, brush3);
+        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette1.setBrush(QPalette::Inactive, QPalette::Highlight, brush3);
+        QBrush brush4(QColor(130, 130, 130, 255));
         brush4.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Disabled, QPalette::Base, brush4);
+        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush4);
+        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush);
         QBrush brush5(QColor(175, 175, 175, 255));
         brush5.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
-        textEdit->setPalette(palette);
+        palette1.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        textEdit->setPalette(palette1);
         textEdit->setLineWrapMode(QTextEdit::WidgetWidth);
         textEdit->setTextInteractionFlags(Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse);
+        radarSplitter->addWidget(textEdit);
 
-        verticalLayout->addWidget(textEdit);
+        verticalLayout_5->addWidget(radarSplitter);
 
-        tabWidget->addTab(tab_4, QString());
+        tabWidget->addTab(tab_5, QString());
         splitter->addWidget(tabWidget);
 
         verticalLayout_4->addWidget(splitter);
@@ -326,7 +353,7 @@ public:
         retranslateUi(LTWindow);
         QObject::connect(actionExit, SIGNAL(triggered(bool)), LTWindow, SLOT(close()));
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(LTWindow);
@@ -375,7 +402,7 @@ public:
 "<tr>\n"
 "<td style=\"border: none;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("LTWindow", "Commentary", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tab_5), QApplication::translate("LTWindow", "Driver radar && commentary", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("LTWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("LTWindow", "Tools", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("LTWindow", "Help", 0, QApplication::UnicodeUTF8));
