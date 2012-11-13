@@ -13,7 +13,7 @@ class F1LTCore
 public:
     F1LTCore();
 
-    static QString programVersion() { return "1.4.1"; }
+    static QString programVersion() { return "1.5.0"; }
 
 
     static QString programHomeDir()
@@ -54,6 +54,20 @@ public:
             return prefix + "/share/season.dat";
         else
             return programHomeDir() + "/season.dat";
+#endif
+    }
+
+    static QString trackDataFile()
+    {
+#ifdef WIN32
+        return programHomeDir() + "/trackdata.dat";
+#else
+        QString prefix = STR(INSTALL_PREFIX);
+        QDir dir;
+        if (dir.exists(prefix))
+            return prefix + "/share/trackdata.dat";
+        else
+            return programHomeDir() + "/trackdata.dat";
 #endif
     }
 

@@ -21,7 +21,7 @@ INSTALLS += target \
 DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+#DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
@@ -69,7 +69,10 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/tools/followadriverdialog.cpp \
     src/tools/sessiontimeswidget.cpp \
     src/tools/driverradarpositioner.cpp \
-    src/tools/driverradar.cpp
+    src/tools/driverradar.cpp \
+    src/tools/drivertrackerpositioner.cpp \
+    src/tools/drivertracker.cpp \
+    src/tools/drivertrackerwidget.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -117,7 +120,10 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/tools/followadriverdialog.h \
     src/tools/sessiontimeswidget.h \
     src/tools/driverradarpositioner.h \
-    src/tools/driverradar.h
+    src/tools/driverradar.h \
+    src/tools/drivertrackerpositioner.h \
+    src/tools/drivertracker.h \
+    src/tools/drivertrackerwidget.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -136,7 +142,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/ltfilesmanagerdialog.ui \
     ui/aboutdialog.ui \
     ui/followadriverdialog.ui \
-    src/tools/sessiontimeswidget.ui
+    src/tools/sessiontimeswidget.ui \
+    src/tools/drivertrackerwidget.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

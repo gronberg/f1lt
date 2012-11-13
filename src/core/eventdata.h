@@ -197,7 +197,11 @@ public:
     int correctPosition(const LapTime &ld) const;
 
     const LTEvent &getEventInfo()              const { return eventInfo; }
-    void setEventInfo(const LTEvent &ev)       { eventInfo = ev; }
+    void setEventInfo(const LTEvent &ev)
+    {
+        eventInfo = ev;
+        SeasonData::getInstance().setTrackCoordinates(eventInfo);
+    }
     int getEventId()                    const { return eventId; }
     LTPackets::EventType getEventType()    const { return eventType; }
     LTPackets::FlagStatus getFlagStatus()  const { return flagStatus; }

@@ -14,9 +14,32 @@ DriverRadarPositioner::DriverRadarPositioner(DriverData *dd, int x, int y, doubl
     sectorPositions[1] = 0.0;
 }
 
+void DriverRadarPositioner::setupHelmet(int size)
+{
+    qDebug() << "SETUP" << driverData->getNumber() << size;
+    helmet = QImage(":/ui_icons/helmet.png").scaledToHeight(size, Qt::SmoothTransformation);
+    QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(size, Qt::SmoothTransformation);
+
+    QImage hl(helmet.size(), helmet.format());
+    QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
+    QPainter phl;
+    phl.begin(&hl);
+    phl.setBrush(QBrush(drvColor));
+    phl.drawRect(0, 0, hl.width(), hl.height());
+    phl.setCompositionMode(QPainter::CompositionMode_DestinationOut);
+    phl.drawImage(0, 0, helmetMask);
+    phl.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    phl.drawImage(0, 0, helmet);
+    phl.end();
+
+    helmet = hl;
+}
+
 void DriverRadarPositioner::setDriverData(DriverData *dd)
 {
     driverData = dd;
+
+    setupHelmet(30);
 }
 
 void DriverRadarPositioner::setStartupPosition()
@@ -26,6 +49,8 @@ void DriverRadarPositioner::setStartupPosition()
     qualiOut = false;
     inPits = false;
     finished = false;
+
+    setupHelmet(30);
 
     sectorPositions[0] = 0;
     sectorPositions[1] = 0;
@@ -80,7 +105,7 @@ void DriverRadarPositioner::update()
 //    else
     {        
         if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT && driverData->getLastLap().getSectorTime(3).isValid() &&
-                EventData::getInstance().getCompletedLaps() == EventData::getInstance().getEventInfo().laps && (finished || currentDeg > 360))
+                EventData::getInstance().getCompletedLaps() == EventData::getInstance().getEventInfo().laps && (finished || fabs(maxDeg() - currentDeg) < 5))
         {
             currentDeg = 0;
             finished = true;
@@ -98,8 +123,9 @@ void DriverRadarPositioner::update()
 
         else
         {
-            if (inPits)
-                currentDeg = 0;
+            if (inPits)            
+                calculatePitOutPosition();
+
 
             inPits = false;
             finished = false;
@@ -118,7 +144,7 @@ void DriverRadarPositioner::calculatePosition()
     if (!ev.isSessionStarted())
         return;
 
-    if (driverData->getLastLap().getTime().toString() != "OUT" && currentDeg > 0)
+    if (/*driverData->getLastLap().getTime().toString() != "OUT" &&*/ currentDeg > 0)
     {
         if (driverData->getLastLap().getSectorTime(1).isValid() &&
                 ((ev.getEventType() == LTPackets::RACE_EVENT && driverData->getColorData().lapTimeColor() == LTPackets::YELLOW) ||
@@ -200,10 +226,24 @@ void DriverRadarPositioner::calculateAvgs()
     {
         double sumT = 0, sumS1 = 0, sumS2 = 0;
         int k = 0, ks1=0, ks2=0;
-        for (int i = driverData->getLapData().size()-1; i >= driverData->getLapData().size()-4 && i >= 0; --i)
+
+        LapData last = driverData->getLastLap();
+
+        if (!driverData->getLapData().isEmpty())
+            last = driverData->getLapData().last();
+
+        int i = driverData->getLapData().size()-1;
+
+        //if the current lap is a second lap out of pits, synchronization has to be done to the best lap, not the last which was slow due to the pit stop
+        if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT && i > 0 &&
+                (driverData->getLapData()[i-1].getRaceLapExtraData().isPitLap() || driverData->getLapData()[i-1].getRaceLapExtraData().isSCLap()) &&
+                !last.getRaceLapExtraData().isPitLap() &&
+                !last.getRaceLapExtraData().isSCLap())
+            last = driverData->getSessionRecords().getBestLap();
+
+        for (i = driverData->getLapData().size()-1; i >= driverData->getLapData().size()-4 && i >= 0; --i)
         {
-            LapData ld = driverData->getLapData()[i];
-            LapData last = driverData->getLapData().last();
+            LapData ld = driverData->getLapData()[i];            
 
             if (EventData::getInstance().getEventType() != LTPackets::RACE_EVENT)
                 last = driverData->getSessionRecords().getBestLap();
@@ -254,6 +294,8 @@ void DriverRadarPositioner::calculateAvgs()
         if (sumT != 0 && k > 0)
             avgTime = sumT / k;
 
+
+
         if (sumS1 != 0 && ks1 > 0 && sumS2 != 0 && ks2 > 0)
         {
 
@@ -270,7 +312,7 @@ void DriverRadarPositioner::calculateAvgs()
             lapped = false;
 
 
-        if (driverData->getLastLap().getTime().toString() == "IN PIT" || driverData->isRetired())
+        if (driverData->getLastLap().getRaceLapExtraData().isPitLap() || driverData->isRetired())
             inPits = true;
         else        
             inPits = false;
@@ -278,37 +320,42 @@ void DriverRadarPositioner::calculateAvgs()
 
         if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT && driverData->getLastLap().getSectorTime(3).isValid() &&
                         EventData::getInstance().getCompletedLaps() == EventData::getInstance().getEventInfo().laps)
-            avgTime += 20;
+            avgTime += 60;
 
     }
+}
+
+QPoint DriverRadarPositioner::getCoordinates()
+{
+    double r = radarR;
+
+    if (inPits/* && !qualiOut*/)
+        r = radarPitR;
+
+    else if (lapped/* || qualiOut*/)
+        r = radarLappedR;
+
+    double x = radarX, y = radarY - r;
+
+    if (currentDeg > 0)
+    {
+        double alpha = currentDeg / 360 * 2 * M_PI;// - quarter * 90;
+
+        x = radarX + /*cos(currentDeg)/fabs(cos(currentDeg)) **/ sin(alpha) * r;
+        y = radarY - /*sin(currentDeg)/fabs(sin(currentDeg)) **/ cos(alpha) * r;
+    }
+
+    return QPoint(x, y);
 }
 
 void DriverRadarPositioner::paint(QPainter *p)
 {
     if (driverData && driverData->getCarID() > 0)
     {
-        double r = radarR;
-
-        if (inPits/* && !qualiOut*/)
-            r = radarPitR;
-
-        else if (lapped/* || qualiOut*/)
-            r = radarLappedR;
-
-        double x = radarX, y = radarY - r;
-
-        if (currentDeg > 0)
-        {
-            double alpha = currentDeg / 360 * 2 * M_PI;// - quarter * 90;
-
-            x = radarX + /*cos(currentDeg)/fabs(cos(currentDeg)) **/ sin(alpha) * r;
-            y = radarY - /*sin(currentDeg)/fabs(sin(currentDeg)) **/ cos(alpha) * r;
-
-        }
-
+        QPoint point = getCoordinates();
 
         QPainterPath path;
-        path.addEllipse(QPoint(x, y), 12, 12);
+        path.addEllipse(point, 15, 15);
         QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
         p->setBrush(QBrush(drvColor));        
 
@@ -327,20 +374,46 @@ void DriverRadarPositioner::paint(QPainter *p)
 
         p->setPen(pen);
 
-        p->drawPath(path);
+//        p->drawPath(path);
 
-        p->setPen(QColor(20, 20, 20));
+        p->drawImage(point.x()-15, point.y()-15, helmet);
 
+        p->setFont(QFont("Arial", 8, 75));
 
-        QString number = QString::number(driverData->getNumber());
+        QString number = SeasonData::getInstance().getDriverShortName(driverData->getDriverName());//QString::number(driverData->getNumber());
 
-        int numX = x - p->fontMetrics().width(number)/2;
-        int numY = y + 12 - p->fontMetrics().height()/2;
+        p->setBrush(drvColor);
 
-        p->setFont(QFont("Arial", 12, 75));
+        if (inPits)
+            p->drawRoundedRect(point.x()-12-helmet.width(), point.y(), helmet.width()-4, 14, 4, 4);
+
+        else
+            p->drawRoundedRect(point.x()-12, point.y()+18, helmet.width()-4, 14, 4, 4);
+
+        p->setPen(SeasonData::getInstance().getColor(LTPackets::BACKGROUND));
+
+        int numX = point.x() - 16 + p->fontMetrics().width(number)/2;
+        int numY = point.y() + 23 + p->fontMetrics().height()/2;
+
+        if (inPits)
+        {
+            numX = point.x() - helmet.width() - 16 + p->fontMetrics().width(number)/2;
+            numY = point.y() + 5 + p->fontMetrics().height()/2;
+        }
 
         p->drawText(numX, numY, number);
 
-//        p->drawPixmap(x-12, y-12, light);
+
+//        p->setPen(QColor(20, 20, 20));
+
+
+//        QString name = SeasonData::getInstance().getDriverShortName(driverData->getDriverName());
+
+//        int numX = point.x() - p->fontMetrics().width(name)/2;
+//        int numY = point.y() + 12 - p->fontMetrics().height()/2;
+
+//        p->setFont(QFont("Arial", 10, 75));
+
+//        p->drawText(numX, numY, name);
     }
 }

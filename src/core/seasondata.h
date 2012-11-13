@@ -34,6 +34,13 @@ struct LTTeam
     QPixmap carImg;
 };
 
+struct LTTrackCoordinates
+{
+    int indexes[3];     //index of S1, S2 and pit out
+    QList<QPoint> coordinates;
+    QString name;
+};
+
 struct LTEvent
 {
     LTEvent() : eventNo(0), laps(0), trackImg(100,100) { }
@@ -51,7 +58,11 @@ struct LTEvent
     {
         return fpDate < event.fpDate;
     }
+
+    LTTrackCoordinates trackCoordinates;
 };
+
+
 
 class CarThumbnailsFactory
 {
@@ -75,6 +86,7 @@ public:
         return instance;
     }
     bool loadSeasonFile();
+    bool loadTrackDataFile();
 
     QPixmap getCarImg(int no);
     int getFPNumber();
@@ -91,6 +103,7 @@ public:
     QTime correctFPTime(const QTime &time);
     QTime correctQualiTime(const QTime &time, int qualiPeriod);
 
+    void setTrackCoordinates(LTEvent &event);
     QString getDriverName(QString &);
     QString getDriverLastName(const QString&);
     QString getDriverShortName(const QString&);
@@ -124,6 +137,7 @@ private:
 
     QVector<LTTeam> ltTeams;
     QVector<LTEvent> ltEvents;
+    QVector<LTTrackCoordinates> ltTrackCoordinates;
 
     int baseEventId;
     int baseEventInc;

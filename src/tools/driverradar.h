@@ -14,10 +14,11 @@ class DriverRadar : public QWidget
     Q_OBJECT
 public:
     explicit DriverRadar(QWidget *parent = 0);
+    virtual ~DriverRadar();
            
     void update();
-    void loadDriversList();
-    void setupDrivers();
+    virtual void loadDriversList();
+    virtual void setupDrivers();
 
 signals:
     
@@ -27,14 +28,14 @@ protected:
     void resizeEvent(QResizeEvent *);
     void paintEvent(QPaintEvent *);
 
-private:
-    QVector<DriverRadarPositioner> drp;
+    QVector<DriverRadarPositioner*> drp;
+    QPixmap trackMap;
+
+private:    
     int radarX, radarY;
     double radarR;
     double radarPitR;
-    double radarLappedR;
-    
-    QPixmap trackMap;
+    double radarLappedR;        
 };
 
 #endif // DRIVERRADAR_H

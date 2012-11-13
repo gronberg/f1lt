@@ -129,6 +129,12 @@ void DriverData::addRaceLap(const EventData &ed)
             lapData.last().lapTime = lastLap.lapTime;
             return;
         }
+
+        if (lastLap.lapTime.toString() == "IN PIT")
+            lastLap.raceLapExtraData.pitLap = true;
+        else
+            lastLap.raceLapExtraData.pitLap = false;
+
         //if we get "IN PIT" before driver crossed the line, we get it again after he croses, in that case update only gap and interval
         if (!lapData.empty() && lastLap.lapTime.toString() == "IN PIT" && lapData.last().lapTime.toString() == "IN PIT" && !releasedFromPits)
         {

@@ -111,16 +111,19 @@ protected:
 class RaceLapExtraData
 {
 public:
-    RaceLapExtraData() : scLap(false) { }
+    RaceLapExtraData() : scLap(false), pitLap(false) { }
 
     bool isSCLap() const { return scLap; }
     void setSCLap(bool sc) { scLap = sc; }
+
+    bool isPitLap() const { return pitLap; }
 
     friend class LapData;
     friend class DriverData;
 
 protected:
     bool scLap;
+    bool pitLap;
 };
 
 //-----------------------------------------------------------

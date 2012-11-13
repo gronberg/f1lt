@@ -174,7 +174,69 @@ bool SeasonData::loadSeasonFile()
     qSort(ltTeams);
     qSort(ltEvents);
 
+    return loadTrackDataFile();
+
     return true;
+}
+
+bool SeasonData::loadTrackDataFile()
+{
+    QString fName = F1LTCore::trackDataFile();
+    if (!fName.isNull())
+    {
+        QFile f(fName);
+        if (f.open(QIODevice::ReadOnly))
+        {
+            QDataStream stream(&f);
+
+            int size;
+            stream >> size;
+
+            qDebug() << size;
+            for (int i = 0; i < size; ++i)
+            {
+                LTTrackCoordinates trackCoordinates;
+
+                int coordSize;
+                stream >> trackCoordinates.name;
+                stream >> trackCoordinates.indexes[0];
+                stream >> trackCoordinates.indexes[1];
+                stream >> trackCoordinates.indexes[2];
+                stream >> coordSize;
+
+                for (int j = 0; j < coordSize; ++j)
+                {
+                    QPoint p;
+                    stream >> p;
+                    trackCoordinates.coordinates.append(p);
+                }
+                ltTrackCoordinates.append(trackCoordinates);
+
+                for (int j = 0; j < ltEvents.size(); ++j)
+                {
+                    if (ltEvents[j].eventShortName.toLower() == trackCoordinates.name.toLower())
+                    {
+                        ltEvents[j].trackCoordinates = trackCoordinates;
+                        break;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+void SeasonData::setTrackCoordinates(LTEvent &event)
+{
+    for (int i = 0; i < ltTrackCoordinates.size(); ++i)
+    {
+        if (ltTrackCoordinates[i].name.toLower() == event.eventShortName.toLower())
+        {
+            event.trackCoordinates = ltTrackCoordinates[i];
+            return;
+        }
+    }
 }
 
 QPixmap SeasonData::getCarImg(int no)

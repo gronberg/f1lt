@@ -23,6 +23,7 @@ LTWindow::LTWindow(QWidget *parent) :
     ltFilesManagerDialog = new LTFilesManagerDialog(this);
     saw = new SessionAnalysisWidget();
     stw = new SessionTimesWidget();
+    driverTrackerWidget = new DriverTrackerWidget();
     aboutDialog = new AboutDialog(this);
 
 //    ui->trackStatusWidget->setupItems();
@@ -50,10 +51,6 @@ LTWindow::LTWindow(QWidget *parent) :
     playing = false;
 
     connectionProgress = new QProgressDialog(this);
-
-    driverRadar = new DriverRadar(this);
-    ui->radarLayout->addWidget(driverRadar);
-    driverRadar->setGeometry(driverRadar->x(), driverRadar->y(), driverRadar->width(), 200);
 
     connect(sessionTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     connect(eventRecorder, SIGNAL(recordingStopped()), this, SLOT(autoStopRecording()));
@@ -391,6 +388,7 @@ void LTWindow::showNoSessionBoard(bool show, QString msg)
 		ui->textEdit->clear();
 		ui->driverDataWidget->clearData();
 		ui->sessionDataWidget->clearData();
+        driverTrackerWidget->setup();
 
 		ui->messageBoardWidget->showSessionBoard(msg);
 		showSessionBoard(true);
@@ -419,7 +417,9 @@ void LTWindow::timeout()
         eventPlayer->timeout();
 
     ui->eventStatusWidget->updateEventStatus();
-    updateRadar();
+
+    if (driverTrackerWidget->isVisible())
+        driverTrackerWidget->update();
 
     //during quali timer is stopped when we have red flag
     if (eventData.isSessionStarted())
@@ -508,12 +508,8 @@ void LTWindow::loadSettings()
 
     restoreGeometry(settings->value("ui/window_geometry").toByteArray());
 
-    QList<int> sizes;
-    sizes << ui->verticalLayout_5->geometry().height() / 2 << ui->verticalLayout_5->geometry().height() / 2;
-    ui->radarSplitter->setSizes(sizes);
 
     ui->splitter->restoreState(settings->value("ui/splitter_pos").toByteArray());
-    ui->radarSplitter->restoreState(settings->value("ui/radar_splitter_pos").toByteArray());
     ui->tabWidget->setCurrentIndex(settings->value("ui/current_tab1").toInt());
 
     if (ui->tabWidget->currentIndex() == 0)
@@ -531,6 +527,7 @@ void LTWindow::loadSettings()
 
     saw->loadSettings(*settings);
     stw->loadSettings(*settings);
+    driverTrackerWidget->loadSettings(settings);
 
     ltFilesManagerDialog->loadSettings(settings);
 }
@@ -541,7 +538,6 @@ void LTWindow::saveSettings()
     encodePasswd(passwd);
     settings->setValue("ui/window_geometry", saveGeometry());
     settings->setValue("ui/splitter_pos", ui->splitter->saveState());
-    settings->setValue("ui/radar_splitter_pos", ui->radarSplitter->saveState());
     settings->setValue("ui/current_tab1", ui->tabWidget->currentIndex());
     if (ui->tabWidget->currentIndex() == 0)
         settings->setValue("ui/current_tab2", ui->driverDataWidget->currentIndex());
@@ -550,6 +546,7 @@ void LTWindow::saveSettings()
 
     saw->saveSettings(*settings);
     stw->saveSettings(*settings);
+    driverTrackerWidget->saveSettings(settings);
     ltFilesManagerDialog->saveSettings(settings);
 
 //    settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
@@ -650,6 +647,9 @@ bool LTWindow::close()
 
     if (stw->isVisible())
         stw->close();
+
+    if (driverTrackerWidget->isVisible())
+        driverTrackerWidget->close();
 
     return QMainWindow::close();
 }
@@ -931,7 +931,7 @@ void LTWindow::eventPlayerOpenFile(QString fName)
 
     eventPlayer->startPlaying();
     saw->resetView();
-    setupRadar();
+    driverTrackerWidget->setup();
 }
 
 void LTWindow::eventPlayerPlayClicked(int interval)
@@ -1032,4 +1032,9 @@ void LTWindow::on_actionSession_analysis_triggered()
 void LTWindow::on_actionSession_times_triggered()
 {
     stw->exec();
+}
+
+void LTWindow::on_actionDriver_tracker_triggered()
+{
+    driverTrackerWidget->exec();
 }

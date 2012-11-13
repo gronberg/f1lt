@@ -13,7 +13,7 @@
 #include "../net/datastreamreader.h"
 #include "../player/eventplayer.h"
 #include "../player/eventrecorder.h"
-#include "../tools/driverradar.h"
+#include "../tools/drivertrackerwidget.h"
 #include "../tools/followadriverdialog.h"
 #include "../tools/headtoheaddialog.h"
 #include "../tools/laptimecomparisondialog.h"
@@ -46,16 +46,6 @@ public:
     void stopRecording(bool autoStop = false);
 
     void setupDialogs();
-
-    void updateRadar()
-    {
-        driverRadar->update();
-    }
-
-    void setupRadar()
-    {
-        driverRadar->setupDrivers();
-    }
 
 public slots:
     bool close();
@@ -116,6 +106,8 @@ private slots:
 
     void on_actionSession_times_triggered();
 
+    void on_actionDriver_tracker_triggered();
+
 private:
     Ui::LTWindow *ui;
     DataStreamReader *streamReader;
@@ -164,8 +156,7 @@ private:
     LTFilesManagerDialog *ltFilesManagerDialog;
 
     AboutDialog *aboutDialog;
-
-    DriverRadar *driverRadar;
+    DriverTrackerWidget *driverTrackerWidget;
 };
 
 #endif // LTWINDOW_H
