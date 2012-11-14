@@ -6,7 +6,7 @@
 
 DriverRadarPositioner::DriverRadarPositioner(DriverData *dd, int x, int y, double r, double r1, double rL) :
     driverData(dd), radarX(x), radarY(y), radarR(r), radarPitR(r1), radarLappedR(rL), currentDeg(0.0),
-    avgTime(100), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false), finished(false), qualiOut(false)
+    avgTime(100), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false), finished(false), qualiOut(false), speed(1)
 {
     avgSectorTimes[0] = 0.0;
     avgSectorTimes[1] = 0.0;
@@ -117,7 +117,7 @@ void DriverRadarPositioner::update()
             (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT && EventData::getInstance().getFlagStatus() == LTPackets::RED_FLAG))
         {
             inPits = true;
-            finished = false;
+            finished = false;            
             calculatePitPosition();
         }
 
@@ -162,7 +162,8 @@ void DriverRadarPositioner::calculatePosition()
 //            currentDeg += 360.0 / (double)avgTime;
         }
         else if (driverData->getLastLap().getSectorTime(2).isValid() &&
-                 !driverData->getLastLap().getSectorTime(3).isValid() && currSector == 2)
+                 !driverData->getLastLap().getSectorTime(3).isValid() && currSector == 2 &&
+                 driverData->getLastLap().getTime().toString() != "OUT")
         {
             currSector = 3;
             if (sectorPositions[1] != 0)
@@ -185,7 +186,7 @@ void DriverRadarPositioner::calculatePosition()
 //                    currentLapTime = sumSectors;
 //            }
 
-            currentDeg += 360.0 / avgTime; //(360 * currentLapTime) / avgTime;
+            currentDeg += (360.0 / avgTime) / speed; //(360 * currentLapTime) / avgTime;
         }
     }
     else
@@ -194,7 +195,7 @@ void DriverRadarPositioner::calculatePosition()
 //            currentDeg = (360 * (avgTime + currentLapTime)) / avgTime;
 
 //        else
-            currentDeg += 360.0 / avgTime;
+            currentDeg += (360.0 / avgTime) / speed;
 //            currentDeg = (360 * currentLapTime) / avgTime;
     }
 }

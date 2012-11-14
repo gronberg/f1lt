@@ -75,19 +75,20 @@ void DriverTrackerPositioner::calculatePosition()
             currentDeg = EventData::getInstance().getEventInfo().trackCoordinates.indexes[0];
         }
         else if (driverData->getLastLap().getSectorTime(2).isValid() &&
-                 !driverData->getLastLap().getSectorTime(3).isValid() && currSector == 2)
+                 !driverData->getLastLap().getSectorTime(3).isValid() && currSector == 2 &&
+                 driverData->getLastLap().getTime().toString() != "OUT")
         {
             currSector = 3;
             currentDeg = EventData::getInstance().getEventInfo().trackCoordinates.indexes[1];
         }
         else
         {
-            currentDeg += (double)coordinatesCount / avgTime; //(360 * currentLapTime) / avgTime;
+            currentDeg += ((double)coordinatesCount / avgTime) / speed; //(360 * currentLapTime) / avgTime;
         }
     }
     else
     {
-        currentDeg += (double)coordinatesCount / avgTime;
+        currentDeg += ((double)coordinatesCount / avgTime) / speed;
     }
 
     if ((int)(round(currentDeg)) >= coordinatesCount)
@@ -158,7 +159,7 @@ QPoint DriverTrackerPositioner::getSCCoordinates()
 
 //    if ((int)round(currentDeg) >= 0 && (int)round(currentDeg) < coordinatesCount)
     {
-        int idx = (int)round(currentDeg + 5 * ((double)coordinatesCount / avgTime)) % coordinatesCount;
+        int idx = (int)round(currentDeg + 5 * ((double)coordinatesCount / avgTime) / speed) % coordinatesCount;
 
         if (!driverData->getLapData().isEmpty() && !driverData->getLapData().last().getRaceLapExtraData().isSCLap())
             idx = 0;

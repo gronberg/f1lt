@@ -10,7 +10,7 @@ public:
     DriverTracker(QWidget *parent = 0);
 
     virtual void loadDriversList();
-    virtual void setupDrivers();
+    virtual void setupDrivers(int speed);
 
 protected:
     virtual void paintEvent(QPaintEvent *);

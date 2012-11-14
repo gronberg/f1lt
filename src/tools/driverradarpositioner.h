@@ -44,6 +44,11 @@ public:
         return 360;
     }
 
+    void setSpeed(int s)
+    {
+        speed = s;
+    }
+
 protected:
     DriverData *driverData;
     double avgTime;
@@ -61,6 +66,8 @@ protected:
     bool qualiOut;
 
     QImage helmet;
+
+    int speed;
 
 private:
     int radarX, radarY;

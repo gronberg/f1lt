@@ -2,6 +2,7 @@
 #define DRIVERTRACKERWIDGET_H
 
 #include <QSettings>
+#include <QTimer>
 #include <QWidget>
 
 namespace Ui {
@@ -19,7 +20,23 @@ public:
     void loadSettings(QSettings *);
     void saveSettings(QSettings *);
 
-    void update();
+    void setTimerInterval(int s=1000)
+    {
+        timer->setInterval(s / speed);
+    }
+    void startTimer(int s=1000)
+    {
+        if (timer->isActive())
+            setTimerInterval(s);
+        else
+            timer->start(s/speed);
+    }
+
+    void stopTimer()
+    {
+        timer->stop();
+    }
+
     void setup();
 
     void exec();
@@ -28,10 +45,13 @@ protected:
     void keyPressEvent(QKeyEvent *);
     
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButton_clicked();    
+    void update();
 
 private:
     Ui::DriverTrackerWidget *ui;
+    QTimer *timer;
+    int speed;
 };
 
 #endif // DRIVERTRACKERWIDGET_H

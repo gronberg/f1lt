@@ -5,9 +5,11 @@
 
 DriverTrackerWidget::DriverTrackerWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DriverTrackerWidget)
+    ui(new Ui::DriverTrackerWidget), speed(1)
 {
     ui->setupUi(this);
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 DriverTrackerWidget::~DriverTrackerWidget()
@@ -23,8 +25,8 @@ void DriverTrackerWidget::update()
 
 void DriverTrackerWidget::setup()
 {
-    ui->driverRadar->setupDrivers();
-    ui->driverTracker->setupDrivers();
+    ui->driverRadar->setupDrivers(speed);
+    ui->driverTracker->setupDrivers(speed);
 }
 
 void DriverTrackerWidget::loadSettings(QSettings *settings)

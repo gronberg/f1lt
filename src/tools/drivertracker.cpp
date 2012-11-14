@@ -9,11 +9,11 @@ DriverTracker::DriverTracker(QWidget *parent) : DriverRadar(parent)
     label = QPixmap(":/ui_icons/label.png");
 }
 
-void DriverTracker::setupDrivers()
+void DriverTracker::setupDrivers(int speed)
 {
     trackMap = EventData::getInstance().getEventInfo().trackImg;
     QSize size = trackMap.size();
-    size.setWidth(size.width() + 120);
+    size.setWidth(size.width() + 140);
     size.setHeight(size.height() + 120);
     setMinimumSize(size);
 
@@ -24,13 +24,14 @@ void DriverTracker::setupDrivers()
     {
         DriverTrackerPositioner *dtp = static_cast<DriverTrackerPositioner*>(drp[i]);
 
-        int px = 60+(width() - trackMap.width())/2;
+        int px = 80+(width() - trackMap.width())/2;
         int py = (height() - trackMap.height()-50)/2;
         int pitX = 15;
         int pitY = height()-60;
         int pitW = width() - 30;
         int pitH = 50;
         dtp->setMapCoords(px, py, pitX, pitY, pitW, pitH);
+        dtp->setSpeed(speed);
     }
 
     repaint();
@@ -56,7 +57,7 @@ void DriverTracker::resizeEvent(QResizeEvent *)
     {
         DriverTrackerPositioner *dtp = static_cast<DriverTrackerPositioner*>(drp[i]);
 
-        int px = 60+(width() - trackMap.width())/2;
+        int px = 80+(width() - trackMap.width())/2;
         int py = (height() - trackMap.height()-50)/2;
         int pitX = 15;
         int pitY = height()-60;
@@ -75,7 +76,7 @@ void DriverTracker::paintEvent(QPaintEvent *)
     p.setBrush(QBrush(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND))));
     p.drawRect(0, 0, width(), height());
 
-    int px = 60+(width() - trackMap.width())/2;
+    int px = 80+(width() - trackMap.width())/2;
     int py = (height() - trackMap.height()-50)/2;
 
     QPoint point(px, py);
@@ -93,26 +94,35 @@ void DriverTracker::paintEvent(QPaintEvent *)
         DriverData *dd = EventData::getInstance().getDriverDataByPosPtr(i+1);
         if (dd)
         {
-            QString txt = QString("%1 %2").arg(dd->getNumber()).arg(SeasonData::getInstance().getDriverShortName(dd->getDriverName()));
+            QString number = QString::number(dd->getNumber());
+
+            if (dd->getNumber() < 10)
+                number = "  " + number;
+
+            QString txt = SeasonData::getInstance().getDriverShortName(dd->getDriverName());
 
             p.setFont(QFont("Arial", 10, 100));
             QColor drvColor = SeasonData::getInstance().getCarColor(*dd);
             p.setBrush(drvColor);
 
-            int x = 20;
+            int x = 5;
             int y = 10 + i * 20;
 
-            int numX = x + 14;
+            int numX = x + 35;
             int numY = y + p.fontMetrics().height()/2 + 8;
 
             p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND)));
-            p.drawRect(x, y, 70, 20);
-            p.drawText(numX, numY, txt);
+            p.drawRect(x, y, 70, 20);            
             p.drawPixmap(x, y, label);
+
+            p.drawText(numX, numY, number);
+
+            p.setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
+            p.drawText(x+65, numY, txt);
 
             if (!dd->isRetired())
             {
-                p.setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
+                p.setPen(QColor(0,0,0));
 
                 if (dd->isInPits())
                     p.setPen(SeasonData::getInstance().getColor(LTPackets::PIT));
@@ -120,7 +130,7 @@ void DriverTracker::paintEvent(QPaintEvent *)
 
                 if (i+1 < 10)
                     pos = "  " + pos;
-                p.drawText(x-15, numY, pos);
+                p.drawText(x+10, numY, pos);
 
                 QString gap = "";
                 if (i > 0)
@@ -150,7 +160,12 @@ void DriverTracker::paintEvent(QPaintEvent *)
                 else
                 {
                     if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT)
-                        gap = QString("LAP %1").arg(EventData::getInstance().getCompletedLaps());
+                    {
+                        int laps = EventData::getInstance().getCompletedLaps() + 1;
+                        if (laps > EventData::getInstance().getEventInfo().laps)
+                            laps = EventData::getInstance().getEventInfo().laps;
+                        gap = QString("LAP %1").arg(laps);
+                    }
 
                     else if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
                         gap = dd->getLastLap().getTime().toString();
@@ -159,7 +174,7 @@ void DriverTracker::paintEvent(QPaintEvent *)
                         gap = dd->getQualiTime(EventData::getInstance().getQualiPeriod()).toString();
                 }
                 p.setPen(SeasonData::getInstance().getColor(LTPackets::YELLOW));
-                p.drawText(x+70, numY, gap);
+                p.drawText(x+110, numY, gap);
             }
 
         }

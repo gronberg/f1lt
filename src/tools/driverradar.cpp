@@ -26,14 +26,17 @@ void DriverRadar::loadDriversList()
     }
 }
 
-void DriverRadar::setupDrivers()
+void DriverRadar::setupDrivers(int speed)
 {
     trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToWidth(radarPitR*1.4, Qt::SmoothTransformation);
     if (trackMap.height() > trackMap.width())
         trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToHeight(radarPitR*1.4, Qt::SmoothTransformation);
 
     for (int i = 0; i < drp.size(); ++i)
+    {
         drp[i]->setStartupPosition();
+        drp[i]->setSpeed(speed);
+    }
 
     repaint();
 }

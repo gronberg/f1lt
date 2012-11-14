@@ -18,7 +18,7 @@ public:
            
     void update();
     virtual void loadDriversList();
-    virtual void setupDrivers();
+    virtual void setupDrivers(int speed);
 
 signals:
     

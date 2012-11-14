@@ -37,8 +37,8 @@
         <file>ltdb.png</file>
         <file>fad.png</file>
         <file>st.png</file>
-        <file>label.png</file>
         <file>helmet.png</file>
         <file>helmet_mask.png</file>
+        <file>label.png</file>
     </qresource>
 </RCC>

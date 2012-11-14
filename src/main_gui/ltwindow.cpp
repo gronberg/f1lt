@@ -375,8 +375,11 @@ void LTWindow::on_actionFollow_a_driver_triggered()
 
 void LTWindow::sessionStarted()
 {
-    if (!sessionTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))        
+    if (!sessionTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))
+    {
         sessionTimer->start(1000);
+        driverTrackerWidget->startTimer(1000);
+    }
 }
 
 void LTWindow::showNoSessionBoard(bool show, QString msg)
@@ -418,8 +421,8 @@ void LTWindow::timeout()
 
     ui->eventStatusWidget->updateEventStatus();
 
-    if (driverTrackerWidget->isVisible())
-        driverTrackerWidget->update();
+//    if (driverTrackerWidget->isVisible())
+//        driverTrackerWidget->update();
 
     //during quali timer is stopped when we have red flag
     if (eventData.isSessionStarted())
@@ -429,7 +432,10 @@ void LTWindow::timeout()
     }
 
     if (!recording && !playing && !eventData.isSessionStarted())
+    {
         sessionTimer->stop();
+        driverTrackerWidget->stopTimer();
+    }
 
 //        if (!(eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
 //            !((eventData.getEventType() == LTPackets::QUALI_EVENT || eventData.getEventType() == LTPackets::RACE_EVENT) && eventData.getFlagStatus() == LTPackets::RED_FLAG))
@@ -821,7 +827,10 @@ void LTWindow::startRecording(bool autoRecord)
     connect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
 
     if (!sessionTimer->isActive())
+    {
         sessionTimer->start();
+        driverTrackerWidget->startTimer();
+    }
 }
 
 void LTWindow::stopRecording(bool autoStop)
@@ -869,6 +878,7 @@ void LTWindow::on_actionOpen_triggered()
     if (!fName.isNull())
     {
         sessionTimer->stop();
+        driverTrackerWidget->stopTimer();
         QFileInfo fi(fName);
         ltDir = fi.absolutePath();
 
@@ -891,6 +901,7 @@ void LTWindow::on_actionLT_files_data_base_triggered()
     if (!fName.isNull())
     {
         sessionTimer->stop();
+        driverTrackerWidget->stopTimer();
         if (recording)
             stopRecording(false);
 
@@ -937,16 +948,19 @@ void LTWindow::eventPlayerOpenFile(QString fName)
 void LTWindow::eventPlayerPlayClicked(int interval)
 {
     sessionTimer->start(interval);
+    driverTrackerWidget->startTimer(interval);
 }
 
 void LTWindow::eventPlayerPauseClicked()
 {
     sessionTimer->stop();
+    driverTrackerWidget->stopTimer();
 }
 
 void LTWindow::eventPlayerRewindToStartClicked()
 {
     sessionTimer->stop();
+    driverTrackerWidget->stopTimer();
     streamReader->clearData();
     ui->sessionDataWidget->clearData();
 
@@ -956,6 +970,7 @@ void LTWindow::eventPlayerRewindToStartClicked()
 void LTWindow::eventPlayerForwardToEndClicked()
 {
     sessionTimer->stop();
+    driverTrackerWidget->stopTimer();
 }
 
 void LTWindow::eventPlayerRewindClicked()
@@ -980,6 +995,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
     saw->resetView();
     eventRecorder->setSessionRecorded(false);
     sessionTimer->stop();
+    driverTrackerWidget->stopTimer();
 
     playing = false;
     SeasonData::getInstance().loadSeasonFile();
