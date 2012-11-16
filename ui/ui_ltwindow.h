@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Tue Nov 13 17:47:03 2012
+** Created: Fri Nov 16 22:04:33 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -156,6 +156,9 @@ public:
         actionSession_times->setIcon(icon12);
         actionDriver_tracker = new QAction(LTWindow);
         actionDriver_tracker->setObjectName(QString::fromUtf8("actionDriver_tracker"));
+        QIcon icon13;
+        icon13.addFile(QString::fromUtf8(":/ui_icons/dt.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionDriver_tracker->setIcon(icon13);
         centralWidget = new QWidget(LTWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
@@ -380,6 +383,7 @@ public:
         actionSession_times->setText(QApplication::translate("LTWindow", "Session times", 0, QApplication::UnicodeUTF8));
         actionSession_times->setShortcut(QApplication::translate("LTWindow", "Ctrl+I", 0, QApplication::UnicodeUTF8));
         actionDriver_tracker->setText(QApplication::translate("LTWindow", "Driver tracker", 0, QApplication::UnicodeUTF8));
+        actionDriver_tracker->setShortcut(QApplication::translate("LTWindow", "Ctrl+R", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("LTWindow", "Driver data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("LTWindow", "Session data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("LTWindow", "Weather charts", 0, QApplication::UnicodeUTF8));

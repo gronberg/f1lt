@@ -49,6 +49,29 @@ public:
         speed = s;
     }
 
+    int getDriverId()
+    {
+        if (driverData != 0)
+            return driverData->getCarID();
+
+        return -1;
+    }
+
+    bool isExcluded()
+    {
+        return excluded;
+    }
+
+    void setExcluded(bool ex)
+    {
+        excluded = ex;
+    }
+
+    bool hasEmptyHelmet()
+    {
+        return helmet.isNull();
+    }
+
 protected:
     DriverData *driverData;
     double avgTime;
@@ -64,6 +87,8 @@ protected:
     bool lapped;
     bool finished;
     bool qualiOut;
+
+    bool excluded;
 
     QImage helmet;
 

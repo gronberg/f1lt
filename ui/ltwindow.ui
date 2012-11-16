@@ -554,8 +554,15 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionDriver_tracker">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/dt.png</normaloff>:/ui_icons/dt.png</iconset>
+   </property>
    <property name="text">
     <string>Driver tracker</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
  </widget>

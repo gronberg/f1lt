@@ -673,6 +673,8 @@ void LTWindow::setupDialogs()
 
     if (stw->isVisible())
         stw->loadDriversList();
+
+    driverTrackerWidget->setup();
 }
 
 //-------------------- connection with server ----------------------
@@ -746,13 +748,18 @@ void LTWindow::connectToServer()
             passwd = loginDialog->getPasswd();
             streamReader->connectToLTServer(email, passwd);
 
+            driverTrackerWidget->setup();
+
             settings->setValue("login/email", email);
             passwd = encodePasswd(loginDialog->getPasswd());
             settings->setValue("login/passwd", passwd);
         }
     }
     else
+    {
         streamReader->connectToLTServer(email, passwd);
+        driverTrackerWidget->setup();
+    }
 }
 
 void LTWindow::error(QAbstractSocket::SocketError er)
@@ -1036,6 +1043,7 @@ void LTWindow::showSessionBoard(bool show)
     ui->actionFollow_a_driver->setEnabled(!show);
     ui->actionSession_analysis->setEnabled(!show);
     ui->actionSession_times->setEnabled(!show);
+    ui->actionDriver_tracker->setEnabled(!show);
 }
 
 void LTWindow::on_actionSession_analysis_triggered()

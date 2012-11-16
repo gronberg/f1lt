@@ -204,7 +204,7 @@ QVariant RaceModel::headerRowData(const QModelIndex &index, int role) const
             case 7: return "S1";
             case 8: return "S2";
             case 9: return "S3";
-            case 10: return "Laps";
+            case 10: return "Pit";
             default: break;
         }
     }

@@ -21,7 +21,7 @@ INSTALLS += target \
 DATA_FILES.files = season.dat
 DATA_FILES.path = $$PREFIX/share/
 
-#DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
@@ -72,7 +72,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/tools/driverradar.cpp \
     src/tools/drivertrackerpositioner.cpp \
     src/tools/drivertracker.cpp \
-    src/tools/drivertrackerwidget.cpp
+    src/tools/drivertrackerwidget.cpp \
+    src/tools/drivertrackerinfo.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -123,7 +124,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/tools/driverradar.h \
     src/tools/drivertrackerpositioner.h \
     src/tools/drivertracker.h \
-    src/tools/drivertrackerwidget.h
+    src/tools/drivertrackerwidget.h \
+    src/tools/drivertrackerinfo.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

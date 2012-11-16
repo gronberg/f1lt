@@ -1,10 +1,11 @@
 #include "driverradar.h"
+#include <typeinfo>
 
 DriverRadar::DriverRadar(QWidget *parent) :
-    QWidget(parent), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0)
+    QWidget(parent), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0), selectedDriver(-1), dti(0)
 {
     loadDriversList();
-    setMinimumSize(200, 200);
+    setMinimumSize(200, 200);               
 }
 
 DriverRadar::~DriverRadar()
@@ -13,8 +14,22 @@ DriverRadar::~DriverRadar()
         delete drp[i];
 }
 
+void DriverRadar::checkSetupCorrect(int speed)
+{
+    if (drp.isEmpty() || drp.first()->hasEmptyHelmet())
+    {
+        setupDrivers(speed);
+    }
+}
+
 void DriverRadar::loadDriversList()
 {
+    if (dti == 0)
+    {
+        dti = new DriverTrackerInfo(this);
+        dti->setVisible(false);
+    }
+
     for (int i = 0; i < drp.size(); ++i)
         delete drp[i];
 
@@ -28,10 +43,6 @@ void DriverRadar::loadDriversList()
 
 void DriverRadar::setupDrivers(int speed)
 {
-    trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToWidth(radarPitR*1.4, Qt::SmoothTransformation);
-    if (trackMap.height() > trackMap.width())
-        trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToHeight(radarPitR*1.4, Qt::SmoothTransformation);
-
     for (int i = 0; i < drp.size(); ++i)
     {
         drp[i]->setStartupPosition();
@@ -39,31 +50,66 @@ void DriverRadar::setupDrivers(int speed)
     }
 
     repaint();
+
+    if (dti)
+    {
+        dti->setup();
+        dti->repaint();
+        setMinimumSize(dti->minimumSize());
+    }
 }
 
 void DriverRadar::update()
 {
+
     for (int i = 0; i < drp.size(); ++i)
         drp[i]->update();
 
     repaint();
+
+    if (dti)
+        dti->repaint();
+}
+
+void DriverRadar::excludeDriver(int id, bool exclude)
+{
+    for (int i = 0; i < drp.size(); ++i)
+    {
+        if (drp[i]->getDriverId() == id)
+            drp[i]->setExcluded(exclude);
+    }
+    repaint();
+
+    if (dti)
+        dti->repaint();
 }
 
 void DriverRadar::resizeEvent(QResizeEvent *)
 {
-    radarR = width() < height() ? (double)width() / 2.0 - 20.0 : (double)height() / 2.0 - 20.0;
+    QSize size;
+
+    if (dti)
+    {
+        size = dti->minimumSize();
+
+        qDebug() << size.height();
+    }
+    radarR = width() < (height() - 30 - size.height()) ? (double)width() / 2.0 - 20.0 : (double)(height() - 30 - size.height()) / 2.0 - 20.0;
     radarX = width()/2;
-    radarY = height()/2;
+    radarY = radarR + 30;
 
     radarLappedR = radarR * 0.75;
     radarPitR = radarR * 0.5;
 
+    if (dti)
+    {
+        dti->setGeometry(0, radarR*2 + 60, width(), height() - (radarR*2 + 60));
+        qDebug() << radarR*2 + 60 << height() - (radarR*2 + 60);
+    }
+
     for (int i = 0; i < drp.size(); ++i)
         drp[i]->setRadarCoords(radarX, radarY, radarR, radarPitR, radarLappedR);
 
-    trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToWidth(radarPitR*1.4, Qt::SmoothTransformation);
-    if (trackMap.height() > trackMap.width())
-        trackMap = EventData::getInstance().getEventInfo().trackImg.scaledToHeight(radarPitR*1.4, Qt::SmoothTransformation);
 }
 
 void DriverRadar::paintEvent(QPaintEvent *)
@@ -112,8 +158,17 @@ void DriverRadar::paintEvent(QPaintEvent *)
 
 //    p.drawPixmap(radarX - trackMap.width()/2, radarY - trackMap.height()/2, trackMap);
 
+    int sel = -1;
     for (int i = drp.size() - 1; i >= 0; --i)
-        drp[i]->paint(&p);
+    {
+        if (drp[i]->getDriverId() != selectedDriver)
+            drp[i]->paint(&p);
+
+        else
+            sel = i;
+    }
+    if (sel >= 0)
+        drp[sel]->paint(&p);
 
     p.end();
 }

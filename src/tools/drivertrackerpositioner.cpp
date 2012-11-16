@@ -196,45 +196,28 @@ void DriverTrackerPositioner::paint(QPainter *p)
         }
 
         p->setPen(pen);
-
-//        p->drawPath(path);
-
-//        QImage hl(helmet.size(), helmet.format());
-//        QPainter phl;
-//        phl.begin(&hl);
-//        phl.setBrush(QBrush(drvColor));
-//        phl.drawRect(0, 0, hl.width(), hl.height());
-//        phl.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-//        phl.drawImage(0, 0, helmetMask);
-//        phl.setCompositionMode(QPainter::CompositionMode_SourceOver);
-//        phl.drawImage(0, 0, helmet);
-//        phl.end();
-
-        p->drawImage(point.x()-12, point.y()-12, helmet);
-
         p->setFont(QFont("Arial", 8, 75));
 
-        QString number = SeasonData::getInstance().getDriverShortName(driverData->getDriverName());//QString::number(driverData->getNumber());
+        if (!excluded)
+        {
+            p->drawImage(point.x()-12, point.y()-12, helmet);
 
-        p->setBrush(drvColor);
-        p->drawRoundedRect(point.x()-12, point.y()+15, helmet.width(), 14, 4, 4);
+            QString number = SeasonData::getInstance().getDriverShortName(driverData->getDriverName());//QString::number(driverData->getNumber());
 
-        p->setPen(SeasonData::getInstance().getColor(LTPackets::BACKGROUND));
+            p->setBrush(drvColor);
+            p->drawRoundedRect(point.x()-12, point.y()+15, helmet.width(), 14, 4, 4);
 
-        int numX = point.x() - 18 + p->fontMetrics().width(number)/2;
-        int numY = point.y() + 20 + p->fontMetrics().height()/2;
-        p->drawText(numX, numY, number);
+            p->setPen(SeasonData::getInstance().getColor(LTPackets::BACKGROUND));
 
-
-//        path.addText(numX, numY, QFont("Arial", 10, 100), number);
-//        pen.setColor(QColor(255, 255, 255));
-//        p->strokePath(path, pen);
-
-//        p->drawText(numX, numY, number);
+            int numX = point.x() - 18 + p->fontMetrics().width(number)/2;
+            int numY = point.y() + 20 + p->fontMetrics().height()/2;
+            p->drawText(numX, numY, number);
+        }
 
         if (driverData->getPosition() == 1 && EventData::getInstance().getFlagStatus() == LTPackets::SAFETY_CAR_DEPLOYED)
         {
             point = getSCCoordinates();
+            p->setPen(SeasonData::getInstance().getColor(LTPackets::BACKGROUND));
             p->setBrush(QColor(SeasonData::getInstance().getColor(LTPackets::YELLOW)));
             p->drawEllipse(point, 15, 15);
 

@@ -6,7 +6,7 @@
 
 DriverRadarPositioner::DriverRadarPositioner(DriverData *dd, int x, int y, double r, double r1, double rL) :
     driverData(dd), radarX(x), radarY(y), radarR(r), radarPitR(r1), radarLappedR(rL), currentDeg(0.0),
-    avgTime(100), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false), finished(false), qualiOut(false), speed(1)
+    avgTime(100), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false), finished(false), qualiOut(false), speed(1), excluded(false)
 {
     avgSectorTimes[0] = 0.0;
     avgSectorTimes[1] = 0.0;
@@ -16,12 +16,16 @@ DriverRadarPositioner::DriverRadarPositioner(DriverData *dd, int x, int y, doubl
 
 void DriverRadarPositioner::setupHelmet(int size)
 {
-    qDebug() << "SETUP" << driverData->getNumber() << size;
     helmet = QImage(":/ui_icons/helmet.png").scaledToHeight(size, Qt::SmoothTransformation);
     QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(size, Qt::SmoothTransformation);
 
     QImage hl(helmet.size(), helmet.format());
     QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
+    if (drvColor == SeasonData::getInstance().getColor(LTPackets::BACKGROUND))
+    {
+        helmet = QImage();
+        return;
+    }
     QPainter phl;
     phl.begin(&hl);
     phl.setBrush(QBrush(drvColor));
@@ -351,7 +355,7 @@ QPoint DriverRadarPositioner::getCoordinates()
 
 void DriverRadarPositioner::paint(QPainter *p)
 {
-    if (driverData && driverData->getCarID() > 0)
+    if (driverData && driverData->getCarID() > 0 && !excluded)
     {
         QPoint point = getCoordinates();
 

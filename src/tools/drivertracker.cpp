@@ -1,19 +1,22 @@
 #include "drivertracker.h"
 #include "drivertrackerpositioner.h"
 
+#include <QMouseEvent>
+
 
 DriverTracker::DriverTracker(QWidget *parent) : DriverRadar(parent)
 {
     loadDriversList();
 
     label = QPixmap(":/ui_icons/label.png");
+    selectedLabel = QPixmap(":/ui_icons/label-sel.png");
 }
 
 void DriverTracker::setupDrivers(int speed)
 {
     trackMap = EventData::getInstance().getEventInfo().trackImg;
     QSize size = trackMap.size();
-    size.setWidth(size.width() + 140);
+    size.setWidth(size.width() + label.width() + 10);
     size.setHeight(size.height() + 120);
     setMinimumSize(size);
 
@@ -24,7 +27,8 @@ void DriverTracker::setupDrivers(int speed)
     {
         DriverTrackerPositioner *dtp = static_cast<DriverTrackerPositioner*>(drp[i]);
 
-        int px = 80+(width() - trackMap.width())/2;
+        int labWidth = label.width() + 10;
+        int px = labWidth + (width() - labWidth - trackMap.width())/2;
         int py = (height() - trackMap.height()-50)/2;
         int pitX = 15;
         int pitY = height()-60;
@@ -39,6 +43,8 @@ void DriverTracker::setupDrivers(int speed)
 
 void DriverTracker::loadDriversList()
 {
+    dti = 0;
+
     for (int i = 0; i < drp.size(); ++i)
         delete drp[i];
 
@@ -57,7 +63,8 @@ void DriverTracker::resizeEvent(QResizeEvent *)
     {
         DriverTrackerPositioner *dtp = static_cast<DriverTrackerPositioner*>(drp[i]);
 
-        int px = 80+(width() - trackMap.width())/2;
+        int labWidth = label.width() + 10;
+        int px = labWidth + (width() - labWidth - trackMap.width())/2;
         int py = (height() - trackMap.height()-50)/2;
         int pitX = 15;
         int pitY = height()-60;
@@ -76,7 +83,8 @@ void DriverTracker::paintEvent(QPaintEvent *)
     p.setBrush(QBrush(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND))));
     p.drawRect(0, 0, width(), height());
 
-    int px = 80+(width() - trackMap.width())/2;
+    int labWidth = label.width() + 10;
+    int px = labWidth + (width() - labWidth - trackMap.width())/2;
     int py = (height() - trackMap.height()-50)/2;
 
     QPoint point(px, py);
@@ -85,14 +93,23 @@ void DriverTracker::paintEvent(QPaintEvent *)
     p.setPen(QColor(255, 0, 0));
     p.drawRect(15, height()-60, width()-30, 50);
 
+    int sel = -1;
     for (int i = drp.size() - 1; i >= 0; --i)
-        drp[i]->paint(&p);
+    {
+        if (drp[i]->getDriverId() != selectedDriver)
+            drp[i]->paint(&p);
+
+        else
+            sel = i;
+    }
+    if (sel >= 0)
+        drp[sel]->paint(&p);
 
     //draw legend
     for (int i = 0; i < EventData::getInstance().getDriversData().size(); ++i)
     {
         DriverData *dd = EventData::getInstance().getDriverDataByPosPtr(i+1);
-        if (dd)
+        if (dd != 0)
         {
             QString number = QString::number(dd->getNumber());
 
@@ -105,6 +122,9 @@ void DriverTracker::paintEvent(QPaintEvent *)
             QColor drvColor = SeasonData::getInstance().getCarColor(*dd);
             p.setBrush(drvColor);
 
+            if (isExcluded(dd->getCarID()))
+                p.setBrush(QColor(80, 80, 80));
+
             int x = 5;
             int y = 10 + i * 20;
 
@@ -112,13 +132,21 @@ void DriverTracker::paintEvent(QPaintEvent *)
             int numY = y + p.fontMetrics().height()/2 + 8;
 
             p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND)));
-            p.drawRect(x, y, 70, 20);            
-            p.drawPixmap(x, y, label);
+            p.drawRect(x, y, 70, 20);
+
+            if (dd->getCarID() == selectedDriver)
+                p.drawPixmap(x, y, selectedLabel);
+            else
+                p.drawPixmap(x, y, label);
 
             p.drawText(numX, numY, number);
 
             p.setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
-            p.drawText(x+65, numY, txt);
+
+            if (isExcluded(dd->getCarID()))
+                p.setPen(QColor(80, 80, 80));
+
+            p.drawText(x+60, numY, txt);
 
             if (!dd->isRetired())
             {
@@ -173,12 +201,90 @@ void DriverTracker::paintEvent(QPaintEvent *)
                     else
                         gap = dd->getQualiTime(EventData::getInstance().getQualiPeriod()).toString();
                 }
-                p.setPen(SeasonData::getInstance().getColor(LTPackets::YELLOW));
-                p.drawText(x+110, numY, gap);
+                p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::YELLOW)));
+
+                if (isExcluded(dd->getCarID()))
+                    p.setPen(QColor(80, 80, 80));
+
+                p.drawText(x+105, numY, gap);
             }
 
         }
     }
 
     p.end();
+}
+
+void DriverTracker::mousePressEvent(QMouseEvent *event)
+{
+    if (event->buttons() == Qt::LeftButton &&
+        event->pos().x() >= 5 && event->pos().x() <= 5 + label.width() &&
+        event->pos().y() >= 10 && event->pos().y() <= 10 + 20 * EventData::getInstance().getDriversData().size())
+    {
+        int pos = (event->pos().y() - 10) / 20 + 1;
+        DriverData *dd = EventData::getInstance().getDriverDataByPosPtr(pos);
+
+        if (dd != 0 && !isExcluded(dd->getCarID()))
+        {
+            if (dd->getCarID() == selectedDriver)
+                selectedDriver = -1;
+
+            else
+                selectedDriver = dd->getCarID();
+        }
+        emit driverSelected(selectedDriver);
+    }
+    repaint();
+}
+
+void DriverTracker::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (event->buttons() == Qt::LeftButton &&
+        event->pos().x() >= 5 && event->pos().x() <= 5 + label.width() &&
+        event->pos().y() >= 10 && event->pos().y() <= 10 + 20 * EventData::getInstance().getDriversData().size())
+    {
+        int pos = (event->pos().y() - 10) / 20 + 1;
+        DriverData *dd = EventData::getInstance().getDriverDataByPosPtr(pos);
+
+        if (dd != 0)
+        {
+            if (dd->getCarID() == selectedDriver)
+                selectedDriver = -1;
+
+            bool found = false;
+            for (int i = 0; i < excludedDrivers.size(); ++i)
+            {
+                if (dd->getCarID() == excludedDrivers[i])
+                {
+                    excludedDrivers.takeAt(i);
+
+                    excludeDriver(dd->getCarID(), false);
+                    emit driverExcluded(dd->getCarID(), false);
+
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                excludedDrivers.append(dd->getCarID());
+                emit driverExcluded(dd->getCarID(), true);
+
+                excludeDriver(dd->getCarID(), true);
+            }
+        }
+    }
+    repaint();
+}
+
+bool DriverTracker::isExcluded(int id)
+{
+    for (int i = 0; i < excludedDrivers.size(); ++i)
+    {
+        if (excludedDrivers[i] == id)
+            return true;
+    }
+
+    return false;
 }
