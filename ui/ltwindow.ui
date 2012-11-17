@@ -178,7 +178,7 @@
          </palette>
         </property>
         <attribute name="title">
-         <string>Driver radar &amp;&amp; commentary</string>
+         <string>Commentary</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>

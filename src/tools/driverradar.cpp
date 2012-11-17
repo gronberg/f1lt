@@ -43,9 +43,11 @@ void DriverRadar::loadDriversList()
 
 void DriverRadar::setupDrivers(int speed)
 {
+    selectedDriver = -1;
     for (int i = 0; i < drp.size(); ++i)
     {
         drp[i]->setStartupPosition();
+        drp[i]->setExcluded(false);
         drp[i]->setSpeed(speed);
     }
 
@@ -55,6 +57,7 @@ void DriverRadar::setupDrivers(int speed)
     {
         dti->setup();
         dti->repaint();
+        dti->setVisible(false);
         setMinimumSize(dti->minimumSize());
     }
 }
@@ -168,7 +171,7 @@ void DriverRadar::paintEvent(QPaintEvent *)
             sel = i;
     }
     if (sel >= 0)
-        drp[sel]->paint(&p);
+        drp[sel]->paint(&p, true);
 
     p.end();
 }

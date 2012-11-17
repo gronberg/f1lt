@@ -9,7 +9,6 @@ DriverLapHistoryModel::DriverLapHistoryModel(QObject *parent) :
 int DriverLapHistoryModel::rowCount(const QModelIndex &) const
 {
 //    int rows = driverData->getLapData().size() + 1;
-//    qDebug() << "rows=" << rows;
 
     return rows; //EventData::getInstance().getDriversData().size()+1;
 }
@@ -23,6 +22,17 @@ void DriverLapHistoryModel::update(DriverData *dd)
 {    
     driverData = dd;
     int laps = dd->getLapData().size();
+
+//    if ((laps+1) > rows)
+//    {
+//        insertRows(rows, laps + 1 - rows);
+//        rows = laps + 1;
+//    }
+//    else if ((laps+1) < rows)
+//    {
+//        removeRows(laps + 1, rows - laps - 1);
+//        rows = laps + 1;
+//    }
 
     if (laps >= rows)
     {

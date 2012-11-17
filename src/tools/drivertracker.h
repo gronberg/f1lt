@@ -14,6 +14,8 @@ public:
     virtual void loadDriversList();
     virtual void setupDrivers(int speed);
 
+    void paintLegend(QPainter &p);
+
 signals:
 
     void driverSelected(int);

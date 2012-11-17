@@ -14,14 +14,20 @@ DriverTracker::DriverTracker(QWidget *parent) : DriverRadar(parent)
 
 void DriverTracker::setupDrivers(int speed)
 {
+    selectedDriver = -1;
+    excludedDrivers.clear();
+
     trackMap = EventData::getInstance().getEventInfo().trackImg;
     QSize size = trackMap.size();
     size.setWidth(size.width() + label.width() + 10);
-    size.setHeight(size.height() + 120);
+    size.setHeight(size.height() + 120);// > EventData::getInstance().getDriversData().size() * 20 + 20 ? size.height() : EventData::getInstance().getDriversData().size() * 20 + 20);
     setMinimumSize(size);
 
     for (int i = 0; i < drp.size(); ++i)
+    {
         drp[i]->setStartupPosition();
+        drp[i]->setExcluded(false);
+    }
 
     for (int i = 0; i < drp.size(); ++i)
     {
@@ -103,9 +109,15 @@ void DriverTracker::paintEvent(QPaintEvent *)
             sel = i;
     }
     if (sel >= 0)
-        drp[sel]->paint(&p);
+        drp[sel]->paint(&p, true);
 
-    //draw legend
+    paintLegend(p);
+
+    p.end();
+}
+\
+void DriverTracker::paintLegend(QPainter &p)
+{
     for (int i = 0; i < EventData::getInstance().getDriversData().size(); ++i)
     {
         DriverData *dd = EventData::getInstance().getDriverDataByPosPtr(i+1);
@@ -148,7 +160,7 @@ void DriverTracker::paintEvent(QPaintEvent *)
 
             p.drawText(x+60, numY, txt);
 
-            if (!dd->isRetired())
+//            if (!dd->isRetired())
             {
                 p.setPen(QColor(0,0,0));
 
@@ -156,9 +168,12 @@ void DriverTracker::paintEvent(QPaintEvent *)
                     p.setPen(SeasonData::getInstance().getColor(LTPackets::PIT));
                 QString pos = QString::number(i+1);
 
-                if (i+1 < 10)
-                    pos = "  " + pos;
-                p.drawText(x+10, numY, pos);
+                if (!dd->isRetired())
+                {
+                    if (i+1 < 10)
+                        pos = "  " + pos;
+                    p.drawText(x+10, numY, pos);
+                }
 
                 QString gap = "";
                 if (i > 0)
@@ -208,11 +223,8 @@ void DriverTracker::paintEvent(QPaintEvent *)
 
                 p.drawText(x+105, numY, gap);
             }
-
         }
     }
-
-    p.end();
 }
 
 void DriverTracker::mousePressEvent(QMouseEvent *event)

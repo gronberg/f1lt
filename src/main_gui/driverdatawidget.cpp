@@ -359,6 +359,7 @@ void DriverDataWidget::resizeEvent(QResizeEvent *event)
 
 void DriverDataWidget::on_tabWidget_currentChanged(int index)
 {
+    qDebug() << ui->tableView->model()->rowCount();
     int w;
     switch (index)
     {
@@ -475,6 +476,8 @@ void DriverDataWidget::clearData()
     lapTimeChart->clearData();
 
     driverLapHistoryModel->clear();
+    ui->tableView->setModel(0);
     currentDriver = 0;
+    ui->tableView->setModel(driverLapHistoryModel);
 
 }

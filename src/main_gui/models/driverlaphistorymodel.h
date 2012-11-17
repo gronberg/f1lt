@@ -38,7 +38,7 @@ public:
     void clear()
     {
         driverData = 0;
-        rows = 0;
+        rows = 0;        
         reset();
     }
     

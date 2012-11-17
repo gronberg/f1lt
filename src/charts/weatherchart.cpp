@@ -371,7 +371,7 @@ void TempChart::drawAxes(QPainter *p)
 void TempChart::drawChart(QPainter *p)
 {
     EventData &ed = EventData::getInstance();
-    if (ed.getWeather().getSize(weatherId)>1)
+//    if (ed.getWeather().getSize(weatherId)>1)
     {
         p->setBrush(QBrush(color));
         QPen pen(color);
@@ -388,16 +388,33 @@ void TempChart::drawChart(QPainter *p)
         double yFactor = ((double)paintRect.height()-40.0) / (double)(tMax-tMin);
 
         double x = paintRect.left(), j1 = x + xFactor1;
-        double y1 = (double)paintRect.bottom() - (double)(ed.getWeather().getWeatherData(weatherId)[first].getValue()-tMin) * yFactor;
-        double y2 = (double)paintRect.bottom() - (double)(ed.getWeather().getWeatherData(trackTempId)[first].getValue()-tMin) * yFactor;
+
+        double y1 = (double)paintRect.bottom();// - (double)(ed.getWeather().getWeatherData(weatherId)[first].getValue()-tMin) * yFactor;
+        double y2 = (double)paintRect.bottom();// - (double)(ed.getWeather().getWeatherData(trackTempId)[first].getValue()-tMin) * yFactor;
+
+        if (first < ed.getWeather().getWeatherData(weatherId).size())
+            y1 -= (double)(ed.getWeather().getWeatherData(weatherId)[first].getValue()-tMin) * yFactor;
+
+        if (first < ed.getWeather().getWeatherData(trackTempId).size())
+            y2 -= (double)(ed.getWeather().getWeatherData(trackTempId)[first].getValue()-tMin) * yFactor;
 
         int i = first;
         pen.setColor(color);
         p->setPen(pen);
-        for (; i < last + 1 && i < ed.getWeather().getSize(weatherId); ++i, j1 += xFactor1)
+
+        int end = ed.getWeather().getWeatherData(weatherId).size() > ed.getWeather().getWeatherData(trackTempId).size() ?
+                    ed.getWeather().getWeatherData(weatherId).size() : ed.getWeather().getWeatherData(trackTempId).size();
+
+        for (; i < last + 1 && i < end; ++i, j1 += xFactor1)
         {
-            double y3 = (double)paintRect.bottom() - (double)(ed.getWeather().getWeatherData(weatherId)[i].getValue()-tMin) * yFactor;
-            double y4 = (double)paintRect.bottom() - (double)(ed.getWeather().getWeatherData(trackTempId)[i].getValue()-tMin) * yFactor;
+            double y3 = (double)paintRect.bottom();// - (double)(ed.getWeather().getWeatherData(weatherId)[i].getValue()-tMin) * yFactor;
+            double y4 = (double)paintRect.bottom();// - (double)(ed.getWeather().getWeatherData(trackTempId)[i].getValue()-tMin) * yFactor;
+
+            if (i < ed.getWeather().getWeatherData(weatherId).size())
+                y3 -= (double)(ed.getWeather().getWeatherData(weatherId)[i].getValue()-tMin) * yFactor;
+
+            if (i < ed.getWeather().getWeatherData(trackTempId).size())
+                y4 -= (double)(ed.getWeather().getWeatherData(trackTempId)[i].getValue()-tMin) * yFactor;
 
             double ty1 = y1, ty3 = y3, ty2 = y2, ty4 = y4;
 

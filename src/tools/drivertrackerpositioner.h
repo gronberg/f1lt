@@ -8,7 +8,7 @@ class DriverTrackerPositioner : public DriverRadarPositioner
 public:
     DriverTrackerPositioner(DriverData *dd = 0);
 
-    virtual void paint(QPainter *p);
+    virtual void paint(QPainter *p, bool selected = false);
     virtual QPoint getCoordinates();
     virtual QPoint getSCCoordinates();
 

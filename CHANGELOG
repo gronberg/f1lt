@@ -1,3 +1,9 @@
+v1.5.0
+- added driver tracker feature - it is now possible to follow drivers positions on a track map and a radar - there is no GPS data avaialable though, track positions are approximated using lap times!
+- added session times feature - displays times of all drivers from the whole session in a table
+- set reverse sorting in the .lt files database dialog window
+- fixed few bugs
+
 v1.4.1 (27-10-2012):
 - fixed bug with recording
 - fixed bug with session timer stopping during quali

@@ -41,9 +41,9 @@
         <file>helmet_mask.png</file>
         <file>label.png</file>
         <file>label-sel.png</file>
-        <file>label-info-long.png</file>
         <file>label-info-short.png</file>
         <file>label-big.png</file>
         <file>dt.png</file>
+        <file>label-info-long.png</file>
     </qresource>
 </RCC>

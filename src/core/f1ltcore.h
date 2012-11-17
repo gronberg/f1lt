@@ -74,7 +74,12 @@ public:
     static QString ltDataHomeDir()
     {
 #ifdef WIN32
-        return programHomeDir() + "/ltdata/";
+        QString path = programHomeDir() + "/ltdata/";
+        QDir dir(path);
+        if (!dir.exists())
+            dir.mkpath(path);
+
+        return path;
 #else
         QDir dir = QDir::homePath() + "/.f1lt/ltdata";
         if (!dir.exists())

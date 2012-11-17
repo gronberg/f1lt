@@ -43,7 +43,7 @@ void DriverRadarPositioner::setDriverData(DriverData *dd)
 {
     driverData = dd;
 
-    setupHelmet(30);
+    setupHelmet(24);
 }
 
 void DriverRadarPositioner::setStartupPosition()
@@ -54,7 +54,7 @@ void DriverRadarPositioner::setStartupPosition()
     inPits = false;
     finished = false;
 
-    setupHelmet(30);
+    setupHelmet(24);
 
     sectorPositions[0] = 0;
     sectorPositions[1] = 0;
@@ -353,14 +353,12 @@ QPoint DriverRadarPositioner::getCoordinates()
     return QPoint(x, y);
 }
 
-void DriverRadarPositioner::paint(QPainter *p)
+void DriverRadarPositioner::paint(QPainter *p, bool selected)
 {
     if (driverData && driverData->getCarID() > 0 && !excluded)
     {
         QPoint point = getCoordinates();
 
-        QPainterPath path;
-        path.addEllipse(point, 15, 15);
         QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
         p->setBrush(QBrush(drvColor));        
 
@@ -368,18 +366,21 @@ void DriverRadarPositioner::paint(QPainter *p)
 
         if (driverData->getPosition() == 1)
         {
-            pen.setColor(QColor(255, 255, 0));
+            pen.setColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
             pen.setWidth(3);
         }
         if (driverData->isRetired() || qualiOut)
         {
             pen.setColor(QColor(255, 0, 0));
             pen.setWidth(3);
-        }        
+        }
+        if (selected)
+        {
+            pen.setColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
+            pen.setWidth(3);
+        }
 
         p->setPen(pen);
-
-//        p->drawPath(path);
 
         p->drawImage(point.x()-15, point.y()-15, helmet);
 
@@ -390,19 +391,23 @@ void DriverRadarPositioner::paint(QPainter *p)
         p->setBrush(drvColor);
 
         if (inPits)
-            p->drawRoundedRect(point.x()-12-helmet.width(), point.y(), helmet.width()-4, 14, 4, 4);
+//            p->drawRoundedRect(point.x()-15, point.y()-8, helmet.width()-4, 14, 4, 4);
+            p->drawRoundedRect(point.x()-16-helmet.width(), point.y(), helmet.width(), 14, 4, 4);
 
         else
-            p->drawRoundedRect(point.x()-12, point.y()+18, helmet.width()-4, 14, 4, 4);
+            p->drawRoundedRect(point.x()-12, point.y()+15, helmet.width(), 14, 4, 4);
 
         p->setPen(SeasonData::getInstance().getColor(LTPackets::BACKGROUND));
 
-        int numX = point.x() - 16 + p->fontMetrics().width(number)/2;
-        int numY = point.y() + 23 + p->fontMetrics().height()/2;
+        int numX = point.x() - 18 + p->fontMetrics().width(number)/2;
+        int numY = point.y() + 20 + p->fontMetrics().height()/2;
+
+//        int numX = point.x() - 15 + p->fontMetrics().width(number)/2;
+//        int numY = point.y() - 2 + p->fontMetrics().height()/2;
 
         if (inPits)
         {
-            numX = point.x() - helmet.width() - 16 + p->fontMetrics().width(number)/2;
+            numX = point.x() - helmet.width() - 22 + p->fontMetrics().width(number)/2;
             numY = point.y() + 5 + p->fontMetrics().height()/2;
         }
 

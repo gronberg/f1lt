@@ -140,7 +140,12 @@ void DriverTrackerInfo::paintLapsInfo(QPainter *p)
 
     //===== Current lap time=======
     p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
-    txt = lap.getTime().toString();
+
+    if (EventData::getInstance().getEventType() != LTPackets::RACE_EVENT && !driverData->getLapData().isEmpty())
+        txt = driverData->getLapData().last().getTime().toString();
+    else
+        txt = lap.getTime().toString();
+
     p->drawText(nX, nY, txt);
 
     //===== Current sector 1 time=======

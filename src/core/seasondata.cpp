@@ -199,6 +199,7 @@ bool SeasonData::loadTrackDataFile()
 
                 int coordSize;
                 stream >> trackCoordinates.name;
+                stream >> trackCoordinates.year;
                 stream >> trackCoordinates.indexes[0];
                 stream >> trackCoordinates.indexes[1];
                 stream >> trackCoordinates.indexes[2];

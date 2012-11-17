@@ -171,14 +171,12 @@ QPoint DriverTrackerPositioner::getSCCoordinates()
     }
 }
 
-void DriverTrackerPositioner::paint(QPainter *p)
+void DriverTrackerPositioner::paint(QPainter *p, bool selected)
 {
     if (driverData && driverData->getCarID() > 0)
     {
         QPoint point = getCoordinates();
 
-        QPainterPath path;
-//        path.addEllipse(point, 12, 12);
         QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
         p->setBrush(QBrush(drvColor));
 
@@ -186,12 +184,17 @@ void DriverTrackerPositioner::paint(QPainter *p)
 
         if (driverData->getPosition() == 1)
         {
-            pen.setColor(QColor(255, 255, 0));
+            pen.setColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
             pen.setWidth(3);
         }
         if (driverData->isRetired() || qualiOut)
         {
             pen.setColor(QColor(255, 0, 0));
+            pen.setWidth(3);
+        }
+        if (selected)
+        {
+            pen.setColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
             pen.setWidth(3);
         }
 

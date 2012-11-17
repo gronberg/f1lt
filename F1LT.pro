@@ -18,8 +18,10 @@ UI_DIR = ui/
 INSTALLS += target \
     DATA_FILES
 
-DATA_FILES.files = season.dat
+DATA_FILES.files = season.dat trackdata.dat
 DATA_FILES.path = $$PREFIX/share/
+
+RC_FILE = f1lt.rc
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
@@ -144,8 +146,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/ltfilesmanagerdialog.ui \
     ui/aboutdialog.ui \
     ui/followadriverdialog.ui \
-    src/tools/sessiontimeswidget.ui \
-    src/tools/drivertrackerwidget.ui
+    ui/sessiontimeswidget.ui \
+    ui/drivertrackerwidget.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

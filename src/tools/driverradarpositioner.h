@@ -10,7 +10,7 @@ class DriverRadarPositioner
 public:
     DriverRadarPositioner(DriverData *dd = 0, int x = 0, int y = 0, double r = 0.0, double rP = 0.0, double rL = 0.0);
 
-    virtual void paint(QPainter *p);
+    virtual void paint(QPainter *p, bool selected = false);
     virtual QPoint getCoordinates();
 
     void update();

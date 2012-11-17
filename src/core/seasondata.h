@@ -39,6 +39,7 @@ struct LTTrackCoordinates
     int indexes[3];     //index of S1, S2 and pit out
     QList<QPoint> coordinates;
     QString name;
+    int year;
 };
 
 struct LTEvent

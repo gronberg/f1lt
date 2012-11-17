@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Fri Nov 16 22:04:33 2012
+** Created: Sat Nov 17 10:27:57 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -395,7 +395,7 @@ public:
 "<tr>\n"
 "<td style=\"border: none;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
-        tabWidget->setTabText(tabWidget->indexOf(tab_5), QApplication::translate("LTWindow", "Driver radar && commentary", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tab_5), QApplication::translate("LTWindow", "Commentary", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("LTWindow", "File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("LTWindow", "Tools", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("LTWindow", "Help", 0, QApplication::UnicodeUTF8));
