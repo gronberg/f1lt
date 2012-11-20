@@ -23,6 +23,7 @@
 #include "../tools/sessionanalysiswidget.h"
 #include "../tools/sessiontimeswidget.h"
 #include "../core/sessiontimer.h"
+#include "delaywidget.h"
 
 
 namespace Ui {
@@ -157,6 +158,9 @@ private:
 
     AboutDialog *aboutDialog;
     DriverTrackerWidget *driverTrackerWidget;
+
+    DelayWidget *delayWidget;
+    QAction *delayWidgetAction;
 };
 
 #endif // LTWINDOW_H

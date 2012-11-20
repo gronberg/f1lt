@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Sat Nov 17 10:27:57 2012
+** Created: Tue Nov 20 21:14:03 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

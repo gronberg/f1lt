@@ -43,7 +43,13 @@ LTWindow::LTWindow(QWidget *parent) :
     eventRecorder = new EventRecorder(this);
     eventPlayer = new EventPlayer(this);
 
+    delayWidget = new DelayWidget(this);
+    connect(delayWidget, SIGNAL(delayChanged(int)), streamReader, SLOT(setDelay(int)));
+
     loadSettings();
+
+    delayWidgetAction = ui->mainToolBar->addWidget(delayWidget);
+    delayWidgetAction->setVisible(true);
 
     eventPlayerAction = ui->mainToolBar->addWidget(eventPlayer);
     eventPlayerAction->setVisible(false);
@@ -81,6 +87,7 @@ LTWindow::LTWindow(QWidget *parent) :
         ui->actionRecord->setVisible(false);
         ui->actionStop_recording->setVisible(false);
         eventPlayerAction->setVisible(true);
+        delayWidgetAction->setVisible(false);
 
         playing = true;
 
@@ -939,6 +946,7 @@ void LTWindow::eventPlayerOpenFile(QString fName)
     ui->actionRecord->setVisible(false);
     ui->actionStop_recording->setVisible(false);
     eventPlayerAction->setVisible(true);
+    delayWidgetAction->setVisible(false);
 
     streamReader->disconnectFromLTServer();
     streamReader->clearData();
@@ -992,6 +1000,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
 {
     streamReader->clearData();
     eventPlayerAction->setVisible(false);
+    delayWidgetAction->setVisible(true);
     ui->actionRecord->setVisible(true);
     ui->actionStop_recording->setVisible(true);
     //ui->tableWidget->clear();

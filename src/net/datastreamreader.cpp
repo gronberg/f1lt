@@ -28,6 +28,11 @@ DataStreamReader::DataStreamReader(QObject *parent) :
     connect(&parser, SIGNAL(requestDecryptionKey(uint)), &httpReader, SLOT(obtainDecryptionKey(uint)));
 }
 
+void DataStreamReader::setDelay(int delay)
+{
+    parser.setDelay(delay);
+}
+
 void DataStreamReader::connectToLTServer(QString email, QString passwd)
 {
     eventData.frame = 0;
@@ -45,9 +50,9 @@ void DataStreamReader::disconnectFromLTServer()
 void DataStreamReader::onCookieReceived(QString cookie)
 {    
     eventData.cookie = cookie;
-    socketReader.openStream(host, port);
+//    socketReader.openStream(host, port);
 //    socketReader.openStream("localhost", 6666);
-//    socketReader.openStream("192.168.1.2", 6666);
+    socketReader.openStream("192.168.1.2", 6666);
 //    eventData.key = 2976363859;
 //    eventData.key = 2462388168;     //bahrain quali
 //    eventData.key = 3875488254; //fp1

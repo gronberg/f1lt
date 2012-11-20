@@ -47,7 +47,7 @@ signals:
     void packetParsed(const Packet&);
     void eventDataChanged();
     void driverDataChanged(int id);
-    void dataChanged();
+    void dataChanged();    
     
 public slots:
     //void connected();
@@ -57,6 +57,7 @@ public slots:
     void onCookieReceived(QString);
 
     void parsePackets(const QVector<Packet> &);
+    void setDelay(int delay);
 
 private:
     SocketDataReader socketReader;

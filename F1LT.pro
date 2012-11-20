@@ -23,7 +23,7 @@ DATA_FILES.path = $$PREFIX/share/
 
 RC_FILE = f1lt.rc
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+#DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
@@ -75,7 +75,9 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/tools/drivertrackerpositioner.cpp \
     src/tools/drivertracker.cpp \
     src/tools/drivertrackerwidget.cpp \
-    src/tools/drivertrackerinfo.cpp
+    src/tools/drivertrackerinfo.cpp \
+    src/net/packetbuffer.cpp \
+    src/main_gui/delaywidget.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -127,7 +129,9 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/tools/drivertrackerpositioner.h \
     src/tools/drivertracker.h \
     src/tools/drivertrackerwidget.h \
-    src/tools/drivertrackerinfo.h
+    src/tools/drivertrackerinfo.h \
+    src/net/packetbuffer.h \
+    src/main_gui/delaywidget.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -147,7 +151,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/aboutdialog.ui \
     ui/followadriverdialog.ui \
     ui/sessiontimeswidget.ui \
-    ui/drivertrackerwidget.ui
+    ui/drivertrackerwidget.ui \
+    src/main_gui/delaywidget.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

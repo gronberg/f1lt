@@ -7,7 +7,9 @@
 
 #include "../core/eventdata.h"
 
+
 class PacketParser;
+class PacketBuffer;
 
 struct Packet
 {
@@ -83,9 +85,13 @@ public:
 
 public slots:
      void parsePackets(const QVector<Packet> &);
+     void parseBufferedPackets(const QVector<Packet> &);
+     void parseBufferedPackets(Packet &);
      void decryptionKeyObtained(unsigned int key);
      void keyFrameObtained(const QByteArray &buf);
      void streamBlockObtained(const QByteArray &buf);
+
+     void setDelay(int delay);
 
 signals:
      void packetParsed(const Packet&);
@@ -112,6 +118,8 @@ private:
     void savePacket(const QByteArray &buf);
 
     bool noSession;
+
+    PacketBuffer *packetBuffer;
 
 };
 

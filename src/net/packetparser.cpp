@@ -1,7 +1,7 @@
 #include "packetparser.h"
 
 #include <QDebug>
-
+#include "packetbuffer.h"
 
 
 bool PacketDecrypter::checkDecryption(QString stream)
@@ -20,6 +20,12 @@ bool PacketDecrypter::checkDecryption(QString stream)
 
 PacketParser::PacketParser(QObject *parent) : QObject(parent), parsing(false), packetNo(0), eventData(EventData::getInstance()), noSession(false)
 {
+    packetBuffer = new PacketBuffer(this, this);
+}
+
+void PacketParser::setDelay(int delay)
+{
+    packetBuffer->setDelay(delay);
 }
 
 void PacketParser::parseStreamBlock(const QByteArray &data)
@@ -36,15 +42,29 @@ void PacketParser::parseStreamBlock(const QByteArray &data)
             packet.longData.clear();
             continue;
         }
-        Packet copyPacket = packet;
 
-        if(packet.carID)
-            parseCarPacket(packet);
+        //after every SYS_KEY_FRAME packet decryption have to be reset
+        if(!packet.carID && (packet.type == LTPackets::SYS_KEY_FRAME || packet.type == LTPackets::SYS_EVENT_ID))
+            decrypter.resetDecryption();
 
+        if (packetBuffer->hasToBeBuffered())
+        {
+            packetBuffer->addPacket(packet);
+        }
         else
-            parseSystemPacket(packet);
+            parseBufferedPackets(packet);
 
-        emit packetParsed(copyPacket);
+//        Packet copyPacket = packet;
+
+
+
+
+//            parseCarPacket(packet);
+
+//        else
+//            parseSystemPacket(packet);
+
+//        emit packetParsed(copyPacket);
         packet.longData.clear();
     }
     parsing = false;
@@ -868,7 +888,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
             eventData.eventType = (LTPackets::EventType)copyPacket.data;
             eventData.lapsCompleted = 0;
 
-            decrypter.resetDecryption();
+//            decrypter.resetDecryption();
             break;
 
         case LTPackets::SYS_KEY_FRAME:
@@ -881,19 +901,19 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                 uc = packet.longData[--i];
                 number |= uc;
             }
-            decrypter.resetDecryption();
+//            decrypter.resetDecryption();
 
 
              if (!eventData.frame || number == 1) // || decryption_failure
              {
-                eventData.frame = number;
-                emit requestKeyFrame(number);
+//                eventData.frame = number;
+//                emit requestKeyFrame(number);
 
 //                httpReader.obtainKeyFrame(number);
 
 
                  /*onDecryptionKeyObtained(2841044872);*/   //valencia race
-//                  decryptionKeyObtained(2971732062);      //valencia qual
+                  decryptionKeyObtained(2971732062);      //valencia qual
 //                onDecryptionKeyObtained(3585657959);  //?
 //                onDecryptionKeyObtained(2488580439);  //qual
 //                 onDecryptionKeyObtained(2438680630);  //race
@@ -1150,6 +1170,38 @@ void PacketParser::parsePackets(const QVector<Packet> &packets)
         }
     }
     emit dataChanged();
+}
+
+void PacketParser::parseBufferedPackets(const QVector<Packet> &packets)
+{
+    bool emitSignal = false;
+    for (int i = 0; i < packets.size(); ++i)
+    {
+        if (i == packets.size() - 1)
+            emitSignal = true;
+
+        Packet packet = packets[i];
+        if (packet.carID)
+            parseCarPacket(packet, false);
+
+        else
+            parseSystemPacket(packet, false);
+
+        emit packetParsed(packets[i]);
+    }
+    emit dataChanged();
+}
+
+void PacketParser::parseBufferedPackets(Packet &packet)
+{
+    Packet copyPacket = packet;
+    if (packet.carID)
+        parseCarPacket(packet, true);
+
+    else
+        parseSystemPacket(packet, true);
+
+    emit packetParsed(copyPacket);
 }
 
 void PacketParser::streamBlockObtained(const QByteArray &buf)
