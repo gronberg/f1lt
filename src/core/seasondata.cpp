@@ -5,6 +5,7 @@
 #include <QFile>
 
 #include "eventdata.h"
+#include "trackrecords.h"
 
 CarThumbnailsFactory::~CarThumbnailsFactory()
 {
@@ -174,9 +175,11 @@ bool SeasonData::loadSeasonFile()
     qSort(ltTeams);
     qSort(ltEvents);
 
-    return loadTrackDataFile();
+    bool ok;
+    ok = loadTrackDataFile();
 
-    return true;
+    ok = TrackRecords::getInstance().loadTrackRecords(F1LTCore::trackRercordsFile());
+    return ok;
 }
 
 bool SeasonData::loadTrackDataFile()

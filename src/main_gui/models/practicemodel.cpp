@@ -202,7 +202,7 @@ QVariant PracticeModel::extraRowData(const QModelIndex &index, int role) const
     if (index.row() == rowCount()-2)
         return QVariant();
 
-    if (role == Qt::DisplayRole && !eventData.getDriverDataByPos(1).getLapData().isEmpty())
+    if (role == Qt::DisplayRole && !eventData.getDriverDataByPos(1).getLapData().isEmpty() && !driversData.isEmpty())
     {
         switch (index.column())
         {

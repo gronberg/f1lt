@@ -14,7 +14,17 @@ public:
     virtual void loadDriversList();
     virtual void setupDrivers(int speed);
 
-    void paintLegend(QPainter &p);
+    void paintClassification(QPainter &p);
+
+    void setDrawDriverClassification(bool val)
+    {
+        drawClassification = val;
+        setMinimumSize();
+        resizeEvent(0);
+        repaint();
+    }
+
+    void setMinimumSize();
 
 signals:
 
@@ -34,6 +44,8 @@ protected:
     QPixmap trackMap;
 
     QList<int> excludedDrivers;
+
+    bool drawClassification;
 };
 
 #endif // DRIVERTRACKER_H

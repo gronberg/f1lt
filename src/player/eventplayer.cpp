@@ -160,6 +160,8 @@ void EventPlayer::timeout()
 //    LTpackets.append(packets[currentPos].second);
 //    bool appendPacket = true;
 
+    if (currentPos < packets.size() - 1)
+        qDebug() << "NEXT PACKET" << elapsedSeconds << packets[currentPos].first << packets[currentPos].second.carID << packets[currentPos].second.type << packets[currentPos].second.data;
 
     while (currentPos < packets.size() && elapsedSeconds == packets[currentPos].first)
     {                

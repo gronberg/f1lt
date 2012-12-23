@@ -328,6 +328,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionFollow_a_driver"/>
     <addaction name="actionHead_to_head"/>
     <addaction name="actionLap_time_comparison"/>
+    <addaction name="actionTrack_records"/>
     <addaction name="separator"/>
     <addaction name="actionRecord"/>
     <addaction name="actionStop_recording"/>
@@ -375,11 +376,13 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionSession_times"/>
    <addaction name="actionDriver_tracker"/>
    <addaction name="separator"/>
+   <addaction name="actionTrack_records"/>
    <addaction name="actionPreferences"/>
    <addaction name="actionExit"/>
    <addaction name="separator"/>
    <addaction name="actionRecord"/>
    <addaction name="actionStop_recording"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="maximumSize">
@@ -563,6 +566,11 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionTrack_records">
+   <property name="text">
+    <string>Track records</string>
    </property>
   </action>
  </widget>

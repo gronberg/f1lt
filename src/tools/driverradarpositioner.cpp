@@ -152,7 +152,7 @@ void DriverRadarPositioner::calculatePosition()
     {
         if (driverData->getLastLap().getSectorTime(1).isValid() &&
                 ((ev.getEventType() == LTPackets::RACE_EVENT && driverData->getColorData().lapTimeColor() == LTPackets::YELLOW) ||
-                 (!driverData->getLastLap().getSectorTime(2).isValid() && !driverData->getLastLap().getSectorTime(3).isValid())) &&
+                 (!driverData->getLastLap().getSectorTime(2).isValid() || !driverData->getLastLap().getSectorTime(3).isValid())) &&
                 currSector == 1)
         {
             currSector = 2;

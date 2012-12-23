@@ -21,6 +21,7 @@ LTWindow::LTWindow(QWidget *parent) :
     settings = new QSettings(F1LTCore::iniFile(), QSettings::IniFormat, this);
     loginDialog = new LoginDialog(this);
     ltFilesManagerDialog = new LTFilesManagerDialog(this);
+    trackRecordsDialog = new TrackRecordsDialog(this);
     saw = new SessionAnalysisWidget();
     stw = new SessionTimesWidget();
     driverTrackerWidget = new DriverTrackerWidget();
@@ -40,11 +41,13 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(showNoSessionBoard(bool, QString)));
 
     sessionTimer = new SessionTimer(this);
-    eventRecorder = new EventRecorder(this);
+    eventRecorder = new EventRecorder(sessionTimer, this);
     eventPlayer = new EventPlayer(this);
 
     delayWidget = new DelayWidget(this);
-    connect(delayWidget, SIGNAL(delayChanged(int)), streamReader, SLOT(setDelay(int)));
+    connect(delayWidget, SIGNAL(delayChanged(int, int)), streamReader, SLOT(setDelay(int, int)));
+    connect(delayWidget, SIGNAL(delayChanged(int, int)), sessionTimer, SLOT(setDelay(int, int)));
+    connect(sessionTimer, SIGNAL(synchronizingTimer(bool)), delayWidget, SLOT(synchronizingTimer(bool)));
 
     loadSettings();
 
@@ -210,7 +213,8 @@ void LTWindow::driverDataChanged(int carID)
 
 void LTWindow::dataChanged()
 {
-    setWindowTitle("F1LT - " + eventData.getEventInfo().eventName + " (" + eventPlayer->playedFile() + ")");
+    if (playing)
+        setWindowTitle("F1LT - " + eventData.getEventInfo().eventName + " (" + eventPlayer->playedFile() + ")");
 //    if (eventData.commentary.size() > ui->textEdit->toPlainText().size())
     {        
         ui->textEdit->setText(eventData.getCommentary());
@@ -386,6 +390,12 @@ void LTWindow::sessionStarted()
     {
         sessionTimer->start(1000);
         driverTrackerWidget->startTimer(1000);
+
+        if (eventData.isSessionStarted() && !playing && !recording && settings->value("ui/auto_record").toBool() && !eventRecorder->isSessionRecorded())
+        {
+            qDebug() << "START RECORDING";
+            startRecording(true);
+        }
     }
 }
 
@@ -431,10 +441,11 @@ void LTWindow::timeout()
 //    if (driverTrackerWidget->isVisible())
 //        driverTrackerWidget->update();
 
-    //during quali timer is stopped when we have red flag
+    //during quali timer is stopped when we have red flag    
+
     if (eventData.isSessionStarted())
     {
-        if (!playing && settings->value("ui/auto_record").toBool() && !recording && !eventRecorder->isSessionRecorded())
+        if (!playing && !recording && settings->value("ui/auto_record").toBool() && !eventRecorder->isSessionRecorded())
             startRecording(true);
     }
 
@@ -543,6 +554,7 @@ void LTWindow::loadSettings()
     driverTrackerWidget->loadSettings(settings);
 
     ltFilesManagerDialog->loadSettings(settings);
+    trackRecordsDialog->loadSettings(settings);
 }
 
 void LTWindow::saveSettings()
@@ -561,6 +573,7 @@ void LTWindow::saveSettings()
     stw->saveSettings(*settings);
     driverTrackerWidget->saveSettings(settings);
     ltFilesManagerDialog->saveSettings(settings);
+    trackRecordsDialog->saveSettings(settings);
 
 //    settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
 //    settings->setValue("ui/alt_colors", prefs->isAlternatingRowColors());
@@ -618,6 +631,7 @@ void LTWindow::on_actionPreferences_triggered()
             ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
 
         ui->ltWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
+        driverTrackerWidget->drawTrackerClassification(settings->value("ui/draw_tracker_classification").toBool());
     }
 }
 
@@ -640,6 +654,7 @@ void LTWindow::setFonts(const QFont &mainFont, const QFont &commentaryFont)
 //    ui->trackStatusWidget->setFont(mainFont);
     ui->eventStatusWidget->setFont(mainFont);
     prefs->setFonts(mainFont, commentaryFont);
+    trackRecordsDialog->setFont(mainFont);
 
     stw->setFont(mainFont);
 }
@@ -838,7 +853,8 @@ void LTWindow::startRecording(bool autoRecord)
 //        ui->actionRecord->setIcon(QIcon(":/ui_icons/stop.png"));
     ui->actionOpen->setEnabled(false);
     eventRecorder->startRecording();
-    connect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+//    connect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+    connect(streamReader, SIGNAL(packetParsed(QPair<Packet, qint64>)), eventRecorder, SLOT(appendPacket(QPair<Packet, qint64>)));
 
     if (!sessionTimer->isActive())
     {
@@ -858,7 +874,8 @@ void LTWindow::stopRecording(bool autoStop)
     if (!autoStop)
         eventRecorder->stopRecording();
 
-    disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+//    disconnect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
+    disconnect(streamReader, SIGNAL(packetParsed(QPair<Packet, qint64>)), eventRecorder, SLOT(appendPacket(QPair<Packet, qint64>)));
 }
 
 void LTWindow::on_actionRecord_triggered()
@@ -1070,4 +1087,9 @@ void LTWindow::on_actionSession_times_triggered()
 void LTWindow::on_actionDriver_tracker_triggered()
 {
     driverTrackerWidget->exec();
+}
+
+void LTWindow::on_actionTrack_records_triggered()
+{
+    trackRecordsDialog->exec();
 }

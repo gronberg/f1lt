@@ -14,7 +14,7 @@ PacketBuffer::PacketBuffer(PacketParser *parser, QObject *parent) :
 void PacketBuffer::addPacket(Packet &packet)
 {
     if (delay == 0)
-        packetParser->parseBufferedPackets(packet);
+        packetParser->parseBufferedPackets(qMakePair(packet, QDateTime::currentMSecsSinceEpoch()));
 
     else
         packetsQueue.enqueue(qMakePair(packet, QDateTime::currentMSecsSinceEpoch()));
@@ -33,12 +33,12 @@ bool PacketBuffer::hasToBeBuffered()
 void PacketBuffer::timeout()
 {
     qint64 currTime = QDateTime::currentMSecsSinceEpoch() - delay * 1000;
-    QVector<Packet> packetsToHandle;
+    QVector< QPair<Packet, qint64> > packetsToHandle;
     while (!packetsQueue.isEmpty())
     {
-        qDebug() << currTime/1000 << packetsQueue.head().second/1000;
+//        qDebug() << currTime/1000 << packetsQueue.head().second/1000;
         if (packetsQueue.head().second  <= currTime)
-            packetsToHandle.append(packetsQueue.dequeue().first);
+            packetsToHandle.append(packetsQueue.dequeue());
 
         else
             break;
@@ -48,8 +48,8 @@ void PacketBuffer::timeout()
 
 void PacketBuffer::setDelay(int del)
 {
-    if (!packetsQueue.isEmpty())
-        qDebug() << "BEFORE" << delay <<(QDateTime::currentMSecsSinceEpoch() - delay * 1000)/1000 << packetsQueue.head().second/1000;
+//    if (!packetsQueue.isEmpty())
+//        qDebug() << "BEFORE" << delay <<(QDateTime::currentMSecsSinceEpoch() - delay * 1000)/1000 << packetsQueue.head().second/1000;
     delay = del;
     if (delay != 0 && !timer->isActive())
         timer->start(100);
@@ -60,5 +60,5 @@ void PacketBuffer::setDelay(int del)
         timeout();
     }
 
-    qDebug() << "DELAY=" << del << packetsQueue.size();
+//    qDebug() << "DELAY=" << del << packetsQueue.size();
 }

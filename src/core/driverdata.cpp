@@ -230,11 +230,11 @@ void DriverData::addFPQLap(const EventData &ed)
     {
         bool correction = false;
         //sometimes servers messes up with lap numbers, we catch this if the numlap is <= than the last one
-        if (!lapData.isEmpty() && lastLap.lapNum <= lapData.last().lapNum)
+        if (!lapData.isEmpty() && lastLap.lapNum+1 <= lapData.last().lapNum)
         {
             correction = true;
             bool approx = lapData.last().qualiLapExtraData.approxLap || lapData.last().practiceLapExtraData.approxLap;
-            int numlap = lapData.last().lapNum;
+            int numlap = lapData.last().lapNum-1;
             lapData.last() = LapData(lastLap);
             lapData.last().qualiLapExtraData.approxLap = approx;
             lapData.last().practiceLapExtraData.approxLap = approx;
@@ -256,6 +256,7 @@ void DriverData::addFPQLap(const EventData &ed)
             lastLap.qualiLapExtraData.sessionTime = ed.getRemainingTime();
             lastLap.practiceLapExtraData.sessionTime = ed.getRemainingTime();
             lapData.append(lastLap);
+            lapData.last().lapNum--;
 
             if (ed.getEventType() == LTPackets::QUALI_EVENT)
             {
@@ -333,7 +334,72 @@ void DriverData::addFPQLap(const EventData &ed)
         lapData.last().gap = QString::number((lapData.last().lapTime - ed.getSessionRecords().getFastestLap().getTime()).toDouble());
 
         posHistory.append(lastLap.pos);
+        outLap = false;
     }
+
+    //saving in and out laps
+    else if (lastLap.lapNum > 1)
+    {
+        if (lapData.isEmpty() || (!lapData.isEmpty() && lapData.last().lapNum < lastLap.lapNum-1))
+        {
+            if (outLap == true || inPits == false)
+            {
+                lapData.append(lastLap);
+                lapData.last().lapTime = LapTime("OUT LAP");
+
+                if (inPits == true)
+                    lapData.last().lapTime = LapTime("INST. LAP");
+
+                lapData.last().lapNum--;
+                outLap = false;
+            }
+            else
+            {
+                lapData.append(lastLap);
+                lapData.last().lapTime = LapTime("IN LAP");
+                lapData.last().lapNum--;
+            }
+            lapData.last().qualiLapExtraData.sessionTime = ed.getRemainingTime();
+            lapData.last().practiceLapExtraData.sessionTime = ed.getRemainingTime();
+        }
+    }
+}
+
+void DriverData::updatePitStatus(LTPackets::Colors pitColor, EventData &ed)
+{
+    if (pitColor == LTPackets::PIT)
+    {
+        bool prev = inPits;
+        inPits = true;
+        if (prev == false && ed.getEventType() != LTPackets::RACE_EVENT)
+            addInLap(ed);
+    }
+
+
+    else
+    {
+        //if driver went out from pit, he is on his outlap
+        if (inPits == true)
+            outLap = true;
+
+        inPits = false;
+    }
+}
+
+void DriverData::addInLap(const EventData &ed)
+{
+    if (lastLap.lapNum <= 0)
+        return;
+
+    lapData.append(lastLap);
+
+    if (outLap == true)
+        lapData.last().lapTime = LapTime("INST. LAP");
+    else
+        lapData.last().lapTime = LapTime("IN LAP");
+
+    lapData.last().qualiLapExtraData.sessionTime = ed.getRemainingTime();
+    lapData.last().practiceLapExtraData.sessionTime = ed.getRemainingTime();
 }
 
 void DriverData::updateLastLap()

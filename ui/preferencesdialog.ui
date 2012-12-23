@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>447</width>
-    <height>371</height>
+    <height>397</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -129,6 +129,13 @@
     <widget class="QCheckBox" name="thumbnailsCheckBox">
      <property name="text">
       <string>Draw car thumbnails</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="trackerBox">
+     <property name="text">
+      <string>Draw drivers classification in driver tracker</string>
      </property>
     </widget>
    </item>

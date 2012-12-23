@@ -45,6 +45,9 @@ public:
     void setAutoConnect(bool);
     bool isAutoConnect();
 
+    bool drawTrackerClassification();
+    void setDrawTrackerClassification(bool);
+
 public slots:
     int exec(QSettings *);
     

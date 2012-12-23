@@ -53,6 +53,7 @@ int PreferencesDialog::exec(QSettings *set)
     setReverseOrderHeadToHead(settings->value("ui/reversed_head_to_head").toBool());
     setReverseOrderLapTimeComparison(settings->value("ui/reversed_lap_time_comparison").toBool());
     setAutoConnect(settings->value("ui/auto_connect").toBool());
+    setDrawTrackerClassification(settings->value("ui/draw_tracker_classification").toBool());
 
     if (!settings->contains("ui/auto_stop_record"))
         setAutoStopRecord(-1);
@@ -82,6 +83,7 @@ void PreferencesDialog::on_buttonBox_accepted()
     settings->setValue("ui/auto_record", isAutoRecord());    
     settings->setValue("ui/auto_stop_record", getAutoStopRecord());
     settings->setValue("ui/auto_connect", isAutoConnect());
+    settings->setValue("ui/draw_tracker_classification", drawTrackerClassification());
 }
 
 void PreferencesDialog::setFonts(const QFont &f1, const QFont &f2)
@@ -209,4 +211,14 @@ void PreferencesDialog::setAutoConnect(bool val)
 bool PreferencesDialog::isAutoConnect()
 {
 	return ui->autoConnectBox->isChecked();
+}
+
+bool PreferencesDialog::drawTrackerClassification()
+{
+    return ui->trackerBox->isChecked();
+}
+
+void PreferencesDialog::setDrawTrackerClassification(bool val)
+{
+    ui->trackerBox->setChecked(val);
 }

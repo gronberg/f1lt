@@ -21,6 +21,7 @@ DataStreamReader::DataStreamReader(QObject *parent) :
     connect(&parser, SIGNAL(noLiveSession(bool,QString)), this, SIGNAL(noLiveSession(bool,QString)));
     connect(&parser, SIGNAL(sessionStarted()), this, SIGNAL(sessionStarted()));
     connect(&parser, SIGNAL(packetParsed(Packet)), this, SIGNAL(packetParsed(Packet)));
+    connect(&parser, SIGNAL(packetParsed(QPair<Packet, qint64>)), this, SIGNAL(packetParsed(QPair<Packet, qint64>)));
     connect(&parser, SIGNAL(eventDataChanged()), this, SIGNAL(eventDataChanged()));
     connect(&parser, SIGNAL(driverDataChanged(int)), this, SIGNAL(driverDataChanged(int)));
     connect(&parser, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
@@ -28,9 +29,9 @@ DataStreamReader::DataStreamReader(QObject *parent) :
     connect(&parser, SIGNAL(requestDecryptionKey(uint)), &httpReader, SLOT(obtainDecryptionKey(uint)));
 }
 
-void DataStreamReader::setDelay(int delay)
+void DataStreamReader::setDelay(int prevDelay, int delay)
 {
-    parser.setDelay(delay);
+    parser.setDelay(prevDelay, delay);
 }
 
 void DataStreamReader::connectToLTServer(QString email, QString passwd)
@@ -50,9 +51,9 @@ void DataStreamReader::disconnectFromLTServer()
 void DataStreamReader::onCookieReceived(QString cookie)
 {    
     eventData.cookie = cookie;
-//    socketReader.openStream(host, port);
+    socketReader.openStream(host, port);
 //    socketReader.openStream("localhost", 6666);
-    socketReader.openStream("192.168.1.2", 6666);
+//    socketReader.openStream("192.168.1.2", 6666);
 //    eventData.key = 2976363859;
 //    eventData.key = 2462388168;     //bahrain quali
 //    eventData.key = 3875488254; //fp1

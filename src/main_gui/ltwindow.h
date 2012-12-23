@@ -18,6 +18,7 @@
 #include "../tools/headtoheaddialog.h"
 #include "../tools/laptimecomparisondialog.h"
 #include "../tools/ltfilesmanagerdialog.h"
+#include "../tools/trackrecordsdialog.h"
 #include "logindialog.h"
 #include "preferencesdialog.h"
 #include "../tools/sessionanalysiswidget.h"
@@ -109,6 +110,8 @@ private slots:
 
     void on_actionDriver_tracker_triggered();
 
+    void on_actionTrack_records_triggered();
+
 private:
     Ui::LTWindow *ui;
     DataStreamReader *streamReader;
@@ -155,12 +158,14 @@ private:
     QProgressDialog *connectionProgress;
 
     LTFilesManagerDialog *ltFilesManagerDialog;
+    TrackRecordsDialog *trackRecordsDialog;
 
     AboutDialog *aboutDialog;
     DriverTrackerWidget *driverTrackerWidget;
 
     DelayWidget *delayWidget;
     QAction *delayWidgetAction;
+
 };
 
 #endif // LTWINDOW_H

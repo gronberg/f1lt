@@ -41,6 +41,10 @@ public:
 
     void exec();
 
+    void drawTrackerClassification(bool val);
+
+
+
 protected:
     void keyPressEvent(QKeyEvent *);
     

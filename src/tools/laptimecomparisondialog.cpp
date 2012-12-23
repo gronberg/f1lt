@@ -259,7 +259,7 @@ void LapTimeComparisonDialog::updateData()
         {
             for (int i = 0; i < 4; ++i)
             {
-                if (i != bestIdx && laps[i].toString() != "" && laps[i].toString() != "IN PIT" && laps[i].toString() != "RETIRED")
+                if (i != bestIdx && laps[i].toString() != "" && laps[i].toString() != "IN PIT" && laps[i].toString() != "RETIRED" && !laps[i].toString().contains("LAP"))
                 {
                     item = ui->tableWidget->item(j+1, i+1);
 
@@ -294,14 +294,14 @@ void LapTimeComparisonDialog::updateData()
                         item->setTextColor(SeasonData::getInstance().getColor(color));
                     }
                 }
-                else if (laps[i].toString() == "IN PIT" || laps[i].toString() == "RETIRED")
+                else if (laps[i].toString() == "IN PIT" || laps[i].toString() == "RETIRED" ||  laps[i].toString().contains("LAP"))
                 {
                     item = ui->tableWidget->item(j+1, i+1);
                     item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
                 }
             }
             item = ui->tableWidget->item(j+1, bestIdx+1);
-            if (item && laps[bestIdx].toString() != "IN PIT" && laps[bestIdx].toString() != "RETIRED")
+            if (item && laps[bestIdx].toString() != "IN PIT" && laps[bestIdx].toString() != "RETIRED" && !laps[bestIdx].toString().contains("LAP"))
                 item->setTextColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
         }
         ui->tableWidget->setRowHeight(j+1, 20);

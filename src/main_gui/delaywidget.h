@@ -16,10 +16,18 @@ public:
     ~DelayWidget();
 
 signals:
-    void delayChanged(int);
+    void delayChanged(int previousDelay, int delay);
+
+public slots:
+    void synchronizingTimer(bool);
     
+private slots:
+
+    void on_spinBox_valueChanged(int arg1);
+
 private:
     Ui::DelayWidget *ui;
+    int delay;
 };
 
 #endif // DELAYWIDGET_H

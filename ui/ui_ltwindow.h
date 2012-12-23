@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Tue Nov 20 21:14:03 2012
-**      by: Qt User Interface Compiler version 4.8.3
+** Created: Sun Dec 23 16:11:00 2012
+**      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -52,6 +52,7 @@ public:
     QAction *actionFollow_a_driver;
     QAction *actionSession_times;
     QAction *actionDriver_tracker;
+    QAction *actionTrack_records;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_4;
     NoSessionBoardWidget *messageBoardWidget;
@@ -159,6 +160,8 @@ public:
         QIcon icon13;
         icon13.addFile(QString::fromUtf8(":/ui_icons/dt.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionDriver_tracker->setIcon(icon13);
+        actionTrack_records = new QAction(LTWindow);
+        actionTrack_records->setObjectName(QString::fromUtf8("actionTrack_records"));
         centralWidget = new QWidget(LTWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
@@ -317,6 +320,7 @@ public:
         menuEdit->addAction(actionFollow_a_driver);
         menuEdit->addAction(actionHead_to_head);
         menuEdit->addAction(actionLap_time_comparison);
+        menuEdit->addAction(actionTrack_records);
         menuEdit->addSeparator();
         menuEdit->addAction(actionRecord);
         menuEdit->addAction(actionStop_recording);
@@ -335,11 +339,13 @@ public:
         mainToolBar->addAction(actionSession_times);
         mainToolBar->addAction(actionDriver_tracker);
         mainToolBar->addSeparator();
+        mainToolBar->addAction(actionTrack_records);
         mainToolBar->addAction(actionPreferences);
         mainToolBar->addAction(actionExit);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionRecord);
         mainToolBar->addAction(actionStop_recording);
+        mainToolBar->addSeparator();
 
         retranslateUi(LTWindow);
         QObject::connect(actionExit, SIGNAL(triggered(bool)), LTWindow, SLOT(close()));
@@ -384,6 +390,7 @@ public:
         actionSession_times->setShortcut(QApplication::translate("LTWindow", "Ctrl+I", 0, QApplication::UnicodeUTF8));
         actionDriver_tracker->setText(QApplication::translate("LTWindow", "Driver tracker", 0, QApplication::UnicodeUTF8));
         actionDriver_tracker->setShortcut(QApplication::translate("LTWindow", "Ctrl+R", 0, QApplication::UnicodeUTF8));
+        actionTrack_records->setText(QApplication::translate("LTWindow", "Track records", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("LTWindow", "Driver data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("LTWindow", "Session data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("LTWindow", "Weather charts", 0, QApplication::UnicodeUTF8));

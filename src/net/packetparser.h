@@ -85,16 +85,17 @@ public:
 
 public slots:
      void parsePackets(const QVector<Packet> &);
-     void parseBufferedPackets(const QVector<Packet> &);
-     void parseBufferedPackets(Packet &);
+     void parseBufferedPackets(const QVector< QPair<Packet, qint64> > &);
+     void parseBufferedPackets(const QPair<Packet, qint64> &);
      void decryptionKeyObtained(unsigned int key);
      void keyFrameObtained(const QByteArray &buf);
      void streamBlockObtained(const QByteArray &buf);
 
-     void setDelay(int delay);
+     void setDelay(int prevDelay, int delay);
 
 signals:
      void packetParsed(const Packet&);
+     void packetParsed(const QPair<Packet, qint64>&);
      void eventDataChanged();
      void driverDataChanged(int id);
      void dataChanged();

@@ -4,7 +4,7 @@
 #include <QMouseEvent>
 
 
-DriverTracker::DriverTracker(QWidget *parent) : DriverRadar(parent)
+DriverTracker::DriverTracker(QWidget *parent) : DriverRadar(parent), drawClassification(true)
 {
     loadDriversList();
 
@@ -12,16 +12,23 @@ DriverTracker::DriverTracker(QWidget *parent) : DriverRadar(parent)
     selectedLabel = QPixmap(":/ui_icons/label-sel.png");
 }
 
+void DriverTracker::setMinimumSize()
+{
+    trackMap = EventData::getInstance().getEventInfo().trackImg;
+    QSize size = trackMap.size();
+    int classificationWidth = drawClassification ? label.width() : 0;
+    size.setWidth(size.width() + classificationWidth + 10);
+
+    size.setHeight(size.height() + 120);// > EventData::getInstance().getDriversData().size() * 20 + 20 ? size.height() : EventData::getInstance().getDriversData().size() * 20 + 20);
+    QWidget::setMinimumSize(size);
+}
+
 void DriverTracker::setupDrivers(int speed)
 {
     selectedDriver = -1;
     excludedDrivers.clear();
 
-    trackMap = EventData::getInstance().getEventInfo().trackImg;
-    QSize size = trackMap.size();
-    size.setWidth(size.width() + label.width() + 10);
-    size.setHeight(size.height() + 120);// > EventData::getInstance().getDriversData().size() * 20 + 20 ? size.height() : EventData::getInstance().getDriversData().size() * 20 + 20);
-    setMinimumSize(size);
+    setMinimumSize();
 
     for (int i = 0; i < drp.size(); ++i)
     {
@@ -69,7 +76,8 @@ void DriverTracker::resizeEvent(QResizeEvent *)
     {
         DriverTrackerPositioner *dtp = static_cast<DriverTrackerPositioner*>(drp[i]);
 
-        int labWidth = label.width() + 10;
+        int labWidth = drawClassification ? label.width() + 10 : 10;
+
         int px = labWidth + (width() - labWidth - trackMap.width())/2;
         int py = (height() - trackMap.height()-50)/2;
         int pitX = 15;
@@ -89,7 +97,7 @@ void DriverTracker::paintEvent(QPaintEvent *)
     p.setBrush(QBrush(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND))));
     p.drawRect(0, 0, width(), height());
 
-    int labWidth = label.width() + 10;
+    int labWidth = drawClassification ? label.width() + 10 : 10;
     int px = labWidth + (width() - labWidth - trackMap.width())/2;
     int py = (height() - trackMap.height()-50)/2;
 
@@ -111,12 +119,13 @@ void DriverTracker::paintEvent(QPaintEvent *)
     if (sel >= 0)
         drp[sel]->paint(&p, true);
 
-    paintLegend(p);
+    if (drawClassification)
+        paintClassification(p);
 
     p.end();
 }
-\
-void DriverTracker::paintLegend(QPainter &p)
+
+void DriverTracker::paintClassification(QPainter &p)
 {
     for (int i = 0; i < EventData::getInstance().getDriversData().size(); ++i)
     {

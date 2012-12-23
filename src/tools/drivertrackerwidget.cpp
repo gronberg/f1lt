@@ -35,6 +35,7 @@ void DriverTrackerWidget::loadSettings(QSettings *settings)
 {
     ui->splitter->restoreState(settings->value("ui/tracker_splitter_pos").toByteArray());
     restoreGeometry(settings->value("ui/driver_tracker_geometry").toByteArray());
+    ui->driverTracker->setDrawDriverClassification(settings->value("ui/draw_tracker_classification").toBool());
 }
 
 void DriverTrackerWidget::saveSettings(QSettings *settings)
@@ -62,4 +63,9 @@ void DriverTrackerWidget::exec()
     ui->driverRadar->checkSetupCorrect(speed);
 
     show();
+}
+
+void DriverTrackerWidget::drawTrackerClassification(bool val)
+{
+    ui->driverTracker->setDrawDriverClassification(val);
 }

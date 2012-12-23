@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Tue Nov 20 21:14:03 2012
-**      by: Qt User Interface Compiler version 4.8.3
+** Created: Sun Dec 23 16:11:00 2012
+**      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -46,6 +46,7 @@ public:
     QSpinBox *autoStopRecordSpinBox;
     QLabel *label_3;
     QCheckBox *thumbnailsCheckBox;
+    QCheckBox *trackerBox;
     QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout_2;
     QCheckBox *revH2HBox;
@@ -56,7 +57,7 @@ public:
     {
         if (PreferencesDialog->objectName().isEmpty())
             PreferencesDialog->setObjectName(QString::fromUtf8("PreferencesDialog"));
-        PreferencesDialog->resize(447, 371);
+        PreferencesDialog->resize(447, 397);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PreferencesDialog->setWindowIcon(icon);
@@ -140,6 +141,11 @@ public:
 
         verticalLayout->addWidget(thumbnailsCheckBox);
 
+        trackerBox = new QCheckBox(PreferencesDialog);
+        trackerBox->setObjectName(QString::fromUtf8("trackerBox"));
+
+        verticalLayout->addWidget(trackerBox);
+
         groupBox_2 = new QGroupBox(PreferencesDialog);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
         verticalLayout_2 = new QVBoxLayout(groupBox_2);
@@ -186,6 +192,7 @@ public:
         autoStopRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically stop recording ", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("PreferencesDialog", "minutes after session ends", 0, QApplication::UnicodeUTF8));
         thumbnailsCheckBox->setText(QApplication::translate("PreferencesDialog", "Draw car thumbnails", 0, QApplication::UnicodeUTF8));
+        trackerBox->setText(QApplication::translate("PreferencesDialog", "Draw drivers classification in driver tracker", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("PreferencesDialog", "Print laps in reverse order", 0, QApplication::UnicodeUTF8));
         revH2HBox->setText(QApplication::translate("PreferencesDialog", "In head to head", 0, QApplication::UnicodeUTF8));
         revLTCBox->setText(QApplication::translate("PreferencesDialog", "In lap time comparison", 0, QApplication::UnicodeUTF8));

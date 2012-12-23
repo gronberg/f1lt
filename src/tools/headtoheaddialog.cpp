@@ -371,7 +371,7 @@ void HeadToHeadDialog::updateData()
                         item->setText(item->text() + " (" + pitTime + ")");
                         item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
                     }
-                    else if (lTime == "RETIRED")
+                    else if (lTime == "RETIRED" || lTime.contains("LAP"))
                         item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
 
                     else if (ld.getRaceLapExtraData().isSCLap())
@@ -460,7 +460,7 @@ void HeadToHeadDialog::updateData()
         if (bestIdx != -1 && laps[i].toString() != "")
         {
             item = ui->tableWidget->item(j+2, 2 + i*6);
-            if (laps[i].toString() != "IN PIT" && laps[i].toString() != "RETIRED")
+            if (laps[i].toString() != "IN PIT" && laps[i].toString() != "RETIRED" && !laps[i].toString().contains("LAP"))
             {
                 item->setText(item->text() + " (+"+QString::number(laps[i].toDouble(), 'f', 3)+")");
 
@@ -494,7 +494,7 @@ void HeadToHeadDialog::updateData()
         //interval        
         QString sInterval;
 
-        if (driversIdx[0] >= 0 && driversIdx[1] >= 0)
+        if (driversIdx[0] >= 0 && driversIdx[1] >= 0 && !laps[0].toString().contains("LAP") && !laps[1].toString().contains("LAP"))
         {
             if (newLap[0] || newLap[1])
             {

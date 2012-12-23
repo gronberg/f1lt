@@ -235,6 +235,9 @@ void SessionTimesWidget::handleQualiEvent()
                     QColor color = ((!relativeTimes || bestLapNo == ld.getLapNumber()) && ld.getTime().isValid()) ?
                                 SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::YELLOW);
 
+                    if (ld.getTime().toString().contains("LAP"))
+                        color = SeasonData::getInstance().getColor(LTPackets::RED);
+
                     if (ld.getCarID() == dd->getCarID())
                     {
                         QString time = ld.getTime().toString();
@@ -242,7 +245,7 @@ void SessionTimesWidget::handleQualiEvent()
 
                         if (selectedDriver != 0 && ui->relativeButton->isChecked())
                         {
-                            color = SeasonData::getInstance().getColor(LTPackets::WHITE);
+                            color = ld.getTime().isValid() ? SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::RED);
                             if (selectedDriver != dd && sld.getCarID() == selectedDriver->getCarID() && sld.getTime().isValid() && ld.getTime().isValid())
                             {
                                 color = (ld < sld) ? SeasonData::getInstance().getColor(LTPackets::GREEN) : SeasonData::getInstance().getColor(LTPackets::RED);
@@ -312,14 +315,16 @@ void SessionTimesWidget::handlePracticeEvent()
                 QColor color = ((!relativeTimes || bestLapNo == ld.getLapNumber()) && ld.getTime().isValid()) ?
                             SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::YELLOW);
 
+                if (ld.getTime().toString().contains("LAP"))
+                    color = SeasonData::getInstance().getColor(LTPackets::RED);
+
                 if (ld.getCarID() == dd->getCarID())
                 {
                     QString time = ld.getTime().toString();
 
-
                     if (selectedDriver != 0 && ui->relativeButton->isChecked())
                     {
-                        color = SeasonData::getInstance().getColor(LTPackets::WHITE);
+                        color = ld.getTime().isValid() ? SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::RED);
                         if (selectedDriver != dd && sld.getCarID() == selectedDriver->getCarID() && sld.getTime().isValid() && ld.getTime().isValid())
                         {
                             color = (ld < sld) ? SeasonData::getInstance().getColor(LTPackets::GREEN) : SeasonData::getInstance().getColor(LTPackets::RED);

@@ -3,20 +3,23 @@
 #include <QFile>
 
 
-EventRecorder::EventRecorder(QObject *parent) :
-    QObject(parent), eventData(EventData::getInstance()), elapsedSeconds(0), sessionRecorded(false)
+EventRecorder::EventRecorder(SessionTimer *st, QObject *parent) :
+    QObject(parent), sessionTimer(st), eventData(EventData::getInstance()), elapsedSeconds(0), sessionRecorded(false), recordStartTime(0)
 {
 }
 
 void EventRecorder::startRecording()
 {
     sessionRecorded = false;
+    recordStartTime = QDateTime::currentMSecsSinceEpoch();
     //prepare everyting for record, clear old records and store the LTTeam and LTEvent data
     ltTeamList = SeasonData::getInstance().getTeams();
     ltEvent = eventData.getEventInfo();
 
     packets.clear();
     elapsedSeconds = 0;
+    lastSavedTime.first = 0;
+    lastSavedTime.second = eventData.getRemainingTime();
     elapsedTimeToStop = -1;
 
     gatherInitialData();    
@@ -494,6 +497,65 @@ void EventRecorder::appendPacket(const Packet &p)
     packets.append(QPair<int, Packet>(elapsedSeconds, p));
 }
 
+void EventRecorder::appendPacket(const QPair<Packet, qint64> &packet)
+{
+    elapsedSeconds = round((double(packet.second) - double(recordStartTime)) / 1000.0);    
+
+    appendSessionTimer();
+
+    qDebug() << "RECORDER:" << elapsedSeconds;
+    packets.append(QPair<int, Packet>(elapsedSeconds, packet.first));
+
+    if (packet.first.type == LTPackets::SYS_WEATHER && packet.first.data == LTPackets::WEATHER_SESSION_CLOCK)
+    {
+        lastSavedTime.first = elapsedSeconds;
+        lastSavedTime.second = eventData.getRemainingTime();
+    }
+}
+
+void EventRecorder::appendSessionTimer()
+{
+    if (/*lastSavedTime.second == eventData.getRemainingTime() ||*/ eventData.getRemainingTime().isNull())
+        return;
+
+    int secs = lastSavedTime.second.second();
+    int mins = lastSavedTime.second.minute();
+    int hours = lastSavedTime.second.hour();
+
+    for (int i = lastSavedTime.first + 1; i <= elapsedSeconds; ++i)
+    {
+        --secs;
+        if (secs < 0)
+        {
+            --mins;
+            secs = 60 + secs;
+
+            if (mins < 0)
+            {
+                --hours;
+                mins = 60 + mins;
+
+                if (hours < 0)
+                    hours = mins = secs = 0;
+
+            }
+        }
+
+        Packet packet;
+        packet.carID = 0;
+        packet.type = LTPackets::SYS_WEATHER;
+        packet.data = LTPackets::WEATHER_SESSION_CLOCK;
+        lastSavedTime.second  = QTime(hours, mins, secs);
+        packet.longData.append(lastSavedTime.second.toString("h:mm:ss"));
+        packet.length = packet.longData.size();
+
+        qDebug() << "RECORDER TIME:" << i << lastSavedTime.second.toString("h:mm:ss");
+        packets.append(QPair<int, Packet>(i, packet));
+
+        lastSavedTime.first = i;
+    }
+}
+
 //void EventRecorder::updateEventData(const EventData &ed)
 //{
 //    //store the EventData object but without its driverData list - we've got here our own list
@@ -546,16 +608,19 @@ void EventRecorder::appendPacket(const Packet &p)
 
 void EventRecorder::timeout()
 {
-    ++elapsedSeconds;
-    //append the system clock packet every second
-    Packet packet;
-    packet.carID = 0;
-    packet.type = LTPackets::SYS_WEATHER;
-    packet.data = LTPackets::WEATHER_SESSION_CLOCK;
-    packet.longData.append(eventData.getRemainingTime().toString("h:mm:ss"));
-    packet.length = packet.longData.size();
+    if (sessionTimer->isSynchronizing())
+        return;
 
-    packets.append(QPair<int, Packet>(elapsedSeconds, packet));
+//    ++elapsedSeconds;
+//    //append the system clock packet every second
+//    Packet packet;
+//    packet.carID = 0;
+//    packet.type = LTPackets::SYS_WEATHER;
+//    packet.data = LTPackets::WEATHER_SESSION_CLOCK;
+//    packet.longData.append(eventData.getRemainingTime().toString("h:mm:ss"));
+//    packet.length = packet.longData.size();
+
+//    packets.append(QPair<int, Packet>(elapsedSeconds, packet));
 
 
 //    DriverData dd;

@@ -604,6 +604,9 @@ void LapTimeChart::drawChart(QPainter *p)
                 }
             }
 
+            if (lapTime.toString().contains("LAP"))
+                continue;
+
             if (sector1.toString() == "")
             {
                 sector1 = driverData->getLapData()[i-1].getSectorTime(1);
@@ -947,6 +950,10 @@ void GapChart::drawChart(QPainter *p)
 //                else
 //                    y2 = height()-25 - gap * yFactor;
             }
+
+
+            if (driverData->getLapData()[i].getTime().toString().contains("LAP"))
+                continue;
 
             if (driverData->getLapData()[i-1].getRaceLapExtraData().isSCLap() && driverData->getLapData()[i-1].getLapNumber() > lastPaintedSC)
             {

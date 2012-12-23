@@ -71,6 +71,20 @@ public:
 #endif
     }
 
+    static QString trackRercordsFile()
+    {
+#ifdef WIN32
+        return programHomeDir() + "/trackrecords.dat";
+#else
+        QString prefix = STR(INSTALL_PREFIX);
+        QDir dir;
+        if (dir.exists(prefix))
+            return prefix + "/share/trackrecords.dat";
+        else
+            return programHomeDir() + "/trackrecords.dat";
+#endif
+    }
+
     static QString ltDataHomeDir()
     {
 #ifdef WIN32

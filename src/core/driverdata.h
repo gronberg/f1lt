@@ -157,7 +157,7 @@ class DriverData
 {
 public:
 
-    DriverData() : carID(-1), number(-1), pos(-1), numPits(0), retired(false), releasedFromPits(false)
+    DriverData() : carID(-1), number(-1), pos(-1), numPits(0), retired(false), releasedFromPits(false), inPits(true)
     {
         ++cnt;
         lastLap.setCarID(carID);
@@ -183,6 +183,7 @@ public:
 
         return false;
     }
+    void updatePitStatus(LTPackets::Colors pitColor, EventData &ed);
 
     LapTime getQualiTime(int idx) const
     {
@@ -235,6 +236,7 @@ public:
     void addLap(const EventData &ed);
     void addRaceLap(const EventData &ed);
     void addFPQLap(const EventData &ed);
+    void addInLap(const EventData &ed);
 
     void correctNumLap(int raceNumLap);
     void correctPosition(const EventData &ed);
@@ -332,6 +334,9 @@ private:
 
     bool retired;
     bool releasedFromPits;
+
+    bool inPits;
+    bool outLap;
 };
 
 

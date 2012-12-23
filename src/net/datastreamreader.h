@@ -45,6 +45,7 @@ signals:
     void noLiveSession(bool, QString);
 
     void packetParsed(const Packet&);
+    void packetParsed(const QPair<Packet, qint64>&);
     void eventDataChanged();
     void driverDataChanged(int id);
     void dataChanged();    
@@ -57,7 +58,7 @@ public slots:
     void onCookieReceived(QString);
 
     void parsePackets(const QVector<Packet> &);
-    void setDelay(int delay);
+    void setDelay(int prevDelay, int delay);
 
 private:
     SocketDataReader socketReader;

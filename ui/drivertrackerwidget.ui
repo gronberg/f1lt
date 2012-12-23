@@ -14,16 +14,40 @@
    <string>Form</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../icons/icons.qrc">
+   <iconset resource="../icons/icons.qrc">
     <normaloff>:/ui_icons/icon.png</normaloff>:/ui_icons/icon.png</iconset>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
+  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
    <item>
     <widget class="QSplitter" name="splitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="DriverTracker" name="driverTracker" native="true"/>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>73</width>
+         <height>469</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="DriverTracker" name="driverTracker" native="true"/>
+        </item>
+       </layout>
+       <zorder>splitter</zorder>
+       <zorder>driverTracker</zorder>
+      </widget>
+     </widget>
      <widget class="DriverRadar" name="driverRadar" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -88,7 +112,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../icons/icons.qrc"/>
+  <include location="../icons/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

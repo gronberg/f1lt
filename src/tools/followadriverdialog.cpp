@@ -244,6 +244,8 @@ void FollowADriverDialog::printDataTable(const DriverData &dd, const QList<Drive
                 }
                 else if (!time.contains("IN PIT") && !time.contains("OUT"))
                     colors[1] = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                else if (time.contains("LAP"))
+                    colors[1] = SeasonData::getInstance().getColor(LTPackets::RED);
                 else
                 {
                     time = QString("IN PIT (%1)").arg(drivers[i]->getPitTime(ld.getLapNumber())) ;
@@ -352,11 +354,13 @@ void FollowADriverDialog::printLapTimesTable(const DriverData &dd, const QList<D
                 }
                 else
                 {
-                    if (time.contains("IN PIT") || time.contains("OUT"))
+                    if (time == "IN PIT" || time == "OUT")
                     {
                         color = SeasonData::getInstance().getColor(LTPackets::RED);
                         time = QString("IN PIT (%1)").arg(drivers[j]->getPitTime(ld.getLapNumber())) ;
                     }
+                    else if (time.contains("LAP"))
+                        color = SeasonData::getInstance().getColor(LTPackets::RED);
                     else
                         color = SeasonData::getInstance().getColor(LTPackets::GREEN);
                 }
@@ -364,7 +368,7 @@ void FollowADriverDialog::printLapTimesTable(const DriverData &dd, const QList<D
             else if (!dd.getLapData()[k].getTime().isValid())
             {
                 color = SeasonData::getInstance().getColor(LTPackets::RED);
-                if (time.contains("IN PIT") || time.contains("OUT"))
+                if (time == "IN PIT" || time == "OUT")
                     time = QString("IN PIT (%1)").arg(drivers[j]->getPitTime(ld.getLapNumber())) ;
             }
 

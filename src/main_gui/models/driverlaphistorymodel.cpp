@@ -154,7 +154,7 @@ QVariant DriverLapHistoryModel::getLapTime(const LapData &ld, int role) const
         s = QString("IN PIT (%1)").arg(driverData->getPitTime(ld.getLapNumber()));
     }
 
-    else if (ld.getTime().toString() == "RETIRED")
+    else if (ld.getTime().toString() == "RETIRED" || ld.getTime().toString().contains("LAP"))
         color = SeasonData::getInstance().getColor(LTPackets::PIT);
 
     else if (ld.getRaceLapExtraData().isSCLap())

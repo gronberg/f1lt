@@ -5,7 +5,7 @@ DriverRadar::DriverRadar(QWidget *parent) :
     QWidget(parent), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0), selectedDriver(-1), dti(0)
 {
     loadDriversList();
-    setMinimumSize(200, 200);               
+    setMinimumSize(50, 200);
 }
 
 DriverRadar::~DriverRadar()
@@ -58,7 +58,7 @@ void DriverRadar::setupDrivers(int speed)
         dti->setup();
         dti->repaint();
         dti->setVisible(false);
-        setMinimumSize(dti->minimumSize());
+//        setMinimumSize(dti->minimumSize());
     }
 }
 

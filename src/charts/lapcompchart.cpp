@@ -205,7 +205,7 @@ void LapCompChart::drawChart(QPainter *p)
 
             LapData ld = driverData[k]->getLapData(i);
 //            if (!driverData[k]->lapData.empty() && index[k] < driverData[k]->lapData.size() && driverData[k]->getLapData()[index[k]].getLapNumber() == i)
-            if (ld.getCarID() == driverData[k]->getCarID() && ld.getLapNumber() == i)
+            if (ld.getCarID() == driverData[k]->getCarID() && ld.getLapNumber() == i && !ld.getTime().toString().contains("LAP"))
             {
                 LapTime lapTime = ld.getTime();//driverData[k]->getLapData()[index[k]].getTime();
 
@@ -657,7 +657,7 @@ void GapCompChart::drawChart(QPainter *p)
 
             LapData ld = dd->getLapData(i);
 //            if (!dd.lapData.empty() && index[k] < dd.lapData.size() && dd.getLapData()[index[k]].getLapNumber() == i)
-            if (ld.getCarID() == dd->getCarID() && ld.getLapNumber() == i)
+            if (ld.getCarID() == dd->getCarID() && ld.getLapNumber() == i  && !ld.getTime().toString().contains("LAP"))
             {
 
                 if (ld.getRaceLapExtraData().isSCLap() && ld.getLapNumber() > lastPaintedSC)
@@ -1016,7 +1016,7 @@ void PosCompChart::drawChart(QPainter *p)
 
             LapData ld = driverData[k]->getLapData(i);
 //            if (!driverData[k]->lapData.empty() && index[k] < driverData[k]->lapData.size() && driverData[k]->getLapData()[index[k]].getLapNumber() == i)
-            if (ld.getCarID() == driverData[k]->getCarID() && ld.getLapNumber() == i)
+            if (ld.getCarID() == driverData[k]->getCarID() && ld.getLapNumber() == i && !ld.getTime().toString().contains("LAP"))
             {
 
                 if (ld.getRaceLapExtraData().isSCLap() && ld.getLapNumber() > lastPaintedSC)

@@ -23,7 +23,7 @@ PacketParser::PacketParser(QObject *parent) : QObject(parent), parsing(false), p
     packetBuffer = new PacketBuffer(this, this);
 }
 
-void PacketParser::setDelay(int delay)
+void PacketParser::setDelay(int, int delay)
 {
     packetBuffer->setDelay(delay);
 }
@@ -52,7 +52,7 @@ void PacketParser::parseStreamBlock(const QByteArray &data)
             packetBuffer->addPacket(packet);
         }
         else
-            parseBufferedPackets(packet);
+            parseBufferedPackets(qMakePair(packet, QDateTime::currentMSecsSinceEpoch()));
 
 //        Packet copyPacket = packet;
 
@@ -215,7 +215,7 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
         emit noLiveSession(false, "");
     }
 
-    qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
+//    qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
 
     if (packet.carID > eventData.driversData.size() || packet.carID < 1)
     {
@@ -302,6 +302,7 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
                 eventData.driversData[packet.carID-1].number = ibuf;
 
             eventData.driversData[packet.carID-1].colorData.numberColor() = (LTPackets::Colors)packet.data;
+            eventData.driversData[packet.carID-1].updatePitStatus((LTPackets::Colors)packet.data, eventData);
             break;
 
         case LTPackets::RACE_DRIVER:
@@ -830,13 +831,13 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
 
 void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 {
-    if (packet.type != LTPackets::SYS_COMMENTARY )//&& packet.type != LTPackets::SYS_TIMESTAMP)
-        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTPackets::SYS_COMMENTARY) ? packet.longData.constData() : "");
+//    if (packet.type != LTPackets::SYS_COMMENTARY )//&& packet.type != LTPackets::SYS_TIMESTAMP)
+//        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTPackets::SYS_COMMENTARY) ? packet.longData.constData() : "");
 
     unsigned int number, i;
 //    unsigned char packetLongData[129];
     unsigned char uc;
-    QString s, format;
+    QString s, format, oldTime;
     QTime time;
     int ibuf;
     double dbuf;
@@ -852,6 +853,9 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 //        packet.length = 0;
 ////        eventData.frame = 0;
 //    }
+
+    if (eventData.eventType == LTPackets::QUALI_EVENT && eventData.qualiPeriod == 0)
+        eventData.qualiPeriod = 1;
 
     switch(packet.type)
     {
@@ -888,6 +892,8 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
             eventData.eventType = (LTPackets::EventType)copyPacket.data;
             eventData.lapsCompleted = 0;
 
+
+
 //            decrypter.resetDecryption();
             break;
 
@@ -903,17 +909,16 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
             }
 //            decrypter.resetDecryption();
 
-
              if (!eventData.frame || number == 1) // || decryption_failure
              {
-//                eventData.frame = number;
-//                emit requestKeyFrame(number);
+                eventData.frame = number;
+                emit requestKeyFrame(number);
 
 //                httpReader.obtainKeyFrame(number);
 
 
                  /*onDecryptionKeyObtained(2841044872);*/   //valencia race
-                  decryptionKeyObtained(2971732062);      //valencia qual
+//                  decryptionKeyObtained(2971732062);      //valencia qual
 //                onDecryptionKeyObtained(3585657959);  //?
 //                onDecryptionKeyObtained(2488580439);  //qual
 //                 onDecryptionKeyObtained(2438680630);  //race
@@ -946,10 +951,14 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                 case LTPackets::WEATHER_SESSION_CLOCK:
                     s = packet.longData;
                     cnt = s.count(':');
+                    oldTime = eventData.remainingTime.toString("mm:ss");
                     format = (cnt == 2) ? "h:mm:ss" : "mm:ss";
                     time = QTime::fromString(s, format);
                     if (time.isValid())
                         eventData.remainingTime = time;
+
+                    if (oldTime == "00:00" && time.minute() != 0 && eventData.eventType == LTPackets::QUALI_EVENT)
+                        ++eventData.qualiPeriod;
 
                     //session actually starts when we get the 59 seconds mark (i.e. Q1 starts when the time is 19:59)
                     j = eventData.remainingTime.second();
@@ -959,8 +968,6 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                     {
                         eventData.sessionStarted = true;
                         eventData.sessionFinished = false;
-                        if (eventData.eventType == LTPackets::QUALI_EVENT)
-                            ++eventData.qualiPeriod;
                     }
 
                     emit sessionStarted();
@@ -1172,7 +1179,7 @@ void PacketParser::parsePackets(const QVector<Packet> &packets)
     emit dataChanged();
 }
 
-void PacketParser::parseBufferedPackets(const QVector<Packet> &packets)
+void PacketParser::parseBufferedPackets(const QVector<QPair<Packet, qint64> > &packets)
 {
     bool emitSignal = false;
     for (int i = 0; i < packets.size(); ++i)
@@ -1180,7 +1187,7 @@ void PacketParser::parseBufferedPackets(const QVector<Packet> &packets)
         if (i == packets.size() - 1)
             emitSignal = true;
 
-        Packet packet = packets[i];
+        Packet packet = packets[i].first;
         if (packet.carID)
             parseCarPacket(packet, false);
 
@@ -1192,16 +1199,16 @@ void PacketParser::parseBufferedPackets(const QVector<Packet> &packets)
     emit dataChanged();
 }
 
-void PacketParser::parseBufferedPackets(Packet &packet)
+void PacketParser::parseBufferedPackets(const QPair<Packet, qint64> &packetPair)
 {
-    Packet copyPacket = packet;
-    if (packet.carID)
-        parseCarPacket(packet, true);
+    Packet copyPacket = packetPair.first;
+    if (copyPacket.carID)
+        parseCarPacket(copyPacket, true);
 
     else
-        parseSystemPacket(packet, true);
+        parseSystemPacket(copyPacket, true);
 
-    emit packetParsed(copyPacket);
+    emit packetParsed(packetPair);
 }
 
 void PacketParser::streamBlockObtained(const QByteArray &buf)
