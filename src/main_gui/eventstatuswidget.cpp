@@ -74,7 +74,7 @@ void EventStatusWidget::updateEventStatus()
         if (eventData.getEventType() == LTPackets::QUALI_EVENT)
             ui->infoLabel->setText("Q" + (eventData.getQualiPeriod() > 0 ? QString::number(eventData.getQualiPeriod()) : ""));
         else
-            ui->infoLabel->setText("FP" + QString::number(SeasonData::getInstance().getFPNumber()));
+            ui->infoLabel->setText("FP" + QString::number(EventData::getInstance().getFPNumber()));
     }
     else
     {

@@ -265,26 +265,26 @@ void DriverData::addFPQLap(const EventData &ed)
                 lapData.last().qualiLapExtraData.qualiPeriod = qPeriod;
 
             }
-            if (((driver != ed.getSessionRecords().getSectorRecord(1).getDriverName()) ||
+            if (/*((driver != ed.getSessionRecords().getSectorRecord(1).getDriverName()) ||
                  (ed.getSessionRecords().getSectorRecord(1).getTime() == lapData.last().getSectorTime(1) &&
-                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(1).getLapNumber())) &&
+                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(1).getLapNumber())) &&*/
                 ((lapData.last().getSectorTime(1) <= sessionRecords.bestSectors[0].first &&
                   sessionRecords.bestSectors[0].second != 0) || sessionRecords.bestSectors[0].second == 0))
             {
                 sessionRecords.bestSectors[0] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(1)), lapData.last().lapNum);
             }
 
-            if (((driver != ed.getSessionRecords().getSectorRecord(2).getDriverName()) ||
+            if (/*((driver != ed.getSessionRecords().getSectorRecord(2).getDriverName()) ||
                  (ed.getSessionRecords().getSectorRecord(2).getTime() == lapData.last().getSectorTime(2) &&
-                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(2).getLapNumber())) &&
+                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(2).getLapNumber())) &&*/
                 ((lapData.last().getSectorTime(2) <= sessionRecords.bestSectors[1].first &&
                   sessionRecords.bestSectors[1].second != 0) || sessionRecords.bestSectors[1].second == 0))
             {
                 sessionRecords.bestSectors[1] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(2)), lapData.last().lapNum);
             }
-            if (((driver != ed.getSessionRecords().getSectorRecord(3).getDriverName()) ||
+            if (/*((driver != ed.getSessionRecords().getSectorRecord(3).getDriverName()) ||
                  (ed.getSessionRecords().getSectorRecord(3).getTime() == lapData.last().getSectorTime(3) &&
-                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(3).getLapNumber())) &&
+                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(3).getLapNumber())) &&*/
                 ((lapData.last().getSectorTime(3) <= sessionRecords.bestSectors[2].first &&
                   sessionRecords.bestSectors[2].second != 0) || sessionRecords.bestSectors[2].second == 0))
             {

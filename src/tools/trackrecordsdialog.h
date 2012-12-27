@@ -5,6 +5,8 @@
 #include <QModelIndex>
 #include <QSettings>
 
+#include "driverrecordsdialog.h"
+
 namespace Ui {
 class TrackRecordsDialog;
 }
@@ -21,8 +23,8 @@ public:
 
     void exec();
 
-    void saveSettings(QSettings *settings);
-    void loadSettings(QSettings *settings);
+    void saveSettings(QSettings &settings);
+    void loadSettings(QSettings &settings);
 
     void setFont(const QFont &font);
 
@@ -34,9 +36,13 @@ private slots:
 
     void on_toolButton_2_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::TrackRecordsDialog *ui;
     int currentIndex;
+
+    DriverRecordsDialog *drDialog;
 };
 
 #endif // TRACKRECORDSDIALOG_H

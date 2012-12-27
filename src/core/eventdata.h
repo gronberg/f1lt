@@ -221,6 +221,8 @@ public:
     const QString &getCommentary()             const { return commentary; }
     int getQualiPeriod()                const { return qualiPeriod; }
 
+    int getFPNumber() const;
+
     const SessionRecords &getSessionRecords()  const { return sessionRecords; }
 
     QVector<DriverData> &getDriversData()        { return driversData; }

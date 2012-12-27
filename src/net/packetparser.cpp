@@ -3,6 +3,8 @@
 #include <QDebug>
 #include "packetbuffer.h"
 
+#include "../core/trackrecords.h"
+
 
 bool PacketDecrypter::checkDecryption(QString stream)
 {
@@ -446,8 +448,10 @@ void PacketParser::handleRaceEvent(const Packet &packet)
                 {
                     eventData.sessionRecords.secRecord[0].driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.secRecord[0].lapTime = eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString();
+                    eventData.sessionRecords.secRecord[0].number = eventData.driversData[packet.carID-1].number;
                     eventData.sessionRecords.secRecord[0].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum + 1;
                 }
+                TrackRecords::getInstance().gatherSessionRecords();
             }
 
             if (eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString() == "STOP" && eventData.flagStatus != LTPackets::RED_FLAG)
@@ -489,8 +493,10 @@ void PacketParser::handleRaceEvent(const Packet &packet)
                 {
                     eventData.sessionRecords.secRecord[1].driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.secRecord[1].lapTime = eventData.driversData[packet.carID-1].lastLap.sectorTimes[1].toString();
+                    eventData.sessionRecords.secRecord[1].number = eventData.driversData[packet.carID-1].number;
                     eventData.sessionRecords.secRecord[1].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum+1;
                 }
+                TrackRecords::getInstance().gatherSessionRecords();
             }
 
             if (eventData.driversData[packet.carID-1].lastLap.sectorTimes[1].toString() == "STOP"/* && eventData.flagStatus != LTPackets::RED_FLAG*/)
@@ -533,6 +539,9 @@ void PacketParser::handleRaceEvent(const Packet &packet)
                 eventData.sessionRecords.secRecord[2].driver = eventData.driversData[packet.carID-1].driver;
                 eventData.sessionRecords.secRecord[2].lapTime = eventData.driversData[packet.carID-1].lastLap.sectorTimes[2].toString();
                 eventData.sessionRecords.secRecord[2].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum;//.driversData[packet.carID-1].lastLap.numLap);
+                eventData.sessionRecords.secRecord[2].number = eventData.driversData[packet.carID-1].number;
+
+                TrackRecords::getInstance().gatherSessionRecords();
             }
 
 
@@ -574,10 +583,15 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                 if (eventData.driversData[packet.carID-1].qualiTimes[0] < eventData.sessionRecords.fastestLap.lapTime)
                 {
                     eventData.sessionRecords.fastestLap.lapTime = eventData.driversData[packet.carID-1].qualiTimes[0];
+                    eventData.sessionRecords.fastestLap.number = eventData.driversData[packet.carID-1].number;
+                    eventData.sessionRecords.fastestLap.driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.fastestLap.qPeriod = 1;
 
                     for (int i = 0; i < eventData.driversData.size(); ++i)
                         eventData.driversData[i].updateGaps(eventData);
+
+
+                    TrackRecords::getInstance().gatherSessionRecords();
 
                 }
                 eventData.qualiPeriod = 1;
@@ -600,7 +614,7 @@ void PacketParser::handleQualiEvent(const Packet &packet)
 
         case LTPackets::QUALI_PERIOD_2:
 
-            eventData.driversData[packet.carID-1].lastLap.lapTime = LapTime(packet.longData.constData());
+            eventData.driversData[packet.carID-1].lastLap.lapTime = LapTime(packet.longData.constData());            
             eventData.driversData[packet.carID-1].qualiTimes[1] = LapTime(packet.longData.constData());
             eventData.driversData[packet.carID-1].colorData.qualiTimeColor(2) = (LTPackets::Colors)packet.data;
 
@@ -609,10 +623,14 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                 if (eventData.driversData[packet.carID-1].qualiTimes[1] < eventData.sessionRecords.fastestLap.lapTime)
                 {
                     eventData.sessionRecords.fastestLap.lapTime = eventData.driversData[packet.carID-1].qualiTimes[1];
+                    eventData.sessionRecords.fastestLap.number = eventData.driversData[packet.carID-1].number;
+                    eventData.sessionRecords.fastestLap.driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.fastestLap.qPeriod = 2;
 
                     for (int i = 0; i < eventData.driversData.size(); ++i)
                         eventData.driversData[i].updateGaps(eventData);
+
+                    TrackRecords::getInstance().gatherSessionRecords();
                 }
                 eventData.qualiPeriod = 2;
             }
@@ -629,10 +647,14 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                 if (eventData.driversData[packet.carID-1].qualiTimes[2] < eventData.sessionRecords.fastestLap.lapTime)
                 {
                     eventData.sessionRecords.fastestLap.lapTime = eventData.driversData[packet.carID-1].qualiTimes[2];
+                    eventData.sessionRecords.fastestLap.number = eventData.driversData[packet.carID-1].number;
+                    eventData.sessionRecords.fastestLap.driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.fastestLap.qPeriod = 3;
 
                     for (int i = 0; i < eventData.driversData.size(); ++i)
                         eventData.driversData[i].updateGaps(eventData);
+
+                    TrackRecords::getInstance().gatherSessionRecords();
                 }
                 eventData.qualiPeriod = 3;
             }
@@ -653,10 +675,12 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                     eventData.sessionRecords.secRecord[0].driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.secRecord[0].lapTime = eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString();
 
-                    eventData.sessionRecords.secRecord[0].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum+1;
+                    eventData.sessionRecords.secRecord[0].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum;
+                    eventData.sessionRecords.secRecord[0].number = eventData.driversData[packet.carID-1].number;
                     eventData.sessionRecords.secRecord[0].sessionTime = eventData.remainingTime;
                     eventData.sessionRecords.secRecord[0].qPeriod = eventData.qualiPeriod;
                 }
+                TrackRecords::getInstance().gatherSessionRecords();
             }
             break;
 
@@ -675,10 +699,12 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                     eventData.sessionRecords.secRecord[1].driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.secRecord[1].lapTime = eventData.driversData[packet.carID-1].lastLap.sectorTimes[1].toString();
 
-                    eventData.sessionRecords.secRecord[1].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum+1;
+                    eventData.sessionRecords.secRecord[1].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum;
+                    eventData.sessionRecords.secRecord[1].number = eventData.driversData[packet.carID-1].number;
                     eventData.sessionRecords.secRecord[1].sessionTime = eventData.remainingTime;
                     eventData.sessionRecords.secRecord[1].qPeriod = eventData.qualiPeriod;
                 }
+                TrackRecords::getInstance().gatherSessionRecords();
             }
             break;
 
@@ -697,10 +723,12 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                     eventData.sessionRecords.secRecord[2].driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.secRecord[2].lapTime = eventData.driversData[packet.carID-1].lastLap.sectorTimes[2].toString();
 
-                    eventData.sessionRecords.secRecord[2].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum+1;
+                    eventData.sessionRecords.secRecord[2].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum;
+                    eventData.sessionRecords.secRecord[2].number = eventData.driversData[packet.carID-1].number;
                     eventData.sessionRecords.secRecord[2].sessionTime = eventData.remainingTime;
                     eventData.sessionRecords.secRecord[2].qPeriod = eventData.qualiPeriod;
                 }
+                TrackRecords::getInstance().gatherSessionRecords();
             }
             break;
 
@@ -735,8 +763,12 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
                 eventData.driversData[packet.carID-1].lastLap.lapTime < eventData.sessionRecords.fastestLap.lapTime)
             {
                 eventData.sessionRecords.fastestLap.lapTime = eventData.driversData[packet.carID-1].lastLap.lapTime;
+                eventData.sessionRecords.fastestLap.number = eventData.driversData[packet.carID-1].number;
+                eventData.sessionRecords.fastestLap.driver = eventData.driversData[packet.carID-1].driver;
                 for (int i = 0; i < eventData.driversData.size(); ++i)
                     eventData.driversData[i].updateGaps(eventData);
+
+                TrackRecords::getInstance().gatherSessionRecords();
             }
             break;
 
@@ -765,9 +797,11 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
                     eventData.sessionRecords.secRecord[0].driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.secRecord[0].lapTime = LapTime(packet.longData.constData());
 
-                    eventData.sessionRecords.secRecord[0].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum+1;
+                    eventData.sessionRecords.secRecord[0].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum;
+                    eventData.sessionRecords.secRecord[0].number = eventData.driversData[packet.carID-1].number;
                     eventData.sessionRecords.secRecord[0].sessionTime = eventData.remainingTime;
                 }
+                TrackRecords::getInstance().gatherSessionRecords();
             }
             break;
 
@@ -786,9 +820,11 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
                     eventData.sessionRecords.secRecord[1].driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.secRecord[1].lapTime = LapTime(packet.longData.constData());
 
-                    eventData.sessionRecords.secRecord[1].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum+1;
+                    eventData.sessionRecords.secRecord[1].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum;
+                    eventData.sessionRecords.secRecord[1].number = eventData.driversData[packet.carID-1].number;
                     eventData.sessionRecords.secRecord[1].sessionTime = eventData.remainingTime;
                 }
+                TrackRecords::getInstance().gatherSessionRecords();
             }
             break;
 
@@ -807,9 +843,11 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
                     eventData.sessionRecords.secRecord[2].driver = eventData.driversData[packet.carID-1].driver;
                     eventData.sessionRecords.secRecord[2].lapTime = eventData.driversData[packet.carID-1].lastLap.sectorTimes[2];
 
-                    eventData.sessionRecords.secRecord[2].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum+1;
+                    eventData.sessionRecords.secRecord[2].lapNum = eventData.driversData[packet.carID-1].lastLap.lapNum;
+                    eventData.sessionRecords.secRecord[2].number = eventData.driversData[packet.carID-1].number;
                     eventData.sessionRecords.secRecord[2].sessionTime = eventData.remainingTime;
                 }
+                TrackRecords::getInstance().gatherSessionRecords();
             }
             break;
 
@@ -1092,8 +1130,11 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                     break;
 
                 case LTPackets::FL_DRIVER:
-                    s = copyPacket.longData.mid(1, copyPacket.longData.size()-1);
-                    eventData.sessionRecords.fastestLap.driver = SeasonData::getInstance().getDriverName(s);// s.left(4) + s.right(s.size()-4).toLower();
+                    if (eventData.eventType == LTPackets::RACE_EVENT)
+                    {
+                        s = copyPacket.longData.mid(1, copyPacket.longData.size()-1);
+                        eventData.sessionRecords.fastestLap.driver = SeasonData::getInstance().getDriverName(s);// s.left(4) + s.right(s.size()-4).toLower();
+                    }
                     break;
 
                 case LTPackets::FL_LAP:
@@ -1115,6 +1156,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                     if (eventData.eventType == LTPackets::RACE_EVENT)
                         eventData.sessionRecords.fastestLap.lapTime = LapTime(copyPacket.longData.mid(1, copyPacket.longData.size()-1).constData());
 
+                    TrackRecords::getInstance().gatherSessionRecords();
                     break;
             }
 

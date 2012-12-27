@@ -316,6 +316,16 @@ QString SeasonData::getDriverNameFromShort(const QString &name)
     return name.left(1) + name.right(name.size()-1).toLower();
 }
 
+QString SeasonData::getTeamName(const QString &driver)
+{
+    for (int i = 0; i < ltTeams.size(); ++i)
+    {
+        if (ltTeams[i].driver1Name == driver || ltTeams[i].driver2Name == driver)
+            return ltTeams[i].teamName;
+    }
+    return QString();
+}
+
 QString SeasonData::getTeamName(int no)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
@@ -466,18 +476,11 @@ int SeasonData::timeToSecs(const QTime &time)
     return hour * 3600 + min * 60 + sec;
 }
 
-int SeasonData::getFPNumber()
-{
-    if (EventData::getInstance().getEventId() == 0)
-        return 1;
 
-    else
-        return (EventData::getInstance().getEventId() - 7066)%6;
-}
 
 int SeasonData::getFPLength()
 {
-    return getFPLength(getFPNumber());
+    return getFPLength(EventData::getInstance().getFPNumber());
 }
 
 int SeasonData::getFPLength(int fp)

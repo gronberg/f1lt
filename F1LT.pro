@@ -79,7 +79,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/net/packetbuffer.cpp \
     src/main_gui/delaywidget.cpp \
     src/core/trackrecords.cpp \
-    src/tools/trackrecordsdialog.cpp
+    src/tools/trackrecordsdialog.cpp \
+    src/tools/driverrecordsdialog.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -135,7 +136,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/net/packetbuffer.h \
     src/main_gui/delaywidget.h \
     src/core/trackrecords.h \
-    src/tools/trackrecordsdialog.h
+    src/tools/trackrecordsdialog.h \
+    src/tools/driverrecordsdialog.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -157,7 +159,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/sessiontimeswidget.ui \
     ui/drivertrackerwidget.ui \
     ui/delaywidget.ui \
-    ui/trackrecordsdialog.ui
+    ui/trackrecordsdialog.ui \
+    src/tools/driverrecordsdialog.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

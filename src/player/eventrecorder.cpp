@@ -670,7 +670,7 @@ void EventRecorder::saveToFile(QString)
                 session = "quali"; break;
 
             default:
-                session = "fp" + QString::number(SeasonData::getInstance().getFPNumber()); break;
+                session = "fp" + QString::number(EventData::getInstance().getFPNumber()); break;
         }
         QString sNo = QString::number(no);
         if (no < 10)

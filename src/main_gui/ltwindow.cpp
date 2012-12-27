@@ -554,7 +554,7 @@ void LTWindow::loadSettings()
     driverTrackerWidget->loadSettings(settings);
 
     ltFilesManagerDialog->loadSettings(settings);
-    trackRecordsDialog->loadSettings(settings);
+    trackRecordsDialog->loadSettings(*settings);
 }
 
 void LTWindow::saveSettings()
@@ -573,7 +573,7 @@ void LTWindow::saveSettings()
     stw->saveSettings(*settings);
     driverTrackerWidget->saveSettings(settings);
     ltFilesManagerDialog->saveSettings(settings);
-    trackRecordsDialog->saveSettings(settings);
+    trackRecordsDialog->saveSettings(*settings);
 
 //    settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
 //    settings->setValue("ui/alt_colors", prefs->isAlternatingRowColors());
@@ -678,6 +678,11 @@ bool LTWindow::close()
 
     if (driverTrackerWidget->isVisible())
         driverTrackerWidget->close();
+
+    if (trackRecordsDialog->isVisible())
+        trackRecordsDialog->close();
+
+    TrackRecords::getInstance().saveTrackRecords(F1LTCore::trackRercordsFile());
 
     return QMainWindow::close();
 }

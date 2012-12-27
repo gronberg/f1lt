@@ -177,6 +177,15 @@ QString EventData::calculateInterval(const DriverData &d1, const DriverData &d2,
 	return "";
 }
 
+int EventData::getFPNumber() const
+{
+    if (getEventId() == 0)
+        return 1;
+
+    else
+        return (getEventId() - 7066)%6;
+}
+
 int EventData::correctPosition(const LapTime &ld) const
 {
     QList<LapTime> timeList;

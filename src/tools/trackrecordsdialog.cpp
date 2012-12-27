@@ -8,6 +8,7 @@ TrackRecordsDialog::TrackRecordsDialog(QWidget *parent) :
     ui(new Ui::TrackRecordsDialog), currentIndex(-1)
 {
     ui->setupUi(this);
+    drDialog = new DriverRecordsDialog(this);
 }
 
 TrackRecordsDialog::~TrackRecordsDialog()
@@ -36,12 +37,16 @@ void TrackRecordsDialog::exec()
             QListWidgetItem *item = ui->listWidget->item(i);
             ui->listWidget->removeItemWidget(item);
         }
+        loadTrackRecords();
     }
     QDialog::show();
 }
 
 void TrackRecordsDialog::loadTrackRecords()
 {
+    if (currentIndex == -1)
+        return;
+
     TrackRecordsAtom tr = TrackRecords::getInstance()[currentIndex];
 
     if (tr != TrackRecords::null())
@@ -51,12 +56,12 @@ void TrackRecordsDialog::loadTrackRecords()
 
         ui->qRTLabel->setText(tr.trackRecords[QUALI_RECORD].time.toString());
         ui->qRDLabel->setText(tr.trackRecords[QUALI_RECORD].driver);
-        ui->qRDTLabel->setText(tr.trackRecords[QUALI_RECORD].team);
+        ui->qRDTLabel->setText("("+tr.trackRecords[QUALI_RECORD].team+")");
         ui->qRYLabel->setText(tr.trackRecords[QUALI_RECORD].year);
 
         ui->rRTLabel->setText(tr.trackRecords[RACE_RECORD].time.toString());
         ui->rRDLabel->setText(tr.trackRecords[RACE_RECORD].driver);
-        ui->rRDTLabel->setText(tr.trackRecords[RACE_RECORD].team);
+        ui->rRDTLabel->setText("("+tr.trackRecords[RACE_RECORD].team+")");
         ui->rRYLabel->setText(tr.trackRecords[RACE_RECORD].year);
 
         ui->s1TLabel->setText(tr.sessionRecords[S1_RECORD].time.toString());
@@ -107,17 +112,21 @@ void TrackRecordsDialog::on_toolButton_2_clicked()
     }
 }
 
-void TrackRecordsDialog::saveSettings(QSettings *settings)
+void TrackRecordsDialog::saveSettings(QSettings &settings)
 {
-    settings->setValue("ui/trackrecords_geometry", saveGeometry());
-    settings->setValue("ui/trackrecords_splitter", ui->splitter->saveState());
+    settings.setValue("ui/trackrecords_geometry", saveGeometry());
+    settings.setValue("ui/trackrecords_splitter", ui->splitter->saveState());
+
+    drDialog->saveSettings(settings);
 
 }
 
-void TrackRecordsDialog::loadSettings(QSettings *settings)
+void TrackRecordsDialog::loadSettings(QSettings &settings)
 {
-    restoreGeometry(settings->value("ui/trackrecords_geometry").toByteArray());
-    ui->splitter->restoreState(settings->value("ui/trackrecords_splitter").toByteArray());
+    restoreGeometry(settings.value("ui/trackrecords_geometry").toByteArray());
+    ui->splitter->restoreState(settings.value("ui/trackrecords_splitter").toByteArray());
+
+    drDialog->loadSettings(settings);
 }
 
 void TrackRecordsDialog::setFont(const QFont &font)
@@ -133,5 +142,15 @@ void TrackRecordsDialog::setFont(const QFont &font)
 
     ui->groupBox->setFont(font);
     ui->groupBox_2->setFont(font);
-//    ui->trackNameLabel->setFont(font);
+
+    drDialog->setFont(font);
+}
+
+void TrackRecordsDialog::on_pushButton_clicked()
+{
+    if (currentIndex == -1)
+        return;
+
+    TrackRecords::getInstance().gatherSessionRecords(true);
+    drDialog->exec(TrackRecords::getInstance()[currentIndex]);
 }

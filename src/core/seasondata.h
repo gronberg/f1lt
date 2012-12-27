@@ -86,11 +86,11 @@ public:
         static SeasonData instance;
         return instance;
     }
+
     bool loadSeasonFile();
     bool loadTrackDataFile();
 
-    QPixmap getCarImg(int no);
-    int getFPNumber();
+    QPixmap getCarImg(int no);    
     int getEventNo(QDate);
     int getFPLength();
     int getFPLength(int fp);
@@ -105,13 +105,16 @@ public:
     QTime correctQualiTime(const QTime &time, int qualiPeriod);
 
     void setTrackCoordinates(LTEvent &event);
-    QString getDriverName(QString &);
-    QString getDriverLastName(const QString&);
-    QString getDriverShortName(const QString&);
-    QString getDriverNameFromShort(const QString&);
-    QString getEventNameFromShort(const QString&);
+    QString getDriverName(QString &name);
+    QString getDriverLastName(const QString &name);
+    QString getDriverShortName(const QString &name);
+    QString getDriverNameFromShort(const QString &name);
+    QString getEventNameFromShort(const QString &shortName);
+
     int getDriverNo(const QString &name);
-    QString getTeamName(int);
+    QString getTeamName(int no);
+    QString getTeamName(const QString &driver);
+
     QStringList getDriversList();
     QStringList getDriversListShort();
 
