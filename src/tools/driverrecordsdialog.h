@@ -18,9 +18,10 @@ public:
     explicit DriverRecordsDialog(QWidget *parent = 0);
     ~DriverRecordsDialog();
 
-    void exec(const TrackRecordsAtom &records);
+    void exec(const TrackWeekendRecords &records, QString trackName);
 
     void loadRecords();
+    void loadRecords(const TrackWeekendRecords &records, QString trackName);
 
     void saveSettings(QSettings &settings);
     void loadSettings(QSettings &settings);
@@ -28,11 +29,14 @@ public:
     void setFont(const QFont &font);
     
 private slots:
-    void on_comboBox_currentIndexChanged(int index);
+    void on_comboBox_currentIndexChanged(int);
+
+    void on_comboBox_2_currentIndexChanged(int index);
 
 private:
     Ui::DriverRecordsDialog *ui;
-    TrackRecordsAtom driverRecords;
+    TrackWeekendRecords driverRecords;
+    QString trackName;
 };
 
 #endif // DRIVERRECORDSDIALOG_H

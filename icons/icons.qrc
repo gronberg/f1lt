@@ -45,5 +45,7 @@
         <file>label-big.png</file>
         <file>dt.png</file>
         <file>label-info-long.png</file>
+        <file>label-small.png</file>
+        <file>tr.png</file>
     </qresource>
 </RCC>

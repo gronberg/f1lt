@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ltwindow.ui'
 **
-** Created: Thu Dec 27 22:24:47 2012
+** Created: Sat Jan 5 18:56:32 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -162,6 +162,9 @@ public:
         actionDriver_tracker->setIcon(icon13);
         actionTrack_records = new QAction(LTWindow);
         actionTrack_records->setObjectName(QString::fromUtf8("actionTrack_records"));
+        QIcon icon14;
+        icon14.addFile(QString::fromUtf8(":/ui_icons/tr.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionTrack_records->setIcon(icon14);
         centralWidget = new QWidget(LTWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout_4 = new QVBoxLayout(centralWidget);
@@ -338,8 +341,8 @@ public:
         mainToolBar->addAction(actionSession_analysis);
         mainToolBar->addAction(actionSession_times);
         mainToolBar->addAction(actionDriver_tracker);
-        mainToolBar->addSeparator();
         mainToolBar->addAction(actionTrack_records);
+        mainToolBar->addSeparator();
         mainToolBar->addAction(actionPreferences);
         mainToolBar->addAction(actionExit);
         mainToolBar->addSeparator();

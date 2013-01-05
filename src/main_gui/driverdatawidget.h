@@ -42,6 +42,7 @@ public slots:
 
     void printDriverData(int id);
     void printDriverChart(int id);
+    void printDriverRecords(int id);
     void printDriverRelatedCommentary(int id);
 
     void updateDriverInfo(const DriverData &);
@@ -65,7 +66,7 @@ private:
 
     EventData &eventData;
 
-    DriverLapHistoryModel *driverLapHistoryModel;
+    DriverLapHistoryModel *driverLapHistoryModel;    
 };
 
 #endif // DRIVERDATAWIDGET_H

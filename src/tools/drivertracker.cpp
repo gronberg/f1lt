@@ -140,7 +140,7 @@ void DriverTracker::paintClassification(QPainter &p)
             QString txt = SeasonData::getInstance().getDriverShortName(dd->getDriverName());
 
             p.setFont(QFont("Arial", 10, 100));
-            QColor drvColor = SeasonData::getInstance().getCarColor(*dd);
+            QColor drvColor = SeasonData::getInstance().getCarColor(dd->getNumber());
             p.setBrush(drvColor);
 
             if (isExcluded(dd->getCarID()))

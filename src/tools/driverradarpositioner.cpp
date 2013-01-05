@@ -20,7 +20,7 @@ void DriverRadarPositioner::setupHelmet(int size)
     QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(size, Qt::SmoothTransformation);
 
     QImage hl(helmet.size(), helmet.format());
-    QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
+    QColor drvColor = SeasonData::getInstance().getCarColor(driverData->getNumber());
     if (drvColor == SeasonData::getInstance().getColor(LTPackets::BACKGROUND))
     {
         helmet = QImage();
@@ -359,7 +359,7 @@ void DriverRadarPositioner::paint(QPainter *p, bool selected)
     {
         QPoint point = getCoordinates();
 
-        QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
+        QColor drvColor = SeasonData::getInstance().getCarColor(driverData->getNumber());
         p->setBrush(QBrush(drvColor));        
 
         QPen pen(drvColor);

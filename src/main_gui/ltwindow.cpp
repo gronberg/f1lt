@@ -150,6 +150,9 @@ void LTWindow::eventDataChanged()
 //        eventRecorder->updateEventData(eventData);
 
     ui->ltWidget->updateLT();
+
+    if (trackRecordsDialog->isVisible())
+        trackRecordsDialog->update();
 }
 
 void LTWindow::driverDataChanged(int carID)
@@ -206,6 +209,9 @@ void LTWindow::driverDataChanged(int carID)
 
         if (stw->isVisible())
             stw->update();
+
+        if (trackRecordsDialog->isVisible())
+            trackRecordsDialog->update();
 //        if (recording)
 //            eventRecorder->updateDriverData(eventData.driversData[carID-1]);
     }
@@ -274,6 +280,9 @@ void LTWindow::dataChanged()
 
     if (stw->isVisible())
         stw->update();
+
+    if (trackRecordsDialog->isVisible())
+        trackRecordsDialog->update();
 }
 
 //void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
@@ -1075,6 +1084,7 @@ void LTWindow::showSessionBoard(bool show)
     ui->actionSession_analysis->setEnabled(!show);
     ui->actionSession_times->setEnabled(!show);
     ui->actionDriver_tracker->setEnabled(!show);
+//    ui->actionTrack_records->setEnabled(!show);
 }
 
 void LTWindow::on_actionSession_analysis_triggered()

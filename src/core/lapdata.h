@@ -2,6 +2,7 @@
 #define LAPDATA_H
 
 #include <QDebug>
+#include <QMetaType>
 #include <QPair>
 #include <QTime>
 
@@ -18,7 +19,9 @@ class LapTime
 {
 public:
     LapTime() { }
+    ~LapTime() { }
     LapTime(const QString &t) { time = t; }
+    LapTime(const LapTime &t) { time = t.time; }
     LapTime(int msecs);
     LapTime(int m, int s, int ms)
     {
@@ -67,6 +70,8 @@ public:
 private:
     QString time;
 };
+
+Q_DECLARE_METATYPE(LapTime)
 
 //-----------------------------------------------------------
 

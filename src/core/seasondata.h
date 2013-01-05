@@ -8,6 +8,7 @@
 #include <QVector>
 
 #include "f1ltcore.h"
+#include "imagesfactory.h"
 #include "ltpackets.h"
 
 class DriverData;
@@ -64,19 +65,6 @@ struct LTEvent
 };
 
 
-
-class CarThumbnailsFactory
-{
-public:
-    ~CarThumbnailsFactory();
-    QList<QPixmap*> *loadCarThumbnails(int size, bool clear = true);
-    QPixmap &getCarThumbnail(int no, int size);
-
-private:
-    QMap<int, QList<QPixmap*> > carThumbnails;
-    QPixmap nullPixmap;
-};
-
 //this class contains all the basic informations about the season, like quali and fp lengths, etc.
 class SeasonData
 {
@@ -119,7 +107,7 @@ public:
     QStringList getDriversListShort();
 
     QColor getColor(LTPackets::Colors color) { return colors[color]; }
-    QColor getCarColor(const DriverData &dd);
+    QColor getCarColor(int no);
 
     QVector<LTTeam> &getTeams() { return ltTeams; }
     void setTeams(const QVector<LTTeam> &teams) { ltTeams = teams; }
@@ -131,6 +119,7 @@ public:
     void fillEventNamesMap();
 
     CarThumbnailsFactory &getCarThumbnailsFactory() { return carThumbnailsFactory; }
+    HelmetsFactory &getHelmetsFactory() { return helmetsFactory; }
 
 private:
     SeasonData();
@@ -151,6 +140,7 @@ private:
 
     QMap<QString, QString> eventNamesMap;
     CarThumbnailsFactory carThumbnailsFactory;
+    HelmetsFactory helmetsFactory;
 };
 
 #endif // SEASONDATA_H

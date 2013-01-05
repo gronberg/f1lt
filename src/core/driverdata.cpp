@@ -293,9 +293,9 @@ void DriverData::addFPQLap(const EventData &ed)
         }
 
         if (!correction)
-        {
+        {            
             if (ed.getEventType() == LTPackets::PRACTICE_EVENT)
-            {
+            {            
                 if (lastLap < sessionRecords.bestLap)
                     sessionRecords.bestLap = lapData.last();
 
@@ -310,6 +310,9 @@ void DriverData::addFPQLap(const EventData &ed)
             }
             else if (ed.getEventType() == LTPackets::QUALI_EVENT)
             {
+                if (lastLap < sessionRecords.bestLap)
+                    sessionRecords.bestLap = lapData.last();
+
                 if (lastLap < sessionRecords.bestQLaps[lastLap.qualiLapExtraData.qualiPeriod-1] ||
                         !sessionRecords.bestQLaps[lastLap.qualiLapExtraData.qualiPeriod-1].getTime().isValid())
                 {

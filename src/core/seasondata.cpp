@@ -7,62 +7,6 @@
 #include "eventdata.h"
 #include "trackrecords.h"
 
-CarThumbnailsFactory::~CarThumbnailsFactory()
-{
-    QMap<int, QList<QPixmap*> >::Iterator iter = carThumbnails.begin();
-    while (iter != carThumbnails.end())
-    {
-        QList<QPixmap*> *images = &iter.value();
-
-        while (!images->isEmpty())
-        {
-            delete images->takeFirst();
-        }
-        ++iter;
-    }
-}
-
-QList<QPixmap*> *CarThumbnailsFactory::loadCarThumbnails(int size, bool clear)
-{
-    QList<QPixmap*> *images = &carThumbnails[size];
-
-    if (!images->isEmpty())
-    {
-        if (clear)
-        {
-            for (int i = 0; i < images->size(); ++i)
-            {
-                delete (*images)[i];
-            }
-
-            images->clear();
-        }
-        else
-            return images;
-    }
-
-    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
-    {
-        images->append(new QPixmap(SeasonData::getInstance().getTeams()[i].carImg.scaledToWidth(size, Qt::SmoothTransformation)));
-    }
-
-    return images;
-}
-
-QPixmap &CarThumbnailsFactory::getCarThumbnail(int no, int size)
-{
-    if (no < 1)
-        return nullPixmap;
-
-    const QList<QPixmap*> *images = loadCarThumbnails(size, false);
-
-    int idx = (no > 13 ? no-2 : no-1) / 2;
-
-    if (idx >= 0 && idx < images->size())
-        return *(*images)[idx];
-
-    return nullPixmap;
-}
 
 SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
 {
@@ -532,16 +476,13 @@ int SeasonData::getQualiLength(int q)
     return 0;
 }
 
-QColor SeasonData::getCarColor(const DriverData &dd)
+QColor SeasonData::getCarColor(int no)
 {
     QColor color = getColor(LTPackets::BACKGROUND);
-    if (dd.getCarID() > 0)
-    {
-        int no = dd.getNumber();
 
-        if (no > 0 && no < driverColors.size()+2)
-            color = driverColors[no <= 12 ? no-1 : no -2];
-    }
+    if (no > 0 && no < driverColors.size()+2)
+        color = driverColors[no <= 12 ? no-1 : no -2];
+
     return color;
 }
 

@@ -15,7 +15,7 @@ void DriverTrackerInfo::setupHelmet()
     QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(30, Qt::SmoothTransformation);
 
     QImage hl(helmet.size(), helmet.format());
-    QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
+    QColor drvColor = SeasonData::getInstance().getCarColor(driverData->getNumber());
     QPainter phl;
     phl.begin(&hl);
     phl.setBrush(QBrush(drvColor));
@@ -61,7 +61,7 @@ void DriverTrackerInfo::paintDriverInfo(QPainter *p)
     int carY = (71 - car.height())/2;
 
 
-    QColor color = SeasonData::getInstance().getCarColor(*driverData);
+    QColor color = SeasonData::getInstance().getCarColor(driverData->getNumber());
     int numX = x + 105;
     int numY = 70;
     p->setBrush(color);

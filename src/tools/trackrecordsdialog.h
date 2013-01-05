@@ -28,6 +28,8 @@ public:
 
     void setFont(const QFont &font);
 
+    void update();
+
     
 private slots:
     void on_listWidget_clicked(const QModelIndex &index);
@@ -38,9 +40,16 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_trackVersionBox_activated(const QString &arg1);
+
+    void on_yearBox_currentIndexChanged(const QString &arg1);
+
 private:
     Ui::TrackRecordsDialog *ui;
+
     int currentIndex;
+    TrackVersion *currentTV;
+    TrackWeekendRecords *currentTWR;
 
     DriverRecordsDialog *drDialog;
 };

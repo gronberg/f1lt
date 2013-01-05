@@ -177,7 +177,7 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
     {
         QPoint point = getCoordinates();
 
-        QColor drvColor = SeasonData::getInstance().getCarColor(*driverData);
+        QColor drvColor = SeasonData::getInstance().getCarColor(driverData->getNumber());
         p->setBrush(QBrush(drvColor));
 
         QPen pen(drvColor);

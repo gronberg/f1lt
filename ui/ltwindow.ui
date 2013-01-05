@@ -375,8 +375,8 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionSession_analysis"/>
    <addaction name="actionSession_times"/>
    <addaction name="actionDriver_tracker"/>
-   <addaction name="separator"/>
    <addaction name="actionTrack_records"/>
+   <addaction name="separator"/>
    <addaction name="actionPreferences"/>
    <addaction name="actionExit"/>
    <addaction name="separator"/>
@@ -569,6 +569,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionTrack_records">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/tr.png</normaloff>:/ui_icons/tr.png</iconset>
+   </property>
    <property name="text">
     <string>Track records</string>
    </property>
