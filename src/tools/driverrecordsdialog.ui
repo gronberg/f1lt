@@ -108,6 +108,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Time</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>S1</string>
         </property>
        </item>
@@ -119,11 +124,6 @@
        <item>
         <property name="text">
          <string>S3</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Time</string>
         </property>
        </item>
       </widget>

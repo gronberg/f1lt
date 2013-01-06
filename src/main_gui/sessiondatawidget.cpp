@@ -8,16 +8,12 @@
 #include <QResizeEvent>
 
 #include "ltitemdelegate.h"
+#include "../core/trackrecords.h"
 
 SessionDataWidget::SessionDataWidget(QWidget *parent) :
     QWidget(parent), ui(new Ui::SessionDataWidget), eventData(EventData::getInstance())
 {
     ui->setupUi(this);
-
-    for (int i = 0; i < 5; ++i)
-    {
-        ui->tableWidget_5->insertRow(i);
-    }
 
 
     ui->speedRecordsTable->setModel(&speedRecordsModel);
@@ -65,9 +61,7 @@ QTableWidgetItem* SessionDataWidget::setItem(QTableWidget *table, int row, int c
 }
 
 void SessionDataWidget::setupContents()
-{    
-    ui->tableWidget_5->setColumnWidth(0, ui->tableWidget_5->width());
-
+{
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
 }
 
@@ -97,53 +91,97 @@ void SessionDataWidget::updateEventInfo()
 {
     if (eventData.getEventInfo().eventNo < 1)
         return;
-    QTableWidgetItem *item;
+
     LTEvent event = eventData.getEventInfo();
 
-    item = setItem(ui->tableWidget_5, 0, 0, event.eventName, Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::YELLOW));
-    item->setFont(QFont("Arial", 15, QFont::Bold));
+    ui->eventNameLabel->setText(event.eventName);
+    ui->eventPlaceLabel->setText(event.eventPlace);
+    ui->eventDateLabel->setText(event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"));
+    ui->eventLapsLabel->setText(QString::number(event.laps) + " laps");
 
-    item = setItem(ui->tableWidget_5, 1, 0, event.eventPlace, Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::GREEN));
-    item->setFont(QFont("Arial", 12, QFont::Bold));
-
-    item = setItem(ui->tableWidget_5, 2, 0, event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"),
-                   Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::WHITE));
-    item->setFont(QFont("Arial", 10, QFont::Bold));
-
-    item = setItem(ui->tableWidget_5, 3, 0, QString::number(event.laps) + " laps", Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::CYAN));
-
-
-    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget_5->cellWidget(4, 0));
-    if (!lab)
-    {
-        lab = new QLabel(this);
-        ui->tableWidget_5->setCellWidget(4, 0, lab);
-    }
-//    if (!lab->pixmap())
+//    if (ui->eventMapLabel->pixmap() == 0 || ui->eventMapLabel->pixmap()->isNull())
     {
         QPixmap trackImg = eventData.getEventInfo().trackImg;
         if (!trackImg.isNull())
         {
-        	QPixmap pix = trackImg;
-        	int w = width() - 20;
-        	int h = height() - 20;
+            QPixmap pix = trackImg;
+            int w = ui->scrollArea_2->width() - 20;
+            int h = ui->scrollArea_2->height() - 20;
 
-        	if (pix.width() > w)
-        		pix = trackImg.scaledToWidth(w, Qt::SmoothTransformation);
+            if (pix.width() > w)
+                pix = trackImg.scaledToWidth(w, Qt::SmoothTransformation);
 
-        	if (pix.height() > h)
+            if (pix.height() > h)
                 pix = trackImg.scaledToHeight(h, Qt::SmoothTransformation);
 
-        	lab->setPixmap(pix);
-
-//            lab->resize(trackImg.size());
-            lab->setAlignment(Qt::AlignCenter);
-            if (ui->tableWidget_5->rowHeight(4) < trackImg.height())
-                ui->tableWidget_5->setRowHeight(4,trackImg.height());
-
-            ui->tableWidget_5->setColumnWidth(0, trackImg.width());
+            ui->eventMapLabel->setPixmap(pix);
         }
     }
+
+    TrackVersion *tv = 0;
+    TrackWeekendRecords *twr = 0;
+
+    TrackRecords::getInstance().getCurrentTrackRecords(&twr, &tv);
+
+    if (tv != 0)
+    {
+        ui->qRTLabel->setText(tv->trackRecords[QUALI_RECORD].time.toString());
+        ui->qRDLabel->setText(tv->trackRecords[QUALI_RECORD].driver);
+        ui->qRDTLabel->setText(tv->trackRecords[QUALI_RECORD].team);
+        ui->qRYLabel->setText(tv->trackRecords[QUALI_RECORD].year);
+
+        ui->rRTLabel->setText(tv->trackRecords[RACE_RECORD].time.toString());
+        ui->rRDLabel->setText(tv->trackRecords[RACE_RECORD].driver);
+        ui->rRDTLabel->setText(tv->trackRecords[RACE_RECORD].team);
+        ui->rRYLabel->setText(tv->trackRecords[RACE_RECORD].year);
+    }
+//    QTableWidgetItem *item;
+//
+
+//    item = setItem(ui->tableWidget_5, 0, 0, event.eventName, Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+//    item->setFont(QFont("Arial", 15, QFont::Bold));
+
+//    item = setItem(ui->tableWidget_5, 1, 0, event.eventPlace, Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::GREEN));
+//    item->setFont(QFont("Arial", 12, QFont::Bold));
+
+//    item = setItem(ui->tableWidget_5, 2, 0, event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"),
+//                   Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::WHITE));
+//    item->setFont(QFont("Arial", 10, QFont::Bold));
+
+//    item = setItem(ui->tableWidget_5, 3, 0, QString::number(event.laps) + " laps", Qt::NoItemFlags, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::CYAN));
+
+
+//    QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget_5->cellWidget(4, 0));
+//    if (!lab)
+//    {
+//        lab = new QLabel(this);
+//        ui->tableWidget_5->setCellWidget(4, 0, lab);
+//    }
+////    if (!lab->pixmap())
+//    {
+//        QPixmap trackImg = eventData.getEventInfo().trackImg;
+//        if (!trackImg.isNull())
+//        {
+//        	QPixmap pix = trackImg;
+//        	int w = width() - 20;
+//        	int h = height() - 20;
+
+//        	if (pix.width() > w)
+//        		pix = trackImg.scaledToWidth(w, Qt::SmoothTransformation);
+
+//        	if (pix.height() > h)
+//                pix = trackImg.scaledToHeight(h, Qt::SmoothTransformation);
+
+//        	lab->setPixmap(pix);
+
+////            lab->resize(trackImg.size());
+//            lab->setAlignment(Qt::AlignCenter);
+//            if (ui->tableWidget_5->rowHeight(4) < trackImg.height())
+//                ui->tableWidget_5->setRowHeight(4,trackImg.height());
+
+//            ui->tableWidget_5->setColumnWidth(0, trackImg.width());
+//        }
+//    }
 }
 
 void SessionDataWidget::updateSpeedRecords()
@@ -285,8 +323,6 @@ void SessionDataWidget::on_tabWidget_currentChanged(int index)
         case 0:
 //            updateSpeedRecords(eventData);
             updateEventInfo();
-            w = ui->tableWidget_5->viewport()->width();
-            ui->tableWidget_5->setColumnWidth(0, (w));
             break;
 
         case 1:
@@ -341,6 +377,10 @@ void SessionDataWidget::setFont(const QFont &font)
     ui->fastestLapsTable->setFont(font);
     ui->pitStopsTable->setFont(font);
     ui->infoWidget->setFont(font);
+
+    ui->recordsLabel->setFont(font);
+    for (int i = 0; i < ui->recordsLayout->count(); ++i)
+        ui->recordsLayout->itemAt(i)->widget()->setFont(font);
 }
 
 int SessionDataWidget::currentIndex()

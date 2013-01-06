@@ -40,7 +40,7 @@ LTFilesManagerDialog::LTFilesManagerDialog(QWidget *parent) :
 }
 
 LTFilesManagerDialog::~LTFilesManagerDialog()
-{
+{    
     delete ui;
 }
 
@@ -81,7 +81,7 @@ void LTFilesManagerDialog::ltListObtained(QStringList list)
 
     ltList.unite(list.toSet());
 
-    updateTree(list);
+    updateTree(list);    
 }
 
 void LTFilesManagerDialog::ltFileObtained(QByteArray buf)
@@ -245,7 +245,15 @@ void LTFilesManagerDialog::on_playButton_clicked()
             ltFilesManager.getLTFile(fileName);
         }
         else
+        {
+            if (progress->isVisible())
+            {
+                progress->cancel();
+                ltFilesManager.cancel();
+            }
+
             QDialog::accept();
+        }
     }
 }
 
@@ -317,11 +325,10 @@ void LTFilesManagerDialog::getLTListFromDisk()
 }
 
 void LTFilesManagerDialog::error(QNetworkReply::NetworkError code)
-{
-    currentFile = "";
-
+{    
     if (code != QNetworkReply::OperationCanceledError)
     {
+        currentFile = "";
         QMessageBox::critical(this, "Error", "Error downloading the file!\nCheck your network connection.");
     }
 }
@@ -336,4 +343,15 @@ void LTFilesManagerDialog::saveSettings(QSettings *settings)
 {
     settings->setValue("ui/ltfilesmanager_geometry", saveGeometry());
     settings->setValue("ui/ltfilesmanager_columns", ui->treeWidget->header()->saveState());
+}
+
+void LTFilesManagerDialog::on_cancelButton_clicked()
+{
+    if (progress->isVisible())
+    {
+        progress->cancel();
+        ltFilesManager.cancel();
+    }
+
+    QDialog::reject();
 }

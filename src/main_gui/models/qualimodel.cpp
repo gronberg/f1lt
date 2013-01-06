@@ -286,7 +286,7 @@ QVariant QualiModel::extraRowData(const QModelIndex &index, int role) const
     if (index.row() == rowCount()-2)
         return QVariant();
 
-    if (role == Qt::DisplayRole && driversData.first()->getQualiTime(1).isValid())
+    if (role == Qt::DisplayRole && !driversData.isEmpty() && driversData.first()->getQualiTime(1).isValid())
     {
         switch (index.column())
         {

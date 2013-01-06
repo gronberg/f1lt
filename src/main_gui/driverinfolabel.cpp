@@ -40,7 +40,7 @@ void DriverInfoLabel::paintEvent(QPaintEvent *)
     p.begin(this);
     int x = (width() - backgroundPixmap.width())/2;
 
-    QColor color = SeasonData::getInstance().getCarColor(driverData->getNumber());
+    QColor color = /*QColor(170, 170, 170);*/SeasonData::getInstance().getCarColor(driverData->getNumber());
     int numX = x + 105;
     int numY = 1;
     p.setBrush(color);

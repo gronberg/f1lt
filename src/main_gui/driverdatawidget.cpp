@@ -97,7 +97,7 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
     if (eventData.getEventType() == LTPackets::RACE_EVENT)
     {
-        ui->gridLabel->setText("Grid position");
+        ui->gridLabel->setText("Grid position:");
         if (!driverData.getPositionHistory().isEmpty())
             s = QString("%1").arg(driverData.getPositionHistory()[0]);
         else

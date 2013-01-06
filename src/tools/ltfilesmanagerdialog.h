@@ -52,6 +52,8 @@ private slots:
 
     void on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
+    void on_cancelButton_clicked();
+
 private:
     Ui::LTFilesManagerDialog *ui;
 

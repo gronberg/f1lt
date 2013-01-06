@@ -58,5 +58,8 @@ void LTFilesManager::finishedLTFile()
 void LTFilesManager::cancel()
 {
     if (reply)
+    {
         reply->close();
+        manager.deleteResource(req);
+    }
 }

@@ -295,22 +295,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>cancelButton</sender>
-   <signal>clicked()</signal>
-   <receiver>LTFilesManagerDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>171</x>
-     <y>498</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>83</x>
-     <y>494</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
