@@ -114,22 +114,7 @@ private slots:
 
 private:
     Ui::LTWindow *ui;
-    DataStreamReader *streamReader;
-
-    //very simple passwd encoding algorithm
-    QString encodePasswd(QString passwd)
-    {
-        int sz = passwd.size();
-        QString ret;
-        for (int i = 0; i < sz; ++i)
-        {
-            char c = passwd[i].toAscii();
-            c ^= (1 << (i%8));
-            ret += c;
-        }
-        return ret;
-    }
-
+    DataStreamReader *streamReader;    
 
     QSettings *settings;
 

@@ -6,7 +6,9 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QTableWidgetItem>
+
 #include "logindialog.h"
+#include "../net/networksettings.h"
 
 LTWindow::LTWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -502,6 +504,8 @@ void LTWindow::timeout()
 
 void LTWindow::loadSettings()
 {
+    NetworkSettings::getInstance().loadSettings(*settings);
+
     QFont mainFont, commentaryFont;
     QString sbuf = settings->value("fonts/main_family").toString();
     mainFont.setFamily(sbuf);
@@ -568,8 +572,11 @@ void LTWindow::loadSettings()
 
 void LTWindow::saveSettings()
 {
-    QString passwd = encodePasswd(settings->value("login/passwd").toString());
-    encodePasswd(passwd);
+//    QString passwd = encodePasswd(settings->value("login/passwd").toString());
+//    encodePasswd(passwd);
+
+    NetworkSettings::getInstance().saveSettings(*settings);
+
     settings->setValue("ui/window_geometry", saveGeometry());
     settings->setValue("ui/splitter_pos", ui->splitter->saveState());
     settings->setValue("ui/current_tab1", ui->tabWidget->currentIndex());
@@ -745,9 +752,9 @@ void LTWindow::authorizationError()
 }
 
 void LTWindow::on_actionConnect_triggered()
-{
-    QString passwd = encodePasswd(settings->value("login/passwd").toString());
-    if (loginDialog->exec(settings->value("login/email").toString(), passwd) == QDialog::Accepted)
+{    
+    if (loginDialog->exec(NetworkSettings::getInstance().getUser(),
+        NetworkSettings::getInstance().getPassword(), NetworkSettings::getInstance().getProxy()) == QDialog::Accepted)
     {
         if (playing)
         {
@@ -757,13 +764,16 @@ void LTWindow::on_actionConnect_triggered()
 
         streamReader->disconnectFromLTServer();
         QString email = loginDialog->getEmail();
-        passwd = loginDialog->getPasswd();
-        streamReader->connectToLTServer(email, passwd);
+        QString passwd = loginDialog->getPasswd();
+        NetworkSettings::getInstance().setUserPassword(email, passwd);
+        NetworkSettings::getInstance().setProxy(loginDialog->getProxy());
 
-        settings->setValue("login/email", email);
+        streamReader->connectToLTServer();
 
-        QString encPasswd = encodePasswd(passwd);
-        settings->setValue("login/passwd", encPasswd);
+//        settings->setValue("login/email", email);
+
+//        QString encPasswd = encodePasswd(passwd);
+//        settings->setValue("login/passwd", encPasswd);
 
         showSessionBoard(false);
 
@@ -773,8 +783,8 @@ void LTWindow::on_actionConnect_triggered()
 
 void LTWindow::connectToServer()
 {
-    QString email = settings->value("login/email").toString();
-    QString passwd = encodePasswd(settings->value("login/passwd").toString());
+    QString email = NetworkSettings::getInstance().getUser();
+    QString passwd = NetworkSettings::getInstance().getPassword();
 
     if (email == "" || passwd == "")
     {
@@ -782,18 +792,21 @@ void LTWindow::connectToServer()
         {
             email = loginDialog->getEmail();            
             passwd = loginDialog->getPasswd();
-            streamReader->connectToLTServer(email, passwd);
+
+            NetworkSettings::getInstance().setUserPassword(email, passwd);
+            NetworkSettings::getInstance().setProxy(loginDialog->getProxy());
+            streamReader->connectToLTServer();
 
             driverTrackerWidget->setup();
 
-            settings->setValue("login/email", email);
-            passwd = encodePasswd(loginDialog->getPasswd());
-            settings->setValue("login/passwd", passwd);
+//            settings->setValue("login/email", email);
+//            passwd = encodePasswd(loginDialog->getPasswd());
+//            settings->setValue("login/passwd", passwd);
         }
     }
     else
     {
-        streamReader->connectToLTServer(email, passwd);
+        streamReader->connectToLTServer();
         driverTrackerWidget->setup();
     }
 }

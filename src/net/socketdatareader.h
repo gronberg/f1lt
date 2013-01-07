@@ -14,7 +14,7 @@ public:
     void runS();
     SocketDataReader(QObject *parent=0);
     ~SocketDataReader();
-    void openStream(QString host, int port);
+    void openStream();
 
     void connectToHost();
     void disconnectFromHost();
@@ -36,8 +36,6 @@ public slots:
 private:
     QTcpSocket *socket;
     QByteArray data;
-    QString host;
-    int port;
 
     QTimer *timer;
     QTimer *reconnectTimer;

@@ -5,8 +5,10 @@
 #include <QTextStream>
 #include <QRegExp>
 
+#include "networksettings.h"
+
 DataStreamReader::DataStreamReader(QObject *parent) :
-    QObject(parent), host("live-timing.formula1.com"), port(4321), eventData(EventData::getInstance())
+    QObject(parent), eventData(EventData::getInstance())
 {    
     connect(&httpReader, SIGNAL(cookieRecieved(QString)), this, SLOT(onCookieReceived(QString)));
     connect(&httpReader, SIGNAL(keyFrameObtained(QByteArray)), &parser, SLOT(keyFrameObtained(QByteArray)));
@@ -34,13 +36,11 @@ void DataStreamReader::setDelay(int prevDelay, int delay)
     parser.setDelay(prevDelay, delay);
 }
 
-void DataStreamReader::connectToLTServer(QString email, QString passwd)
+void DataStreamReader::connectToLTServer()
 {
     eventData.frame = 0;
-//    httpReader.authorize("http://"+host, email, passwd);
-    qDebug() << "authorizing";
     emit tryAuthorize();
-    httpReader.authorize("http://"+host, "http://formula1.com", email, passwd);
+    httpReader.authorize();
 }
 
 void DataStreamReader::disconnectFromLTServer()
@@ -51,7 +51,7 @@ void DataStreamReader::disconnectFromLTServer()
 void DataStreamReader::onCookieReceived(QString cookie)
 {    
     eventData.cookie = cookie;
-    socketReader.openStream(host, port);
+    socketReader.openStream();
 //    socketReader.openStream("localhost", 6666);
 //    socketReader.openStream("192.168.1.2", 6666);
 //    eventData.key = 2976363859;

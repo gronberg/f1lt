@@ -3,7 +3,7 @@
 #include <QByteArray>
 #include <QDebug>
 
-#include "../core/f1ltcore.h"
+#include "networksettings.h"
 
 LTFilesManager::LTFilesManager(QObject *parent) :
     QObject(parent)
@@ -12,8 +12,13 @@ LTFilesManager::LTFilesManager(QObject *parent) :
 
 void LTFilesManager::getLTList()
 {
-    req = QNetworkRequest(F1LTCore::ltDataList());
+    req = QNetworkRequest(NetworkSettings::getInstance().getLTDataList());
     req.setRawHeader("User-Agent","f1lt");
+
+    if (NetworkSettings::getInstance().usingProxy())
+        manager.setProxy(NetworkSettings::getInstance().getProxy());
+    else
+        manager.setProxy(QNetworkProxy::NoProxy);
 
     reply = manager.get(req);
 
@@ -23,7 +28,7 @@ void LTFilesManager::getLTList()
 
 void LTFilesManager::getLTFile(QString ltDataFile)
 {
-    req = QNetworkRequest(F1LTCore::ltDataUrl() + ltDataFile);
+    req = QNetworkRequest(NetworkSettings::getInstance().getLTDataUrl() + ltDataFile);
     req.setRawHeader("User-Agent","f1lt");
 
     reply = manager.get(req);

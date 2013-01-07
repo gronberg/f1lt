@@ -22,7 +22,7 @@ class DataStreamReader : public QObject
 public:
     explicit DataStreamReader(QObject *parent = 0);
 
-    void connectToLTServer(QString email, QString passwd);
+    void connectToLTServer();
     void disconnectFromLTServer();
 
     bool parsePacket(const QByteArray&, Packet &packet, int &pos);
@@ -63,10 +63,7 @@ public slots:
 private:
     SocketDataReader socketReader;
     HttpDataReader httpReader;
-    PacketParser parser;
-
-    QString host;
-    int port;    
+    PacketParser parser;  
 
 
     EventData &eventData;   

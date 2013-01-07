@@ -2,6 +2,7 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
+#include <QNetworkProxy>
 
 namespace Ui {
 class LoginDialog;
@@ -17,8 +18,13 @@ public:
 
     QString getEmail();
     QString getPasswd();
-    int exec(QString email="", QString passwd="");
+    QNetworkProxy getProxy();
+    int exec(QString email="", QString passwd="", QNetworkProxy proxy = QNetworkProxy());
     
+private slots:
+
+    void on_proxyCheckBox_toggled(bool checked);
+
 private:
     Ui::LoginDialog *ui;
 };

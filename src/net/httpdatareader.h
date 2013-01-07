@@ -15,11 +15,9 @@ public:
     explicit HttpDataReader(QObject *parent = 0);
     ~HttpDataReader();
 
-    void authorize(QString host, QString loginHost, QString email, QString passwd);    
+    void authorize();
 
     QString getCookie() { return cookie; }
-    QString getHost() { return host; }
-    void setHost(QString h) { host = h; }
     bool parseCookie(QString header);
     
 signals:
@@ -41,8 +39,6 @@ private:
     QNetworkReply *reply;
 
     QString cookie;
-    QString host;
-    QString loginHost;
     QByteArray keyFrame;
     unsigned int decryptionKey;
 

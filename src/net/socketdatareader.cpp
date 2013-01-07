@@ -1,6 +1,8 @@
 #include "socketdatareader.h"
 #include <QDebug>
 
+#include "networksettings.h"
+
 SocketDataReader::SocketDataReader(QObject *parent) :
     QObject(parent), connectionOpened(false)
 {
@@ -16,15 +18,12 @@ SocketDataReader::~SocketDataReader()
     qDebug()<<"Bytes received: "<<bytes;
 }
 
-void SocketDataReader::openStream(QString host, int port)
+void SocketDataReader::openStream()
 {
-    if (host == this->host && connectionOpened)
+    if (connectionOpened)
         return;
 
     tryReconnect = 5;
-
-    this->host = host;
-    this->port = port;
 
 //    if (!isRunning())
 //        start();
@@ -36,7 +35,12 @@ void SocketDataReader::openStream(QString host, int port)
 
 void SocketDataReader::connectToHost()
 {    
-    socket->connectToHost(host, port, QIODevice::ReadWrite);
+    if (NetworkSettings::getInstance().usingProxy())
+        socket->setProxy(NetworkSettings::getInstance().getProxy());
+    else
+        socket->setProxy(QNetworkProxy::NoProxy);
+
+    socket->connectToHost(NetworkSettings::getInstance().getSocketHost(), NetworkSettings::getInstance().getSocketPort(), QIODevice::ReadWrite);
     qDebug() << "connected";
     socket->waitForReadyRead();
     qDebug() << "ready";
@@ -71,7 +75,6 @@ void SocketDataReader::runS()
 {
     socket = new QTcpSocket();
 
-    //socket->moveToThread(this->thread());
     QObject::connect(socket, SIGNAL(connected()), this, SLOT(connected()));
     QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectionError(QAbstractSocket::SocketError)));
     QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
@@ -79,13 +82,7 @@ void SocketDataReader::runS()
 
     connectionOpened = false;
 
-//    std::cout<<"host="<<host.toStdString()<<", port="<<port<<std::endl;
-
     connectToHost();
-
-    //socket->moveToThread(this);
-
-//    exec();
 }
 
 void SocketDataReader::connected()
@@ -109,7 +106,6 @@ void SocketDataReader::readyRead()
     QByteArray pac = socket->readAll();
 
     bytes += pac.size();
-//    connectionOpened = true;
 
     emit packetObtained(pac);
 }
@@ -117,7 +113,6 @@ void SocketDataReader::readyRead()
 void SocketDataReader::timeout()
 {
     wakeUpServer();
-//    timer->start(900);
 }
 
 void SocketDataReader::connectionError(QAbstractSocket::SocketError err)
