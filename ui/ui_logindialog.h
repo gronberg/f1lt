@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'logindialog.ui'
 **
-** Created: Mon Jan 7 21:25:01 2013
+** Created: Tue Jan 8 20:45:08 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -191,7 +191,13 @@ public:
     {
         LoginDialog->setWindowTitle(QApplication::translate("LoginDialog", "Login", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("LoginDialog", "E-mail:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        emailEdit->setToolTip(QApplication::translate("LoginDialog", "Use your formula1.com login and password. <br/>If you don't have one, register for free at formula1.com site.", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
         label_2->setText(QApplication::translate("LoginDialog", "Password:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        passwordEdit->setToolTip(QApplication::translate("LoginDialog", "Use your formula1.com login and password. <br/>If you don't have one, register for free at formula1.com site.", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
         proxyCheckBox->setText(QApplication::translate("LoginDialog", "Use proxy", 0, QApplication::UnicodeUTF8));
         proxyBox->setTitle(QApplication::translate("LoginDialog", "Proxy settings", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("LoginDialog", "Host:", 0, QApplication::UnicodeUTF8));
@@ -202,7 +208,6 @@ public:
         proxyTypeBox->clear();
         proxyTypeBox->insertItems(0, QStringList()
          << QApplication::translate("LoginDialog", "HTTP", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("LoginDialog", "FTP", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("LoginDialog", "Socks5", 0, QApplication::UnicodeUTF8)
         );
     } // retranslateUi

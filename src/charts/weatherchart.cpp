@@ -4,7 +4,7 @@
 
 void WeatherChart::drawAxes(QPainter *p)
 {
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -13,7 +13,7 @@ void WeatherChart::drawAxes(QPainter *p)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     double yFactor = (double)(((double)paintRect.height()-40.0)/6.0);
     double yFactor2 = (double)((tMax-tMin)/6.0);
@@ -21,12 +21,12 @@ void WeatherChart::drawAxes(QPainter *p)
 
     for (int i = paintRect.bottom(); i >= 50; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString::number(j, 'f', 1));
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+            QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -70,13 +70,13 @@ void WeatherChart::drawAxes(QPainter *p)
             i += (double)(round(j) - prevJ) * xFactor;           
 
             prevJ = round(j);
-            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+            p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
             if (i > paintRect.left() && i < paintRect.right()-xFactor)
             {                
                 QString text = getSessionTime(ed.getWeather().getWeatherData(weatherId)[round(j)]);
                 p->drawText(round(i)-10, paintRect.bottom()+15, text);
-                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+                QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);                
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -276,7 +276,7 @@ void WeatherChart::calculateTransformFactors()
 
 void TempChart::drawAxes(QPainter *p)
 {
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -285,19 +285,19 @@ void TempChart::drawAxes(QPainter *p)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     double yFactor = (double)(((double)paintRect.height()-40.0)/8.0);
     double yFactor2 = (double)((tMax-tMin)/8.0);
     double j = tMin;
     for (int i = height()-25; i >= 50; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString::number(j, 'f', 1));
 
         if (i != height()-25)
         {
-            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+            QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -339,13 +339,13 @@ void TempChart::drawAxes(QPainter *p)
 
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+            p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
             if (i > paintRect.left() && i < paintRect.right()-xFactor)
             {
                 QString text = getSessionTime(ed.getWeather().getWeatherData(id)[round(j)]);
                 p->drawText(round(i)-10, paintRect.bottom()+15, text);
-                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+                QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -457,7 +457,7 @@ void TempChart::drawLegend(QPainter *p)
     p->setRenderHint(QPainter::Antialiasing, false);
     p->setBrush(QColor(20, 20, 20));
 
-    p->setPen(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    p->setPen(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT));
     p->drawRect(width()-85, height()-80, 80, 50);
 
     p->setPen(color);
@@ -520,7 +520,7 @@ void TempChart::setMinMax()
 
 void WetDryChart::drawAxes(QPainter *p)
 {
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(40, height()-25, width()-5, height()-25);
@@ -529,15 +529,15 @@ void WetDryChart::drawAxes(QPainter *p)
     p->drawLine(40, height()-25, 40, 10);
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     double yFactor = (double)((height()-75.0)/2.0);
 
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
     p->drawText(5, yFactor+yFactor*0.5, "Dry");
     p->drawText(5, yFactor-yFactor*0.5, "Wet");
 
-    QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+    QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
     pen.setStyle(Qt::DashLine);
     p->setPen(pen);
     p->drawLine(40, yFactor+yFactor*0.5, width()-5, yFactor+yFactor*0.5);
@@ -579,7 +579,7 @@ void WetDryChart::drawAxes(QPainter *p)
 
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+            p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
 //			p->drawText(round(i)-5, height()-10, QString("%1").arg(ed.getWeather().getWeatherData(weatherId)[round(j)]));
 
@@ -587,7 +587,7 @@ void WetDryChart::drawAxes(QPainter *p)
             {
                 QString text = getSessionTime(ed.getWeather().getWeatherData(weatherId)[round(j)]);
                 p->drawText(round(i)-10, paintRect.bottom()+15, text);
-                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+                QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), height()-25, round(i), 10);

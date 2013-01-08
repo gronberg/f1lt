@@ -65,7 +65,7 @@ int FPLapTimesChart::checkLapDataCoordinates(int x, int y)
 
 void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -74,14 +74,14 @@ void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     double yFactor = (double)((paintRect.height())/10.0);
     double yFactor2 = (double)((tMax-tMin)/10.0);
     double j = tMin;
     for (double i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
         int msecs = j * 1000;
         LapTime lt(msecs);
         QString str = lt.toString();
@@ -93,7 +93,7 @@ void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+            QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -112,12 +112,12 @@ void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+            p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("%1'").arg(round(j)));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+                QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -517,7 +517,7 @@ int AllQualiLapTimesChart::checkLapDataCoordinates(int x, int y)
 
 void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 {
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -526,14 +526,14 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10, QFont::Bold, false));
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     double yFactor = (double)((paintRect.height())/10.0);
     double yFactor2 = (double)((tMax-tMin)/10.0);
     double j = tMin;
     for (double i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
         int msecs = j * 1000;
         LapTime lt(msecs);
         QString str = lt.toString();
@@ -545,7 +545,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+            QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -562,7 +562,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         double jFactor = (last - first) < 6 ? 1.0 : (double)((last - first) / 9.0);
         double q1Line = (SeasonData::getInstance().getQualiLength(1) - first) * xFactor + paintRect.left();
         double q2Line = (SeasonData::getInstance().getQualiLength(1)+SeasonData::getInstance().getQualiLength(2) - first) * xFactor + paintRect.left();
-        QPen pen(QColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT)));
+        QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
         pen.setWidth(1);
         for (; i < width()-15.0 && round(j) < last; /*i += xFactor,*/ j += jFactor)
         {
@@ -576,7 +576,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 
             prevJ = round(j);
             p->setFont(QFont("Arial", 10, QFont::Bold, false));
-            p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+            p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("%1'").arg(qTime));
 
             if (i > paintRect.left())
@@ -590,7 +590,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         int qpos[6] = {-1, -1, -1, -1, -1, -1};
         if (i >= q1Line && q1Line > paintRect.left())
         {
-            pen.setColor(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+            pen.setColor(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
             pen.setWidth(4);
             pen.setStyle(Qt::SolidLine);
             p->setPen(pen);
@@ -610,7 +610,7 @@ void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
         if (i >= q2Line && q2Line > paintRect.left())
         {
             pen.setWidth(4);
-            pen.setColor(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+            pen.setColor(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
             pen.setStyle(Qt::SolidLine);
             p->setPen(pen);
             p->drawLine(round(q2Line), paintRect.bottom(), round(q2Line), paintRect.top());

@@ -611,6 +611,8 @@ void LTWindow::on_actionPreferences_triggered()
 
         eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
 
+        NetworkSettings::getInstance().setProxy(prefs->getProxy(), prefs->proxyEnabled());
+
 //        settings->setValue("fonts/main_family", prefs->getMainFont().family());
 //        settings->setValue("fonts/main_size", QString::number(prefs->getMainFont().pointSize()));
 //        settings->setValue("fonts/main_weight", QString::number(prefs->getMainFont().weight()));
@@ -753,8 +755,8 @@ void LTWindow::authorizationError()
 
 void LTWindow::on_actionConnect_triggered()
 {    
-    if (loginDialog->exec(NetworkSettings::getInstance().getUser(),
-        NetworkSettings::getInstance().getPassword(), NetworkSettings::getInstance().getProxy()) == QDialog::Accepted)
+    if (loginDialog->exec(NetworkSettings::getInstance().getUser(), NetworkSettings::getInstance().getPassword(),
+          NetworkSettings::getInstance().getProxy(), NetworkSettings::getInstance().usingProxy()) == QDialog::Accepted)
     {
         if (playing)
         {
@@ -766,7 +768,7 @@ void LTWindow::on_actionConnect_triggered()
         QString email = loginDialog->getEmail();
         QString passwd = loginDialog->getPasswd();
         NetworkSettings::getInstance().setUserPassword(email, passwd);
-        NetworkSettings::getInstance().setProxy(loginDialog->getProxy());
+        NetworkSettings::getInstance().setProxy(loginDialog->getProxy(), loginDialog->proxyEnabled());
 
         streamReader->connectToLTServer();
 
@@ -794,7 +796,7 @@ void LTWindow::connectToServer()
             passwd = loginDialog->getPasswd();
 
             NetworkSettings::getInstance().setUserPassword(email, passwd);
-            NetworkSettings::getInstance().setProxy(loginDialog->getProxy());
+            NetworkSettings::getInstance().setProxy(loginDialog->getProxy(), loginDialog->proxyEnabled());
             streamReader->connectToLTServer();
 
             driverTrackerWidget->setup();

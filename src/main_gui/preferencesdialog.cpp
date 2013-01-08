@@ -1,7 +1,11 @@
 #include "preferencesdialog.h"
 #include "ui_preferencesdialog.h"
 #include <iostream>
+#include <QColorDialog>
 #include <QFontDialog>
+
+#include "../core/seasondata.h"
+#include "../net/networksettings.h"
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
@@ -50,15 +54,27 @@ int PreferencesDialog::exec(QSettings *set)
     setAutoRecord(settings->value("ui/auto_record").toBool());
     setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
 
-    setReverseOrderHeadToHead(settings->value("ui/reversed_head_to_head").toBool());
-    setReverseOrderLapTimeComparison(settings->value("ui/reversed_lap_time_comparison").toBool());
-    setAutoConnect(settings->value("ui/auto_connect").toBool());
-    setDrawTrackerClassification(settings->value("ui/draw_tracker_classification").toBool());
-
     if (!settings->contains("ui/auto_stop_record"))
         setAutoStopRecord(-1);
     else
         setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
+
+
+    QNetworkProxy proxy = NetworkSettings::getInstance().getProxy();
+
+    ui->proxyHostEdit->setText(proxy.hostName());
+    ui->proxyPortEdit->setValue(proxy.port());
+    ui->proxyUserEdit->setText(proxy.user());
+    ui->proxyPasswordEdit->setText(proxy.password());
+
+    switch (proxy.type())
+    {
+        case QNetworkProxy::HttpCachingProxy: ui->proxyTypeBox->setCurrentIndex(0); break;
+        case QNetworkProxy::Socks5Proxy: ui->proxyTypeBox->setCurrentIndex(1); break;
+        default: break;
+    }
+
+    ui->proxyCheckBox->setChecked(NetworkSettings::getInstance().usingProxy());
 
     return QDialog::exec();
 }
@@ -78,12 +94,36 @@ void PreferencesDialog::on_buttonBox_accepted()
     settings->setValue("ui/ltresize", isSplitterOpaqueResize());    
     settings->setValue("ui/car_thumbnails", drawCarThumbnails());
 
-    settings->setValue("ui/reversed_head_to_head", isReverseOrderHeadToHead());
-    settings->setValue("ui/reversed_lap_time_comparison", isReverseOrderLapTimeComparison());
     settings->setValue("ui/auto_record", isAutoRecord());    
     settings->setValue("ui/auto_stop_record", getAutoStopRecord());
     settings->setValue("ui/auto_connect", isAutoConnect());
     settings->setValue("ui/draw_tracker_classification", drawTrackerClassification());
+}
+
+QNetworkProxy PreferencesDialog::getProxy()
+{
+    QNetworkProxy proxy;
+
+//    if (ui->proxyCheckBox->isChecked())
+    {
+        proxy.setHostName(ui->proxyHostEdit->text());
+        proxy.setUser(ui->proxyUserEdit->text());
+        proxy.setPassword(ui->proxyPasswordEdit->text());
+        proxy.setPort(ui->proxyPortEdit->value());
+
+        switch (ui->proxyTypeBox->currentIndex())
+        {
+            case 0: proxy.setType(QNetworkProxy::HttpCachingProxy); break;
+            case 1: proxy.setType(QNetworkProxy::Socks5Proxy); break;
+        }
+    }
+
+    return proxy;
+}
+
+bool PreferencesDialog::proxyEnabled()
+{
+    return ui->proxyCheckBox->isChecked();
 }
 
 void PreferencesDialog::setFonts(const QFont &f1, const QFont &f2)
@@ -145,25 +185,6 @@ void PreferencesDialog::setDrawCarThumbnails(bool val)
     ui->thumbnailsCheckBox->setChecked(val);
 }
 
-void PreferencesDialog::setReverseOrderHeadToHead(bool val)
-{
-    ui->revH2HBox->setChecked(val);
-}
-
-bool PreferencesDialog::isReverseOrderHeadToHead()
-{
-    return ui->revH2HBox->isChecked();
-}
-
-void PreferencesDialog::setReverseOrderLapTimeComparison(bool val)
-{
-    ui->revLTCBox->setChecked(val);
-}
-
-bool PreferencesDialog::isReverseOrderLapTimeComparison()
-{
-    return ui->revLTCBox->isChecked();
-}
 
 void PreferencesDialog::setAutoRecord(bool val)
 {
@@ -221,4 +242,131 @@ bool PreferencesDialog::drawTrackerClassification()
 void PreferencesDialog::setDrawTrackerClassification(bool val)
 {
     ui->trackerBox->setChecked(val);
+}
+
+void PreferencesDialog::on_proxyCheckBox_toggled(bool checked)
+{
+    ui->proxyBox->setEnabled(checked);
+}
+
+void PreferencesDialog::on_pushButton_clicked()
+{
+    SeasonData::getInstance().setDefaultColor(LTPackets::WHITE);
+    setButtonColor(ui->colorWhiteButton, SeasonData::getInstance().getColor(LTPackets::WHITE));
+}
+
+void PreferencesDialog::on_pushButton_2_clicked()
+{
+    SeasonData::getInstance().setDefaultColor(LTPackets::CYAN);
+    setButtonColor(ui->colorCyanButton, SeasonData::getInstance().getColor(LTPackets::CYAN));
+}
+
+void PreferencesDialog::on_pushButton_3_clicked()
+{
+    SeasonData::getInstance().setDefaultColor(LTPackets::YELLOW);
+    setButtonColor(ui->colorYellowButton, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+}
+
+void PreferencesDialog::on_pushButton_4_clicked()
+{
+    SeasonData::getInstance().setDefaultColor(LTPackets::PIT);
+    SeasonData::getInstance().setDefaultColor(LTPackets::RED);
+    setButtonColor(ui->colorRedButton, SeasonData::getInstance().getColor(LTPackets::PIT));
+}
+
+void PreferencesDialog::on_pushButton_5_clicked()
+{
+    SeasonData::getInstance().setDefaultColor(LTPackets::GREEN);
+    setButtonColor(ui->colorGreenButton, SeasonData::getInstance().getColor(LTPackets::GREEN));
+}
+
+void PreferencesDialog::on_pushButton_6_clicked()
+{
+    SeasonData::getInstance().setDefaultColor(LTPackets::VIOLET);
+    setButtonColor(ui->colorVioletButton, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+}
+
+void PreferencesDialog::on_colorWhiteButton_clicked()
+{
+    QColor color = QColorDialog::getColor(SeasonData::getInstance().getColor(LTPackets::WHITE), this);
+    if (color.isValid())
+    {
+        SeasonData::getInstance().setColor(LTPackets::WHITE, color);
+        setButtonColor(ui->colorWhiteButton, color);
+    }
+}
+
+void PreferencesDialog::on_colorCyanButton_clicked()
+{
+    QColor color = QColorDialog::getColor(SeasonData::getInstance().getColor(LTPackets::CYAN), this);
+    if (color.isValid())
+    {
+        SeasonData::getInstance().setColor(LTPackets::CYAN, color);
+        setButtonColor(ui->colorCyanButton, color);
+    }
+}
+
+void PreferencesDialog::on_colorYellowButton_clicked()
+{
+    QColor color = QColorDialog::getColor(SeasonData::getInstance().getColor(LTPackets::YELLOW), this);
+    if (color.isValid())
+    {
+        SeasonData::getInstance().setColor(LTPackets::YELLOW, color);
+        setButtonColor(ui->colorYellowButton, color);
+    }
+}
+
+void PreferencesDialog::on_colorRedButton_clicked()
+{
+    QColor color = QColorDialog::getColor(SeasonData::getInstance().getColor(LTPackets::PIT), this);
+    if (color.isValid())
+    {
+        SeasonData::getInstance().setColor(LTPackets::PIT, color);
+        SeasonData::getInstance().setColor(LTPackets::RED, color);
+        setButtonColor(ui->colorRedButton, color);
+    }
+}
+
+void PreferencesDialog::on_colorGreenButton_clicked()
+{
+    QColor color = QColorDialog::getColor(SeasonData::getInstance().getColor(LTPackets::GREEN), this);
+    if (color.isValid())
+    {
+        SeasonData::getInstance().setColor(LTPackets::GREEN, color);
+        setButtonColor(ui->colorGreenButton, color);
+    }
+}
+
+void PreferencesDialog::on_colorVioletButton_clicked()
+{
+    QColor color = QColorDialog::getColor(SeasonData::getInstance().getColor(LTPackets::VIOLET), this);
+    if (color.isValid())
+    {
+        SeasonData::getInstance().setColor(LTPackets::VIOLET, color);
+        setButtonColor(ui->colorVioletButton, color);
+    }
+}
+
+void PreferencesDialog::setButtonColor(QToolButton *button, QColor color)
+{
+    QString styleSheet = "background-color: rgb(" + QString("%1, %2, %3").arg(color.red()).arg(color.green()).arg(color.blue()) + ");\n     "\
+            "border-style: solid;\n     "\
+            "border-width: 1px;\n     "\
+            "border-radius: 3px;\n     "\
+            "border-color: rgb(153, 153, 153);\n     "\
+            "padding: 3px;\n";
+
+    button->setStyleSheet(styleSheet);
+}
+
+
+void PreferencesDialog::on_pushButton_7_clicked()
+{
+    SeasonData::getInstance().setAllDefaultColors();
+    setButtonColor(ui->colorWhiteButton, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    setButtonColor(ui->colorCyanButton, SeasonData::getInstance().getColor(LTPackets::CYAN));
+    setButtonColor(ui->colorYellowButton, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    setButtonColor(ui->colorRedButton, SeasonData::getInstance().getColor(LTPackets::RED));
+    setButtonColor(ui->colorGreenButton, SeasonData::getInstance().getColor(LTPackets::GREEN));
+    setButtonColor(ui->colorVioletButton, SeasonData::getInstance().getColor(LTPackets::VIOLET));
 }

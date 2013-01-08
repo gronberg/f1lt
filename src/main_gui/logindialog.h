@@ -19,7 +19,8 @@ public:
     QString getEmail();
     QString getPasswd();
     QNetworkProxy getProxy();
-    int exec(QString email="", QString passwd="", QNetworkProxy proxy = QNetworkProxy());
+    bool proxyEnabled();
+    int exec(QString email="", QString passwd="", QNetworkProxy proxy = QNetworkProxy(), bool proxyEnabled = false);
     
 private slots:
 

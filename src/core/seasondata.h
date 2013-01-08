@@ -107,6 +107,20 @@ public:
     QStringList getDriversListShort();
 
     QColor getColor(LTPackets::Colors color) { return colors[color]; }
+    QColor getDefaultColor(LTPackets::Colors color) { return defaultColors[color]; }
+    void setColor(LTPackets::Colors colorCode, QColor color)
+    {
+        colors[colorCode] = color;
+    }
+    void setDefaultColor(LTPackets::Colors colorCode)
+    {
+        colors[colorCode] = defaultColors[colorCode];
+    }
+    void setAllDefaultColors()
+    {
+        colors = defaultColors;
+    }
+
     QColor getCarColor(int no);
 
     QVector<LTTeam> &getTeams() { return ltTeams; }
@@ -136,6 +150,7 @@ private:
     int baseEventInc;
 
     QList<QColor> colors;
+    QList<QColor> defaultColors;
     QList<QColor> driverColors;
 
     QMap<QString, QString> eventNamesMap;

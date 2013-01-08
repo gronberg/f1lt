@@ -47,6 +47,8 @@ LTFilesManagerDialog::~LTFilesManagerDialog()
 QString LTFilesManagerDialog::exec()
 {
     currentFile = QString();
+    setWindowModality(Qt::WindowModal);
+    open();
     downloadLTList();
     int ret = QDialog::exec();
 

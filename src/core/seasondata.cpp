@@ -33,6 +33,8 @@ SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
     colors[LTPackets::BACKGROUND] = QColor(20, 20, 20);
     colors[LTPackets::BACKGROUND2] = QColor(30, 30, 30);
 
+    defaultColors = colors;
+
     driverColors.append(QColor(0, 255, 255));
     driverColors.append(QColor(0, 0, 255));
     driverColors.append(QColor(128, 0, 128));

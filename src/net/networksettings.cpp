@@ -24,6 +24,7 @@ void NetworkSettings::loadSettings(const QSettings &settings)
     int proxyType = settings.value("proxy/type", 0).toInt();
     QString proxyUser = settings.value("proxy/user").toString();
     QString proxyPasswd = encodePasswd(settings.value("proxy/passwd").toString());
+    proxyOn = settings.value("proxy/enabled", false).toBool();
 
     proxy.setHostName(proxyHost);
     proxy.setPort(proxyPort);
@@ -41,4 +42,5 @@ void NetworkSettings::saveSettings(QSettings &settings)
     settings.setValue("proxy/type", (int)proxy.type());
     settings.setValue("proxy/user", proxy.user());
     settings.setValue("proxy/passwd", encodePasswd(proxy.password()));
+    settings.setValue("proxy/enabled", proxyOn);
 }

@@ -50,7 +50,11 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLineEdit" name="emailEdit"/>
+    <widget class="QLineEdit" name="emailEdit">
+     <property name="toolTip">
+      <string>Use your formula1.com login and password. &lt;br/&gt;If you don't have one, register for free at formula1.com site.</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
@@ -64,6 +68,9 @@
    </item>
    <item row="1" column="1">
     <widget class="QLineEdit" name="passwordEdit">
+     <property name="toolTip">
+      <string>Use your formula1.com login and password. &lt;br/&gt;If you don't have one, register for free at formula1.com site.</string>
+     </property>
      <property name="echoMode">
       <enum>QLineEdit::Password</enum>
      </property>
@@ -151,11 +158,6 @@
         <item>
          <property name="text">
           <string>HTTP</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>FTP</string>
          </property>
         </item>
         <item>

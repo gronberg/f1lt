@@ -35,7 +35,7 @@ void SocketDataReader::openStream()
 
 void SocketDataReader::connectToHost()
 {    
-    if (NetworkSettings::getInstance().usingProxy())
+    if (NetworkSettings::getInstance().usingProxy() && NetworkSettings::getInstance().getProxy().type() == QNetworkProxy::Socks5Proxy)
         socket->setProxy(NetworkSettings::getInstance().getProxy());
     else
         socket->setProxy(QNetworkProxy::NoProxy);

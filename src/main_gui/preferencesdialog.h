@@ -2,7 +2,9 @@
 #define PREFERENCESDIALOG_H
 
 #include <QDialog>
+#include <QNetworkProxy>
 #include <QSettings>
+#include <QToolButton>
 
 namespace Ui {
 class PreferencesDialog;
@@ -30,12 +32,6 @@ public:
     void setDrawCarThumbnails(bool);
     bool drawCarThumbnails();
 
-    void setReverseOrderHeadToHead(bool);
-    bool isReverseOrderHeadToHead();
-
-    void setReverseOrderLapTimeComparison(bool);
-    bool isReverseOrderLapTimeComparison();
-
     void setAutoRecord(bool);
     bool isAutoRecord();
 
@@ -47,6 +43,9 @@ public:
 
     bool drawTrackerClassification();
     void setDrawTrackerClassification(bool);
+
+    QNetworkProxy getProxy();
+    bool proxyEnabled();
 
 public slots:
     int exec(QSettings *);
@@ -60,7 +59,38 @@ private slots:
 
     void on_autoStopRecordBox_toggled(bool checked);
 
+    void on_proxyCheckBox_toggled(bool checked);
+
+    void on_pushButton_clicked();
+
+    void on_colorWhiteButton_clicked();
+
+    void on_colorCyanButton_clicked();
+
+    void on_colorYellowButton_clicked();
+
+    void on_colorRedButton_clicked();
+
+    void on_colorGreenButton_clicked();
+
+    void on_colorVioletButton_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_4_clicked();
+
+    void on_pushButton_5_clicked();
+
+    void on_pushButton_6_clicked();
+
+    void on_pushButton_7_clicked();
+
 private:
+
+    void setButtonColor(QToolButton *button, QColor color);
+
     Ui::PreferencesDialog *ui;
 
     QFont mainFont;

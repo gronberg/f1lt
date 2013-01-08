@@ -80,14 +80,10 @@ public:
         return proxy;
     }
 
-    void setProxy(const QNetworkProxy &p)
+    void setProxy(const QNetworkProxy &p, bool pOn = false)
     {
         proxy = p;
-        if (p.hostName().isNull() || p.hostName() == "")
-            proxyOn = false;
-
-        else
-            proxyOn = true;
+        proxyOn = pOn;
     }
 
     void loadSettings(const QSettings &settings);
