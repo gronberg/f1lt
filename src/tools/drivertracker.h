@@ -23,6 +23,10 @@ public:
         resizeEvent(0);
         repaint();
     }
+    bool drawDriverClassification()
+    {
+        return drawClassification;
+    }
 
     void setMinimumSize();
 

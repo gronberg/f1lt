@@ -102,6 +102,7 @@ void TrackRecordsDialog::loadTrackRecords()
     else
         ui->yearBox->setCurrentIndex(0);
 
+    QPalette palette;
     ui->qRTLabel->setText(tv->trackRecords[QUALI_RECORD].time.toString());
     ui->qRDLabel->setText(tv->trackRecords[QUALI_RECORD].driver);
     ui->qRDTLabel->setText(tv->trackRecords[QUALI_RECORD].team);
@@ -131,6 +132,40 @@ void TrackRecordsDialog::loadTrackRecords()
     ui->tDLabel->setText(twr->sessionRecords[TIME_RECORD].driver);
     ui->tDTLabel->setText(twr->sessionRecords[TIME_RECORD].team);
     ui->tSLabel->setText(twr->sessionRecords[TIME_RECORD].session);
+
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    ui->qRDLabel->setPalette(palette);
+    ui->qRDTLabel->setPalette(palette);
+    ui->rRDLabel->setPalette(palette);
+    ui->rRDTLabel->setPalette(palette);
+
+    ui->s1DLabel->setPalette(palette);
+    ui->s1DTLabel->setPalette(palette);
+    ui->s2DLabel->setPalette(palette);
+    ui->s2DTLabel->setPalette(palette);
+    ui->s3DLabel->setPalette(palette);
+    ui->s3DTLabel->setPalette(palette);
+    ui->tDLabel->setPalette(palette);
+    ui->tDTLabel->setPalette(palette);
+
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+    ui->qRTLabel->setPalette(palette);
+    ui->rRTLabel->setPalette(palette);
+
+    ui->s1TLabel->setPalette(palette);
+    ui->s2TLabel->setPalette(palette);
+    ui->s3TLabel->setPalette(palette);
+    ui->tTLabel->setPalette(palette);
+
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    ui->qRYLabel->setPalette(palette);
+    ui->rRYLabel->setPalette(palette);
+
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::CYAN));
+    ui->s1SLabel->setPalette(palette);
+    ui->s2SLabel->setPalette(palette);
+    ui->s3SLabel->setPalette(palette);
+    ui->tSLabel->setPalette(palette);
 
     currentTV = tv;
     currentTWR = twr;

@@ -89,6 +89,7 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
         ui->infoWidget->setVisible(true);
 
     QString s;
+    QPalette palette;
 
     ui->driverInfoLabel->setDriver(&driverData);
     ui->driverInfoLabel->update();
@@ -112,13 +113,17 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
         s = QString::number(laps);
     }
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
     ui->gridPositionLabel->setText(s);
+    ui->gridPositionLabel->setPalette(palette);
 
     s = driverData.getLastLap().getGap();
     if (driverData.getPosition() == 1)
         s = "";
 
-    ui->gapLabel->setText(s);
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    ui->gapLabel->setText(s);    
+    ui->gapLabel->setPalette(palette);
 
     if (eventData.getEventType() == LTPackets::RACE_EVENT)
     {
@@ -145,13 +150,20 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
         s = lt.toString();
 
         if (lt.isValid() && lt != driverData.getSessionRecords().getBestLap().getTime())
-            s += " (+" + DriverData::calculateGap(lt, driverData.getSessionRecords().getBestLap().getTime()) + ")";        
+            s += " (+" + DriverData::calculateGap(lt, driverData.getSessionRecords().getBestLap().getTime()) + ")";
+
+        if (lt.isValid())
+            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+        else
+            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::RED));
+
+        ui->lastLapLabel->setPalette(palette);
     }
 
     ui->lastLapLabel->setText(s);
     ui->bestLapLabel->setText(driverData.getSessionRecords().getBestLap().getTime().toString());
 
-    QPalette palette = ui->bestLapLabel->palette();
+    palette = ui->bestLapLabel->palette();
 
     if (driverData.getDriverName() == eventData.getSessionRecords().getFastestLap().getDriverName() &&
         driverData.getSessionRecords().getBestLap().getTime() == eventData.getSessionRecords().getFastestLap().getTime())
@@ -172,6 +184,9 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
     else
         ui->approxLapLabel->setText("");
 
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::CYAN));
+    ui->approxLapLabel->setPalette(palette);
+
     if (eventData.getEventType() == LTPackets::RACE_EVENT)
     {
         ui->pitStopsLabel->setText("Pit stops:");
@@ -180,6 +195,9 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
         ui->pitStopsLabel->setPalette(palette);
 
         ui->numPitsLabel->setText(QString::number(driverData.getNumPits()));
+
+        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::PIT));
+        ui->numPitsLabel->setPalette(palette);
 
         if (!ui->numPitsLabel->isVisible())
             ui->numPitsLabel->setVisible(true);
@@ -286,11 +304,14 @@ void DriverDataWidget::printDriverRecords(int id)
 
     if (twr != 0 && tv != 0)
     {
+        QPalette palette;
+        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+
         Record rec[4];
         rec[0] = tv->getTrackWeekendRecords(eventData.getEventInfo().fpDate.year()).sessionRecords[S1_RECORD];
 
         if (rec[0].time.isValid())
-            ui->s1BLabel->setText(rec[0].time.toString() + QString(" (%1) ").arg(SeasonData::getInstance().getDriverShortName(rec[0].driver)));
+            ui->s1BLabel->setText(rec[0].time.toString() + QString(" (%1) ").arg(SeasonData::getInstance().getDriverShortName(rec[0].driver)));                
 
         rec[1] = tv->getTrackWeekendRecords(eventData.getEventInfo().fpDate.year()).sessionRecords[S2_RECORD];
         if (rec[1].time.isValid())
@@ -304,11 +325,16 @@ void DriverDataWidget::printDriverRecords(int id)
         if (rec[3].time.isValid())
             ui->tBLabel->setText(rec[3].time.toString() + QString(" (%1) ").arg(SeasonData::getInstance().getDriverShortName(rec[3].driver)));
 
+        ui->s1BLabel->setPalette(palette);
+        ui->s2BLabel->setPalette(palette);
+        ui->s3BLabel->setPalette(palette);
+        ui->tBLabel->setPalette(palette);
+
         DriverWeekendRecords dwr = twr->getDriverRecords(driverData->getDriverName());
 
         Record record;
         record = dwr.getWeekendRecord(S1_RECORD);
-        QPalette palette;
+
         if (record.time.isValid())
         {
             ui->s1RLabel->setText(record.time.toString() + QString(" (%1)").arg(record.session));

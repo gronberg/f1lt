@@ -42,6 +42,7 @@ void DriverTrackerWidget::saveSettings(QSettings *settings)
 {
     settings->setValue("ui/tracker_splitter_pos", ui->splitter->saveState());
     settings->setValue("ui/driver_tracker_geometry", saveGeometry());
+    settings->setValue("ui/draw_tracker_classification", ui->driverTracker->drawDriverClassification());
 }
 
 void DriverTrackerWidget::on_pushButton_clicked()

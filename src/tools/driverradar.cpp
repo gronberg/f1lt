@@ -129,7 +129,7 @@ void DriverRadar::paintEvent(QPaintEvent *)
     QPen pen(QColor(255, 255, 255), 5);
 
     if (EventData::getInstance().getFlagStatus() == LTPackets::SAFETY_CAR_DEPLOYED)
-        pen.setColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
+        pen.setColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW));
 
 //    path.addEllipse(QPoint(radarX, radarY), radarR, radarR);
     p.setBrush(QBrush());

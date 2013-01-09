@@ -102,7 +102,7 @@ void LTFilesManagerDialog::ltFileObtained(QByteArray buf)
             {
                 list.first()->setText(4, currentFile);
                 list.first()->setText(5, "On disk / Online");
-                list.first()->setTextColor(5, SeasonData::getInstance().getColor(LTPackets::GREEN));
+                list.first()->setTextColor(5, SeasonData::getInstance().getDefaultColor(LTPackets::GREEN));
             }
 
             QDialog::accept();
@@ -139,7 +139,7 @@ void LTFilesManagerDialog::updateTree(const QStringList &onlineList)
         if (array.size() < 6)
             continue;
 
-        QColor color = array[5].contains("On disk") ? SeasonData::getInstance().getColor(LTPackets::GREEN) : SeasonData::getInstance().getColor(LTPackets::CYAN);
+        QColor color = array[5].contains("On disk") ? SeasonData::getInstance().getDefaultColor(LTPackets::GREEN) : SeasonData::getInstance().getDefaultColor(LTPackets::CYAN);
 
 //        QTreeWidgetItem *newParent = parent;
         if (!parent || parent->text(0) != array[0])

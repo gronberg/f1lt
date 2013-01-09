@@ -143,6 +143,8 @@ void FollowADriverDialog::printDriverInfo(const DriverData &dd)
     ui->carImageLabel->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));
     ui->bestLapLabel->setText(dd.getSessionRecords().getBestLap().getTime().toString() + QString(" (L%1)").arg(dd.getSessionRecords().getBestLap().getLapNumber()));
 
+    QPalette palette;
+
     if (eventData.getEventType() == LTPackets::RACE_EVENT)
     {
         if (dd.getPosition() > 1)
@@ -150,7 +152,10 @@ void FollowADriverDialog::printDriverInfo(const DriverData &dd)
         else
             ui->gapLabel->setText("");
 
+        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::PIT));
         ui->pitsLabel->setText(QString::number(dd.getPitStops().size()));
+        ui->pitsLabel->setPalette(palette);
+
         ui->pitStopsLabel->setText("Pit stops:");
 
         QPalette palette = ui->pitStopsLabel->palette();
@@ -172,7 +177,7 @@ void FollowADriverDialog::printDriverInfo(const DriverData &dd)
         ui->pitsLabel->setText("");
 
 
-        QPalette palette = ui->pitStopsLabel->palette();
+        palette = ui->pitStopsLabel->palette();
         if (dd.getColorData().numberColor() == LTPackets::PIT)
         {
             ui->pitStopsLabel->setText("In pits");
@@ -185,6 +190,13 @@ void FollowADriverDialog::printDriverInfo(const DriverData &dd)
         }
         ui->pitStopsLabel->setPalette(palette);
     }
+
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+    ui->bestLapLabel->setPalette(palette);
+
+    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    ui->gapLabel->setPalette(palette);
+
 
 }
 

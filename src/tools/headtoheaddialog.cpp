@@ -36,8 +36,8 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
 
     loadDriversList();
 
-    color[0] = SeasonData::getInstance().getColor(LTPackets::YELLOW);
-    color[1] = SeasonData::getInstance().getColor(LTPackets::CYAN);
+    color[0] = SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW);
+    color[1] = SeasonData::getInstance().getDefaultColor(LTPackets::CYAN);
     lapCompChart = new LapCompChart(color, this);
     gapCompChart = new GapCompChart(color, this);
     posCompChart = new PosCompChart(color, this);

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Tue Jan 8 20:45:08 2013
+** Created: Wed Jan 9 18:48:33 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -251,6 +251,13 @@ public:
 
         recordsLabel = new QLabel(scrollAreaWidgetContents_2);
         recordsLabel->setObjectName(QString::fromUtf8("recordsLabel"));
+        QPalette palette5;
+        QBrush brush7(QColor(150, 150, 150, 255));
+        brush7.setStyle(Qt::SolidPattern);
+        palette5.setBrush(QPalette::Active, QPalette::WindowText, brush7);
+        palette5.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
+        palette5.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        recordsLabel->setPalette(palette5);
         recordsLabel->setAlignment(Qt::AlignCenter);
 
         verticalLayout_8->addWidget(recordsLabel);
@@ -263,25 +270,23 @@ public:
         recordsLayout->setObjectName(QString::fromUtf8("recordsLayout"));
         label_9 = new QLabel(scrollAreaWidgetContents_2);
         label_9->setObjectName(QString::fromUtf8("label_9"));
-        QPalette palette5;
-        QBrush brush7(QColor(230, 230, 230, 255));
-        brush7.setStyle(Qt::SolidPattern);
-        palette5.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette5.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette5.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        label_9->setPalette(palette5);
+        QPalette palette6;
+        palette6.setBrush(QPalette::Active, QPalette::WindowText, brush7);
+        palette6.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
+        palette6.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        label_9->setPalette(palette6);
 
         recordsLayout->addWidget(label_9, 0, 0, 1, 1);
 
         rRTLabel = new QLabel(scrollAreaWidgetContents_2);
         rRTLabel->setObjectName(QString::fromUtf8("rRTLabel"));
-        QPalette palette6;
+        QPalette palette7;
         QBrush brush8(QColor(255, 0, 255, 255));
         brush8.setStyle(Qt::SolidPattern);
-        palette6.setBrush(QPalette::Active, QPalette::WindowText, brush8);
-        palette6.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
-        palette6.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        rRTLabel->setPalette(palette6);
+        palette7.setBrush(QPalette::Active, QPalette::WindowText, brush8);
+        palette7.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
+        palette7.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        rRTLabel->setPalette(palette7);
         rRTLabel->setAlignment(Qt::AlignCenter);
         rRTLabel->setIndent(10);
 
@@ -289,11 +294,11 @@ public:
 
         qRTLabel = new QLabel(scrollAreaWidgetContents_2);
         qRTLabel->setObjectName(QString::fromUtf8("qRTLabel"));
-        QPalette palette7;
-        palette7.setBrush(QPalette::Active, QPalette::WindowText, brush8);
-        palette7.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
-        palette7.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        qRTLabel->setPalette(palette7);
+        QPalette palette8;
+        palette8.setBrush(QPalette::Active, QPalette::WindowText, brush8);
+        palette8.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
+        palette8.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        qRTLabel->setPalette(palette8);
         qRTLabel->setAlignment(Qt::AlignCenter);
         qRTLabel->setMargin(0);
         qRTLabel->setIndent(10);
@@ -302,72 +307,74 @@ public:
 
         rRDLabel = new QLabel(scrollAreaWidgetContents_2);
         rRDLabel->setObjectName(QString::fromUtf8("rRDLabel"));
-        QPalette palette8;
-        palette8.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette8.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette8.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        rRDLabel->setPalette(palette8);
+        QPalette palette9;
+        QBrush brush9(QColor(230, 230, 230, 255));
+        brush9.setStyle(Qt::SolidPattern);
+        palette9.setBrush(QPalette::Active, QPalette::WindowText, brush9);
+        palette9.setBrush(QPalette::Inactive, QPalette::WindowText, brush9);
+        palette9.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        rRDLabel->setPalette(palette9);
 
         recordsLayout->addWidget(rRDLabel, 1, 2, 1, 1);
 
         label_10 = new QLabel(scrollAreaWidgetContents_2);
         label_10->setObjectName(QString::fromUtf8("label_10"));
-        QPalette palette9;
-        palette9.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette9.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette9.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        label_10->setPalette(palette9);
+        QPalette palette10;
+        palette10.setBrush(QPalette::Active, QPalette::WindowText, brush7);
+        palette10.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
+        palette10.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        label_10->setPalette(palette10);
 
         recordsLayout->addWidget(label_10, 1, 0, 1, 1);
 
         rRDTLabel = new QLabel(scrollAreaWidgetContents_2);
         rRDTLabel->setObjectName(QString::fromUtf8("rRDTLabel"));
-        QPalette palette10;
-        palette10.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette10.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette10.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        rRDTLabel->setPalette(palette10);
+        QPalette palette11;
+        palette11.setBrush(QPalette::Active, QPalette::WindowText, brush9);
+        palette11.setBrush(QPalette::Inactive, QPalette::WindowText, brush9);
+        palette11.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        rRDTLabel->setPalette(palette11);
 
         recordsLayout->addWidget(rRDTLabel, 1, 3, 1, 1);
 
         rRYLabel = new QLabel(scrollAreaWidgetContents_2);
         rRYLabel->setObjectName(QString::fromUtf8("rRYLabel"));
-        QPalette palette11;
-        palette11.setBrush(QPalette::Active, QPalette::WindowText, brush4);
-        palette11.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
-        palette11.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        rRYLabel->setPalette(palette11);
+        QPalette palette12;
+        palette12.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette12.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette12.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        rRYLabel->setPalette(palette12);
         rRYLabel->setIndent(5);
 
         recordsLayout->addWidget(rRYLabel, 1, 4, 1, 1);
 
         qRDTLabel = new QLabel(scrollAreaWidgetContents_2);
         qRDTLabel->setObjectName(QString::fromUtf8("qRDTLabel"));
-        QPalette palette12;
-        palette12.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette12.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette12.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        qRDTLabel->setPalette(palette12);
+        QPalette palette13;
+        palette13.setBrush(QPalette::Active, QPalette::WindowText, brush9);
+        palette13.setBrush(QPalette::Inactive, QPalette::WindowText, brush9);
+        palette13.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        qRDTLabel->setPalette(palette13);
 
         recordsLayout->addWidget(qRDTLabel, 0, 3, 1, 1);
 
         qRDLabel = new QLabel(scrollAreaWidgetContents_2);
         qRDLabel->setObjectName(QString::fromUtf8("qRDLabel"));
-        QPalette palette13;
-        palette13.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette13.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette13.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        qRDLabel->setPalette(palette13);
+        QPalette palette14;
+        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush9);
+        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush9);
+        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        qRDLabel->setPalette(palette14);
 
         recordsLayout->addWidget(qRDLabel, 0, 2, 1, 1);
 
         qRYLabel = new QLabel(scrollAreaWidgetContents_2);
         qRYLabel->setObjectName(QString::fromUtf8("qRYLabel"));
-        QPalette palette14;
-        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush4);
-        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
-        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        qRYLabel->setPalette(palette14);
+        QPalette palette15;
+        palette15.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette15.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette15.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        qRYLabel->setPalette(palette15);
         qRYLabel->setIndent(5);
 
         recordsLayout->addWidget(qRYLabel, 0, 4, 1, 1);
@@ -390,21 +397,21 @@ public:
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         scrollArea = new QScrollArea(tab_2);
         scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
-        QPalette palette15;
-        palette15.setBrush(QPalette::Active, QPalette::Button, brush);
-        palette15.setBrush(QPalette::Active, QPalette::Base, brush);
-        palette15.setBrush(QPalette::Active, QPalette::Window, brush);
-        palette15.setBrush(QPalette::Inactive, QPalette::Button, brush);
-        palette15.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette15.setBrush(QPalette::Inactive, QPalette::Window, brush);
-        palette15.setBrush(QPalette::Disabled, QPalette::Button, brush);
-        palette15.setBrush(QPalette::Disabled, QPalette::Base, brush);
-        palette15.setBrush(QPalette::Disabled, QPalette::Window, brush);
-        scrollArea->setPalette(palette15);
+        QPalette palette16;
+        palette16.setBrush(QPalette::Active, QPalette::Button, brush);
+        palette16.setBrush(QPalette::Active, QPalette::Base, brush);
+        palette16.setBrush(QPalette::Active, QPalette::Window, brush);
+        palette16.setBrush(QPalette::Inactive, QPalette::Button, brush);
+        palette16.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette16.setBrush(QPalette::Inactive, QPalette::Window, brush);
+        palette16.setBrush(QPalette::Disabled, QPalette::Button, brush);
+        palette16.setBrush(QPalette::Disabled, QPalette::Base, brush);
+        palette16.setBrush(QPalette::Disabled, QPalette::Window, brush);
+        scrollArea->setPalette(palette16);
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 551, 713));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 260, 262));
         verticalLayout_6 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_6->setContentsMargins(2, 2, 2, 2);
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
@@ -416,13 +423,11 @@ public:
         sizePolicy.setHeightForWidth(infoWidget->sizePolicy().hasHeightForWidth());
         infoWidget->setSizePolicy(sizePolicy);
         infoWidget->setMinimumSize(QSize(0, 0));
-        QPalette palette16;
-        QBrush brush9(QColor(150, 150, 150, 255));
-        brush9.setStyle(Qt::SolidPattern);
-        palette16.setBrush(QPalette::Active, QPalette::WindowText, brush9);
-        palette16.setBrush(QPalette::Inactive, QPalette::WindowText, brush9);
-        palette16.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        infoWidget->setPalette(palette16);
+        QPalette palette17;
+        palette17.setBrush(QPalette::Active, QPalette::WindowText, brush7);
+        palette17.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
+        palette17.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        infoWidget->setPalette(palette17);
         gridLayout = new QGridLayout(infoWidget);
         gridLayout->setContentsMargins(4, 4, 4, 4);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
@@ -441,33 +446,33 @@ public:
 
         s3LapLabel = new QLabel(infoWidget);
         s3LapLabel->setObjectName(QString::fromUtf8("s3LapLabel"));
-        QPalette palette17;
-        palette17.setBrush(QPalette::Active, QPalette::WindowText, brush4);
-        palette17.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
-        palette17.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s3LapLabel->setPalette(palette17);
+        QPalette palette18;
+        palette18.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette18.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette18.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s3LapLabel->setPalette(palette18);
         s3LapLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(s3LapLabel, 6, 3, 1, 1);
 
         s2TimeLabel = new QLabel(infoWidget);
         s2TimeLabel->setObjectName(QString::fromUtf8("s2TimeLabel"));
-        QPalette palette18;
-        palette18.setBrush(QPalette::Active, QPalette::WindowText, brush8);
-        palette18.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
-        palette18.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s2TimeLabel->setPalette(palette18);
+        QPalette palette19;
+        palette19.setBrush(QPalette::Active, QPalette::WindowText, brush8);
+        palette19.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
+        palette19.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s2TimeLabel->setPalette(palette19);
         s2TimeLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(s2TimeLabel, 4, 1, 1, 1);
 
         s1DriverLabel = new QLabel(infoWidget);
         s1DriverLabel->setObjectName(QString::fromUtf8("s1DriverLabel"));
-        QPalette palette19;
-        palette19.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette19.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette19.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s1DriverLabel->setPalette(palette19);
+        QPalette palette20;
+        palette20.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette20.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette20.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s1DriverLabel->setPalette(palette20);
 
         gridLayout->addWidget(s1DriverLabel, 3, 2, 1, 1);
 
@@ -478,22 +483,22 @@ public:
 
         s2LapLabel = new QLabel(infoWidget);
         s2LapLabel->setObjectName(QString::fromUtf8("s2LapLabel"));
-        QPalette palette20;
-        palette20.setBrush(QPalette::Active, QPalette::WindowText, brush4);
-        palette20.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
-        palette20.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s2LapLabel->setPalette(palette20);
+        QPalette palette21;
+        palette21.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette21.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette21.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s2LapLabel->setPalette(palette21);
         s2LapLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(s2LapLabel, 4, 3, 1, 1);
 
         s1LapLabel = new QLabel(infoWidget);
         s1LapLabel->setObjectName(QString::fromUtf8("s1LapLabel"));
-        QPalette palette21;
-        palette21.setBrush(QPalette::Active, QPalette::WindowText, brush4);
-        palette21.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
-        palette21.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s1LapLabel->setPalette(palette21);
+        QPalette palette22;
+        palette22.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette22.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette22.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s1LapLabel->setPalette(palette22);
         s1LapLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(s1LapLabel, 3, 3, 1, 1);
@@ -505,21 +510,21 @@ public:
 
         s3DriverLabel = new QLabel(infoWidget);
         s3DriverLabel->setObjectName(QString::fromUtf8("s3DriverLabel"));
-        QPalette palette22;
-        palette22.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette22.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette22.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s3DriverLabel->setPalette(palette22);
+        QPalette palette23;
+        palette23.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette23.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette23.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s3DriverLabel->setPalette(palette23);
 
         gridLayout->addWidget(s3DriverLabel, 6, 2, 1, 1);
 
         flDriverLabel = new QLabel(infoWidget);
         flDriverLabel->setObjectName(QString::fromUtf8("flDriverLabel"));
-        QPalette palette23;
-        palette23.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette23.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette23.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        flDriverLabel->setPalette(palette23);
+        QPalette palette24;
+        palette24.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette24.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette24.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        flDriverLabel->setPalette(palette24);
 
         gridLayout->addWidget(flDriverLabel, 2, 2, 1, 1);
 
@@ -530,44 +535,44 @@ public:
 
         flTimeLabel = new QLabel(infoWidget);
         flTimeLabel->setObjectName(QString::fromUtf8("flTimeLabel"));
-        QPalette palette24;
-        palette24.setBrush(QPalette::Active, QPalette::WindowText, brush8);
-        palette24.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
-        palette24.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        flTimeLabel->setPalette(palette24);
+        QPalette palette25;
+        palette25.setBrush(QPalette::Active, QPalette::WindowText, brush8);
+        palette25.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
+        palette25.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        flTimeLabel->setPalette(palette25);
         flTimeLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(flTimeLabel, 2, 1, 1, 1);
 
         s1TimeLabel = new QLabel(infoWidget);
         s1TimeLabel->setObjectName(QString::fromUtf8("s1TimeLabel"));
-        QPalette palette25;
-        palette25.setBrush(QPalette::Active, QPalette::WindowText, brush8);
-        palette25.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
-        palette25.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s1TimeLabel->setPalette(palette25);
+        QPalette palette26;
+        palette26.setBrush(QPalette::Active, QPalette::WindowText, brush8);
+        palette26.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
+        palette26.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s1TimeLabel->setPalette(palette26);
         s1TimeLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(s1TimeLabel, 3, 1, 1, 1);
 
         theoreticalTimeLabel = new QLabel(infoWidget);
         theoreticalTimeLabel->setObjectName(QString::fromUtf8("theoreticalTimeLabel"));
-        QPalette palette26;
-        palette26.setBrush(QPalette::Active, QPalette::WindowText, brush6);
-        palette26.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
-        palette26.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        theoreticalTimeLabel->setPalette(palette26);
+        QPalette palette27;
+        palette27.setBrush(QPalette::Active, QPalette::WindowText, brush6);
+        palette27.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette27.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        theoreticalTimeLabel->setPalette(palette27);
         theoreticalTimeLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(theoreticalTimeLabel, 7, 1, 1, 1);
 
         s2DriverLabel = new QLabel(infoWidget);
         s2DriverLabel->setObjectName(QString::fromUtf8("s2DriverLabel"));
-        QPalette palette27;
-        palette27.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        palette27.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette27.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s2DriverLabel->setPalette(palette27);
+        QPalette palette28;
+        palette28.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette28.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette28.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s2DriverLabel->setPalette(palette28);
 
         gridLayout->addWidget(s2DriverLabel, 4, 2, 1, 1);
 
@@ -578,11 +583,11 @@ public:
 
         flLapLabel = new QLabel(infoWidget);
         flLapLabel->setObjectName(QString::fromUtf8("flLapLabel"));
-        QPalette palette28;
-        palette28.setBrush(QPalette::Active, QPalette::WindowText, brush4);
-        palette28.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
-        palette28.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        flLapLabel->setPalette(palette28);
+        QPalette palette29;
+        palette29.setBrush(QPalette::Active, QPalette::WindowText, brush4);
+        palette29.setBrush(QPalette::Inactive, QPalette::WindowText, brush4);
+        palette29.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        flLapLabel->setPalette(palette29);
         flLapLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(flLapLabel, 2, 3, 1, 1);
@@ -594,11 +599,11 @@ public:
 
         s3TimeLabel = new QLabel(infoWidget);
         s3TimeLabel->setObjectName(QString::fromUtf8("s3TimeLabel"));
-        QPalette palette29;
-        palette29.setBrush(QPalette::Active, QPalette::WindowText, brush8);
-        palette29.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
-        palette29.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        s3TimeLabel->setPalette(palette29);
+        QPalette palette30;
+        palette30.setBrush(QPalette::Active, QPalette::WindowText, brush8);
+        palette30.setBrush(QPalette::Inactive, QPalette::WindowText, brush8);
+        palette30.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
+        s3TimeLabel->setPalette(palette30);
         s3TimeLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(s3TimeLabel, 6, 1, 1, 1);
@@ -633,23 +638,23 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(fastestLapsTable->sizePolicy().hasHeightForWidth());
         fastestLapsTable->setSizePolicy(sizePolicy1);
-        QPalette palette30;
-        palette30.setBrush(QPalette::Active, QPalette::Base, brush);
+        QPalette palette31;
+        palette31.setBrush(QPalette::Active, QPalette::Base, brush);
         QBrush brush10(QColor(73, 73, 73, 255));
         brush10.setStyle(Qt::SolidPattern);
-        palette30.setBrush(QPalette::Active, QPalette::Highlight, brush10);
+        palette31.setBrush(QPalette::Active, QPalette::Highlight, brush10);
         QBrush brush11(QColor(30, 30, 30, 255));
         brush11.setStyle(Qt::SolidPattern);
-        palette30.setBrush(QPalette::Active, QPalette::AlternateBase, brush11);
-        palette30.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette30.setBrush(QPalette::Inactive, QPalette::Highlight, brush10);
-        palette30.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush11);
-        palette30.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette31.setBrush(QPalette::Active, QPalette::AlternateBase, brush11);
+        palette31.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette31.setBrush(QPalette::Inactive, QPalette::Highlight, brush10);
+        palette31.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush11);
+        palette31.setBrush(QPalette::Disabled, QPalette::Base, brush1);
         QBrush brush12(QColor(175, 175, 175, 255));
         brush12.setStyle(Qt::SolidPattern);
-        palette30.setBrush(QPalette::Disabled, QPalette::Highlight, brush12);
-        palette30.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush11);
-        fastestLapsTable->setPalette(palette30);
+        palette31.setBrush(QPalette::Disabled, QPalette::Highlight, brush12);
+        palette31.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush11);
+        fastestLapsTable->setPalette(palette31);
         fastestLapsTable->setFrameShape(QFrame::NoFrame);
         fastestLapsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         fastestLapsTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -676,17 +681,17 @@ public:
         speedRecordsTable->setObjectName(QString::fromUtf8("speedRecordsTable"));
         sizePolicy1.setHeightForWidth(speedRecordsTable->sizePolicy().hasHeightForWidth());
         speedRecordsTable->setSizePolicy(sizePolicy1);
-        QPalette palette31;
-        palette31.setBrush(QPalette::Active, QPalette::Base, brush);
-        palette31.setBrush(QPalette::Active, QPalette::Highlight, brush10);
-        palette31.setBrush(QPalette::Active, QPalette::AlternateBase, brush11);
-        palette31.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette31.setBrush(QPalette::Inactive, QPalette::Highlight, brush10);
-        palette31.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush11);
-        palette31.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        palette31.setBrush(QPalette::Disabled, QPalette::Highlight, brush12);
-        palette31.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush11);
-        speedRecordsTable->setPalette(palette31);
+        QPalette palette32;
+        palette32.setBrush(QPalette::Active, QPalette::Base, brush);
+        palette32.setBrush(QPalette::Active, QPalette::Highlight, brush10);
+        palette32.setBrush(QPalette::Active, QPalette::AlternateBase, brush11);
+        palette32.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette32.setBrush(QPalette::Inactive, QPalette::Highlight, brush10);
+        palette32.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush11);
+        palette32.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette32.setBrush(QPalette::Disabled, QPalette::Highlight, brush12);
+        palette32.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush11);
+        speedRecordsTable->setPalette(palette32);
         speedRecordsTable->setFrameShape(QFrame::NoFrame);
         speedRecordsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         speedRecordsTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -709,17 +714,17 @@ public:
         pitStopsTable->setObjectName(QString::fromUtf8("pitStopsTable"));
         sizePolicy1.setHeightForWidth(pitStopsTable->sizePolicy().hasHeightForWidth());
         pitStopsTable->setSizePolicy(sizePolicy1);
-        QPalette palette32;
-        palette32.setBrush(QPalette::Active, QPalette::Base, brush);
-        palette32.setBrush(QPalette::Active, QPalette::Highlight, brush10);
-        palette32.setBrush(QPalette::Active, QPalette::AlternateBase, brush11);
-        palette32.setBrush(QPalette::Inactive, QPalette::Base, brush);
-        palette32.setBrush(QPalette::Inactive, QPalette::Highlight, brush10);
-        palette32.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush11);
-        palette32.setBrush(QPalette::Disabled, QPalette::Base, brush1);
-        palette32.setBrush(QPalette::Disabled, QPalette::Highlight, brush12);
-        palette32.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush11);
-        pitStopsTable->setPalette(palette32);
+        QPalette palette33;
+        palette33.setBrush(QPalette::Active, QPalette::Base, brush);
+        palette33.setBrush(QPalette::Active, QPalette::Highlight, brush10);
+        palette33.setBrush(QPalette::Active, QPalette::AlternateBase, brush11);
+        palette33.setBrush(QPalette::Inactive, QPalette::Base, brush);
+        palette33.setBrush(QPalette::Inactive, QPalette::Highlight, brush10);
+        palette33.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush11);
+        palette33.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette33.setBrush(QPalette::Disabled, QPalette::Highlight, brush12);
+        palette33.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush11);
+        pitStopsTable->setPalette(palette33);
         pitStopsTable->setFrameShape(QFrame::NoFrame);
         pitStopsTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         pitStopsTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

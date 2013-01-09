@@ -108,6 +108,10 @@ public:
 
     QColor getColor(LTPackets::Colors color) { return colors[color]; }
     QColor getDefaultColor(LTPackets::Colors color) { return defaultColors[color]; }
+    QList<QColor> getColors() { return colors; }
+    QList<QColor> getDefaultColors() { return defaultColors; }
+    void setColors(QList<QColor> col) { colors = col; }
+
     void setColor(LTPackets::Colors colorCode, QColor color)
     {
         colors[colorCode] = color;

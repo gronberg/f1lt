@@ -184,7 +184,7 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
 
         if (driverData->getPosition() == 1)
         {
-            pen.setColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
+            pen.setColor(SeasonData::getInstance().getDefaultColor(LTPackets::GREEN));
             pen.setWidth(3);
         }
         if (driverData->isRetired() || qualiOut)
@@ -194,7 +194,7 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
         }
         if (selected)
         {
-            pen.setColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
+            pen.setColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW));
             pen.setWidth(3);
         }
 
@@ -221,7 +221,7 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
         {
             point = getSCCoordinates();
             p->setPen(SeasonData::getInstance().getColor(LTPackets::BACKGROUND));
-            p->setBrush(QColor(SeasonData::getInstance().getColor(LTPackets::YELLOW)));
+            p->setBrush(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW)));
             p->drawEllipse(point, 15, 15);
 
             p->setFont(QFont("Arial", 12, 100));

@@ -56,15 +56,15 @@ void DriverInfoLabel::paintEvent(QPaintEvent *)
         txt = " " + txt;
 
     p.setFont(QFont("Arial", 20, 100));
-    p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND)));
+    p.setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::BACKGROUND)));
 
     if (driverData->isInPits())
-        p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::PIT)));
+        p.setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::PIT)));
 
     p.drawText(numX, numY, txt);
 
     txt = driverData->getDriverName();
-    p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p.setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
     p.setFont(QFont("Arial", 10, 100));
     numX = x + 140;
     numY = 15;

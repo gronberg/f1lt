@@ -366,7 +366,7 @@ void DriverRadarPositioner::paint(QPainter *p, bool selected)
 
         if (driverData->getPosition() == 1)
         {
-            pen.setColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
+            pen.setColor(SeasonData::getInstance().getDefaultColor(LTPackets::GREEN));
             pen.setWidth(3);
         }
         if (driverData->isRetired() || qualiOut)
@@ -376,7 +376,7 @@ void DriverRadarPositioner::paint(QPainter *p, bool selected)
         }
         if (selected)
         {
-            pen.setColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
+            pen.setColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW));
             pen.setWidth(3);
         }
 

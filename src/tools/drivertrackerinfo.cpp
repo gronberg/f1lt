@@ -82,12 +82,12 @@ void DriverTrackerInfo::paintDriverInfo(QPainter *p)
     p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND)));
 
     if (driverData->isInPits())
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::PIT)));
+        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::PIT)));
 
     p->drawText(numX, numY, txt);
 
     txt = driverData->getDriverName();
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
     p->setFont(QFont("Arial", 10, 100));
     numX = x + 140;
     numY = 85;
@@ -100,7 +100,7 @@ void DriverTrackerInfo::paintDriverInfo(QPainter *p)
 
 
 
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::BACKGROUND)));
     txt = QString::number(driverData->getNumber());
     if (driverData->getNumber() < 10)
         txt = " " + txt;
@@ -139,7 +139,7 @@ void DriverTrackerInfo::paintLapsInfo(QPainter *p)
 
 
     //===== Current lap time=======
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     if (EventData::getInstance().getEventType() != LTPackets::RACE_EVENT && !driverData->getLapData().isEmpty())
         txt = driverData->getLapData().last().getTime().toString();
@@ -149,19 +149,19 @@ void DriverTrackerInfo::paintLapsInfo(QPainter *p)
     p->drawText(nX, nY, txt);
 
     //===== Current sector 1 time=======
-    p->setPen(SeasonData::getInstance().getColor(driverData->getColorData().sectorColor(1)));
+    p->setPen(SeasonData::getInstance().getDefaultColor(driverData->getColorData().sectorColor(1)));
     nX += 65;
     txt = lap.getSectorTime(1).toString();
     p->drawText(nX, nY, txt);
 
     //===== Current sector 2 time=======
-    p->setPen(SeasonData::getInstance().getColor(driverData->getColorData().sectorColor(2)));
+    p->setPen(SeasonData::getInstance().getDefaultColor(driverData->getColorData().sectorColor(2)));
     nX += 35;
     txt = lap.getSectorTime(2).toString();
     p->drawText(nX, nY, txt);
 
     //===== Current sector 3 time=======
-    p->setPen(SeasonData::getInstance().getColor(driverData->getColorData().sectorColor(3)));
+    p->setPen(SeasonData::getInstance().getDefaultColor(driverData->getColorData().sectorColor(3)));
     nX += 35;
     txt = lap.getSectorTime(3).toString();
     p->drawText(nX, nY, txt);
@@ -173,37 +173,37 @@ void DriverTrackerInfo::paintLapsInfo(QPainter *p)
     nX = x + 20;
     nY = y + 15;
 
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::BACKGROUND)));
     txt = "Best lap:";
     p->drawText(nX, nY, txt);
 
     //===== Best lap time=======
     lap = driverData->getSessionRecords().getBestLap();
     txt = lap.getTime().toString();
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::GREEN)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::GREEN)));
     nX = x + 115;
     p->drawText(nX, nY, txt);
 
     //===== Best sector 1 time=======
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
     if (driverData->getSessionRecords().getBestSector(1).second == lap.getLapNumber())
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::GREEN)));
+        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::GREEN)));
     nX += 65;
     txt = lap.getSectorTime(1).toString();
     p->drawText(nX, nY, txt);
 
     //===== Best sector 2 time=======
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
     if (driverData->getSessionRecords().getBestSector(2).second == lap.getLapNumber())
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::GREEN)));
+        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::GREEN)));
     nX += 35;
     txt = lap.getSectorTime(2).toString();
     p->drawText(nX, nY, txt);
 
     //===== Best sector 3 time=======
-    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
     if (driverData->getSessionRecords().getBestSector(3).second == lap.getLapNumber())
-        p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::GREEN)));
+        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::GREEN)));
     nX += 35;
     txt = lap.getSectorTime(3).toString();
     p->drawText(nX, nY, txt);
@@ -226,15 +226,15 @@ void DriverTrackerInfo::paintGapsInfo(QPainter *p)
     int prevPos = driverData->getPosition() - 1;
     int nextPos = driverData->getPosition() + 1;
 
-    QColor prevColor = SeasonData::getInstance().getColor(LTPackets::RED);
-    QColor nextColor = SeasonData::getInstance().getColor(LTPackets::GREEN);
+    QColor prevColor = SeasonData::getInstance().getDefaultColor(LTPackets::RED);
+    QColor nextColor = SeasonData::getInstance().getDefaultColor(LTPackets::GREEN);
 
     if (prevPos == 0)
     {
         prevPos = 2;
         nextPos = 3;
 
-        prevColor = SeasonData::getInstance().getColor(LTPackets::GREEN);
+        prevColor = SeasonData::getInstance().getDefaultColor(LTPackets::GREEN);
     }
 
     if (nextPos > EventData::getInstance().getDriversData().size())
@@ -242,7 +242,7 @@ void DriverTrackerInfo::paintGapsInfo(QPainter *p)
         nextPos = driverData->getPosition() - 1;
         prevPos = driverData->getPosition() - 2;
 
-        nextColor = SeasonData::getInstance().getColor(LTPackets::RED);
+        nextColor = SeasonData::getInstance().getDefaultColor(LTPackets::RED);
 
     }
     p->drawText(nX, nY, QString("Gaps:"));
@@ -290,7 +290,7 @@ void DriverTrackerInfo::paintGapsInfo(QPainter *p)
                 nextGap = "+" + nextGap;
         }
 
-        p->setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
+        p->setPen(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE));
         nX = x + 115;
         p->drawText(nX, nY, QString("P%1:").arg(prevPos));
 
@@ -298,7 +298,7 @@ void DriverTrackerInfo::paintGapsInfo(QPainter *p)
         nX += 32;
         p->drawText(nX, nY, prevGap);
 
-        p->setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
+        p->setPen(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE));
         nX += 55;
         p->drawText(nX, nY, QString("P%1:").arg(nextPos));
 

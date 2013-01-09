@@ -96,6 +96,7 @@ private:
     QFont mainFont;
     QFont commentaryFont;
     QSettings *settings;
+    QList<QColor> colors;
 };
 
 #endif // PREFERENCESDIALOG_H

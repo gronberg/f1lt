@@ -162,7 +162,7 @@ void DriverTracker::paintClassification(QPainter &p)
 
             p.drawText(numX, numY, number);
 
-            p.setPen(SeasonData::getInstance().getColor(LTPackets::WHITE));
+            p.setPen(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE));
 
             if (isExcluded(dd->getCarID()))
                 p.setPen(QColor(80, 80, 80));
@@ -174,7 +174,7 @@ void DriverTracker::paintClassification(QPainter &p)
                 p.setPen(QColor(0,0,0));
 
                 if (dd->isInPits())
-                    p.setPen(SeasonData::getInstance().getColor(LTPackets::PIT));
+                    p.setPen(SeasonData::getInstance().getDefaultColor(LTPackets::PIT));
                 QString pos = QString::number(i+1);
 
                 if (!dd->isRetired())
@@ -225,7 +225,7 @@ void DriverTracker::paintClassification(QPainter &p)
                     else
                         gap = dd->getQualiTime(EventData::getInstance().getQualiPeriod()).toString();
                 }
-                p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::YELLOW)));
+                p.setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW)));
 
                 if (isExcluded(dd->getCarID()))
                     p.setPen(QColor(80, 80, 80));

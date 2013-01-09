@@ -26,10 +26,10 @@ LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
 
     loadDriversList();
 
-    color[0] = SeasonData::getInstance().getColor(LTPackets::GREEN);
-    color[1] = SeasonData::getInstance().getColor(LTPackets::CYAN);
-    color[2] = SeasonData::getInstance().getColor(LTPackets::YELLOW);
-    color[3] = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+    color[0] = SeasonData::getInstance().getDefaultColor(LTPackets::GREEN);
+    color[1] = SeasonData::getInstance().getDefaultColor(LTPackets::CYAN);
+    color[2] = SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW);
+    color[3] = SeasonData::getInstance().getDefaultColor(LTPackets::VIOLET);
     lapCompChart = new LapCompChart(color, this);
 
 
