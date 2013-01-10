@@ -6,6 +6,8 @@
 #include <QSettings>
 #include <QToolButton>
 
+#include "drivercolorsdialog.h"
+
 namespace Ui {
 class PreferencesDialog;
 }
@@ -87,6 +89,8 @@ private slots:
 
     void on_pushButton_7_clicked();
 
+    void on_pushButton_8_clicked();
+
 private:
 
     void setButtonColor(QToolButton *button, QColor color);
@@ -97,6 +101,8 @@ private:
     QFont commentaryFont;
     QSettings *settings;
     QList<QColor> colors;
+
+    DriverColorsDialog *dcDialog;
 };
 
 #endif // PREFERENCESDIALOG_H

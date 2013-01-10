@@ -60,6 +60,8 @@ SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
     driverColors.append(QColor(234, 78, 115));
     driverColors.append(QColor(245, 146, 166));
 
+    defaultDriverColors = driverColors;
+
     ltTeams.clear();
     fillEventNamesMap();
 }

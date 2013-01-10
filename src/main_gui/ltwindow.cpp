@@ -568,6 +568,24 @@ void LTWindow::loadSettings()
 
     ltFilesManagerDialog->loadSettings(settings);
     trackRecordsDialog->loadSettings(*settings);
+
+    QList<QColor> colors = SeasonData::getInstance().getColors();
+    for (int i = 0; i < SeasonData::getInstance().getColors().size(); ++i)
+    {
+        QVariant color = settings->value(QString("ui/color_%1").arg(i), colors[i]);
+
+        colors[i] = color.value<QColor>();
+    }
+    SeasonData::getInstance().setColors(colors);
+
+    colors = SeasonData::getInstance().getDriverColors();
+    for (int i = 0; i < SeasonData::getInstance().getDriverColors().size(); ++i)
+    {
+        QVariant color = settings->value(QString("ui/driver_color_%1").arg(i), colors[i]);
+
+        colors[i] = color.value<QColor>();
+    }
+    SeasonData::getInstance().setDriverColors(colors);
 }
 
 void LTWindow::saveSettings()
@@ -590,6 +608,18 @@ void LTWindow::saveSettings()
     driverTrackerWidget->saveSettings(settings);
     ltFilesManagerDialog->saveSettings(settings);
     trackRecordsDialog->saveSettings(*settings);
+
+    for (int i = 0; i < SeasonData::getInstance().getColors().size(); ++i)
+    {
+        QVariant color = SeasonData::getInstance().getColors()[i];
+        settings->setValue(QString("ui/color_%1").arg(i), color);
+    }
+
+    for (int i = 0; i < SeasonData::getInstance().getDriverColors().size(); ++i)
+    {
+        QVariant color = SeasonData::getInstance().getDriverColors()[i];
+        settings->setValue(QString("ui/driver_color_%1").arg(i), color);
+    }
 
 //    settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
 //    settings->setValue("ui/alt_colors", prefs->isAlternatingRowColors());
@@ -650,6 +680,7 @@ void LTWindow::on_actionPreferences_triggered()
 
         ui->ltWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
         driverTrackerWidget->drawTrackerClassification(settings->value("ui/draw_tracker_classification").toBool());
+        saw->setupColors();
     }
 }
 

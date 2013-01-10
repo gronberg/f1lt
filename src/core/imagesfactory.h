@@ -26,6 +26,8 @@ public:
 
     QPixmap *loadHelmet(int no, int size);
 
+    void reloadHelmets();
+
 private:
     QMap<int, QList<QPixmap*> > helmets;
     QPixmap nullPixmap;

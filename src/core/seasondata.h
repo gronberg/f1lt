@@ -126,6 +126,18 @@ public:
     }
 
     QColor getCarColor(int no);
+    QList<QColor> getDriverColors()
+    {
+        return driverColors;
+    }
+    void setDriverColors(QList<QColor> colors)
+    {
+        driverColors = colors;
+    }
+    QList<QColor> getDefaultDriverColors()
+    {
+        return defaultDriverColors;
+    }
 
     QVector<LTTeam> &getTeams() { return ltTeams; }
     void setTeams(const QVector<LTTeam> &teams) { ltTeams = teams; }
@@ -155,7 +167,9 @@ private:
 
     QList<QColor> colors;
     QList<QColor> defaultColors;
+
     QList<QColor> driverColors;
+    QList<QColor> defaultDriverColors;
 
     QMap<QString, QString> eventNamesMap;
     CarThumbnailsFactory carThumbnailsFactory;

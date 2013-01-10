@@ -15,27 +15,23 @@ SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
 {
 	ui.setupUi(this);
 
-    QList<QColor> colors;
-	for (int i = 0; i < ui.gridLayout->columnCount(); i += 2)
-	{
+    for (int i = 0; i < ui.gridLayout->columnCount(); i += 2)
+    {
         QLabel *lab = (QLabel*)ui.gridLayout->itemAtPosition(0, i)->widget();
         QCheckBox *box = (QCheckBox*)ui.gridLayout->itemAtPosition(0, i+1)->widget();
 
         box->setChecked(true);
-		driverLabels.append(lab);
-		driverCheckBoxes.append(box);
-
-        colors.append(lab->palette().window().color());
+        driverLabels.append(lab);
+        driverCheckBoxes.append(box);
 
         lab = (QLabel*)ui.gridLayout->itemAtPosition(1, i)->widget();
         box = (QCheckBox*)ui.gridLayout->itemAtPosition(1, i+1)->widget();
 
         box->setChecked(true);
-		driverLabels.append(lab);
-		driverCheckBoxes.append(box);
+        driverLabels.append(lab);
+        driverCheckBoxes.append(box);
+    }
 
-        colors.append(lab->palette().window().color());
-	}
     setupTables();
     ui.lapTimeTableWidget->setItemDelegate(new LTItemDelegate);
     ui.lapTimeTableWidgetFP->setItemDelegate(new LTItemDelegate);
@@ -44,20 +40,15 @@ SessionAnalysisWidget::SessionAnalysisWidget(QWidget *parent)
     ui.lapTimeTableWidgetQ2->setItemDelegate(new LTItemDelegate);
     ui.lapTimeTableWidgetQ3->setItemDelegate(new LTItemDelegate);
 
-    setupIcons(colors);
-    ui.sessionLapTimesChart->setColors(colors);
-    ui.sessionPositionsChart->setColors(colors);
-    ui.sessionGapsChart->setColors(colors);
-    ui.sessionLapTimesChartFP->setColors(colors);
-    ui.sessionLapTimesChartQuali->setColors(colors);
+    setupColors();
 
-    ui.sessionLapTimesChartQ1->setColors(colors);
+
+
     ui.sessionLapTimesChartQ1->setQualiPeriod(1);
 
-    ui.sessionLapTimesChartQ2->setColors(colors);
+
     ui.sessionLapTimesChartQ2->setQualiPeriod(2);
 
-    ui.sessionLapTimesChartQ3->setColors(colors);
     ui.sessionLapTimesChartQ3->setQualiPeriod(3);
     selected = true;
 //    ui.splitter->refresh();
@@ -252,8 +243,46 @@ void SessionAnalysisWidget::setupTables()
     resizeTables();
 }
 
-void SessionAnalysisWidget::setupIcons(QList<QColor> colors)
+void SessionAnalysisWidget::setupColors()
 {
+    for (int i = 0; i < ui.gridLayout->columnCount(); i += 2)
+    {
+        QLabel *lab = (QLabel*)ui.gridLayout->itemAtPosition(0, i)->widget();
+
+        QPalette palette = lab->palette();
+        palette.setColor(QPalette::Window, SeasonData::getInstance().getDriverColors()[i]);
+        lab->setPalette(palette);
+
+        lab = (QLabel*)ui.gridLayout->itemAtPosition(1, i)->widget();
+
+        palette = lab->palette();
+        palette.setColor(QPalette::Window, SeasonData::getInstance().getDriverColors()[i+1]);
+        lab->setPalette(palette);
+    }
+    setupIcons(SeasonData::getInstance().getDriverColors());
+    ui.sessionLapTimesChart->setColors(SeasonData::getInstance().getDriverColors());
+    ui.sessionPositionsChart->setColors(SeasonData::getInstance().getDriverColors());
+    ui.sessionGapsChart->setColors(SeasonData::getInstance().getDriverColors());
+    ui.sessionLapTimesChartFP->setColors(SeasonData::getInstance().getDriverColors());
+    ui.sessionLapTimesChartQuali->setColors(SeasonData::getInstance().getDriverColors());
+
+    ui.sessionLapTimesChartQ1->setColors(SeasonData::getInstance().getDriverColors());
+
+    ui.sessionLapTimesChartQ2->setColors(SeasonData::getInstance().getDriverColors());
+
+    ui.sessionLapTimesChartQ3->setColors(SeasonData::getInstance().getDriverColors());
+
+    ui.lapTimeTableWidget->repaint();
+    ui.lapTimeTableWidgetFP->repaint();
+    ui.lapTimeTableWidgetQ1->repaint();
+    ui.lapTimeTableWidgetQ2->repaint();
+    ui.lapTimeTableWidgetQ3->repaint();
+    ui.lapTimeTableWidgetQuali->repaint();
+}
+
+void SessionAnalysisWidget::setupIcons(const QList<QColor> &colors)
+{
+    driverIcons.clear();
     for (int i = 0; i < colors.size(); ++i)
     {
         QPixmap pix(10, 22);

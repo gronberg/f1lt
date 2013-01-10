@@ -139,3 +139,11 @@ QPixmap *HelmetsFactory::loadHelmet(int no, int size)
 
     return new QPixmap(QPixmap::fromImage(hl));
 }
+
+void HelmetsFactory::reloadHelmets()
+{
+    QList<int> keys = helmets.keys();
+
+    for (int i = 0; i < keys.size(); ++i)
+        loadHelmets(keys[i], true);
+}

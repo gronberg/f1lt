@@ -14,14 +14,12 @@ public:
     void setDriverData(DriverData *dd)
     {
         driverData = dd;
-        setupHelmet();
         SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(240, false);
 
         repaint();
     }
 
     void setup();
-    void setupHelmet();
 
     void paintDriverInfo(QPainter *p);
     void paintLapsInfo(QPainter *p);
@@ -37,7 +35,6 @@ public slots:
 private:
     QPixmap labelBig;
     QPixmap labelInfoLong;
-    QImage helmet;
 
     DriverData *driverData;
     

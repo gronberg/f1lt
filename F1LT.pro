@@ -83,7 +83,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/tools/driverrecordsdialog.cpp \
     src/core/imagesfactory.cpp \
     src/main_gui/driverinfolabel.cpp \
-    src/net/networksettings.cpp
+    src/net/networksettings.cpp \
+    src/main_gui/drivercolorsdialog.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -143,7 +144,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/tools/driverrecordsdialog.h \
     src/core/imagesfactory.h \
     src/main_gui/driverinfolabel.h \
-    src/net/networksettings.h
+    src/net/networksettings.h \
+    src/main_gui/drivercolorsdialog.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -166,7 +168,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/drivertrackerwidget.ui \
     ui/delaywidget.ui \
     ui/trackrecordsdialog.ui \
-    src/tools/driverrecordsdialog.ui
+    src/tools/driverrecordsdialog.ui \
+    src/main_gui/drivercolorsdialog.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

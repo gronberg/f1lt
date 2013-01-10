@@ -30,7 +30,6 @@ public:
         radarPitR = rP;
         radarLappedR = rL;
     }
-    void setupHelmet(int size);
 
     virtual void calculatePosition();
     virtual void calculatePitPosition();
@@ -67,11 +66,6 @@ public:
         excluded = ex;
     }
 
-    bool hasEmptyHelmet()
-    {
-        return helmet.isNull();
-    }
-
 protected:
     DriverData *driverData;
     double avgTime;
@@ -89,8 +83,6 @@ protected:
     bool qualiOut;
 
     bool excluded;
-
-    QImage helmet;
 
     int speed;
 

@@ -14,10 +14,6 @@ void DriverTrackerPositioner::setStartupPosition()
     inPits = false;
     finished = false;
 
-    setupHelmet(24);
-
-    qDebug() << helmet.width();
-
     coordinatesCount = EventData::getInstance().getEventInfo().trackCoordinates.coordinates.size();
 
     //a very rough estimate ;)
@@ -203,7 +199,8 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
 
         if (!excluded)
         {
-            p->drawImage(point.x()-12, point.y()-12, helmet);
+            QPixmap helmet = SeasonData::getInstance().getHelmetsFactory().getHelmet(driverData->getNumber(), 24);
+            p->drawPixmap(point.x()-12, point.y()-12, helmet);
 
             QString number = SeasonData::getInstance().getDriverShortName(driverData->getDriverName());//QString::number(driverData->getNumber());
 

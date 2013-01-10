@@ -9,26 +9,6 @@ DriverTrackerInfo::DriverTrackerInfo(QWidget *parent) :
     labelInfoLong = QPixmap(":/ui_icons/label-info-long.png");
 }
 
-void DriverTrackerInfo::setupHelmet()
-{
-    helmet = QImage(":/ui_icons/helmet.png").scaledToHeight(30, Qt::SmoothTransformation);
-    QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(30, Qt::SmoothTransformation);
-
-    QImage hl(helmet.size(), helmet.format());
-    QColor drvColor = SeasonData::getInstance().getCarColor(driverData->getNumber());
-    QPainter phl;
-    phl.begin(&hl);
-    phl.setBrush(QBrush(drvColor));
-    phl.drawRect(0, 0, hl.width(), hl.height());
-    phl.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-    phl.drawImage(0, 0, helmetMask);
-    phl.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    phl.drawImage(0, 0, helmet);
-    phl.end();
-
-    helmet = hl;
-}
-
 void DriverTrackerInfo::setup()
 {
     SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(240, true);
@@ -111,7 +91,8 @@ void DriverTrackerInfo::paintDriverInfo(QPainter *p)
 
     numX = x + 63;
     numY = 74;
-    p->drawImage(numX, numY, helmet);
+    QPixmap helmet = SeasonData::getInstance().getHelmetsFactory().getHelmet(driverData->getNumber(), 30);
+    p->drawPixmap(numX, numY, helmet);
 }
 
 void DriverTrackerInfo::paintLapsInfo(QPainter *p)

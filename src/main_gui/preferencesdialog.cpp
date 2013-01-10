@@ -13,7 +13,9 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 //    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "pieczar", "F1LT", this);
-    settings = new QSettings("f1lt.ini", QSettings::IniFormat, this);    
+    settings = new QSettings("f1lt.ini", QSettings::IniFormat, this);
+
+    dcDialog = new DriverColorsDialog(this);
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -380,4 +382,9 @@ void PreferencesDialog::on_pushButton_7_clicked()
     setButtonColor(ui->colorRedButton, colors[LTPackets::RED]);
     setButtonColor(ui->colorGreenButton, colors[LTPackets::GREEN]);
     setButtonColor(ui->colorVioletButton, colors[LTPackets::VIOLET]);
+}
+
+void PreferencesDialog::on_pushButton_8_clicked()
+{
+    dcDialog->exec();
 }

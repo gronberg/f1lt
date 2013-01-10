@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Wed Jan 9 19:06:46 2013
+** Created: Thu Jan 10 18:46:15 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -82,6 +82,10 @@ public:
     QSpacerItem *horizontalSpacer_3;
     QPushButton *pushButton_7;
     QSpacerItem *horizontalSpacer_4;
+    QHBoxLayout *horizontalLayout_3;
+    QSpacerItem *horizontalSpacer_5;
+    QPushButton *pushButton_8;
+    QSpacerItem *horizontalSpacer_6;
     QWidget *tab_2;
     QVBoxLayout *verticalLayout_3;
     QCheckBox *proxyCheckBox;
@@ -103,7 +107,7 @@ public:
     {
         if (PreferencesDialog->objectName().isEmpty())
             PreferencesDialog->setObjectName(QString::fromUtf8("PreferencesDialog"));
-        PreferencesDialog->resize(447, 357);
+        PreferencesDialog->resize(447, 367);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PreferencesDialog->setWindowIcon(icon);
@@ -368,6 +372,24 @@ public:
 
         gridLayout_3->addLayout(horizontalLayout_2, 7, 0, 1, 5);
 
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_5);
+
+        pushButton_8 = new QPushButton(Co);
+        pushButton_8->setObjectName(QString::fromUtf8("pushButton_8"));
+
+        horizontalLayout_3->addWidget(pushButton_8);
+
+        horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_6);
+
+
+        gridLayout_3->addLayout(horizontalLayout_3, 8, 0, 1, 5);
+
         tabWidget->addTab(Co, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
@@ -501,6 +523,7 @@ public:
         colorYellowButton->setText(QString());
         colorVioletButton->setText(QString());
         pushButton_7->setText(QApplication::translate("PreferencesDialog", "Reset all to defaults", 0, QApplication::UnicodeUTF8));
+        pushButton_8->setText(QApplication::translate("PreferencesDialog", "Driver colors", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(Co), QApplication::translate("PreferencesDialog", "Colors", 0, QApplication::UnicodeUTF8));
         proxyCheckBox->setText(QApplication::translate("PreferencesDialog", "Use proxy", 0, QApplication::UnicodeUTF8));
         proxyBox->setTitle(QApplication::translate("PreferencesDialog", "Proxy settings", 0, QApplication::UnicodeUTF8));

@@ -16,7 +16,7 @@ DriverRadar::~DriverRadar()
 
 void DriverRadar::checkSetupCorrect(int speed)
 {
-    if (drp.isEmpty() || drp.first()->hasEmptyHelmet())
+    if (drp.isEmpty())
     {
         setupDrivers(speed);
     }

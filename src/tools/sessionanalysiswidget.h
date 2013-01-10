@@ -19,6 +19,7 @@ public:
     ~SessionAnalysisWidget();
 
     void setupTables();
+    void setupColors();
     void resizeTables();
 
 protected:
@@ -37,7 +38,7 @@ public slots:
     void setDriverChecked(int no, bool checked);
     void onZoomChanged(int, int, double, double);
     void setupBoxes();
-    void setupIcons(QList<QColor> colors);
+    void setupIcons(const QList<QColor> &colors);
     QIcon getDriverIcon(int no);
 
     void resetView();

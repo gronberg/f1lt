@@ -14,36 +14,9 @@ DriverRadarPositioner::DriverRadarPositioner(DriverData *dd, int x, int y, doubl
     sectorPositions[1] = 0.0;
 }
 
-void DriverRadarPositioner::setupHelmet(int size)
-{
-    helmet = QImage(":/ui_icons/helmet.png").scaledToHeight(size, Qt::SmoothTransformation);
-    QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(size, Qt::SmoothTransformation);
-
-    QImage hl(helmet.size(), helmet.format());
-    QColor drvColor = SeasonData::getInstance().getCarColor(driverData->getNumber());
-    if (drvColor == SeasonData::getInstance().getColor(LTPackets::BACKGROUND))
-    {
-        helmet = QImage();
-        return;
-    }
-    QPainter phl;
-    phl.begin(&hl);
-    phl.setBrush(QBrush(drvColor));
-    phl.drawRect(0, 0, hl.width(), hl.height());
-    phl.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-    phl.drawImage(0, 0, helmetMask);
-    phl.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    phl.drawImage(0, 0, helmet);
-    phl.end();
-
-    helmet = hl;
-}
-
 void DriverRadarPositioner::setDriverData(DriverData *dd)
 {
     driverData = dd;
-
-    setupHelmet(24);
 }
 
 void DriverRadarPositioner::setStartupPosition()
@@ -53,8 +26,6 @@ void DriverRadarPositioner::setStartupPosition()
     qualiOut = false;
     inPits = false;
     finished = false;
-
-    setupHelmet(24);
 
     sectorPositions[0] = 0;
     sectorPositions[1] = 0;
@@ -382,7 +353,8 @@ void DriverRadarPositioner::paint(QPainter *p, bool selected)
 
         p->setPen(pen);
 
-        p->drawImage(point.x()-15, point.y()-15, helmet);
+        QPixmap helmet = SeasonData::getInstance().getHelmetsFactory().getHelmet(driverData->getNumber(), 24);
+        p->drawPixmap(point.x()-15, point.y()-15, helmet);
 
         p->setFont(QFont("Arial", 8, 75));
 
