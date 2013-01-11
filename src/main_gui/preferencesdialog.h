@@ -49,6 +49,9 @@ public:
     QNetworkProxy getProxy();
     bool proxyEnabled();
 
+signals:
+    void driversColorsChanged();
+
 public slots:
     int exec(QSettings *);
     
@@ -103,6 +106,7 @@ private:
     QList<QColor> colors;
 
     DriverColorsDialog *dcDialog;
+
 };
 
 #endif // PREFERENCESDIALOG_H

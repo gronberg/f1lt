@@ -25,12 +25,7 @@ LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
     comboBox[3] = ui->comboBox4;
 
     loadDriversList();
-
-    color[0] = SeasonData::getInstance().getDefaultColor(LTPackets::GREEN);
-    color[1] = SeasonData::getInstance().getDefaultColor(LTPackets::CYAN);
-    color[2] = SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW);
-    color[3] = SeasonData::getInstance().getDefaultColor(LTPackets::VIOLET);
-    lapCompChart = new LapCompChart(color, this);
+    lapCompChart = new LapCompChart(this);
 
 
     connect(ui->comboBox1, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxValueChanged(int)));
@@ -330,7 +325,7 @@ void LapTimeComparisonDialog::updateCharts()
 
             QTableWidgetItem *item = ui->chartsTableWidget->item(0, i);
             item->setText(driver);
-            item->setTextColor(color[i]);
+            item->setTextColor(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
 
 //            if (carIdx >= 0)
             {

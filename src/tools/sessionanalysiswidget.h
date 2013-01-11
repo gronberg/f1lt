@@ -18,8 +18,7 @@ public:
     SessionAnalysisWidget(QWidget *parent = 0);
     ~SessionAnalysisWidget();
 
-    void setupTables();
-    void setupColors();
+    void setupTables();    
     void resizeTables();
 
 protected:
@@ -31,6 +30,8 @@ protected:
 public slots:
 	void selectDriversClicked();
     void exec();
+
+    void setupColors();
 
     void update(bool repaintCharts = true);
     void gatherData();

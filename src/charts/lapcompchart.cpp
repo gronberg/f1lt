@@ -217,7 +217,7 @@ void LapCompChart::drawChart(QPainter *p)
 
                 QPen pen;
                 pen.setWidth(2);
-                pen.setColor(colors[k]);
+                pen.setColor(SeasonData::getInstance().getCarColor(driverData[k]->getNumber()));
                 p->setPen(pen);
 
                 if (lapTime.toString() == "IN PIT")
@@ -279,7 +279,7 @@ void LapCompChart::drawChart(QPainter *p)
                         p->drawLine(dx1, dy1, dx2, dy2);
                         pointSize = 2;
                     }
-                    p->setBrush(QBrush(colors[k]));
+                    p->setBrush(QBrush(SeasonData::getInstance().getCarColor(driverData[k]->getNumber())));
 
                     QPainterPath path;
                     if (y2[k] <= paintRect.bottom())
@@ -352,7 +352,7 @@ void LapCompChart::drawLegend(QPainter *p)
             p->setPen(QColor(20, 20, 20));
             p->drawRect(40, yy, 115, 20);
 
-            p->setPen(colors[i]);
+            p->setPen(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
             p->drawText(45, yy+20, driverData[i]->getDriverName());
             yy += 20;
         }
@@ -569,7 +569,7 @@ void GapCompChart::drawAxes(QPainter *p, int firstLap, int lastLap)
 void GapCompChart::findFirstAndLastLap(int &firstLap, int &lastLap)
 {
     firstLap = 99, lastLap = 0;
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 2; ++i)
     {
         DriverData *dd = driverIdx[i] >= 0 ? &eventData.getDriversData()[driverIdx[i]] : 0;
         if (dd != 0 && !dd->getLapData().isEmpty())
@@ -668,7 +668,7 @@ void GapCompChart::drawChart(QPainter *p)
 
                 QPen pen;
                 pen.setWidth(2);
-                pen.setColor(colors[k]);
+                pen.setColor(SeasonData::getInstance().getCarColor(dd->getNumber()));
                 p->setPen(pen);
 
                 double driverY = fabs(intervals[i-firstLap].toDouble());
@@ -709,7 +709,7 @@ void GapCompChart::drawChart(QPainter *p)
                     }
 
                     QPainterPath path;
-                    p->setBrush(QBrush(colors[k]));
+                    p->setBrush(QBrush(SeasonData::getInstance().getCarColor(dd->getNumber())));
 
                     if (y2[k] <= paintRect.bottom())
                     {
@@ -793,7 +793,7 @@ void GapCompChart::drawLegend(QPainter *p)
         DriverData *dd = driverIdx[i] >= 0 ? &eventData.getDriversData()[driverIdx[i]] : 0;
         if (dd != 0 && dd->getCarID() > 0)
         {
-            p->setPen(colors[i]);
+            p->setPen(SeasonData::getInstance().getCarColor(dd->getNumber()));
             p->drawText(45, yy+20, dd->getDriverName());
             yy += 20;
         }
@@ -1027,7 +1027,7 @@ void PosCompChart::drawChart(QPainter *p)
 
                 QPen pen;
                 pen.setWidth(2);
-                pen.setColor(colors[k]);
+                pen.setColor(SeasonData::getInstance().getCarColor(driverData[k]->getNumber()));
                 p->setPen(pen);
 
                 int pos = ld.getPosition();//driverData[k]->getLapData()[index[k]].pos;
@@ -1047,7 +1047,7 @@ void PosCompChart::drawChart(QPainter *p)
                 if (y2[k] <= paintRect.bottom())
                 {
                     QPainterPath path;
-                    p->setBrush(QBrush(colors[k]));
+                    p->setBrush(QBrush(SeasonData::getInstance().getCarColor(driverData[k]->getNumber())));
 
                     if (ld.getTime().toString() == "IN PIT")
                         path.addEllipse(QPoint(j[k], y2[k]), 6, 6);
@@ -1108,7 +1108,7 @@ void PosCompChart::drawLegend(QPainter *p)
     {
         if (driverData[i] != 0 && driverData[i]->getCarID() > 0)
         {
-            p->setPen(colors[i]);
+            p->setPen(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
             p->drawText(45, yy+20, driverData[i]->getDriverName());
             yy += 20;
         }

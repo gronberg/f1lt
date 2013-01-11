@@ -61,7 +61,6 @@ public:
     }
 
     virtual void setData(const QList<LapData> ld) { lapDataArray = ld; qSort(lapDataArray.begin(), lapDataArray.end(), lessThan);}
-    virtual void setColors(const QList<QColor> cl) { colors = cl; }
 
     virtual void setMinMax(double min, double max) { this->min = min, this->max = max; }
 
@@ -108,7 +107,6 @@ protected:
     void paintEvent(QPaintEvent *);
 
     QList<LapData> lapDataArray;
-    QList<QColor> colors;
 
     QImage chartImg;
 };

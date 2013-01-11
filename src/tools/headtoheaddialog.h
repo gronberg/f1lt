@@ -63,7 +63,6 @@ private:
     LapCompChart *lapCompChart;
     GapCompChart *gapCompChart;
     PosCompChart *posCompChart;
-    QColor color[2];
     QList<QPixmap> *smallCarImg;
 
     bool reversedOrder;

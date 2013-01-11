@@ -260,24 +260,8 @@ void SessionAnalysisWidget::setupColors()
         lab->setPalette(palette);
     }
     setupIcons(SeasonData::getInstance().getDriverColors());
-    ui.sessionLapTimesChart->setColors(SeasonData::getInstance().getDriverColors());
-    ui.sessionPositionsChart->setColors(SeasonData::getInstance().getDriverColors());
-    ui.sessionGapsChart->setColors(SeasonData::getInstance().getDriverColors());
-    ui.sessionLapTimesChartFP->setColors(SeasonData::getInstance().getDriverColors());
-    ui.sessionLapTimesChartQuali->setColors(SeasonData::getInstance().getDriverColors());
 
-    ui.sessionLapTimesChartQ1->setColors(SeasonData::getInstance().getDriverColors());
-
-    ui.sessionLapTimesChartQ2->setColors(SeasonData::getInstance().getDriverColors());
-
-    ui.sessionLapTimesChartQ3->setColors(SeasonData::getInstance().getDriverColors());
-
-    ui.lapTimeTableWidget->repaint();
-    ui.lapTimeTableWidgetFP->repaint();
-    ui.lapTimeTableWidgetQ1->repaint();
-    ui.lapTimeTableWidgetQ2->repaint();
-    ui.lapTimeTableWidgetQ3->repaint();
-    ui.lapTimeTableWidgetQuali->repaint();
+    update();
 }
 
 void SessionAnalysisWidget::setupIcons(const QList<QColor> &colors)
@@ -810,6 +794,7 @@ void SessionAnalysisWidget::loadSettings(QSettings &settings)
     ui.lapTimeTableWidgetQ3->setGeometry(ui.lapTimeTableWidgetQ3->x(), ui.lapTimeTableWidgetQ3->y(), w == 0 ? 300 : w,ui.lapTimeTableWidgetQ3->height());
 
     setupTables();
+    setupColors();
 }
 
 void SessionAnalysisWidget::onSplitterMoved(int, int)

@@ -36,11 +36,9 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
 
     loadDriversList();
 
-    color[0] = SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW);
-    color[1] = SeasonData::getInstance().getDefaultColor(LTPackets::CYAN);
-    lapCompChart = new LapCompChart(color, this);
-    gapCompChart = new GapCompChart(color, this);
-    posCompChart = new PosCompChart(color, this);
+    lapCompChart = new LapCompChart(this);
+    gapCompChart = new GapCompChart(this);
+    posCompChart = new PosCompChart(this);
 
     posCompChart->setMinMax(1, SeasonData::getInstance().getTeams().size()*2);
 
@@ -581,15 +579,15 @@ void HeadToHeadDialog::updateCharts()
 
             QTableWidgetItem *item = ui->chartsTableWidget->item(0, i);
             item->setText(driver);
-            item->setTextColor(color[i]);
+            item->setTextColor(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
 
             item = ui->gapChartTableWidget->item(0, i);
             item->setText(driver);
-            item->setTextColor(color[i]);
+            item->setTextColor(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
 
             item = ui->posChartTableWidget->item(0, i);
             item->setText(driver);
-            item->setTextColor(color[i]);
+            item->setTextColor(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
 
 //            if (carIdx >= 0)
             {

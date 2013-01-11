@@ -346,15 +346,16 @@ QColor SessionLapTimesChart::getCarColor(const LapData &ld)
 
 QColor SessionLapTimesChart::getCarColor(const DriverData &dd)
 {
-    QColor color = SeasonData::getInstance().getDefaultColor(LTPackets::BACKGROUND);
-    if (dd.getCarID() > 0)
-    {
-        int no = dd.getNumber();
+//    QColor color = SeasonData::getInstance().getDefaultColor(LTPackets::BACKGROUND);
+//    if (dd.getCarID() > 0)
+//    {
+//        int no = dd.getNumber();
 
-        if (no > 0 && no < colors.size()+2)
-            color = colors[no <= 12 ? no-1 : no -2];
-    }
-    return color;
+//        if (no > 0 && no < colors.size()+2)
+//            color = colors[no <= 12 ? no-1 : no -2];
+//    }
+//    return color;
+    return SeasonData::getInstance().getCarColor(dd.getNumber());
 }
 
 void SessionLapTimesChart::drawIntoImage(QImage &img)

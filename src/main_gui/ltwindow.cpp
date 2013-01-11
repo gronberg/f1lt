@@ -42,6 +42,8 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
     connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(showNoSessionBoard(bool, QString)));
 
+    connect(prefs, SIGNAL(driversColorsChanged()), saw, SLOT(setupColors()));
+
     sessionTimer = new SessionTimer(this);
     eventRecorder = new EventRecorder(sessionTimer, this);
     eventPlayer = new EventPlayer(this);
@@ -562,7 +564,6 @@ void LTWindow::loadSettings()
 
     eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
 
-    saw->loadSettings(*settings);
     stw->loadSettings(*settings);
     driverTrackerWidget->loadSettings(settings);
 
@@ -586,6 +587,8 @@ void LTWindow::loadSettings()
         colors[i] = color.value<QColor>();
     }
     SeasonData::getInstance().setDriverColors(colors);
+
+    saw->loadSettings(*settings);
 }
 
 void LTWindow::saveSettings()
@@ -679,8 +682,7 @@ void LTWindow::on_actionPreferences_triggered()
             ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
 
         ui->ltWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
-        driverTrackerWidget->drawTrackerClassification(settings->value("ui/draw_tracker_classification").toBool());
-        saw->setupColors();
+        driverTrackerWidget->drawTrackerClassification(settings->value("ui/draw_tracker_classification").toBool());        
     }
 }
 

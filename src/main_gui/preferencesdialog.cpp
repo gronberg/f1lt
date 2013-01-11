@@ -386,5 +386,6 @@ void PreferencesDialog::on_pushButton_7_clicked()
 
 void PreferencesDialog::on_pushButton_8_clicked()
 {
-    dcDialog->exec();
+    if (dcDialog->exec())
+        emit driversColorsChanged();
 }

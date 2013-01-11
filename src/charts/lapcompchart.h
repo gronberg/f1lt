@@ -77,12 +77,11 @@ class LapCompChart : public DriverDataChart
     Q_OBJECT
 
 public:
-    explicit LapCompChart(QColor *col, QWidget *parent = 0) : DriverDataChart(0, 180, col[0], parent)
+    explicit LapCompChart(QWidget *parent = 0) : DriverDataChart(0, 180, QColor(), parent)
     {
         for (int i = 0; i < 4; ++i)
         {
             driverData[i] = 0;
-            colors[i] = col[i];
         }
 
         popupBox = new PopupLapTimeCompInfoBox();
@@ -118,7 +117,6 @@ protected:
 
 private:
     DriverData *driverData[4];
-    QColor colors[4];
 
     QList<LapDataCompCoordinates> lapDataCompCoordinates;
 };
@@ -130,12 +128,8 @@ class GapCompChart : public DriverDataChart
     Q_OBJECT
 
 public:
-    explicit GapCompChart(QColor *col, QWidget *parent = 0) : DriverDataChart(0, 0, col[0], parent), eventData(EventData::getInstance())
+    explicit GapCompChart(QWidget *parent = 0) : DriverDataChart(0, 0, QColor(), parent), eventData(EventData::getInstance())
     {
-        for (int i = 0; i < 2; ++i)
-            colors[i] = col[i];
-
-
         popupBox = new PopupGapCompInfoBox();
     }
 
@@ -170,7 +164,6 @@ protected:
 private:
     EventData &eventData;
     int driverIdx[2];
-    QColor colors[2];
 
     QList<LapDataGapCompCoordinates> lapDataGapCompCoordinates;
 };
@@ -180,12 +173,11 @@ class PosCompChart : public DriverDataChart
     Q_OBJECT
 
 public:
-    explicit PosCompChart(QColor *col, QWidget *parent = 0) : DriverDataChart(0, 180, col[0], parent)
+    explicit PosCompChart(QWidget *parent = 0) : DriverDataChart(0, 180, QColor(), parent)
     {
         for (int i = 0; i < 2; ++i)
         {
             driverData[i] = 0;
-            colors[i] = col[i];
         }
     }
 
@@ -215,7 +207,6 @@ protected:
 
 private:
     DriverData *driverData[2];
-    QColor colors[2];
 };
 
 
