@@ -44,8 +44,6 @@
          <widget class="DriverTracker" name="driverTracker" native="true"/>
         </item>
        </layout>
-       <zorder>splitter</zorder>
-       <zorder>driverTracker</zorder>
       </widget>
      </widget>
      <widget class="DriverRadar" name="driverRadar" native="true">

@@ -395,13 +395,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionHead_to_head">
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
-     <normaloff>:/ui_icons/head2head-s.png</normaloff>:/ui_icons/head2head-s.png</iconset>
+     <normaloff>:/ui_icons/h2h.png</normaloff>:/ui_icons/h2h.png</iconset>
    </property>
    <property name="text">
     <string>Head to head</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionConnect">
@@ -417,6 +420,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionRecord">
@@ -446,6 +452,12 @@ p, li { white-space: pre-wrap; }
    <property name="shortcut">
     <string>Ctrl+P</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionExit">
    <property name="icon">
@@ -458,15 +470,34 @@ p, li { white-space: pre-wrap; }
    <property name="shortcut">
     <string>Ctrl+Q</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/ui_icons/icon3.png</normaloff>:/ui_icons/icon3.png</iconset>
+   </property>
    <property name="text">
     <string>About</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionAbout_Qt">
    <property name="text">
     <string>About Qt</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionOpen">
@@ -480,17 +511,23 @@ p, li { white-space: pre-wrap; }
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionLap_time_comparison">
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
-     <normaloff>:/ui_icons/ltc-s.png</normaloff>:/ui_icons/ltc-s.png</iconset>
+     <normaloff>:/ui_icons/ltc.png</normaloff>:/ui_icons/ltc.png</iconset>
    </property>
    <property name="text">
     <string>Lap time comparison</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionStop_recording">
@@ -519,6 +556,9 @@ p, li { white-space: pre-wrap; }
    <property name="shortcut">
     <string>Ctrl+A</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionLT_files_data_base">
    <property name="icon">
@@ -530,6 +570,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+B</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionFollow_a_driver">
@@ -543,6 +586,9 @@ p, li { white-space: pre-wrap; }
    <property name="shortcut">
     <string>Ctrl+F</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionSession_times">
    <property name="icon">
@@ -554,6 +600,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionDriver_tracker">
@@ -567,6 +616,9 @@ p, li { white-space: pre-wrap; }
    <property name="shortcut">
     <string>Ctrl+R</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionTrack_records">
    <property name="icon">
@@ -575,6 +627,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Track records</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

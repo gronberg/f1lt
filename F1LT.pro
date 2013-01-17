@@ -18,7 +18,7 @@ UI_DIR = ui/
 INSTALLS += target \
     DATA_FILES
 
-DATA_FILES.files = season.dat trackdata.dat
+DATA_FILES.files = season.dat trackdata.dat trackrecords.dat
 DATA_FILES.path = $$PREFIX/share/
 
 RC_FILE = f1lt.rc
@@ -155,7 +155,6 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/sessiondatawidget.ui \
     ui/headtoheaddialog.ui \
     ui/preferencesdialog.ui \
-    ui/connectiondialog.ui \
     ui/logindialog.ui \
     ui/eventplayer.ui \
     ui/laptimecomparisondialog.ui \
@@ -168,8 +167,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/drivertrackerwidget.ui \
     ui/delaywidget.ui \
     ui/trackrecordsdialog.ui \
-    src/tools/driverrecordsdialog.ui \
-    src/main_gui/drivercolorsdialog.ui
+    ui/driverrecordsdialog.ui \
+    ui/drivercolorsdialog.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

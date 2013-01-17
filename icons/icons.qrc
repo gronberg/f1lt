@@ -9,12 +9,6 @@
         <file>yellow-light.png</file>
     </qresource>
     <qresource prefix="/ui_icons">
-        <file>exit.png</file>
-        <file>login.png</file>
-        <file>preferences.png</file>
-        <file>head2head-s.png</file>
-        <file>media-playback-stop.png</file>
-        <file>media-record.png</file>
         <file>rewind.png</file>
         <file>forward.png</file>
         <file>skip-forward.png</file>
@@ -23,8 +17,6 @@
         <file>record.png</file>
         <file>play.png</file>
         <file>pause.png</file>
-        <file>document-open.png</file>
-        <file>ltc-s.png</file>
         <file>icon.png</file>
         <file>weather_air_temp.png</file>
         <file>weather_dry.png</file>
@@ -33,7 +25,6 @@
         <file>weather_track_temp.png</file>
         <file>weather_wind.png</file>
         <file>weather_wet.png</file>
-        <file>sa.png</file>
         <file>ltdb.png</file>
         <file>fad.png</file>
         <file>st.png</file>
@@ -45,7 +36,14 @@
         <file>label-big.png</file>
         <file>dt.png</file>
         <file>label-info-long.png</file>
-        <file>tr.png</file>
         <file>label-small.png</file>
+        <file>tr.png</file>
+        <file>exit.png</file>
+        <file>preferences.png</file>
+        <file>document-open.png</file>
+        <file>login.png</file>
+        <file>h2h.png</file>
+        <file>ltc.png</file>
+        <file>sa.png</file>
     </qresource>
 </RCC>

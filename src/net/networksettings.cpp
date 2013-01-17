@@ -1,3 +1,24 @@
+/*******************************************************************************
+ *                                                                             *
+ *   F1LT - unofficial Formula 1 live timing application                       *
+ *   Copyright (C) 2012-2013  Mariusz Pilarek (pieczaro@gmail.com)             *
+ *                                                                             *
+ *   This program is free software: you can redistribute it and/or modify      *
+ *   it under the terms of the GNU General Public License as published by      *
+ *   the Free Software Foundation, either version 3 of the License, or         *
+ *   (at your option) any later version.                                       *
+ *                                                                             *
+ *   This program is distributed in the hope that it will be useful,           *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *   GNU General Public License for more details.                              *
+ *                                                                             *
+ *   You should have received a copy of the GNU General Public License         *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.     *
+ *                                                                             *
+ *******************************************************************************/
+
+
 #include "networksettings.h"
 
 NetworkSettings::NetworkSettings()
@@ -7,8 +28,11 @@ NetworkSettings::NetworkSettings()
     httpKeyFrameUrl = "http://live-timing.formula1.com/keyframe";
     httpDecryptionKeyUrl = "http://live-timing.formula1.com/reg/getkey/";
 
-    socketHost = "live-timing.formula1.com";
-    socketPort = 4321;
+//    socketHost = "live-timing.formula1.com";
+//    socketPort = 4321;
+
+    socketHost = "192.168.1.2";
+    socketPort = 6666;
 
     ltDataUrl = "http://lt.f1lt.pl/";
     ltDataList = "http://lt.f1lt.pl/lis.php";

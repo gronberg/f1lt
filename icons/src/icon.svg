@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="259.10413"
+   height="260.11429"
+   id="svg2">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient4149">
+      <stop
+         id="stop4151"
+         style="stop-color:#000000;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop4153"
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3997">
+      <stop
+         id="stop3999"
+         style="stop-color:#000000;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop4001"
+         style="stop-color:#000000;stop-opacity:0"
+         offset="1" />
+    </linearGradient>
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect3969" />
+    <linearGradient
+       id="linearGradient3887">
+      <stop
+         id="stop3889"
+         style="stop-color:#ffc900;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3891"
+         style="stop-color:#000000;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3069">
+      <stop
+         id="stop3071"
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3073"
+         style="stop-color:#ffffff;stop-opacity:0"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient12003">
+      <stop
+         id="stop12005"
+         style="stop-color:#ff0000;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop12007"
+         style="stop-color:#ff0000;stop-opacity:0"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient11847">
+      <stop
+         id="stop11849"
+         style="stop-color:#ffc900;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop11851"
+         style="stop-color:#000000;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient10602">
+      <stop
+         id="stop10604"
+         style="stop-color:#343434;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop10606"
+         style="stop-color:#d6d6d6;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient10508">
+      <stop
+         id="stop10510"
+         style="stop-color:#3e3b3b;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop10512"
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4028">
+      <stop
+         id="stop4030"
+         style="stop-color:#ffffff;stop-opacity:0.92694062"
+         offset="0" />
+      <stop
+         id="stop4032"
+         style="stop-color:#ffffff;stop-opacity:0"
+         offset="1" />
+    </linearGradient>
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect4025" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect4000" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect3996" />
+    <linearGradient
+       x1="596.49506"
+       y1="611.4306"
+       x2="231.32494"
+       y2="169.48886"
+       id="linearGradient10516"
+       xlink:href="#linearGradient10508"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-54.544044,201.77509)" />
+    <linearGradient
+       x1="139.40105"
+       y1="231.10817"
+       x2="383.59756"
+       y2="476.02759"
+       id="linearGradient10608"
+       xlink:href="#linearGradient10602"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter10614">
+      <feGaussianBlur
+         id="feGaussianBlur10616"
+         stdDeviation="0.58998781" />
+    </filter>
+    <linearGradient
+       x1="251.54195"
+       y1="376.22232"
+       x2="250.58809"
+       y2="477.65085"
+       id="linearGradient11853"
+       xlink:href="#linearGradient11847"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(5.8083771,7.5761441)" />
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter11991">
+      <feFlood
+         result="flood"
+         flood-color="rgb(0,0,0)"
+         flood-opacity="0.6"
+         id="feFlood11993" />
+      <feComposite
+         in2="SourceGraphic"
+         operator="in"
+         in="flood"
+         result="composite1"
+         id="feComposite11995" />
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="10"
+         id="feGaussianBlur11997" />
+      <feOffset
+         result="offset"
+         dy="0"
+         dx="0"
+         id="feOffset11999" />
+      <feComposite
+         in2="offset"
+         operator="over"
+         in="SourceGraphic"
+         result="composite2"
+         id="feComposite12001" />
+    </filter>
+    <linearGradient
+       x1="142.77373"
+       y1="160.66014"
+       x2="373.17337"
+       y2="159.23157"
+       id="linearGradient12009"
+       xlink:href="#linearGradient12003"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       x1="251.54195"
+       y1="375.50803"
+       x2="247.73094"
+       y2="504.43655"
+       id="linearGradient3885"
+       xlink:href="#linearGradient3887"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(5.8083771,7.5761441)" />
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter3917">
+      <feGaussianBlur
+         id="feGaussianBlur3919"
+         stdDeviation="1.5988679" />
+    </filter>
+    <linearGradient
+       x1="251.54195"
+       y1="375.50803"
+       x2="247.73094"
+       y2="504.43655"
+       id="linearGradient4052"
+       xlink:href="#linearGradient3887"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(5.8083771,7.5761441)" />
+    <linearGradient
+       x1="414.30801"
+       y1="375.39288"
+       x2="326.41965"
+       y2="258.25"
+       id="linearGradient4066"
+       xlink:href="#linearGradient4028"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-70.414024,174.85577)" />
+    <linearGradient
+       x1="255.71428"
+       y1="388.07648"
+       x2="261.42856"
+       y2="269.50504"
+       id="linearGradient4069"
+       xlink:href="#linearGradient3997"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(90.219327,201.77131)" />
+    <linearGradient
+       x1="242.9417"
+       y1="446.0181"
+       x2="247.73991"
+       y2="368.99399"
+       id="linearGradient4155"
+       xlink:href="#linearGradient4149"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       x1="242.9417"
+       y1="446.0181"
+       x2="247.73991"
+       y2="368.99399"
+       id="linearGradient4176"
+       xlink:href="#linearGradient4149"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       x1="242.9417"
+       y1="446.0181"
+       x2="247.73991"
+       y2="368.99399"
+       id="linearGradient3216"
+       xlink:href="#linearGradient4149"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       x1="253.57143"
+       y1="415.57648"
+       x2="253.57143"
+       y2="380.57648"
+       id="linearGradient3221"
+       xlink:href="#linearGradient3069"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(90.219327,201.77131)" />
+    <linearGradient
+       x1="246.51312"
+       y1="479.94666"
+       x2="247.73991"
+       y2="368.99399"
+       id="linearGradient3225"
+       xlink:href="#linearGradient4149"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(95.714286,214.28571)" />
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter4001">
+      <feGaussianBlur
+         id="feGaussianBlur4003"
+         stdDeviation="0.41028125" />
+    </filter>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-213.61502,-418.23605)"
+     id="layer1">
+    <rect
+       width="259.10413"
+       height="260.11429"
+       x="213.61502"
+       y="418.23605"
+       id="rect9024"
+       style="fill:url(#linearGradient10516);fill-opacity:1;fill-rule:evenodd;stroke:none" />
+    <rect
+       width="237.15321"
+       height="234.83704"
+       ry="18.427202"
+       x="134.36185"
+       y="229.09958"
+       transform="matrix(0.97059729,0,0,0.98005615,97.665717,208.686)"
+       id="rect10560"
+       style="fill:url(#linearGradient10608);fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter10614)" />
+    <g
+       transform="matrix(1.3790852,0,0,2.2701369,-446.22099,-161.20169)"
+       id="g11875"
+       style="opacity:0.18264842" />
+    <rect
+       width="220"
+       height="220"
+       ry="14.869072"
+       x="233.16708"
+       y="438.63687"
+       id="rect3066"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+    <g
+       transform="translate(-94.523694,175.63718)"
+       id="g8990"
+       style="opacity:0.89954343">
+      <text
+         x="334.87933"
+         y="285.01938"
+         id="text3068"
+         xml:space="preserve"
+         style="font-size:14.67831421px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:150%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"><tspan
+           x="334.87933"
+           y="285.01938"
+           id="tspan3070"
+           style="font-weight:bold;line-height:150%;-inkscape-font-specification:Arial Bold"><tspan
+             id="tspan3848"
+             style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">1.</tspan><tspan
+             id="tspan3842"
+             style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">   8 N. Rosberg</tspan></tspan><tspan
+           x="334.87933"
+           y="307.03687"
+           id="tspan3850"
+           style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold"><tspan
+   id="tspan3876"
+   style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">2.</tspan>   3 J. Button</tspan><tspan
+           x="334.87933"
+           y="329.05432"
+           id="tspan3852"
+           style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold"><tspan
+   id="tspan3878"
+   style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">3.</tspan>   4 L. Hamilton</tspan><tspan
+           x="334.87933"
+           y="351.07178"
+           id="tspan3854"
+           style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold"><tspan
+   id="tspan3880"
+   style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">4.</tspan>   2 M. Webber</tspan><tspan
+           x="334.87933"
+           y="373.08926"
+           id="tspan3856"
+           style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold"><tspan
+   id="tspan3882"
+   style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">5.</tspan>   1 S. Vettel</tspan><tspan
+           x="334.87933"
+           y="395.10675"
+           id="tspan3858"
+           style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold"><tspan
+   id="tspan3884"
+   style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">6.</tspan> 10 R. Grosjean</tspan><tspan
+           x="334.87933"
+           y="417.12421"
+           id="tspan3860"
+           style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold"><tspan
+   id="tspan3886"
+   style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">7.</tspan> 19 B. Senna</tspan><tspan
+           x="334.87933"
+           y="439.14166"
+           id="tspan3862"
+           style="font-weight:bold;line-height:150%;-inkscape-font-specification:Arial Bold"><tspan
+             id="tspan3888"
+             style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">8.</tspan><tspan
+             id="tspan3870"
+             style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold"> 18 P. Maldonado</tspan></tspan><tspan
+           x="334.87933"
+           y="461.15915"
+           id="tspan3864"
+           style="font-weight:bold;line-height:150%;-inkscape-font-specification:Arial Bold"><tspan
+             id="tspan3890"
+             style="font-weight:bold;line-height:150%;fill:#00ffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">9.</tspan><tspan
+             id="tspan3868"
+             style="font-weight:bold;line-height:150%;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Arial Bold">   5 F. Alonso</tspan></tspan></text>
+      <text
+         x="469.668"
+         y="286.21796"
+         id="text3902"
+         xml:space="preserve"
+         style="font-size:14.69734097px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:150%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"><tspan
+           x="469.668"
+           y="286.21796"
+           id="tspan3904"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">LAP      56</tspan><tspan
+           x="469.668"
+           y="308.26398"
+           id="tspan3906"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">20.6   20.6</tspan><tspan
+           x="469.668"
+           y="330.30997"
+           id="tspan3908"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">26.0     5.3</tspan><tspan
+           x="469.668"
+           y="352.35599"
+           id="tspan3910"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">27.9     1.9</tspan><tspan
+           x="469.668"
+           y="374.40201"
+           id="tspan3912"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">30.4     2.5</tspan><tspan
+           x="469.668"
+           y="396.44803"
+           id="tspan3914"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">31.4     1.0</tspan><tspan
+           x="469.668"
+           y="418.49402"
+           id="tspan3916"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">34.5     3.1</tspan><tspan
+           x="469.668"
+           y="440.54004"
+           id="tspan3918"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">35.6     1.0</tspan><tspan
+           x="469.668"
+           y="462.58606"
+           id="tspan3920"
+           style="font-weight:bold;line-height:150%;fill:#ffff00;fill-opacity:1;-inkscape-font-specification:Arial Bold">37.2     1.6</tspan></text>
+    </g>
+    <rect
+       width="220"
+       height="220"
+       ry="14.869072"
+       x="233.16708"
+       y="438.63687"
+       id="rect3995"
+       style="opacity:0.90410958;fill:url(#linearGradient4069);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+    <path
+       d="m 248.08598,437.94951 c -8.26348,0 -14.90625,6.64277 -14.90625,14.90625 l 0,175.40625 C 268.22676,539.31682 379.8562,503.90343 453.14848,485.23076 l 0,-32.375 c 0,-8.26348 -6.64277,-14.90625 -14.90625,-14.90625 z"
+       id="rect3992"
+       style="opacity:0.39269409;fill:url(#linearGradient4066);fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4001)" />
+    <text
+       x="249.19382"
+       y="646.68152"
+       id="text10660"
+       xml:space="preserve"
+       style="font-size:74.57678223px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.50684934;fill:#4d4d4d;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"><tspan
+         x="249.19382"
+         y="646.68152"
+         id="tspan10662"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#4d4d4d;fill-opacity:1;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L Bold Italic">F1LT</tspan></text>
+    <text
+       x="245.62239"
+       y="642.0387"
+       id="text10656"
+       xml:space="preserve"
+       style="font-size:74.57678223px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3225);fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"><tspan
+         x="245.62239"
+         y="642.0387"
+         id="tspan10658"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;fill:url(#linearGradient3225);fill-opacity:1;stroke:none;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L Bold Italic">F1LT</tspan></text>
+    <path
+       d="m 262.68808,587.67756 -6,28.25 35,0 1.4375,-6.625 -23.875,0 2.625,-12.3125 27,0 2,-9.3125 -38.1875,0 z m 87.5625,0 -6,28.25 11.21875,0 5.96875,-28.25 -11.1875,0 z m 40.65625,0 -2,9.3125 16.5625,0 -4.03125,18.9375 11.1875,0 4.03125,-18.9375 15.8125,0 2,-9.3125 -43.5625,0 z m -67.1875,1.5 c -2.98307,6.26444 -9.08914,9.46875 -18.1875,9.46875 l -1.5,6.9375 12.6875,0 -2.1875,10.34375 10.4375,0 5.6875,-26.75 -6.9375,0 z"
+       id="rect3067"
+       style="opacity:0.61187212;fill:url(#linearGradient3221);fill-opacity:1;fill-rule:evenodd;stroke:none" />
+  </g>
+</svg>

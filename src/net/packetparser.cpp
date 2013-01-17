@@ -1,3 +1,24 @@
+/*******************************************************************************
+ *                                                                             *
+ *   F1LT - unofficial Formula 1 live timing application                       *
+ *   Copyright (C) 2012-2013  Mariusz Pilarek (pieczaro@gmail.com)             *
+ *                                                                             *
+ *   This program is free software: you can redistribute it and/or modify      *
+ *   it under the terms of the GNU General Public License as published by      *
+ *   the Free Software Foundation, either version 3 of the License, or         *
+ *   (at your option) any later version.                                       *
+ *                                                                             *
+ *   This program is distributed in the hope that it will be useful,           *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+ *   GNU General Public License for more details.                              *
+ *                                                                             *
+ *   You should have received a copy of the GNU General Public License         *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.     *
+ *                                                                             *
+ *******************************************************************************/
+
+
 #include "packetparser.h"
 
 #include <QDebug>
@@ -169,7 +190,7 @@ bool PacketParser::parsePacket(const QByteArray &buf, Packet &packet, int &pos)
         }
     }
 
-//    decryptPacket = false;
+    decryptPacket = false;
     packet.encrypted = decryptPacket;
 
     if (packet.length > 0)
@@ -217,7 +238,7 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
         emit noLiveSession(false, "");
     }
 
-//    qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
+    qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
 
     if (packet.carID > eventData.driversData.size() || packet.carID < 1)
     {
@@ -330,7 +351,7 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
                 eventData.driversData[packet.carID-1].posHistory.append((int)copyPacket.longData[i]);
 
             //during the race carID is always equal to grid position
-            if (eventData.eventType == LTPackets::RACE_EVENT)
+            if (eventData.eventType == LTPackets::RACE_EVENT && !eventData.driversData[packet.carID-1].posHistory.isEmpty())
                 eventData.driversData[packet.carID-1].posHistory[0] = packet.carID;
 
             break;
@@ -869,8 +890,10 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
 
 void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 {
-//    if (packet.type != LTPackets::SYS_COMMENTARY )//&& packet.type != LTPackets::SYS_TIMESTAMP)
-//        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTPackets::SYS_COMMENTARY) ? packet.longData.constData() : "");
+//    if (packet.type != LTPackets::SYS_COMMENTARY && packet.type != LTPackets::SYS_TIMESTAMP)
+        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< /*((packet.type != LTPackets::SYS_COMMENTARY) ? */packet.longData.constData()/* : "")*/;
+
+//    qDebug() << "EVENT TYPE=" << eventData.eventType;
 
     unsigned int number, i;
 //    unsigned char packetLongData[129];
@@ -928,6 +951,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 
             eventData.eventInfo = SeasonData::getInstance().getEvent(/*QDate::fromString("12.06.2011", "dd.MM.yyyy"));//*/QDate::currentDate());//(int)(packet.longData[0]);
             eventData.eventType = (LTPackets::EventType)copyPacket.data;
+
             eventData.lapsCompleted = 0;
 
 
@@ -950,7 +974,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
              if (!eventData.frame || number == 1) // || decryption_failure
              {
                 eventData.frame = number;
-                emit requestKeyFrame(number);
+//                emit requestKeyFrame(number);
 
 //                httpReader.obtainKeyFrame(number);
 

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/files">
         <file>CHANGELOG</file>
+        <file>LICENSE</file>
     </qresource>
 </RCC>
