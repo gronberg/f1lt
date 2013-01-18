@@ -82,14 +82,12 @@ int PreferencesDialog::exec(QSettings *set)
     commentaryFont.setItalic(bbuf);
 
     setSplitterOpaqueResize(settings->value("ui/ltresize").toBool());    
-    setAutoRecord(settings->value("ui/auto_record").toBool());
+    setAutoRecord(settings->value("ui/auto_record").toBool());    
     setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
     setDrawTrackerClassification(settings->value("ui/draw_tracker_classification").toBool());
 
-    if (!settings->contains("ui/auto_stop_record"))
-        setAutoStopRecord(-1);
-    else
-        setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
+    setAutoStopRecord(settings->value("ui/auto_stop_record", -1).toInt());
+    setAutoSaveRecord(settings->value("ui/auto_save_record", -1).toInt());
 
 
     QNetworkProxy proxy = NetworkSettings::getInstance().getProxy();
@@ -128,6 +126,8 @@ void PreferencesDialog::on_buttonBox_accepted()
 
     settings->setValue("ui/auto_record", isAutoRecord());    
     settings->setValue("ui/auto_stop_record", getAutoStopRecord());
+    settings->setValue("ui/auto_save_record", getAutoSaveRecord());
+
     settings->setValue("ui/auto_connect", isAutoConnect());
     settings->setValue("ui/draw_tracker_classification", drawTrackerClassification());
 
@@ -254,9 +254,33 @@ int PreferencesDialog::getAutoStopRecord()
         return ui->autoStopRecordSpinBox->value();
 }
 
+void PreferencesDialog::setAutoSaveRecord(int val)
+{
+    if (val >= 0)
+    {
+        ui->autoSaveRecordSpinBox->setEnabled(true);
+        ui->autoSaveRecordBox->setChecked(true);
+        ui->autoSaveRecordSpinBox->setValue(val);
+    }
+    else
+    {
+        ui->autoSaveRecordSpinBox->setEnabled(false);
+        ui->autoSaveRecordBox->setChecked(false);
+    }
+}
+
+int PreferencesDialog::getAutoSaveRecord()
+{
+    if (!ui->autoSaveRecordBox->isChecked())
+        return -1;
+
+    else
+        return ui->autoSaveRecordSpinBox->value();
+}
+
 void PreferencesDialog::on_autoStopRecordBox_toggled(bool checked)
 {
-    ui->autoStopRecordSpinBox->setEnabled(checked);
+    ui->autoSaveRecordSpinBox->setEnabled(checked);
 }
 
 void PreferencesDialog::setAutoConnect(bool val)
@@ -409,4 +433,9 @@ void PreferencesDialog::on_pushButton_8_clicked()
 {
     if (dcDialog->exec())
         emit driversColorsChanged();
+}
+
+void PreferencesDialog::on_autoSaveRecordBox_toggled(bool checked)
+{
+    ui->autoSaveRecordSpinBox->setEnabled(checked);
 }

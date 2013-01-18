@@ -49,6 +49,11 @@ public:
     	autoStopRecord = x;
     }
 
+    void setAutoSaveRecord(int x)
+    {
+        autoSaveRecord = x;
+    }
+
     void appendSessionTimer();
 //    void saveEventData(QDataStream &);
 //    void saveLapData(QDataStream &);
@@ -82,6 +87,8 @@ private:
     qint64 recordStartTime;
     int elapsedSeconds;
     int autoStopRecord;
+    int autoSaveRecord;
+    int autoSaveCounter;
     int elapsedTimeToStop;
     bool sessionRecorded;
 

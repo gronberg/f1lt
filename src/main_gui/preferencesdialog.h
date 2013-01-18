@@ -62,6 +62,9 @@ public:
     void setAutoStopRecord(int);
     int getAutoStopRecord();
 
+    void setAutoSaveRecord(int);
+    int getAutoSaveRecord();
+
     void setAutoConnect(bool);
     bool isAutoConnect();
 
@@ -115,6 +118,8 @@ private slots:
     void on_pushButton_7_clicked();
 
     void on_pushButton_8_clicked();
+
+    void on_autoSaveRecordBox_toggled(bool checked);
 
 private:
 

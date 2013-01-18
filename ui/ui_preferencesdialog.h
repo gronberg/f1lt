@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Thu Jan 17 22:32:12 2013
+** Created: Fri Jan 18 21:24:18 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -54,6 +54,10 @@ public:
     QCheckBox *autoStopRecordBox;
     QSpinBox *autoStopRecordSpinBox;
     QLabel *label_3;
+    QHBoxLayout *horizontalLayout_4;
+    QCheckBox *autoSaveRecordBox;
+    QSpinBox *autoSaveRecordSpinBox;
+    QLabel *label_10;
     QCheckBox *thumbnailsCheckBox;
     QCheckBox *trackerBox;
     QWidget *Co;
@@ -191,6 +195,28 @@ public:
 
 
         verticalLayout_4->addLayout(horizontalLayout);
+
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        autoSaveRecordBox = new QCheckBox(tab);
+        autoSaveRecordBox->setObjectName(QString::fromUtf8("autoSaveRecordBox"));
+
+        horizontalLayout_4->addWidget(autoSaveRecordBox);
+
+        autoSaveRecordSpinBox = new QSpinBox(tab);
+        autoSaveRecordSpinBox->setObjectName(QString::fromUtf8("autoSaveRecordSpinBox"));
+        autoSaveRecordSpinBox->setEnabled(false);
+        autoSaveRecordSpinBox->setMaximumSize(QSize(50, 16777215));
+
+        horizontalLayout_4->addWidget(autoSaveRecordSpinBox);
+
+        label_10 = new QLabel(tab);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
+
+        horizontalLayout_4->addWidget(label_10);
+
+
+        verticalLayout_4->addLayout(horizontalLayout_4);
 
         thumbnailsCheckBox = new QCheckBox(tab);
         thumbnailsCheckBox->setObjectName(QString::fromUtf8("thumbnailsCheckBox"));
@@ -501,6 +527,8 @@ public:
         autoRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically start recording when session starts", 0, QApplication::UnicodeUTF8));
         autoStopRecordBox->setText(QApplication::translate("PreferencesDialog", "Automatically stop recording ", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("PreferencesDialog", "minutes after session ends", 0, QApplication::UnicodeUTF8));
+        autoSaveRecordBox->setText(QApplication::translate("PreferencesDialog", "Auto-save currently recorded session file every ", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("PreferencesDialog", "minutes", 0, QApplication::UnicodeUTF8));
         thumbnailsCheckBox->setText(QApplication::translate("PreferencesDialog", "Draw car thumbnails", 0, QApplication::UnicodeUTF8));
         trackerBox->setText(QApplication::translate("PreferencesDialog", "Draw drivers classification in driver tracker", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("PreferencesDialog", "General", 0, QApplication::UnicodeUTF8));

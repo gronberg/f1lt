@@ -5,6 +5,7 @@ v2.0.0:
 - added possibility to choose different colors for displaying lap times, position numbers, etc.
 - classification in driver tracker can be now turned off
 - added IN and OUT laps into lap history during practices and qualis
+- implemented auto-save recorded session file every x minutes (x can be set in the preferences)
 - retired drivers are now not drawn in radar during races
 
 

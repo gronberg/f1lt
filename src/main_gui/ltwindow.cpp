@@ -584,7 +584,8 @@ void LTWindow::loadSettings()
 
     ui->ltWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
 
-    eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
+    eventRecorder->setAutoSaveRecord(settings->value("ui/auto_save_record", -1).toInt());
+    eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record", -1).toInt());
 
     stw->loadSettings(*settings);
     driverTrackerWidget->loadSettings(settings);
@@ -665,6 +666,7 @@ void LTWindow::on_actionPreferences_triggered()
         //ui->tableWidget->setAlternatingRowColors(prefs->isAlternatingRowColors());
 
         eventRecorder->setAutoStopRecord(settings->value("ui/auto_stop_record").toInt());
+        eventRecorder->setAutoSaveRecord(settings->value("ui/auto_save_record").toInt());
 
         NetworkSettings::getInstance().setProxy(prefs->getProxy(), prefs->proxyEnabled());
 
@@ -1140,12 +1142,14 @@ void LTWindow::showSessionBoard(bool show)
         ui->splitter->setVisible(!show);
         ui->eventStatusWidget->setVisible(!show);
         ui->messageBoardWidget->setVisible(show);
+        delayWidget->setEnabled(false);
     }
     else
     {
         ui->messageBoardWidget->setVisible(show);
         ui->eventStatusWidget->setVisible(!show);
         ui->splitter->setVisible(!show);
+        delayWidget->setEnabled(true);
     }
 	ui->actionRecord->setEnabled(!show);
     ui->actionHead_to_head->setEnabled(!show);

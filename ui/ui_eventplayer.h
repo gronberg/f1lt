@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'eventplayer.ui'
 **
-** Created: Thu Jan 17 22:32:12 2013
+** Created: Fri Jan 18 21:24:18 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

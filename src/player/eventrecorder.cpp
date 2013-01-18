@@ -25,7 +25,7 @@
 
 
 EventRecorder::EventRecorder(SessionTimer *st, QObject *parent) :
-    QObject(parent), sessionTimer(st), eventData(EventData::getInstance()), elapsedSeconds(0), sessionRecorded(false), recordStartTime(0)
+    QObject(parent), sessionTimer(st), eventData(EventData::getInstance()), elapsedSeconds(0), sessionRecorded(false), recordStartTime(0), autoSaveRecord(-1), autoSaveCounter(-1)
 {
 }
 
@@ -42,6 +42,8 @@ void EventRecorder::startRecording()
     lastSavedTime.first = 0;
     lastSavedTime.second = eventData.getRemainingTime();
     elapsedTimeToStop = -1;
+
+    autoSaveCounter = autoSaveRecord * 60;
 
     gatherInitialData();    
 
@@ -667,6 +669,16 @@ void EventRecorder::timeout()
 		}
     }
 
+    if (autoSaveRecord > -1)
+    {
+        --autoSaveCounter;
+
+        if (autoSaveCounter <= 0)
+        {
+            saveToFile("");
+            autoSaveCounter = autoSaveRecord * 60;
+        }
+    }
 
     //on every timeout the eventData object is appended into eventDataList and the driverData list is cleared
 //    eventDataList.append(eventData);
