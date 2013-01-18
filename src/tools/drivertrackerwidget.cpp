@@ -91,3 +91,18 @@ void DriverTrackerWidget::drawTrackerClassification(bool val)
 {
     ui->driverTracker->setDrawDriverClassification(val);
 }
+
+void DriverTrackerWidget::startTimer(int s)
+{
+    if (timer->isActive())
+        setTimerInterval(s);
+
+    else
+    {
+        ui->driverTracker->checkSetupCorrect(speed);
+        ui->driverRadar->checkSetupCorrect(speed);
+
+        interval = s / speed;
+        timer->start(interval);
+    }
+}

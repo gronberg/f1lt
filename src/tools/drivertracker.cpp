@@ -46,7 +46,9 @@ void DriverTracker::setMinimumSize()
 
 void DriverTracker::setupDrivers(int speed)
 {
-    selectedDriver = -1;
+    if (selectedDriver != -2)
+        selectedDriver = -1;
+
     excludedDrivers.clear();
 
     setMinimumSize();

@@ -73,6 +73,7 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(delayWidget, SIGNAL(delayChanged(int, int)), streamReader, SLOT(setDelay(int, int)));
     connect(delayWidget, SIGNAL(delayChanged(int, int)), sessionTimer, SLOT(setDelay(int, int)));
     connect(sessionTimer, SIGNAL(synchronizingTimer(bool)), delayWidget, SLOT(synchronizingTimer(bool)));
+    connect(sessionTimer, SIGNAL(synchronizingTimer(bool)), driverTrackerWidget, SLOT(pauseTimer(bool)));
 
     loadSettings();
 

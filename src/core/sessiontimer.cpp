@@ -102,7 +102,6 @@ void SessionTimer::setDelay(int prevDelay, int delay)
 
         if (timerDelay < 0)
         {
-            qDebug() << "TIMERDELAY" << timerDelay;
             secs += timerDelay;
         }
 

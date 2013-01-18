@@ -1,15 +1,19 @@
-v2.0.0
+v2.0.0:
 - added delay option - live timing can be now synchronized with the tv coverage
 - added track records database - application gathers driver best laps from the weekend and displays them in driver info tab, there is also a tool to access all records
 - added proxy settings - it is now possible to connect with the live timing server using proxy
 - added possibility to choose different colors for displaying lap times, position numbers, etc.
 - classification in driver tracker can be now turned off
+- added IN and OUT laps into lap history during practices and qualis
+- retired drivers are now not drawn in radar during races
 
-v1.5.0
+
+v1.5.0 (17-11-2012):
 - added driver tracker feature - it is now possible to follow drivers positions on a track map and a radar - there is no GPS data avaialable though, track positions are approximated using lap times!
 - added session times feature - displays times of all drivers from the whole session in a table
 - set reverse sorting in the .lt files database dialog window
 - fixed few bugs
+
 
 v1.4.1 (27-10-2012):
 - fixed bug with recording
@@ -17,6 +21,7 @@ v1.4.1 (27-10-2012):
 - done some memory optimizations
 - fixed sorting drivers with lap times over 107% during Q1
 - added keyboard shortcuts
+
 
 v1.4.0 (12-10-2012):
 - added .lt files database connected to the online server - it is now possible to get the access to online .lt files from the application
@@ -38,11 +43,13 @@ v1.3.2 (28-07-2012):
 - added starting grid into position chart in session analysis
 - corrected bugs related to refreshing data in h2h and ltc tools
 
+
 v1.3.1 (22-07-2012):
 - the app should now correctly switch from one session into another one
 - race charts in session analisys now always displays data from 0 to total race laps if zooming is not applied
 - session time of a moment when a lap time has been set during FP and quali is now shown as the time that has passed since the start of the session
 - bug fixes
+
 
 v1.3.0 (18-07-2012):
 - added auto-stop recording - it can be configured in preferences how many minutes after the end of the session the recoring will be stopped
@@ -61,6 +68,7 @@ v1.3.0 (18-07-2012):
 - charts scaling
 - added session analisys tool
 - bug fixes
+
 
 v1.2.1 (27-05-2012):
 - fixed bug causing the app to crash (mostly on WinXP)
@@ -81,7 +89,7 @@ v1.1.0 (11-05-2012):
 - some optimizations made
 
 
-v.1.0.0 (04-05-2012):
+v1.0.0 (04-05-2012):
 - added session recording and replaying
 - reimplementation of the Head 2 Head tool, the old tool is now called Lap Time Comparison
 - added option to print lap data in driver data tab in the reverse order (from newest to oldest)
@@ -92,5 +100,5 @@ v.1.0.0 (04-05-2012):
 - bug fixes
 
 
-v.0.5.0 (21-04-2012):
+v0.5.0 (21-04-2012):
 - initial version

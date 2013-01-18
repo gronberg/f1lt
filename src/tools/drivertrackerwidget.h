@@ -43,19 +43,8 @@ public:
 
     void setTimerInterval(int s=1000)
     {
-        timer->setInterval(s / speed);
-    }
-    void startTimer(int s=1000)
-    {
-        if (timer->isActive())
-            setTimerInterval(s);
-        else
-            timer->start(s/speed);
-    }
-
-    void stopTimer()
-    {
-        timer->stop();
+        interval = s / speed;
+        timer->setInterval(interval);
     }
 
     void setup();
@@ -64,6 +53,22 @@ public:
 
     void drawTrackerClassification(bool val);
 
+public slots:
+    void startTimer(int s=1000);
+
+    void pauseTimer(bool pause)
+    {
+        if (pause)
+            timer->stop();
+
+        else
+            timer->start(interval);
+    }
+
+    void stopTimer()
+    {
+        timer->stop();
+    }
 
 
 protected:
@@ -77,6 +82,7 @@ private:
     Ui::DriverTrackerWidget *ui;
     QTimer *timer;
     int speed;
+    int interval;
 };
 
 #endif // DRIVERTRACKERWIDGET_H

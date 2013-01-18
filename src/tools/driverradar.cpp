@@ -23,10 +23,10 @@
 #include <typeinfo>
 
 DriverRadar::DriverRadar(QWidget *parent) :
-    QWidget(parent), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0), selectedDriver(-1), dti(0)
+    QWidget(parent), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0), selectedDriver(-2), dti(0)
 {
     loadDriversList();
-    setMinimumSize(50, 200);
+    QWidget::setMinimumSize(50, 200);
 }
 
 DriverRadar::~DriverRadar()
@@ -37,8 +37,8 @@ DriverRadar::~DriverRadar()
 
 void DriverRadar::checkSetupCorrect(int speed)
 {
-    if (drp.isEmpty())
-    {
+    if (drp.isEmpty() || selectedDriver == -2)
+    {        
         setupDrivers(speed);
     }
 }
@@ -64,7 +64,8 @@ void DriverRadar::loadDriversList()
 
 void DriverRadar::setupDrivers(int speed)
 {
-    selectedDriver = -1;
+    if (selectedDriver != -2)
+        selectedDriver = -1;
     for (int i = 0; i < drp.size(); ++i)
     {
         drp[i]->setStartupPosition();
@@ -85,6 +86,8 @@ void DriverRadar::setupDrivers(int speed)
 
 void DriverRadar::update()
 {
+    if (selectedDriver == -2)
+        selectedDriver = -1;
 
     for (int i = 0; i < drp.size(); ++i)
         drp[i]->update();

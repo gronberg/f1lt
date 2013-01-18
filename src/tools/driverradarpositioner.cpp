@@ -347,7 +347,11 @@ QPoint DriverRadarPositioner::getCoordinates()
 
 void DriverRadarPositioner::paint(QPainter *p, bool selected)
 {
-    if (driverData && driverData->getCarID() > 0 && !excluded)
+    if (!driverData || driverData->getCarID() < 1)
+        return;
+
+    LTPackets::EventType eType = EventData::getInstance().getEventType();
+    if (!excluded && (eType != LTPackets::RACE_EVENT || !driverData->isRetired()))
     {
         QPoint point = getCoordinates();
 
