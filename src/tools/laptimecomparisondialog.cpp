@@ -33,6 +33,7 @@
 #include <QScrollBar>
 #include <cmath>
 
+#include "../core/colorsmanager.h"
 #include "../main_gui/ltitemdelegate.h"
 
 LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
@@ -91,7 +92,7 @@ LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
     item = new QTableWidgetItem("Lap");
     item->setFlags(Qt::NoItemFlags);
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(0, 0, item);
 
     QLabel *lab = new QLabel();
@@ -142,7 +143,7 @@ void LapTimeComparisonDialog::loadDriversList()
 //    comboBox[2]->addItems(SeasonData::getInstance().getDriversList());
 //    comboBox[3]->addItems(SeasonData::getInstance().getDriversList());
 
-    /*smallCarImg = */SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
+    /*smallCarImg = */ImagesFactory::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 }
 
 void LapTimeComparisonDialog::updateData()
@@ -179,7 +180,7 @@ void LapTimeComparisonDialog::updateData()
 
             DriverData &dd = eventData.getDriversData()[idx-1];
 			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, i+1));
-            lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+            lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
         }
         else
         {
@@ -207,7 +208,7 @@ void LapTimeComparisonDialog::updateData()
             item = new QTableWidgetItem(QString("%1.").arg(lapNo));
 //                item->setFlags(Qt::ItemIsSelectable);
             item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+            item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
             ui->tableWidget->setItem(j+1, 0, item);
         }
         else
@@ -307,18 +308,18 @@ void LapTimeComparisonDialog::updateData()
                         else if (laps[i].toMsecs() == maxGap)
                             color = LTPackets::RED;
 
-                        item->setTextColor(SeasonData::getInstance().getColor(color));
+                        item->setTextColor(ColorsManager::getInstance().getColor(color));
                     }
                 }
                 else if (laps[i].toString() == "IN PIT" || laps[i].toString() == "RETIRED" ||  laps[i].toString().contains("LAP"))
                 {
                     item = ui->tableWidget->item(j+1, i+1);
-                    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
+                    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::RED));
                 }
             }
             item = ui->tableWidget->item(j+1, bestIdx+1);
             if (item && laps[bestIdx].toString() != "IN PIT" && laps[bestIdx].toString() != "RETIRED" && !laps[bestIdx].toString().contains("LAP"))
-                item->setTextColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
+                item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::GREEN));
         }
         ui->tableWidget->setRowHeight(j+1, 20);
     }
@@ -346,7 +347,7 @@ void LapTimeComparisonDialog::updateCharts()
 
             QTableWidgetItem *item = ui->chartsTableWidget->item(0, i);
             item->setText(driver);
-            item->setTextColor(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
+            item->setTextColor(ColorsManager::getInstance().getCarColor(driverData[i]->getNumber()));
 
 //            if (carIdx >= 0)
             {
@@ -355,11 +356,11 @@ void LapTimeComparisonDialog::updateCharts()
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->chartsTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
             }
         }
         else

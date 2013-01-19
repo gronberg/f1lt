@@ -28,6 +28,8 @@
 #include <QSplitter>
 
 #include "ltitemdelegate.h"
+
+#include "../core/colorsmanager.h"
 #include "../core/trackrecords.h"
 
 DriverDataWidget::DriverDataWidget(QWidget *parent) :
@@ -35,18 +37,18 @@ DriverDataWidget::DriverDataWidget(QWidget *parent) :
 {        
     ui->setupUi(this);
 
-    posChart = new DriverDataChart(1, 24, SeasonData::getInstance().getColor(LTPackets::CYAN), this);
+    posChart = new DriverDataChart(1, 24, ColorsManager::getInstance().getColor(LTPackets::CYAN), this);
 
     QColor colors[5];
-    colors[0] = SeasonData::getInstance().getColor(LTPackets::RED);
-    colors[1] = SeasonData::getInstance().getColor(LTPackets::WHITE);
-    colors[2] = SeasonData::getInstance().getColor(LTPackets::GREEN);
-    colors[3] = SeasonData::getInstance().getColor(LTPackets::VIOLET);
-    colors[4] = SeasonData::getInstance().getColor(LTPackets::YELLOW);
+    colors[0] = ColorsManager::getInstance().getColor(LTPackets::RED);
+    colors[1] = ColorsManager::getInstance().getColor(LTPackets::WHITE);
+    colors[2] = ColorsManager::getInstance().getColor(LTPackets::GREEN);
+    colors[3] = ColorsManager::getInstance().getColor(LTPackets::VIOLET);
+    colors[4] = ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
     lapTimeChart = new LapTimeChart(colors, this);
 
-    gapChart = new GapChart(SeasonData::getInstance().getColor(LTPackets::YELLOW), this);
+    gapChart = new GapChart(ColorsManager::getInstance().getColor(LTPackets::YELLOW), this);
 
     ui->chartsTableWidget->setColumnWidth(0, ui->chartsTableWidget->width());
     ui->lapTimeChartTableWidget->setColumnWidth(0, ui->lapTimeChartTableWidget->width());
@@ -134,7 +136,7 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
         s = QString::number(laps);
     }
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
     ui->gridPositionLabel->setText(s);
     ui->gridPositionLabel->setPalette(palette);
 
@@ -142,7 +144,7 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
     if (driverData.getPosition() == 1)
         s = "";
 
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
     ui->gapLabel->setText(s);    
     ui->gapLabel->setPalette(palette);
 
@@ -156,9 +158,9 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
         QPalette palette = ui->lastLapLabel->palette();
         if (lt.toString() == "RETIRED" || lt.toString() == "IN PIT" || lt.toString() == "OUT")
-            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::RED));
+            palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::RED));
         else
-            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+            palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
 
         ui->lastLapLabel->setPalette(palette);
     }
@@ -174,9 +176,9 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
             s += " (+" + DriverData::calculateGap(lt, driverData.getSessionRecords().getBestLap().getTime()) + ")";
 
         if (lt.isValid())
-            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+            palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
         else
-            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::RED));
+            palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::RED));
 
         ui->lastLapLabel->setPalette(palette);
     }
@@ -188,10 +190,10 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
 
     if (driverData.getDriverName() == eventData.getSessionRecords().getFastestLap().getDriverName() &&
         driverData.getSessionRecords().getBestLap().getTime() == eventData.getSessionRecords().getFastestLap().getTime())
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
 
     else
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
 
     ui->bestLapLabel->setPalette(palette);
 
@@ -205,19 +207,19 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
     else
         ui->approxLapLabel->setText("");
 
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::CYAN));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::CYAN));
     ui->approxLapLabel->setPalette(palette);
 
     if (eventData.getEventType() == LTPackets::RACE_EVENT)
     {
         ui->pitStopsLabel->setText("Pit stops:");
         palette = ui->pitStopsLabel->palette();
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
         ui->pitStopsLabel->setPalette(palette);
 
         ui->numPitsLabel->setText(QString::number(driverData.getNumPits()));
 
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::PIT));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::PIT));
         ui->numPitsLabel->setPalette(palette);
 
         if (!ui->numPitsLabel->isVisible())
@@ -229,12 +231,12 @@ void DriverDataWidget::updateDriverInfo(const DriverData &driverData)
         if (driverData.isInPits())
         {
             ui->pitStopsLabel->setText("In pits");
-            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::PIT));
+            palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::PIT));
         }
         else
         {
             ui->pitStopsLabel->setText("On track");
-            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+            palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
         }
         ui->pitStopsLabel->setPalette(palette);
 
@@ -326,7 +328,7 @@ void DriverDataWidget::printDriverRecords(int id)
     if (twr != 0 && tv != 0)
     {
         QPalette palette;
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
 
         Record rec[4];
         rec[0] = tv->getTrackWeekendRecords(eventData.getEventInfo().fpDate.year()).sessionRecords[S1_RECORD];
@@ -361,9 +363,9 @@ void DriverDataWidget::printDriverRecords(int id)
             ui->s1RLabel->setText(record.time.toString() + QString(" (%1)").arg(record.session));
 
             if (driverData->getDriverName() == rec[0].driver)
-                palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+                palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
             else
-                palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+                palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
 
             ui->s1RLabel->setPalette(palette);
 
@@ -374,9 +376,9 @@ void DriverDataWidget::printDriverRecords(int id)
         {
             ui->s2RLabel->setText(record.time.toString() + QString(" (%1)").arg(record.session));
             if (driverData->getDriverName() == rec[1].driver)
-                palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+                palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
             else
-                palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+                palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
 
             ui->s2RLabel->setPalette(palette);
         }
@@ -386,9 +388,9 @@ void DriverDataWidget::printDriverRecords(int id)
         {
             ui->s3RLabel->setText(record.time.toString() + QString(" (%1)").arg(record.session));
             if (driverData->getDriverName() == rec[2].driver)
-                palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+                palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
             else
-                palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+                palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
 
             ui->s3RLabel->setPalette(palette);
         }
@@ -399,9 +401,9 @@ void DriverDataWidget::printDriverRecords(int id)
             ui->tRLabel->setText(record.time.toString() + QString(" (%1)").arg(record.session));
 
             if (driverData->getDriverName() == rec[3].driver)
-                palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+                palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
             else
-                palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+                palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
 
             ui->tRLabel->setPalette(palette);
         }
@@ -602,7 +604,7 @@ void DriverDataWidget::clearData()
     ui->numPitsLabel->clear();
     ui->pitStopsLabel->setText("Pit stops:");
     QPalette palette = ui->pitStopsLabel->palette();
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->pitStopsLabel->setPalette(palette);
 
     gapChart->clearData();

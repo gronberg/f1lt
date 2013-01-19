@@ -84,7 +84,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/core/imagesfactory.cpp \
     src/main_gui/driverinfolabel.cpp \
     src/net/networksettings.cpp \
-    src/main_gui/drivercolorsdialog.cpp
+    src/main_gui/drivercolorsdialog.cpp \
+    src/core/colorsmanager.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -145,7 +146,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/core/imagesfactory.h \
     src/main_gui/driverinfolabel.h \
     src/net/networksettings.h \
-    src/main_gui/drivercolorsdialog.h
+    src/main_gui/drivercolorsdialog.h \
+    src/core/colorsmanager.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \

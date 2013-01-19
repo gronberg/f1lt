@@ -593,23 +593,23 @@ void LTWindow::loadSettings()
     ltFilesManagerDialog->loadSettings(settings);
     trackRecordsDialog->loadSettings(*settings);
 
-    QList<QColor> colors = SeasonData::getInstance().getColors();
-    for (int i = 0; i < SeasonData::getInstance().getColors().size(); ++i)
+    QList<QColor> colors = ColorsManager::getInstance().getColors();
+    for (int i = 0; i < ColorsManager::getInstance().getColors().size(); ++i)
     {
         QVariant color = settings->value(QString("ui/color_%1").arg(i), colors[i]);
 
         colors[i] = color.value<QColor>();
     }
-    SeasonData::getInstance().setColors(colors);
+    ColorsManager::getInstance().setColors(colors);
 
-    colors = SeasonData::getInstance().getDriverColors();
-    for (int i = 0; i < SeasonData::getInstance().getDriverColors().size(); ++i)
+    colors = ColorsManager::getInstance().getDriverColors();
+    for (int i = 0; i < ColorsManager::getInstance().getDriverColors().size(); ++i)
     {
         QVariant color = settings->value(QString("ui/driver_color_%1").arg(i), colors[i]);
 
         colors[i] = color.value<QColor>();
     }
-    SeasonData::getInstance().setDriverColors(colors);
+    ColorsManager::getInstance().setDriverColors(colors);
 
     saw->loadSettings(*settings);
 }
@@ -635,15 +635,15 @@ void LTWindow::saveSettings()
     ltFilesManagerDialog->saveSettings(settings);
     trackRecordsDialog->saveSettings(*settings);
 
-    for (int i = 0; i < SeasonData::getInstance().getColors().size(); ++i)
+    for (int i = 0; i < ColorsManager::getInstance().getColors().size(); ++i)
     {
-        QVariant color = SeasonData::getInstance().getColors()[i];
+        QVariant color = ColorsManager::getInstance().getColors()[i];
         settings->setValue(QString("ui/color_%1").arg(i), color);
     }
 
-    for (int i = 0; i < SeasonData::getInstance().getDriverColors().size(); ++i)
+    for (int i = 0; i < ColorsManager::getInstance().getDriverColors().size(); ++i)
     {
-        QVariant color = SeasonData::getInstance().getDriverColors()[i];
+        QVariant color = ColorsManager::getInstance().getDriverColors()[i];
         settings->setValue(QString("ui/driver_color_%1").arg(i), color);
     }
 

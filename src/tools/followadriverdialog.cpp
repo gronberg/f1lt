@@ -25,6 +25,8 @@
 #include <QClipboard>
 #include <QDebug>
 #include <QKeyEvent>
+
+#include "../core/colorsmanager.h"
 #include "../main_gui/ltitemdelegate.h"
 
 FollowADriverDialog::FollowADriverDialog(QWidget *parent) :
@@ -49,7 +51,7 @@ FollowADriverDialog::~FollowADriverDialog()
 
 void FollowADriverDialog::loadDriversList()
 {
-    /*smallCarImg = */SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
+    /*smallCarImg = */ImagesFactory::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 
 //    ui->comboBox->clear();
 
@@ -83,15 +85,15 @@ void FollowADriverDialog::setupTables()
             ui->lapTimesTableWidget->setRowHeight(i, 22);
         }
     }
-    setItem(ui->dataTableWidget, 0, 0, "P", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignRight | Qt::AlignVCenter, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
-    setItem(ui->dataTableWidget, 0, 1, "Name", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
-    setItem(ui->dataTableWidget, 0, 2, "Int.", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
-    setItem(ui->dataTableWidget, 0, 3, "Time", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
-    setItem(ui->dataTableWidget, 0, 4, "S1", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
-    setItem(ui->dataTableWidget, 0, 5, "S2", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
-    setItem(ui->dataTableWidget, 0, 6, "S3", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    setItem(ui->dataTableWidget, 0, 0, "P", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignRight | Qt::AlignVCenter, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
+    setItem(ui->dataTableWidget, 0, 1, "Name", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
+    setItem(ui->dataTableWidget, 0, 2, "Int.", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
+    setItem(ui->dataTableWidget, 0, 3, "Time", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
+    setItem(ui->dataTableWidget, 0, 4, "S1", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
+    setItem(ui->dataTableWidget, 0, 5, "S2", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
+    setItem(ui->dataTableWidget, 0, 6, "S3", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
 
-    setItem(ui->lapTimesTableWidget, 0, 0, "Lap", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    setItem(ui->lapTimesTableWidget, 0, 0, "Lap", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
 }
 
 QTableWidgetItem* FollowADriverDialog::setItem(QTableWidget *table, int row, int col, QString text, Qt::ItemFlags flags, int align,
@@ -161,7 +163,7 @@ void FollowADriverDialog::updateData()
 
 void FollowADriverDialog::printDriverInfo(const DriverData &dd)
 {    
-    ui->carImageLabel->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));
+    ui->carImageLabel->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));
     ui->bestLapLabel->setText(dd.getSessionRecords().getBestLap().getTime().toString() + QString(" (L%1)").arg(dd.getSessionRecords().getBestLap().getLapNumber()));
 
     QPalette palette;
@@ -173,14 +175,14 @@ void FollowADriverDialog::printDriverInfo(const DriverData &dd)
         else
             ui->gapLabel->setText("");
 
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::PIT));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::PIT));
         ui->pitsLabel->setText(QString::number(dd.getPitStops().size()));
         ui->pitsLabel->setPalette(palette);
 
         ui->pitStopsLabel->setText("Pit stops:");
 
         QPalette palette = ui->pitStopsLabel->palette();
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
         ui->pitStopsLabel->setPalette(palette);
     }
     else
@@ -202,20 +204,20 @@ void FollowADriverDialog::printDriverInfo(const DriverData &dd)
         if (dd.getColorData().numberColor() == LTPackets::PIT)
         {
             ui->pitStopsLabel->setText("In pits");
-            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::PIT));
+            palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::PIT));
         }
         else
         {
             ui->pitStopsLabel->setText("On track");
-            palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+            palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
         }
         ui->pitStopsLabel->setPalette(palette);
     }
 
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
     ui->bestLapLabel->setPalette(palette);
 
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
     ui->gapLabel->setPalette(palette);
 
 
@@ -253,7 +255,7 @@ void FollowADriverDialog::printDataTable(const DriverData &dd, const QList<Drive
 
             QString time = ld.getTime().toString();
             QColor colors[5];
-            colors[0] = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+            colors[0] = ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
             if (drivers[i]->getCarID() != dd.getCarID())
             {                
@@ -267,32 +269,32 @@ void FollowADriverDialog::printDataTable(const DriverData &dd, const QList<Drive
                 if (ld.getTime().isValid() && ldCurr.getTime().isValid())
                 {
                     QString gap = DriverData::calculateGap(ld.getTime(), ldCurr.getTime());
-                    colors[1] = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                    colors[1] = ColorsManager::getInstance().getColor(LTPackets::GREEN);
                     if (gap.size() > 0 && gap[0] != '-')
                     {
                         gap = "+" + gap;
-                        colors[1] = SeasonData::getInstance().getColor(LTPackets::RED);
+                        colors[1] = ColorsManager::getInstance().getColor(LTPackets::RED);
                     }
                     time += " ("+gap+")";
                 }
                 else if (!time.contains("IN PIT") && !time.contains("OUT"))
-                    colors[1] = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                    colors[1] = ColorsManager::getInstance().getColor(LTPackets::GREEN);
                 else if (time.contains("LAP"))
-                    colors[1] = SeasonData::getInstance().getColor(LTPackets::RED);
+                    colors[1] = ColorsManager::getInstance().getColor(LTPackets::RED);
                 else
                 {
                     time = QString("IN PIT (%1)").arg(drivers[i]->getPitTime(ld.getLapNumber())) ;
-                    colors[1] = SeasonData::getInstance().getColor(LTPackets::RED);
+                    colors[1] = ColorsManager::getInstance().getColor(LTPackets::RED);
                 }
 
                 for (int j = 1; j <= 3; ++j)
                 {
                     if ((ld.getSectorTime(j).toDouble() < ldCurr.getSectorTime(j).toDouble()) ||
                          dd.getLastLap().getSectorTime(j).toDouble() == 0.0)
-                        colors[j+1] = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                        colors[j+1] = ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
                     else
-                        colors[j+1] = SeasonData::getInstance().getColor(LTPackets::RED);
+                        colors[j+1] = ColorsManager::getInstance().getColor(LTPackets::RED);
 
                     if (ok && eventData.getEventType() == LTPackets::RACE_EVENT &&
                             ld.getLapNumber() == ldCurr.getLapNumber() &&
@@ -311,25 +313,25 @@ void FollowADriverDialog::printDataTable(const DriverData &dd, const QList<Drive
                 }
 
                 if (interval.size() > 0 && interval[0] == '+')
-                    colors[0] = SeasonData::getInstance().getColor(LTPackets::RED);
+                    colors[0] = ColorsManager::getInstance().getColor(LTPackets::RED);
             }
             else
             {
                 for (int j = 0; j < 5; ++j)
-                    colors[j] = SeasonData::getInstance().getColor(LTPackets::WHITE);
+                    colors[j] = ColorsManager::getInstance().getColor(LTPackets::WHITE);
 
                 if (time.contains("IN PIT") || time.contains("OUT"))
                 {
-                    colors[1] = SeasonData::getInstance().getColor(LTPackets::RED);
+                    colors[1] = ColorsManager::getInstance().getColor(LTPackets::RED);
                     time = QString("IN PIT (%1)").arg(drivers[i]->getPitTime(ld.getLapNumber())) ;
                 }
             }
 
 
             setItem(ui->dataTableWidget, i+1, 0, QString::number(drivers[i]->getPosition()), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignRight | Qt::AlignVCenter,
-                    SeasonData::getInstance().getColor(LTPackets::CYAN), bg);
+                    ColorsManager::getInstance().getColor(LTPackets::CYAN), bg);
             setItem(ui->dataTableWidget, i+1, 1, drivers[i]->getDriverName(), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignLeft | Qt::AlignVCenter,
-                    SeasonData::getInstance().getColor(LTPackets::WHITE), bg);
+                    ColorsManager::getInstance().getColor(LTPackets::WHITE), bg);
             setItem(ui->dataTableWidget, i+1, 2, interval, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
                     colors[0], bg);
             setItem(ui->dataTableWidget, i+1, 3, time, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
@@ -353,7 +355,7 @@ void FollowADriverDialog::printLapTimesTable(const DriverData &dd, const QList<D
     {
         if (drivers[i] != 0)
             setItem(ui->lapTimesTableWidget, 0, i+1, QString("%1 %2").arg(drivers[i]->getPosition()).arg(drivers[i]->getDriverName()),
-                    Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, SeasonData::getInstance().getColor(LTPackets::WHITE));
+                    Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, ColorsManager::getInstance().getColor(LTPackets::WHITE));
     }
     int i, j, k;
 //    for (i = lap, k = 0; i >= lap-5; --i, ++k)
@@ -362,7 +364,7 @@ void FollowADriverDialog::printLapTimesTable(const DriverData &dd, const QList<D
         int lapNo = dd.getLapData()[k].getLapNumber();
 
         setItem(ui->lapTimesTableWidget, i+1, 0, QString("%1.").arg(lapNo), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
-                SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+                ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
         for (j = 0; j < drivers.size(); ++j)
         {
             if (drivers[j] == 0)
@@ -371,16 +373,16 @@ void FollowADriverDialog::printLapTimesTable(const DriverData &dd, const QList<D
             LapData ld = drivers[j]->getLapData(lapNo);
 
             QString time = ld.getTime().toString();
-            QColor color = SeasonData::getInstance().getColor(LTPackets::WHITE);
+            QColor color = ColorsManager::getInstance().getColor(LTPackets::WHITE);
             if (drivers[j]->getCarID() != dd.getCarID())
             {
                 if (ld.getTime().isValid() && dd.getLapData()[k].getTime().isValid())
                 {
                     QString gap = DriverData::calculateGap(ld.getTime(), dd.getLapData()[k].getTime());
-                    color = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                    color = ColorsManager::getInstance().getColor(LTPackets::GREEN);
                     if (gap.size() > 0 && gap[0] != '-')
                     {
-                        color = SeasonData::getInstance().getColor(LTPackets::RED);
+                        color = ColorsManager::getInstance().getColor(LTPackets::RED);
                         gap = "+" + gap;
                     }
                     time += " (" + gap + ")";
@@ -389,18 +391,18 @@ void FollowADriverDialog::printLapTimesTable(const DriverData &dd, const QList<D
                 {
                     if (time == "IN PIT" || time == "OUT")
                     {
-                        color = SeasonData::getInstance().getColor(LTPackets::RED);
+                        color = ColorsManager::getInstance().getColor(LTPackets::RED);
                         time = QString("IN PIT (%1)").arg(drivers[j]->getPitTime(ld.getLapNumber())) ;
                     }
                     else if (time.contains("LAP"))
-                        color = SeasonData::getInstance().getColor(LTPackets::RED);
+                        color = ColorsManager::getInstance().getColor(LTPackets::RED);
                     else
-                        color = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                        color = ColorsManager::getInstance().getColor(LTPackets::GREEN);
                 }
             }
             else if (!dd.getLapData()[k].getTime().isValid())
             {
-                color = SeasonData::getInstance().getColor(LTPackets::RED);
+                color = ColorsManager::getInstance().getColor(LTPackets::RED);
                 if (time == "IN PIT" || time == "OUT")
                     time = QString("IN PIT (%1)").arg(drivers[j]->getPitTime(ld.getLapNumber())) ;
             }

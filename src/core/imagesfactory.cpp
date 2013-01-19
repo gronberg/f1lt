@@ -19,6 +19,7 @@
  *******************************************************************************/
 
 
+#include "colorsmanager.h"
 #include "imagesfactory.h"
 #include "seasondata.h"
 
@@ -147,7 +148,7 @@ QPixmap *HelmetsFactory::loadHelmet(int no, int size)
     QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(size, Qt::SmoothTransformation);
 
     QImage hl(helmet.size(), helmet.format());
-    QColor drvColor = SeasonData::getInstance().getCarColor(no);
+    QColor drvColor = ColorsManager::getInstance().getCarColor(no);
     QPainter phl;
     phl.begin(&hl);
     phl.setBrush(QBrush(drvColor));

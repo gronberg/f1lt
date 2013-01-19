@@ -29,6 +29,7 @@
 #include <QWidget>
 #include <QTableWidgetItem>
 
+#include "../core/colorsmanager.h"
 #include "../core/eventdata.h"
 #include "models/fastestlapsmodel.h"
 #include "models/pitstopsmodel.h"
@@ -74,7 +75,7 @@ private slots:
 private:
 
     QTableWidgetItem* setItem(QTableWidget *table, int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
-                 QColor textColor = SeasonData::getInstance().getColor(LTPackets::DEFAULT), QBrush background = QBrush());
+                 QColor textColor = ColorsManager::getInstance().getColor(LTPackets::DEFAULT), QBrush background = QBrush());
 
     Ui::SessionDataWidget *ui;    
 

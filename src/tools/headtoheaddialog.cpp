@@ -32,6 +32,7 @@
 #include <QScrollBar>
 #include <cmath>
 
+#include "../core/colorsmanager.h"
 #include "../main_gui/ltitemdelegate.h"
 
 
@@ -151,12 +152,12 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
     ui->tableWidget->insertRow(1);
     item = new QTableWidgetItem("L");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 0, item);
 
     item = new QTableWidgetItem("P");
     item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 1, item);
 
 //    item = new QTableWidgetItem("Gap");
@@ -166,32 +167,32 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
 
     item = new QTableWidgetItem("Lap time");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 2, item);
 
     item = new QTableWidgetItem("S1");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 3, item);
 
     item = new QTableWidgetItem("S2");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 4, item);
 
     item = new QTableWidgetItem("S3");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 5, item);
 
     item = new QTableWidgetItem("Gap");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 6, item);
 
     item = new QTableWidgetItem("P");
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 7, item);
 
 //    item = new QTableWidgetItem("Gap");
@@ -201,22 +202,22 @@ HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
 
     item = new QTableWidgetItem("Lap time");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 8, item);
 
     item = new QTableWidgetItem("S1");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 9, item);
 
     item = new QTableWidgetItem("S2");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 10, item);
 
     item = new QTableWidgetItem("S3");
     item->setTextAlignment(Qt::AlignCenter);
-    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
     ui->tableWidget->setItem(1, 11, item);
 
     ui->tableWidget->setRowHeight(1, 20);    
@@ -229,7 +230,7 @@ HeadToHeadDialog::~HeadToHeadDialog()
 
 void HeadToHeadDialog::loadDriversList()
 {
-    /*smallCarImg = */SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
+    /*smallCarImg = */ImagesFactory::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 
     comboBox[0]->clear();
     comboBox[1]->clear();
@@ -288,7 +289,7 @@ void HeadToHeadDialog::updateData()
         	}
             DriverData &dd = eventData.getDriversData()[idx-1];            
 			QLabel *lab = qobject_cast<QLabel*>(ui->tableWidget->cellWidget(0, 2+5*i));
-            lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
+            lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd.getNumber(), thumbnailsSize));//eventData.carImages[idx].scaledToWidth(120, Qt::SmoothTransformation));
         }
         else
         {
@@ -313,7 +314,7 @@ void HeadToHeadDialog::updateData()
         {
             item = new QTableWidgetItem(QString("%1.").arg(lapNo));
             item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            item->setTextColor(SeasonData::getInstance().getColor(LTPackets::DEFAULT));
+            item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::DEFAULT));
             ui->tableWidget->setItem(j+2, 0, item);
         }
         else
@@ -359,7 +360,7 @@ void HeadToHeadDialog::updateData()
                     if (!item)
                     {
                         item = new QTableWidgetItem(QString::number(ld.getPosition()));
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::CYAN));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::CYAN));
                         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
                         ui->tableWidget->setItem(j+2, 1 + i*6, item);
                     }
@@ -388,18 +389,18 @@ void HeadToHeadDialog::updateData()
                     {
                         QString pitTime = dd.getPitTime(ld.getLapNumber());
                         item->setText(item->text() + " (" + pitTime + ")");
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::RED));
                     }
                     else if (lTime == "RETIRED" || lTime.contains("LAP"))
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::RED));
 
                     else if (ld.getRaceLapExtraData().isSCLap())
                     {
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::YELLOW));
                         scLap = true;
                     }
                     else
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::GREEN));
 
 
                     item = ui->tableWidget->item(j+2, 3+i*6);
@@ -412,9 +413,9 @@ void HeadToHeadDialog::updateData()
                     else
                         item->setText(ld.getSectorTime(1).toString());
                     if (scLap)
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::YELLOW));
                     else
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::WHITE));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::WHITE));
 
                     item = ui->tableWidget->item(j+2, 4+i*6);
                     if (!item)
@@ -427,9 +428,9 @@ void HeadToHeadDialog::updateData()
                         item->setText(ld.getSectorTime(2).toString());
 
                     if (scLap)
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::YELLOW));
                     else
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::WHITE));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::WHITE));
 
                     item = ui->tableWidget->item(j+2, 5+i*6);
                     if (!item)
@@ -442,9 +443,9 @@ void HeadToHeadDialog::updateData()
                         item->setText(ld.getSectorTime(3).toString());
 
                     if (scLap)
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::YELLOW));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::YELLOW));
                     else
-                        item->setTextColor(SeasonData::getInstance().getColor(LTPackets::WHITE));
+                        item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::WHITE));
 
                     if (!newLap[i])
                         ++index[i];
@@ -484,7 +485,7 @@ void HeadToHeadDialog::updateData()
                 item->setText(item->text() + " (+"+QString::number(laps[i].toDouble(), 'f', 3)+")");
 
                 if (!scLap)
-                    item->setTextColor(SeasonData::getInstance().getColor(LTPackets::WHITE));
+                    item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::WHITE));
             }
         }
 
@@ -505,7 +506,7 @@ void HeadToHeadDialog::updateData()
                     if (s1 == s2)
                         greenIdx = laps[1] < laps[0] ? 3+i : 9+i;
 
-                    ui->tableWidget->item(j+2, greenIdx)->setTextColor(SeasonData::getInstance().getColor(LTPackets::GREEN));
+                    ui->tableWidget->item(j+2, greenIdx)->setTextColor(ColorsManager::getInstance().getColor(LTPackets::GREEN));
                 }
             }
         }
@@ -568,9 +569,9 @@ void HeadToHeadDialog::updateData()
             item->setText(sInterval);
 
         if (sInterval[0] == '-')
-            item->setTextColor(SeasonData::getInstance().getColor(LTPackets::VIOLET));
+            item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::VIOLET));
         else
-            item->setTextColor(SeasonData::getInstance().getColor(LTPackets::RED));
+            item->setTextColor(ColorsManager::getInstance().getColor(LTPackets::RED));
 
         ui->tableWidget->setRowHeight(j+2, 20);
     }
@@ -600,15 +601,15 @@ void HeadToHeadDialog::updateCharts()
 
             QTableWidgetItem *item = ui->chartsTableWidget->item(0, i);
             item->setText(driver);
-            item->setTextColor(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
+            item->setTextColor(ColorsManager::getInstance().getCarColor(driverData[i]->getNumber()));
 
             item = ui->gapChartTableWidget->item(0, i);
             item->setText(driver);
-            item->setTextColor(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
+            item->setTextColor(ColorsManager::getInstance().getCarColor(driverData[i]->getNumber()));
 
             item = ui->posChartTableWidget->item(0, i);
             item->setText(driver);
-            item->setTextColor(SeasonData::getInstance().getCarColor(driverData[i]->getNumber()));
+            item->setTextColor(ColorsManager::getInstance().getCarColor(driverData[i]->getNumber()));
 
 //            if (carIdx >= 0)
             {
@@ -617,33 +618,33 @@ void HeadToHeadDialog::updateCharts()
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->chartsTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
 
                 lab = qobject_cast<QLabel*>(ui->gapChartTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->gapChartTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));
+                    lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));
 
                 lab = qobject_cast<QLabel*>(ui->posChartTableWidget->cellWidget(1, i));
                 if (!lab)
                 {
                     lab = new QLabel();
                     lab->setAlignment(Qt::AlignCenter);
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
+                    lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));//eventData.carImages[carIdx].scaledToWidth(120, Qt::SmoothTransformation));
                     ui->posChartTableWidget->setCellWidget(1, i, lab);
                 }
                 else
-                    lab->setPixmap(SeasonData::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));
+                    lab->setPixmap(ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(driverData[i]->getNumber(), thumbnailsSize));
             }
         }
         else

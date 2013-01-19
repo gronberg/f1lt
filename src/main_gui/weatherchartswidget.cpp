@@ -21,13 +21,15 @@
 
 #include "weatherchartswidget.h"
 
+#include "../core/colorsmanager.h"
+
 #include <QDebug>
 WeatherChartsWidget::WeatherChartsWidget(QWidget *parent)
     : QWidget(parent)
 {
 	ui.setupUi(this);
 
-    SeasonData &sd = SeasonData::getInstance();
+    ColorsManager &sd = ColorsManager::getInstance();
     tempWidget = new TempChart(sd.getColor(LTPackets::VIOLET), sd.getColor(LTPackets::YELLOW), 0, 1, 5, this);
     windWidget = new WeatherChart(sd.getColor(LTPackets::GREEN), 2, 5, this);
     pressureWidget = new WeatherChart(sd.getColor(LTPackets::WHITE), 3, 5, this);

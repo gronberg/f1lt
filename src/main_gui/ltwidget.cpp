@@ -66,7 +66,7 @@ void LTWidget::loadCarImages()
     showDiff = 0;
     currDriverId = 0;
 
-    SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
+    ImagesFactory::getInstance().getCarThumbnailsFactory().loadCarThumbnails(thumbnailsSize);
 }
 
 void LTWidget::setFont(const QFont &font)

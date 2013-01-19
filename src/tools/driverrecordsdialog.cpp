@@ -22,6 +22,7 @@
 #include "driverrecordsdialog.h"
 #include "ui_driverrecordsdialog.h"
 
+#include "../core/colorsmanager.h"
 #include "../main_gui/ltitemdelegate.h"
 
 DriverRecordsDialog::DriverRecordsDialog(QWidget *parent) :
@@ -77,7 +78,7 @@ void DriverRecordsDialog::loadRecords()
             ui->tableWidget->insertRow(i);
 
         MyTableWidgetItem *item = new MyTableWidgetItem(driverRecords.driverRecords[i].driver);
-        item->setForeground(SeasonData::getInstance().getColor(LTPackets::WHITE));
+        item->setForeground(ColorsManager::getInstance().getColor(LTPackets::WHITE));
         ui->tableWidget->setItem(i, 0, item);
 
         item = static_cast<MyTableWidgetItem *>(ui->tableWidget->item(i, 1));
@@ -87,10 +88,10 @@ void DriverRecordsDialog::loadRecords()
             ui->tableWidget->setItem(i, 1, item);
         }
         item->setText(driverRecords.driverRecords[i].team);
-        item->setForeground(SeasonData::getInstance().getColor(LTPackets::WHITE));
+        item->setForeground(ColorsManager::getInstance().getColor(LTPackets::WHITE));
 
 
-        QColor color = SeasonData::getInstance().getColor(LTPackets::YELLOW);
+        QColor color = ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
         Record rec;
 
@@ -101,7 +102,7 @@ void DriverRecordsDialog::loadRecords()
 
 
         if (rec.time == driverRecords.sessionRecords[S1_RECORD].time && driverRecords.driverRecords[i].driver == driverRecords.sessionRecords[S1_RECORD].driver)
-            color = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+            color = ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
         QString text = rec.time.toString();
         if ((currentIndex == 3 || currentIndex == 5) && text != "")
@@ -124,10 +125,10 @@ void DriverRecordsDialog::loadRecords()
             rec = driverRecords.driverRecords[i].sessionRecords[ui->comboBox->currentIndex()][S2_RECORD];
 
         if (rec.time == driverRecords.sessionRecords[S2_RECORD].time && driverRecords.driverRecords[i].driver == driverRecords.sessionRecords[S2_RECORD].driver)
-            color = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+            color = ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
         else
-            color = SeasonData::getInstance().getColor(LTPackets::YELLOW);
+            color = ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
         text = rec.time.toString();
         if ((currentIndex == 3 || currentIndex == 5) && text != "")
@@ -150,10 +151,10 @@ void DriverRecordsDialog::loadRecords()
 
 
         if (rec.time == driverRecords.sessionRecords[S3_RECORD].time && driverRecords.driverRecords[i].driver == driverRecords.sessionRecords[S3_RECORD].driver)
-            color = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+            color = ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
         else
-            color = SeasonData::getInstance().getColor(LTPackets::YELLOW);
+            color = ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
         text = rec.time.toString();
         if ((currentIndex == 3 || currentIndex == 5) && text != "")
@@ -176,10 +177,10 @@ void DriverRecordsDialog::loadRecords()
 
 
         if (rec.time == driverRecords.sessionRecords[TIME_RECORD].time && driverRecords.driverRecords[i].driver == driverRecords.sessionRecords[TIME_RECORD].driver)
-            color = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+            color = ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
         else
-            color = SeasonData::getInstance().getColor(LTPackets::GREEN);
+            color = ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
         text = rec.time.toString();
         if ((currentIndex == 3 || currentIndex == 5) && text != "")

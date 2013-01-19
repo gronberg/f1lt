@@ -22,6 +22,7 @@
 #include "trackrecordsdialog.h"
 #include "ui_trackrecordsdialog.h"
 
+#include "../core/colorsmanager.h"
 #include "../core/trackrecords.h"
 
 bool loadingRecords = false;
@@ -154,7 +155,7 @@ void TrackRecordsDialog::loadTrackRecords()
     ui->tDTLabel->setText(twr->sessionRecords[TIME_RECORD].team);
     ui->tSLabel->setText(twr->sessionRecords[TIME_RECORD].session);
 
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
     ui->qRDLabel->setPalette(palette);
     ui->qRDTLabel->setPalette(palette);
     ui->rRDLabel->setPalette(palette);
@@ -169,7 +170,7 @@ void TrackRecordsDialog::loadTrackRecords()
     ui->tDLabel->setPalette(palette);
     ui->tDTLabel->setPalette(palette);
 
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
     ui->qRTLabel->setPalette(palette);
     ui->rRTLabel->setPalette(palette);
 
@@ -178,11 +179,11 @@ void TrackRecordsDialog::loadTrackRecords()
     ui->s3TLabel->setPalette(palette);
     ui->tTLabel->setPalette(palette);
 
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
     ui->qRYLabel->setPalette(palette);
     ui->rRYLabel->setPalette(palette);
 
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::CYAN));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::CYAN));
     ui->s1SLabel->setPalette(palette);
     ui->s2SLabel->setPalette(palette);
     ui->s3SLabel->setPalette(palette);

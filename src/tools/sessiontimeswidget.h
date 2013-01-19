@@ -27,6 +27,7 @@
 #include <QTableWidgetItem>
 #include <QWidget>
 
+#include "../core/colorsmanager.h"
 #include "../core/driverdata.h"
 #include "../core/seasondata.h"
 
@@ -79,7 +80,7 @@ private slots:
 private:
 
     QTableWidgetItem* setItem(int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
-                     QColor textColor = SeasonData::getInstance().getColor(LTPackets::DEFAULT), QBrush background = QBrush());
+                     QColor textColor = ColorsManager::getInstance().getColor(LTPackets::DEFAULT), QBrush background = QBrush());
 
     Ui::SessionTimesWidget *ui;
 

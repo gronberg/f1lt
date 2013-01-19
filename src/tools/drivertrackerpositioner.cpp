@@ -21,6 +21,7 @@
 
 #include "drivertrackerpositioner.h"
 
+#include "../core/colorsmanager.h"
 #include "../core/eventdata.h"
 
 DriverTrackerPositioner::DriverTrackerPositioner(DriverData *dd) : DriverRadarPositioner(dd), coordinatesCount(0), mapX(0), mapY(0)
@@ -194,14 +195,14 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
     {
         QPoint point = getCoordinates();
 
-        QColor drvColor = SeasonData::getInstance().getCarColor(driverData->getNumber());
+        QColor drvColor = ColorsManager::getInstance().getCarColor(driverData->getNumber());
         p->setBrush(QBrush(drvColor));
 
         QPen pen(drvColor);
 
         if (driverData->getPosition() == 1)
         {
-            pen.setColor(SeasonData::getInstance().getDefaultColor(LTPackets::GREEN));
+            pen.setColor(ColorsManager::getInstance().getDefaultColor(LTPackets::GREEN));
             pen.setWidth(3);
         }
         if (driverData->isRetired() || qualiOut)
@@ -211,7 +212,7 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
         }
         if (selected)
         {
-            pen.setColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW));
+            pen.setColor(ColorsManager::getInstance().getDefaultColor(LTPackets::YELLOW));
             pen.setWidth(3);
         }
 
@@ -220,7 +221,7 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
 
         if (!excluded)
         {
-            QPixmap helmet = SeasonData::getInstance().getHelmetsFactory().getHelmet(driverData->getNumber(), 24);
+            QPixmap helmet = ImagesFactory::getInstance().getHelmetsFactory().getHelmet(driverData->getNumber(), 24);
             p->drawPixmap(point.x()-12, point.y()-12, helmet);
 
             QString number = SeasonData::getInstance().getDriverShortName(driverData->getDriverName());//QString::number(driverData->getNumber());
@@ -228,7 +229,7 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
             p->setBrush(drvColor);
             p->drawRoundedRect(point.x()-12, point.y()+15, helmet.width(), 14, 4, 4);
 
-            p->setPen(SeasonData::getInstance().getColor(LTPackets::BACKGROUND));
+            p->setPen(ColorsManager::getInstance().getColor(LTPackets::BACKGROUND));
 
             int numX = point.x() - 18 + p->fontMetrics().width(number)/2;
             int numY = point.y() + 20 + p->fontMetrics().height()/2;
@@ -238,8 +239,8 @@ void DriverTrackerPositioner::paint(QPainter *p, bool selected)
         if (driverData->getPosition() == 1 && EventData::getInstance().getFlagStatus() == LTPackets::SAFETY_CAR_DEPLOYED)
         {
             point = getSCCoordinates();
-            p->setPen(SeasonData::getInstance().getColor(LTPackets::BACKGROUND));
-            p->setBrush(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW)));
+            p->setPen(ColorsManager::getInstance().getColor(LTPackets::BACKGROUND));
+            p->setBrush(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::YELLOW)));
             p->drawEllipse(point, 15, 15);
 
             p->setFont(QFont("Arial", 12, 100));

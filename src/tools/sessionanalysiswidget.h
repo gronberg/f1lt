@@ -30,6 +30,7 @@
 
 #include "ui_sessionanalysiswidget.h"
 
+#include "../core/colorsmanager.h"
 #include "../core/eventdata.h"
 
 class SessionAnalysisWidget : public QWidget
@@ -84,7 +85,7 @@ private slots:
 private:
 
     QTableWidgetItem* setItem(QTableWidget *table, int row, int col, QString text = "", Qt::ItemFlags flags = Qt::NoItemFlags, int align = Qt::AlignCenter,
-                     QColor textColor = SeasonData::getInstance().getColor(LTPackets::DEFAULT), QBrush background = QBrush());
+                     QColor textColor = ColorsManager::getInstance().getColor(LTPackets::DEFAULT), QBrush background = QBrush());
 
     Ui::SessionAnalysisWidgetClass ui;
     QList<QCheckBox*> driverCheckBoxes;

@@ -21,6 +21,7 @@
 
 #include "racemodel.h"
 
+#include "../../core/colorsmanager.h"
 #include <QPixmap>
 
 RaceModel::RaceModel(QObject *parent) : LTModel(parent), eventData(EventData::getInstance())
@@ -67,7 +68,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
             }
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().positionColor());
+                return ColorsManager::getInstance().getColor(dd.getColorData().positionColor());
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);
@@ -79,7 +80,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
                 return dd.getNumber();
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().numberColor());
+                return ColorsManager::getInstance().getColor(dd.getColorData().numberColor());
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);
@@ -103,7 +104,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
                 return dd.getDriverName();
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().driverColor());
+                return ColorsManager::getInstance().getColor(dd.getColorData().driverColor());
 
             break;
 
@@ -113,7 +114,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
 
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().gapColor());
+                return ColorsManager::getInstance().getColor(dd.getColorData().gapColor());
 
             if (role == Qt::TextAlignmentRole)
                 return Qt::AlignCenter;
@@ -129,7 +130,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
             }
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().intervalColor());
+                return ColorsManager::getInstance().getColor(dd.getColorData().intervalColor());
 
             if (role == Qt::TextAlignmentRole)
                 return Qt::AlignCenter;
@@ -146,7 +147,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
             }
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().lapTimeColor());
+                return ColorsManager::getInstance().getColor(dd.getColorData().lapTimeColor());
 
             if (role == Qt::TextAlignmentRole)
                 return Qt::AlignCenter;
@@ -163,7 +164,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
                 return dd.getLastLap().getSectorTime(1).toString();
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().sectorColor(1));
+                return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(1));
 
             if (role == Qt::TextAlignmentRole)
                 return Qt::AlignCenter;
@@ -175,7 +176,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
                 return dd.getLastLap().getSectorTime(2).toString();
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().sectorColor(2));
+                return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(2));
 
             if (role == Qt::TextAlignmentRole)
                 return Qt::AlignCenter;
@@ -187,7 +188,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
                 return dd.getLastLap().getSectorTime(3).toString();
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().sectorColor(3));
+                return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(3));
 
             if (role == Qt::TextAlignmentRole)
                 return Qt::AlignCenter;
@@ -199,7 +200,7 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
                 return dd.getNumPits();
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(dd.getColorData().numLapsColor());
+                return ColorsManager::getInstance().getColor(dd.getColorData().numLapsColor());
 
             if (role == Qt::TextAlignmentRole)
                 return Qt::AlignCenter;
@@ -230,7 +231,7 @@ QVariant RaceModel::headerRowData(const QModelIndex &index, int role) const
         }
     }
     if (role == Qt::ForegroundRole)
-        return SeasonData::getInstance().getColor(LTPackets::DEFAULT);
+        return ColorsManager::getInstance().getColor(LTPackets::DEFAULT);
 
     if (role == Qt::TextAlignmentRole)
     {
@@ -262,10 +263,10 @@ QVariant RaceModel::extraRowData(const QModelIndex &index, int role) const
         }
     }
     else if (role == Qt::ForegroundRole && (index.column() == 3 || index.column() == 5 || index.column() == 6))
-        return SeasonData::getInstance().getColor(LTPackets::VIOLET);
+        return ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
     else if (role == Qt::ForegroundRole && (index.column() == 1 || index.column() == 4))
-        return SeasonData::getInstance().getColor(LTPackets::DEFAULT);
+        return ColorsManager::getInstance().getColor(LTPackets::DEFAULT);
 
     if (role == Qt::TextAlignmentRole && index.column() == 1)
         return (int)(Qt::AlignVCenter | Qt::AlignRight);

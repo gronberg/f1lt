@@ -25,7 +25,7 @@
 #include <QColorDialog>
 #include <QFontDialog>
 
-#include "../core/seasondata.h"
+#include "../core/colorsmanager.h"
 #include "../net/networksettings.h"
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
@@ -47,7 +47,7 @@ PreferencesDialog::~PreferencesDialog()
 
 int PreferencesDialog::exec(QSettings *set)
 {
-    colors = SeasonData::getInstance().getColors();
+    colors = ColorsManager::getInstance().getColors();
     setButtonColor(ui->colorGreenButton, colors[LTPackets::GREEN]);
     setButtonColor(ui->colorWhiteButton, colors[LTPackets::WHITE]);
     setButtonColor(ui->colorVioletButton, colors[LTPackets::VIOLET]);
@@ -131,7 +131,7 @@ void PreferencesDialog::on_buttonBox_accepted()
     settings->setValue("ui/auto_connect", isAutoConnect());
     settings->setValue("ui/draw_tracker_classification", drawTrackerClassification());
 
-    SeasonData::getInstance().setColors(colors);
+    ColorsManager::getInstance().setColors(colors);
 }
 
 QNetworkProxy PreferencesDialog::getProxy()
@@ -309,38 +309,38 @@ void PreferencesDialog::on_proxyCheckBox_toggled(bool checked)
 
 void PreferencesDialog::on_pushButton_clicked()
 {
-    colors[LTPackets::WHITE] = SeasonData::getInstance().getDefaultColor(LTPackets::WHITE);
+    colors[LTPackets::WHITE] = ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE);
     setButtonColor(ui->colorWhiteButton, colors[LTPackets::WHITE]);
 }
 
 void PreferencesDialog::on_pushButton_2_clicked()
 {
-    colors[LTPackets::CYAN] = SeasonData::getInstance().getDefaultColor(LTPackets::CYAN);
+    colors[LTPackets::CYAN] = ColorsManager::getInstance().getDefaultColor(LTPackets::CYAN);
     setButtonColor(ui->colorCyanButton, colors[LTPackets::CYAN]);
 }
 
 void PreferencesDialog::on_pushButton_3_clicked()
 {
-    colors[LTPackets::YELLOW] = SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW);
+    colors[LTPackets::YELLOW] = ColorsManager::getInstance().getDefaultColor(LTPackets::YELLOW);
     setButtonColor(ui->colorYellowButton, colors[LTPackets::YELLOW]);
 }
 
 void PreferencesDialog::on_pushButton_4_clicked()
 {
-    colors[LTPackets::PIT] = SeasonData::getInstance().getDefaultColor(LTPackets::PIT);
-    colors[LTPackets::RED] = SeasonData::getInstance().getDefaultColor(LTPackets::RED);
+    colors[LTPackets::PIT] = ColorsManager::getInstance().getDefaultColor(LTPackets::PIT);
+    colors[LTPackets::RED] = ColorsManager::getInstance().getDefaultColor(LTPackets::RED);
     setButtonColor(ui->colorRedButton, colors[LTPackets::PIT]);
 }
 
 void PreferencesDialog::on_pushButton_5_clicked()
 {
-    colors[LTPackets::GREEN] = SeasonData::getInstance().getDefaultColor(LTPackets::GREEN);
+    colors[LTPackets::GREEN] = ColorsManager::getInstance().getDefaultColor(LTPackets::GREEN);
     setButtonColor(ui->colorGreenButton, colors[LTPackets::GREEN]);
 }
 
 void PreferencesDialog::on_pushButton_6_clicked()
 {
-    colors[LTPackets::VIOLET] = SeasonData::getInstance().getDefaultColor(LTPackets::VIOLET);
+    colors[LTPackets::VIOLET] = ColorsManager::getInstance().getDefaultColor(LTPackets::VIOLET);
     setButtonColor(ui->colorVioletButton, colors[LTPackets::VIOLET]);
 }
 
@@ -420,7 +420,7 @@ void PreferencesDialog::setButtonColor(QToolButton *button, QColor color)
 
 void PreferencesDialog::on_pushButton_7_clicked()
 {
-    colors = SeasonData::getInstance().getDefaultColors();
+    colors = ColorsManager::getInstance().getDefaultColors();
     setButtonColor(ui->colorWhiteButton, colors[LTPackets::WHITE]);
     setButtonColor(ui->colorCyanButton, colors[LTPackets::CYAN]);
     setButtonColor(ui->colorYellowButton, colors[LTPackets::YELLOW]);

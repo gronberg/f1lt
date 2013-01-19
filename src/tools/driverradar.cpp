@@ -22,6 +22,8 @@
 #include "driverradar.h"
 #include <typeinfo>
 
+#include "../core/colorsmanager.h"
+
 DriverRadar::DriverRadar(QWidget *parent) :
     QWidget(parent), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0), selectedDriver(-2), dti(0)
 {
@@ -145,7 +147,7 @@ void DriverRadar::paintEvent(QPaintEvent *)
     p.begin(this);
 
     p.setRenderHint(QPainter::Antialiasing);
-    p.setBrush(QBrush(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND))));
+    p.setBrush(QBrush(QColor(ColorsManager::getInstance().getColor(LTPackets::BACKGROUND))));
     p.drawRect(0, 0, width(), height());
 
     QPainterPath path;
@@ -153,7 +155,7 @@ void DriverRadar::paintEvent(QPaintEvent *)
     QPen pen(QColor(255, 255, 255), 5);
 
     if (EventData::getInstance().getFlagStatus() == LTPackets::SAFETY_CAR_DEPLOYED)
-        pen.setColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW));
+        pen.setColor(ColorsManager::getInstance().getDefaultColor(LTPackets::YELLOW));
 
 //    path.addEllipse(QPoint(radarX, radarY), radarR, radarR);
     p.setBrush(QBrush());

@@ -24,6 +24,7 @@
 
 #include <QMouseEvent>
 
+#include "../core/colorsmanager.h"
 
 DriverTracker::DriverTracker(QWidget *parent) : DriverRadar(parent), drawClassification(true)
 {
@@ -117,7 +118,7 @@ void DriverTracker::paintEvent(QPaintEvent *)
     p.begin(this);
 
     p.setRenderHint(QPainter::Antialiasing);
-    p.setBrush(QBrush(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND))));
+    p.setBrush(QBrush(QColor(ColorsManager::getInstance().getColor(LTPackets::BACKGROUND))));
     p.drawRect(0, 0, width(), height());
 
     int labWidth = drawClassification ? label.width() + 10 : 10;
@@ -163,7 +164,7 @@ void DriverTracker::paintClassification(QPainter &p)
             QString txt = SeasonData::getInstance().getDriverShortName(dd->getDriverName());
 
             p.setFont(QFont("Arial", 10, 100));
-            QColor drvColor = SeasonData::getInstance().getCarColor(dd->getNumber());
+            QColor drvColor = ColorsManager::getInstance().getCarColor(dd->getNumber());
             p.setBrush(drvColor);
 
             if (isExcluded(dd->getCarID()))
@@ -175,7 +176,7 @@ void DriverTracker::paintClassification(QPainter &p)
             int numX = x + 35;
             int numY = y + p.fontMetrics().height()/2 + 8;
 
-            p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND)));
+            p.setPen(QColor(ColorsManager::getInstance().getColor(LTPackets::BACKGROUND)));
             p.drawRect(x, y, 70, 20);
 
             if (dd->getCarID() == selectedDriver)
@@ -185,7 +186,7 @@ void DriverTracker::paintClassification(QPainter &p)
 
             p.drawText(numX, numY, number);
 
-            p.setPen(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE));
+            p.setPen(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE));
 
             if (isExcluded(dd->getCarID()))
                 p.setPen(QColor(80, 80, 80));
@@ -197,7 +198,7 @@ void DriverTracker::paintClassification(QPainter &p)
                 p.setPen(QColor(0,0,0));
 
                 if (dd->isInPits())
-                    p.setPen(SeasonData::getInstance().getDefaultColor(LTPackets::PIT));
+                    p.setPen(ColorsManager::getInstance().getDefaultColor(LTPackets::PIT));
                 QString pos = QString::number(i+1);
 
                 if (!dd->isRetired())
@@ -248,7 +249,7 @@ void DriverTracker::paintClassification(QPainter &p)
                     else
                         gap = dd->getQualiTime(EventData::getInstance().getQualiPeriod()).toString();
                 }
-                p.setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::YELLOW)));
+                p.setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::YELLOW)));
 
                 if (isExcluded(dd->getCarID()))
                     p.setPen(QColor(80, 80, 80));

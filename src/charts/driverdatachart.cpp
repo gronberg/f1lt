@@ -20,6 +20,8 @@
 
 
 #include "driverdatachart.h"
+
+#include "../core/colorsmanager.h"
 #include <QPainter>
 
 void PopupInfoBox::paint(QPainter *p, int x, int y, const QRect &paintRect)
@@ -47,7 +49,7 @@ void PopupInfoBox::paint(QPainter *p, int x, int y, const QRect &paintRect)
 
     p->drawRect(x+20, y, width, 20 * (getSize() + titleRows));
 
-    p->setPen(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE));
+    p->setPen(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE));
     if (!title.isNull())
     {
         p->setFont(QFont("Arial", 10, QFont::Normal, true));
@@ -100,7 +102,7 @@ void DriverDataChart::mouseMoveEvent(QMouseEvent *ev)
 
 void DriverDataChart::drawAxes(QPainter *p)
 {
-    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+    p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -112,19 +114,19 @@ void DriverDataChart::drawAxes(QPainter *p)
 //	last = driverData->posHistory.size();
 
     p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+    p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     double yFactor = (((double)paintRect.height())/4.0);
     double yFactor2 = ((double)(tMax-tMin)/4.0);
     double j = tMin;
     for (int i = paintRect.bottom(); i >= 10; i-= yFactor, j += yFactor2)
     {
-        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+        p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString("%1").arg(round(j)));
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
+            QPen pen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -149,7 +151,7 @@ void DriverDataChart::drawAxes(QPainter *p)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+            p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
 
             if (driverData->getPositionHistory().size() > driverData->getLapData().size())
                 p->drawText(round(i)-5, height()-10, QString("L%1").arg(round(j)));
@@ -158,7 +160,7 @@ void DriverDataChart::drawAxes(QPainter *p)
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
+                QPen pen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -243,7 +245,7 @@ void DriverDataChart::drawChart(QPainter *p)
 
 void DriverDataChart::drawLegend(QPainter *p)
 {
-    p->setPen(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE));
+    p->setPen(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE));
     p->drawText(40, 20, driverData->getDriverName());
 }
 
@@ -296,7 +298,7 @@ int DriverDataChart::checkLapDataCoordinates(int x, int y)
 
 
 //    p->setFont(QFont("Arial", 10, QFont::Bold, false));
-//    p->setPen(QColor(SeasonData::getInstance().getColor(LTPackets::WHITE)));
+//    p->setPen(QColor(ColorsManager::getInstance().getColor(LTPackets::WHITE)));
 //    for (int i = 0; i < itemsInXY.size(); ++i)
 //    {
 //        if (itemsInXY[i] < driverData->getLapData().size())
@@ -460,7 +462,7 @@ void LapTimeChart::setData(DriverData *dd)
 
 void LapTimeChart::drawAxes(QPainter *p)
 {
-    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+    p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     //x axe
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.right(), paintRect.bottom());
@@ -472,12 +474,12 @@ void LapTimeChart::drawAxes(QPainter *p)
 
     for (int i = paintRect.bottom(), j = tMin; i >= 50; i-= (height()-55)/6, j += (tMax-tMin)/6)
     {
-        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+        p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString("%1").arg(j));
 
         if (i != paintRect.bottom())
         {
-            QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
+            QPen pen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -497,12 +499,12 @@ void LapTimeChart::drawAxes(QPainter *p)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+            p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("L%1").arg(driverData->getLapData()[round(j)].getLapNumber()));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
+                QPen pen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());
@@ -760,7 +762,7 @@ void LapTimeChart::drawLegend(QPainter *p)
     int x = 35, y = 25;
     p->setRenderHint(QPainter::Antialiasing, false);
     p->setBrush(QColor(20, 20, 20));
-    p->setPen(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT));
+    p->setPen(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT));
     p->drawRect(x, y, 200, 20);
 
     p->setPen(colors[0]);
@@ -820,7 +822,7 @@ void LapTimeChart::resetZoom()
 
 void GapChart::drawAxes(QPainter *p)
 {
-    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+    p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
 
 
     //x axe
@@ -830,7 +832,7 @@ void GapChart::drawAxes(QPainter *p)
     p->drawLine(paintRect.left(), paintRect.bottom(), paintRect.left(), paintRect.top());
 
     p->setFont(QFont("Arial", 10));
-    p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+    p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
 
     //double factor =
 
@@ -848,12 +850,12 @@ void GapChart::drawAxes(QPainter *p)
 //    }
     for (int i = paintRect.bottom(), j = tMin; i >= 50; i-= (height()-75)/4, j += (tMax-tMin)/4)
     {
-        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+        p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
         p->drawText(5, i+5, QString("%1").arg(j));
 
         if (i != paintRect.height() && i < paintRect.bottom())
         {
-            QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
+            QPen pen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT)));
             pen.setStyle(Qt::DashLine);
             p->setPen(pen);
             p->drawLine(paintRect.left(), i, paintRect.right(), i);
@@ -862,16 +864,16 @@ void GapChart::drawAxes(QPainter *p)
 
     if (tMax >= max)
     {
-        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+        p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
         p->drawText(5, 15, ">1L");
-        QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
+        QPen pen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT)));
         pen.setStyle(Qt::DashLine);
         p->setPen(pen);
         p->drawLine(paintRect.left(), paintRect.top(), paintRect.right(), paintRect.top());
 
-        p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+        p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
         p->drawText(5, 35, QString(">%1").arg(max));
-        pen.setColor(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
+        pen.setColor(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT)));
         pen.setStyle(Qt::DashLine);
         p->setPen(pen);
         p->drawLine(paintRect.left(), 30, paintRect.right(), 30);
@@ -890,12 +892,12 @@ void GapChart::drawAxes(QPainter *p)
         {
             i += (double)(round(j) - prevJ) * xFactor;
             prevJ = round(j);
-            p->setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+            p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
             p->drawText(round(i)-5, height()-10, QString("L%1").arg(driverData->getLapData()[round(j)].getLapNumber()));
 
             if (i > paintRect.left())
             {
-                QPen pen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::DEFAULT)));
+                QPen pen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::DEFAULT)));
                 pen.setStyle(Qt::DashLine);
                 p->setPen(pen);
                 p->drawLine(round(i), paintRect.bottom(), round(i), paintRect.top());

@@ -20,6 +20,8 @@
 
 
 #include "driverlaphistorymodel.h"
+
+#include "../../core/colorsmanager.h"
 #include <QDebug>
 
 DriverLapHistoryModel::DriverLapHistoryModel(QObject *parent) :
@@ -91,7 +93,7 @@ QVariant DriverLapHistoryModel::data(const QModelIndex & index, int role) const
                 return ld.getLapNumber();
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter + Qt::AlignRight);
@@ -101,7 +103,7 @@ QVariant DriverLapHistoryModel::data(const QModelIndex & index, int role) const
                 return ld.getPosition();
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::CYAN);
+                return ColorsManager::getInstance().getColor(LTPackets::CYAN);
 
         case 2:
             if (role == Qt::DisplayRole)
@@ -122,7 +124,7 @@ QVariant DriverLapHistoryModel::data(const QModelIndex & index, int role) const
             }
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::YELLOW);
+                return ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter + Qt::AlignRight);
@@ -140,7 +142,7 @@ QVariant DriverLapHistoryModel::data(const QModelIndex & index, int role) const
             }
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::YELLOW);
+                return ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter + Qt::AlignRight);
@@ -159,31 +161,31 @@ QVariant DriverLapHistoryModel::data(const QModelIndex & index, int role) const
 
 QVariant DriverLapHistoryModel::getLapTime(const LapData &ld, int role) const
 {
-    QColor color = SeasonData::getInstance().getColor(LTPackets::WHITE);
+    QColor color = ColorsManager::getInstance().getColor(LTPackets::WHITE);
     QString s = ld.getTime().toString();
 
     if (ld.getLapNumber() == driverData->getSessionRecords().getBestLap().getLapNumber())
-        color = SeasonData::getInstance().getColor(LTPackets::GREEN);
+        color = ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
     if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getFastestLap().getLapNumber() &&
         driverData->getDriverName() == EventData::getInstance().getSessionRecords().getFastestLap().getDriverName())
-        color = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+        color = ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
     if (ld.getTime().toString() == "IN PIT")
     {
-        color = SeasonData::getInstance().getColor(LTPackets::PIT);
+        color = ColorsManager::getInstance().getColor(LTPackets::PIT);
         s = QString("IN PIT (%1)").arg(driverData->getPitTime(ld.getLapNumber()));
     }
 
     else if (ld.getTime().toString() == "RETIRED" || ld.getTime().toString().contains("LAP"))
-        color = SeasonData::getInstance().getColor(LTPackets::PIT);
+        color = ColorsManager::getInstance().getColor(LTPackets::PIT);
 
     else if (ld.getRaceLapExtraData().isSCLap())
-        color = SeasonData::getInstance().getColor(LTPackets::YELLOW);
+        color = ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
     if ((EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT && ld.getPracticeLapExtraData().isApproxLap()) ||
         (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT && ld.getQualiLapExtraData().isApproxLap()))
-        color = SeasonData::getInstance().getColor(LTPackets::CYAN);
+        color = ColorsManager::getInstance().getColor(LTPackets::CYAN);
 
 
     if (role == Qt::DisplayRole)
@@ -199,17 +201,17 @@ QVariant DriverLapHistoryModel::getLapTime(const LapData &ld, int role) const
 }
 QVariant DriverLapHistoryModel::getSectorTime(const LapData &ld, int role, int sector) const
 {
-    QColor color = SeasonData::getInstance().getColor(LTPackets::WHITE);
+    QColor color = ColorsManager::getInstance().getColor(LTPackets::WHITE);
     QString s = ld.getSectorTime(sector).toString();
 
     if (ld.getLapNumber() == driverData->getSessionRecords().getBestSectorLapNumber(sector))
     {
-        color = SeasonData::getInstance().getColor(LTPackets::GREEN);
+        color = ColorsManager::getInstance().getColor(LTPackets::GREEN);
     }
 
     if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(sector).getLapNumber() &&
         driverData->getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(sector).getDriverName())
-        color = SeasonData::getInstance().getColor(LTPackets::VIOLET);
+        color = ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
     if (role == Qt::DisplayRole)
         return s;
@@ -257,7 +259,7 @@ QVariant DriverLapHistoryModel::headerData(const QModelIndex & index, int role) 
         }
     }
     if (role == Qt::ForegroundRole)
-        return SeasonData::getInstance().getColor(LTPackets::DEFAULT);
+        return ColorsManager::getInstance().getColor(LTPackets::DEFAULT);
 
     return QVariant();
 }

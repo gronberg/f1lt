@@ -26,6 +26,8 @@
 #include <QDebug>
 #include <QLabel>
 #include <QToolButton>
+
+#include "../core/colorsmanager.h"
 #include "../core/eventdata.h"
 
 DriverColorsDialog::DriverColorsDialog(QWidget *parent) :
@@ -43,7 +45,7 @@ DriverColorsDialog::~DriverColorsDialog()
 int DriverColorsDialog::exec()
 {
     SeasonData &sd = SeasonData::getInstance();
-    colors = sd.getDriverColors();
+    colors = ColorsManager::getInstance().getDriverColors();
     int i = 0;
     for (; i < sd.getTeams().size(); ++i)
     {
@@ -98,7 +100,7 @@ int DriverColorsDialog::exec()
             QToolButton *button = static_cast<QToolButton*>(layout->itemAt(0)->widget());
 
             label->setText(QString("%1 %2").arg(sd.getTeams()[i].driver1No).arg(sd.getTeams()[i].driver1Name));
-            setButtonColor(button, sd.getCarColor(sd.getTeams()[i].driver1No));
+            setButtonColor(button, ColorsManager::getInstance().getCarColor(sd.getTeams()[i].driver1No));
 
             label->setVisible(true);
             button->setVisible(true);
@@ -110,7 +112,7 @@ int DriverColorsDialog::exec()
             button = static_cast<QToolButton*>(layout->itemAt(3)->widget());
 
             label->setText(QString("%1 %2").arg(sd.getTeams()[i].driver2No).arg(sd.getTeams()[i].driver2Name));
-            setButtonColor(button, sd.getCarColor(sd.getTeams()[i].driver2No));
+            setButtonColor(button, ColorsManager::getInstance().getCarColor(sd.getTeams()[i].driver2No));
 
             label->setVisible(true);
             button->setVisible(true);
@@ -194,8 +196,8 @@ void DriverColorsDialog::onResetButtonClicked()
 
         if (button == resetButton)
         {
-            setButtonColor(colorButton, SeasonData::getInstance().getDefaultDriverColors()[i * 2]);
-            colors[i * 2] = SeasonData::getInstance().getDefaultDriverColors()[i * 2];
+            setButtonColor(colorButton, ColorsManager::getInstance().getDefaultDriverColors()[i * 2]);
+            colors[i * 2] = ColorsManager::getInstance().getDefaultDriverColors()[i * 2];
 
             return;
         }
@@ -204,8 +206,8 @@ void DriverColorsDialog::onResetButtonClicked()
         colorButton = static_cast<QToolButton*>(layout->itemAt(3)->widget());
         if (button == resetButton)
         {
-            setButtonColor(colorButton, SeasonData::getInstance().getDefaultDriverColors()[i * 2 + 1]);
-            colors[i * 2 + 1] = SeasonData::getInstance().getDefaultDriverColors()[i * 2 + 1];
+            setButtonColor(colorButton, ColorsManager::getInstance().getDefaultDriverColors()[i * 2 + 1]);
+            colors[i * 2 + 1] = ColorsManager::getInstance().getDefaultDriverColors()[i * 2 + 1];
 
             return;
         }
@@ -226,8 +228,8 @@ void DriverColorsDialog::setButtonColor(QToolButton *button, QColor color)
 
 void DriverColorsDialog::on_buttonBox_accepted()
 {
-    SeasonData::getInstance().setDriverColors(colors);
-    SeasonData::getInstance().getHelmetsFactory().reloadHelmets();
+    ColorsManager::getInstance().setDriverColors(colors);
+    ImagesFactory::getInstance().getHelmetsFactory().reloadHelmets();
 }
 
 void DriverColorsDialog::on_pushButton_clicked()
@@ -237,12 +239,12 @@ void DriverColorsDialog::on_pushButton_clicked()
         QHBoxLayout *layout = static_cast<QHBoxLayout*>(ui->verticalLayout->itemAt(i)->layout());
         QToolButton *colorButton = static_cast<QToolButton*>(layout->itemAt(0)->widget());
 
-        setButtonColor(colorButton, SeasonData::getInstance().getDefaultDriverColors()[i * 2]);
-        colors[i * 2] = SeasonData::getInstance().getDefaultDriverColors()[i * 2];
+        setButtonColor(colorButton, ColorsManager::getInstance().getDefaultDriverColors()[i * 2]);
+        colors[i * 2] = ColorsManager::getInstance().getDefaultDriverColors()[i * 2];
 
         colorButton = static_cast<QToolButton*>(layout->itemAt(3)->widget());
 
-        setButtonColor(colorButton, SeasonData::getInstance().getDefaultDriverColors()[i * 2 + 1]);
-        colors[i * 2 + 1] = SeasonData::getInstance().getDefaultDriverColors()[i * 2 + 1];
+        setButtonColor(colorButton, ColorsManager::getInstance().getDefaultDriverColors()[i * 2 + 1]);
+        colors[i * 2 + 1] = ColorsManager::getInstance().getDefaultDriverColors()[i * 2 + 1];
     }
 }

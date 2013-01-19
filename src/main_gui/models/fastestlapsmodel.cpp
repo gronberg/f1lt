@@ -21,6 +21,8 @@
 
 #include "fastestlapsmodel.h"
 
+#include "../../core/colorsmanager.h"
+
 FastestLapsModel::FastestLapsModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
@@ -75,7 +77,7 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             }
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::CYAN);
+                return ColorsManager::getInstance().getColor(LTPackets::CYAN);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);
@@ -89,9 +91,9 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             if (role == Qt::ForegroundRole)
             {
                 if (index.row() == 1)
-                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
+                    return ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
             }
             return QVariant();
 
@@ -102,9 +104,9 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             if (role == Qt::ForegroundRole)
             {
                 if (index.row() == 1)
-                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
+                    return ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
-                return SeasonData::getInstance().getColor(LTPackets::GREEN);
+                return ColorsManager::getInstance().getColor(LTPackets::GREEN);
             }
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignCenter);
@@ -117,7 +119,7 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
 
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::YELLOW);
+                return ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignCenter);
@@ -132,13 +134,13 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getLapNumber() &&
                     dd->getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(1).getDriverName())
-                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
+                    return ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
 
                 if (ld.getLapNumber() == dd->getSessionRecords().getBestSectorLapNumber(1))
-                    return SeasonData::getInstance().getColor(LTPackets::GREEN);
+                    return ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
             }
 
             if (role == Qt::TextAlignmentRole)
@@ -152,12 +154,12 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getLapNumber() &&
                     dd->getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(2).getDriverName())
-                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
+                    return ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
                 if (ld.getLapNumber() == dd->getSessionRecords().getBestSectorLapNumber(2))
-                    return SeasonData::getInstance().getColor(LTPackets::GREEN);
+                    return ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
             }
 
             if (role == Qt::TextAlignmentRole)
@@ -171,12 +173,12 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             {
                 if (ld.getLapNumber() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getLapNumber() &&
                     dd->getDriverName() == EventData::getInstance().getSessionRecords().getSectorRecord(3).getDriverName())
-                    return SeasonData::getInstance().getColor(LTPackets::VIOLET);
+                    return ColorsManager::getInstance().getColor(LTPackets::VIOLET);
 
                 if (ld.getLapNumber() == dd->getSessionRecords().getBestSectorLapNumber(3))
-                    return SeasonData::getInstance().getColor(LTPackets::GREEN);
+                    return ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
             }
 
             if (role == Qt::TextAlignmentRole)
@@ -195,7 +197,7 @@ QVariant FastestLapsModel::data(const QModelIndex & index, int role) const
             }
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter | Qt::AlignRight);
@@ -220,7 +222,7 @@ QVariant FastestLapsModel::headerData(const QModelIndex & index, int role) const
         }
     }
     if (role == Qt::ForegroundRole)
-        return SeasonData::getInstance().getColor(LTPackets::DEFAULT);
+        return ColorsManager::getInstance().getColor(LTPackets::DEFAULT);
 
     if (role == Qt::TextAlignmentRole)
     {

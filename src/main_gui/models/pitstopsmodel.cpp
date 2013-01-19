@@ -21,6 +21,8 @@
 
 #include "pitstopsmodel.h"
 
+#include "../../core/colorsmanager.h"
+
 PitStopsModel::PitStopsModel(QObject *parent) :
     QAbstractTableModel(parent), rows(1)
 {
@@ -74,7 +76,7 @@ QVariant PitStopsModel::data(const QModelIndex & index, int role) const
                 return QString("%1.").arg(index.row());
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::CYAN);
+                return ColorsManager::getInstance().getColor(LTPackets::CYAN);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter + Qt::AlignRight);
@@ -84,7 +86,7 @@ QVariant PitStopsModel::data(const QModelIndex & index, int role) const
                 return ps.lap;
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::YELLOW);
+                return ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter + Qt::AlignRight);
@@ -94,7 +96,7 @@ QVariant PitStopsModel::data(const QModelIndex & index, int role) const
                 return SeasonData::getInstance().getDriverNo(ps.driver);
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignVCenter + Qt::AlignRight);
@@ -104,7 +106,7 @@ QVariant PitStopsModel::data(const QModelIndex & index, int role) const
                 return ps.driver;
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
 
             return QVariant();
 
@@ -113,7 +115,7 @@ QVariant PitStopsModel::data(const QModelIndex & index, int role) const
                 return QString::number(ps.time, 'f', 1);
 
             if (role == Qt::ForegroundRole)
-                return SeasonData::getInstance().getColor(LTPackets::YELLOW);
+                return ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
             if (role == Qt::TextAlignmentRole)
                 return (int)(Qt::AlignCenter);
@@ -131,12 +133,12 @@ QVariant PitStopsModel::data(const QModelIndex & index, int role) const
             if (role == Qt::ForegroundRole)
             {
                 if (ps.pos > 0)
-                    return SeasonData::getInstance().getColor(LTPackets::GREEN);
+                    return ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
                 if (ps.pos < 0)
-                    return SeasonData::getInstance().getColor(LTPackets::RED);
+                    return ColorsManager::getInstance().getColor(LTPackets::RED);
 
-                return SeasonData::getInstance().getColor(LTPackets::WHITE);
+                return ColorsManager::getInstance().getColor(LTPackets::WHITE);
             }
 
             if (role == Qt::TextAlignmentRole)
@@ -169,7 +171,7 @@ QVariant PitStopsModel::headerData(const QModelIndex & index, int role) const
         }
     }
     if (role == Qt::ForegroundRole)
-        return SeasonData::getInstance().getColor(LTPackets::DEFAULT);
+        return ColorsManager::getInstance().getColor(LTPackets::DEFAULT);
 
     return QVariant();
 }

@@ -18,47 +18,89 @@
  *                                                                             *
  *******************************************************************************/
 
+#ifndef COLORSMANAGER_H
+#define COLORSMANAGER_H
 
-#include "ltitemdelegate.h"
-#include <QDebug>
+#include <QColor>
+#include <QList>
 
-#include <QPainter>
+#include "ltpackets.h"
 
-#include "models/ltmodel.h"
-
-void LTItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+/*!
+ * \brief This class is responsible for holding interace and driver colors. This is a singleton.
+ */
+class ColorsManager
 {
-    QStyleOptionViewItem viewOption(option);
+public:    
 
-    QColor color = index.data(Qt::ForegroundRole).value<QColor>();
-    if (color.isValid())
+    static ColorsManager &getInstance()
     {
-        if (color != option.palette.color(QPalette::WindowText))
-            viewOption.palette.setColor(QPalette::HighlightedText, color);
+        static ColorsManager instance;
+        return instance;
     }
-    QItemDelegate::paint(painter, viewOption, index);
-}
 
-//=========================================
-
-void LTMainItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    LTItemDelegate::paint(painter, option, index);
-
-    if (index.column() == 2 && drawCars)
+    QColor getColor(LTPackets::Colors color)
     {
-        const DriverData *dd = static_cast<const LTModel*>(index.model())->getDriverData(index);
-
-        if (dd == 0 || dd->getCarID() <= 0)
-            return;
-
-        QPixmap &pix = ImagesFactory::getInstance().getCarThumbnailsFactory().getCarThumbnail(dd->getNumber(), thumbnailsSize);//getCarImage(dd);
-
-        if (!pix.isNull())
-        {
-            int x = option.rect.x() + (option.rect.width() - pix.rect().width())/2;
-            int y = option.rect.y() + (option.rect.height() - pix.rect().height())/2;
-            painter->drawPixmap(x, y, pix.width(), pix.height(), pix);
-        }
+        return colors[color];
     }
-}
+
+    QColor getDefaultColor(LTPackets::Colors color)
+    {
+        return defaultColors[color];
+    }
+
+    QList<QColor> getColors()
+    {
+        return colors;
+    }
+
+    QList<QColor> getDefaultColors()
+    {
+        return defaultColors;
+    }
+
+    void setColors(QList<QColor> col)
+    {
+        colors = col;
+    }
+
+    void setColor(LTPackets::Colors colorCode, QColor color)
+    {
+        colors[colorCode] = color;
+    }
+    void setDefaultColor(LTPackets::Colors colorCode)
+    {
+        colors[colorCode] = defaultColors[colorCode];
+    }
+    void setAllDefaultColors()
+    {
+        colors = defaultColors;
+    }
+
+    QColor getCarColor(int no);
+
+
+    QList<QColor> getDriverColors()
+    {
+        return driverColors;
+    }
+    void setDriverColors(QList<QColor> colors)
+    {
+        driverColors = colors;
+    }
+    QList<QColor> getDefaultDriverColors()
+    {
+        return defaultDriverColors;
+    }
+
+private:
+    ColorsManager();
+
+    QList<QColor> colors;
+    QList<QColor> defaultColors;
+
+    QList<QColor> driverColors;
+    QList<QColor> defaultDriverColors;
+};
+
+#endif // COLORSMANAGER_H

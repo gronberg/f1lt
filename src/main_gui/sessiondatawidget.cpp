@@ -29,6 +29,8 @@
 #include <QResizeEvent>
 
 #include "ltitemdelegate.h"
+
+#include "../core/colorsmanager.h"
 #include "../core/trackrecords.h"
 
 SessionDataWidget::SessionDataWidget(QWidget *parent) :
@@ -117,19 +119,19 @@ void SessionDataWidget::updateEventInfo()
 
     QPalette palette;
     ui->eventNameLabel->setText(event.eventName);
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
     ui->eventNameLabel->setPalette(palette);
 
     ui->eventPlaceLabel->setText(event.eventPlace);
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::GREEN));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::GREEN));
     ui->eventPlaceLabel->setPalette(palette);
 
     ui->eventDateLabel->setText(event.fpDate.toString("dd.MM.yyyy") + " - " + event.raceDate.toString("dd.MM.yyyy"));
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
     ui->eventDateLabel->setPalette(palette);
 
     ui->eventLapsLabel->setText(QString::number(event.laps) + " laps");
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::CYAN));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::CYAN));
     ui->eventLapsLabel->setPalette(palette);
 
 //    if (ui->eventMapLabel->pixmap() == 0 || ui->eventMapLabel->pixmap()->isNull())
@@ -169,17 +171,17 @@ void SessionDataWidget::updateEventInfo()
         ui->rRYLabel->setText(tv->trackRecords[RACE_RECORD].year);
 
         QPalette palette;
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
         ui->qRTLabel->setPalette(palette);
         ui->rRTLabel->setPalette(palette);
 
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
         ui->qRDLabel->setPalette(palette);
         ui->qRDTLabel->setPalette(palette);
         ui->rRDLabel->setPalette(palette);
         ui->rRDTLabel->setPalette(palette);
 
-        palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+        palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
         ui->qRYLabel->setPalette(palette);
         ui->rRYLabel->setPalette(palette);
     }
@@ -256,7 +258,7 @@ void SessionDataWidget::updateFastestLaps()
     ui->fastestLapsTable->setMinimumSize(QSize(ui->fastestLapsTable->minimumWidth(), fastestLapsModel.rowCount() * 22));
 
     QPalette palette;
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
     QList<LapData> fastestLaps = fastestLapsModel.getFastestLaps();
 
     QString str = eventData.getSessionRecords().getFastestLap().getTime();
@@ -275,7 +277,7 @@ void SessionDataWidget::updateFastestLaps()
     }
 
     ui->flDriverLabel->setText(str);
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
     ui->flDriverLabel->setPalette(palette);
 
     str = QString("L%1").arg(eventData.getSessionRecords().getFastestLap().getLapNumber());
@@ -292,16 +294,16 @@ void SessionDataWidget::updateFastestLaps()
     }
 
     ui->flLapLabel->setText(str);
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
     ui->flLapLabel->setPalette(palette);
 
     ui->s1TimeLabel->setText(eventData.getSessionRecords().getSectorRecord(1).getTime());
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
     ui->s1TimeLabel->setPalette(palette);
 
 
     ui->s1DriverLabel->setText(eventData.getSessionRecords().getSectorRecord(1).getDriverName());
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
     ui->s1DriverLabel->setPalette(palette);
 
     str = "";    
@@ -321,16 +323,16 @@ void SessionDataWidget::updateFastestLaps()
     }
 
     ui->s1LapLabel->setText(str);
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
     ui->s1LapLabel->setPalette(palette);
 
 
     ui->s2TimeLabel->setText(eventData.getSessionRecords().getSectorRecord(2).getTime());
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
     ui->s2TimeLabel->setPalette(palette);
 
     ui->s2DriverLabel->setText(eventData.getSessionRecords().getSectorRecord(2).getDriverName());
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
     ui->s2DriverLabel->setPalette(palette);
 
     str = "";
@@ -350,15 +352,15 @@ void SessionDataWidget::updateFastestLaps()
     }
 
     ui->s2LapLabel->setText(str);
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
     ui->s2LapLabel->setPalette(palette);
 
     ui->s3TimeLabel->setText(eventData.getSessionRecords().getSectorRecord(3).getTime());
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::VIOLET));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::VIOLET));
     ui->s3TimeLabel->setPalette(palette);
 
     ui->s3DriverLabel->setText(eventData.getSessionRecords().getSectorRecord(3).getDriverName());
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::WHITE));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::WHITE));
     ui->s3DriverLabel->setPalette(palette);
 
     str = "";
@@ -378,7 +380,7 @@ void SessionDataWidget::updateFastestLaps()
     }
 
     ui->s3LapLabel->setText(str);
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::YELLOW));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
     ui->s3LapLabel->setPalette(palette);
 
     QString tL = "";
@@ -390,7 +392,7 @@ void SessionDataWidget::updateFastestLaps()
                                  eventData.getSessionRecords().getSectorRecord(3).getTime());
 
     ui->theoreticalTimeLabel->setText(tL);
-    palette.setBrush(QPalette::Foreground, SeasonData::getInstance().getColor(LTPackets::CYAN));
+    palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::CYAN));
     ui->theoreticalTimeLabel->setPalette(palette);
 }
 

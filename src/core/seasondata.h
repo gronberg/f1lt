@@ -130,38 +130,7 @@ public:
     QStringList getDriversList();
     QStringList getDriversListShort();
 
-    QColor getColor(LTPackets::Colors color) { return colors[color]; }
-    QColor getDefaultColor(LTPackets::Colors color) { return defaultColors[color]; }
-    QList<QColor> getColors() { return colors; }
-    QList<QColor> getDefaultColors() { return defaultColors; }
-    void setColors(QList<QColor> col) { colors = col; }
 
-    void setColor(LTPackets::Colors colorCode, QColor color)
-    {
-        colors[colorCode] = color;
-    }
-    void setDefaultColor(LTPackets::Colors colorCode)
-    {
-        colors[colorCode] = defaultColors[colorCode];
-    }
-    void setAllDefaultColors()
-    {
-        colors = defaultColors;
-    }
-
-    QColor getCarColor(int no);
-    QList<QColor> getDriverColors()
-    {
-        return driverColors;
-    }
-    void setDriverColors(QList<QColor> colors)
-    {
-        driverColors = colors;
-    }
-    QList<QColor> getDefaultDriverColors()
-    {
-        return defaultDriverColors;
-    }
 
     QVector<LTTeam> &getTeams() { return ltTeams; }
     void setTeams(const QVector<LTTeam> &teams) { ltTeams = teams; }
@@ -172,8 +141,7 @@ public:
 
     void fillEventNamesMap();
 
-    CarThumbnailsFactory &getCarThumbnailsFactory() { return carThumbnailsFactory; }
-    HelmetsFactory &getHelmetsFactory() { return helmetsFactory; }
+
 
 private:
     SeasonData();
@@ -189,15 +157,9 @@ private:
     int baseEventId;
     int baseEventInc;
 
-    QList<QColor> colors;
-    QList<QColor> defaultColors;
 
-    QList<QColor> driverColors;
-    QList<QColor> defaultDriverColors;
 
-    QMap<QString, QString> eventNamesMap;
-    CarThumbnailsFactory carThumbnailsFactory;
-    HelmetsFactory helmetsFactory;
+    QMap<QString, QString> eventNamesMap;    
 };
 
 #endif // SEASONDATA_H

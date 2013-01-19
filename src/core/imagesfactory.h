@@ -27,6 +27,12 @@
 #include <QMap>
 #include <QPixmap>
 
+class ImagesFactory;
+
+/*!
+ * \brief The CarThumbnailsFactory class holds car thumbnails of all required sizes. All objects have access to car thumbnails using this class.
+ * Only constructor of CarThumbnailsFactory is private, access to object of this class is available by ImagesFactory singleton only.
+ */
 class CarThumbnailsFactory
 {
 public:
@@ -34,11 +40,18 @@ public:
     QList<QPixmap*> *loadCarThumbnails(int size, bool clear = true);
     QPixmap &getCarThumbnail(int no, int size);
 
+    friend class ImagesFactory;
+
 private:
+    CarThumbnailsFactory() { }
     QMap<int, QList<QPixmap*> > carThumbnails;
     QPixmap nullPixmap;
 };
 
+/*!
+ * \brief The HelmetsFactory class holds helmet images of all required sizes. All objects have access to helmet images using this class.
+ * Only constructor of CarThumbnailsFactory is private, access to object of this class is available by ImagesFactory singleton only.
+ */
 class HelmetsFactory
 {
 public:
@@ -50,9 +63,34 @@ public:
 
     void reloadHelmets();
 
+    friend class ImagesFactory;
+
 private:
+    HelmetsFactory() { }
     QMap<int, QList<QPixmap*> > helmets;
     QPixmap nullPixmap;
+};
+
+/*!
+ * \brief The ImagesFactory class is a singleton used only to give access to HelmetsFactory and CarThumbnailsFactory objects.
+ */
+class ImagesFactory
+{
+public:
+    static ImagesFactory &getInstance()
+    {
+        static ImagesFactory imFact;
+        return imFact;
+    }
+
+    CarThumbnailsFactory &getCarThumbnailsFactory() { return carThumbnailsFactory; }
+    HelmetsFactory &getHelmetsFactory() { return helmetsFactory; }
+
+private:
+    ImagesFactory() { }
+
+    CarThumbnailsFactory carThumbnailsFactory;
+    HelmetsFactory helmetsFactory;
 };
 
 

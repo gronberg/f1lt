@@ -24,6 +24,8 @@
 
 #include <QDebug>
 
+#include "../core/colorsmanager.h"
+
 DriverInfoLabel::DriverInfoLabel(QWidget *parent) :
     QWidget(parent), driverData(0)
 {
@@ -61,7 +63,7 @@ void DriverInfoLabel::paintEvent(QPaintEvent *)
     p.begin(this);
     int x = (width() - backgroundPixmap.width())/2;
 
-    QColor color = /*QColor(170, 170, 170);*/SeasonData::getInstance().getCarColor(driverData->getNumber());
+    QColor color = /*QColor(170, 170, 170);*/ColorsManager::getInstance().getCarColor(driverData->getNumber());
     int numX = x + 105;
     int numY = 1;
     p.setBrush(color);
@@ -77,15 +79,15 @@ void DriverInfoLabel::paintEvent(QPaintEvent *)
         txt = " " + txt;
 
     p.setFont(QFont("Arial", 20, 100));
-    p.setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::BACKGROUND)));
+    p.setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::BACKGROUND)));
 
     if (driverData->isInPits())
-        p.setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::PIT)));
+        p.setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::PIT)));
 
     p.drawText(numX, numY, txt);
 
     txt = driverData->getDriverName();
-    p.setPen(QColor(SeasonData::getInstance().getDefaultColor(LTPackets::WHITE)));
+    p.setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
     p.setFont(QFont("Arial", 10, 100));
     numX = x + 140;
     numY = 15;
@@ -98,7 +100,7 @@ void DriverInfoLabel::paintEvent(QPaintEvent *)
 
 
 
-    p.setPen(QColor(SeasonData::getInstance().getColor(LTPackets::BACKGROUND)));
+    p.setPen(QColor(ColorsManager::getInstance().getColor(LTPackets::BACKGROUND)));
     txt = QString::number(driverData->getNumber());
     if (driverData->getNumber() < 10)
         txt = " " + txt;
@@ -109,5 +111,5 @@ void DriverInfoLabel::paintEvent(QPaintEvent *)
 
     numX = x + 63;
     numY = 4;
-    p.drawPixmap(numX, numY, SeasonData::getInstance().getHelmetsFactory().getHelmet(driverData->getNumber(), 30));
+    p.drawPixmap(numX, numY, ImagesFactory::getInstance().getHelmetsFactory().getHelmet(driverData->getNumber(), 30));
 }

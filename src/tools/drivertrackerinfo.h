@@ -35,7 +35,7 @@ public:
     void setDriverData(DriverData *dd)
     {
         driverData = dd;
-        SeasonData::getInstance().getCarThumbnailsFactory().loadCarThumbnails(240, false);
+        ImagesFactory::getInstance().getCarThumbnailsFactory().loadCarThumbnails(240, false);
 
         repaint();
     }

@@ -25,6 +25,8 @@
 
 #include <QDebug>
 #include <QStringList>
+
+#include "../core/colorsmanager.h"
 #include "../core/eventdata.h"
 #include "../core/seasondata.h"
 #include "../main_gui/ltitemdelegate.h"
@@ -146,7 +148,7 @@ void SessionTimesWidget::handleRaceEvent()
             for (int j = 1; j <= EventData::getInstance().getCompletedLaps(); ++j)
             {
                 LapData ld = dd->getLapData(j);
-                QColor color = ((!relativeTimes || bestLapNo == j) && ld.getTime().isValid()) ? SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::YELLOW);
+                QColor color = ((!relativeTimes || bestLapNo == j) && ld.getTime().isValid()) ? ColorsManager::getInstance().getColor(LTPackets::WHITE) : ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
                 if (ld.getCarID() == dd->getCarID())
                 {
@@ -156,14 +158,14 @@ void SessionTimesWidget::handleRaceEvent()
 
                     if (selectedDriver != 0 && ui->relativeButton->isChecked())
                     {
-                        color = (ld.getTime().isValid()) ? SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::RED);
+                        color = (ld.getTime().isValid()) ? ColorsManager::getInstance().getColor(LTPackets::WHITE) : ColorsManager::getInstance().getColor(LTPackets::RED);
                         if (selectedDriver != dd)
                         {
                             LapData sld = selectedDriver->getLapData(j);
 
                             if (sld.getCarID() == selectedDriver->getCarID() && sld.getTime().isValid() && ld.getTime().isValid())
                             {
-                                color = (ld < sld) ? SeasonData::getInstance().getColor(LTPackets::GREEN) : SeasonData::getInstance().getColor(LTPackets::RED);
+                                color = (ld < sld) ? ColorsManager::getInstance().getColor(LTPackets::GREEN) : ColorsManager::getInstance().getColor(LTPackets::RED);
 
                                 if (relativeTimes)
                                     time = DriverData::calculateGap(ld.getTime(), sld.getTime());
@@ -174,10 +176,10 @@ void SessionTimesWidget::handleRaceEvent()
                     else
                     {
                         if (j == bestLapNo)
-                            color = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                            color = ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
                         if (!ld.getTime().isValid())
-                            color = SeasonData::getInstance().getColor(LTPackets::RED);
+                            color = ColorsManager::getInstance().getColor(LTPackets::RED);
 
                         if (relativeTimes && bestLapNo != j && ld.getTime().isValid())
                             time = DriverData::calculateGap(ld.getTime(), bestTime);
@@ -211,7 +213,7 @@ void SessionTimesWidget::handleQualiEvent()
     {
         for (int i = 0; i < ui->timesTableWidget->columnCount(); ++i)
             setItem(row, i, QString("Q%1").arg(q), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
-                    SeasonData::getInstance().getColor(LTPackets::BACKGROUND), /*SeasonData::getInstance().getColor(LTPackets::YELLOW)*/QBrush(QColor(123, 123, 123)));
+                    ColorsManager::getInstance().getColor(LTPackets::BACKGROUND), /*SeasonData::getInstance().getColor(LTPackets::YELLOW)*/QBrush(QColor(123, 123, 123)));
 
         QTableWidgetItem *item = ui->timesTableWidget->verticalHeaderItem(row);
 
@@ -254,10 +256,10 @@ void SessionTimesWidget::handleQualiEvent()
 
                     LapData ld = dd->getQLapData(j, q);
                     QColor color = ((!relativeTimes || bestLapNo == ld.getLapNumber()) && ld.getTime().isValid()) ?
-                                SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::YELLOW);
+                                ColorsManager::getInstance().getColor(LTPackets::WHITE) : ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
                     if (ld.getTime().toString().contains("LAP"))
-                        color = SeasonData::getInstance().getColor(LTPackets::RED);
+                        color = ColorsManager::getInstance().getColor(LTPackets::RED);
 
                     if (ld.getCarID() == dd->getCarID())
                     {
@@ -266,10 +268,10 @@ void SessionTimesWidget::handleQualiEvent()
 
                         if (selectedDriver != 0 && ui->relativeButton->isChecked())
                         {
-                            color = ld.getTime().isValid() ? SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::RED);
+                            color = ld.getTime().isValid() ? ColorsManager::getInstance().getColor(LTPackets::WHITE) : ColorsManager::getInstance().getColor(LTPackets::RED);
                             if (selectedDriver != dd && sld.getCarID() == selectedDriver->getCarID() && sld.getTime().isValid() && ld.getTime().isValid())
                             {
-                                color = (ld < sld) ? SeasonData::getInstance().getColor(LTPackets::GREEN) : SeasonData::getInstance().getColor(LTPackets::RED);
+                                color = (ld < sld) ? ColorsManager::getInstance().getColor(LTPackets::GREEN) : ColorsManager::getInstance().getColor(LTPackets::RED);
 
                                 if (relativeTimes)
                                     time = DriverData::calculateGap(ld.getTime(), sld.getTime());
@@ -279,7 +281,7 @@ void SessionTimesWidget::handleQualiEvent()
                         else
                         {
                             if (ld.getLapNumber() == bestLapNo)
-                                color = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                                color = ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
                             if (relativeTimes && bestLapNo != ld.getLapNumber() && ld.getTime().isValid())
                                 time = DriverData::calculateGap(ld.getTime(), bestTime);
@@ -334,10 +336,10 @@ void SessionTimesWidget::handlePracticeEvent()
 
                 LapData ld = dd->getFPLapData(j);
                 QColor color = ((!relativeTimes || bestLapNo == ld.getLapNumber()) && ld.getTime().isValid()) ?
-                            SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::YELLOW);
+                            ColorsManager::getInstance().getColor(LTPackets::WHITE) : ColorsManager::getInstance().getColor(LTPackets::YELLOW);
 
                 if (ld.getTime().toString().contains("LAP"))
-                    color = SeasonData::getInstance().getColor(LTPackets::RED);
+                    color = ColorsManager::getInstance().getColor(LTPackets::RED);
 
                 if (ld.getCarID() == dd->getCarID())
                 {
@@ -345,10 +347,10 @@ void SessionTimesWidget::handlePracticeEvent()
 
                     if (selectedDriver != 0 && ui->relativeButton->isChecked())
                     {
-                        color = ld.getTime().isValid() ? SeasonData::getInstance().getColor(LTPackets::WHITE) : SeasonData::getInstance().getColor(LTPackets::RED);
+                        color = ld.getTime().isValid() ? ColorsManager::getInstance().getColor(LTPackets::WHITE) : ColorsManager::getInstance().getColor(LTPackets::RED);
                         if (selectedDriver != dd && sld.getCarID() == selectedDriver->getCarID() && sld.getTime().isValid() && ld.getTime().isValid())
                         {
-                            color = (ld < sld) ? SeasonData::getInstance().getColor(LTPackets::GREEN) : SeasonData::getInstance().getColor(LTPackets::RED);
+                            color = (ld < sld) ? ColorsManager::getInstance().getColor(LTPackets::GREEN) : ColorsManager::getInstance().getColor(LTPackets::RED);
 
                             if (relativeTimes)
                                 time = DriverData::calculateGap(ld.getTime(), sld.getTime());
@@ -358,7 +360,7 @@ void SessionTimesWidget::handlePracticeEvent()
                     else
                     {
                         if (ld.getLapNumber() == bestLapNo)
-                            color = SeasonData::getInstance().getColor(LTPackets::GREEN);
+                            color = ColorsManager::getInstance().getColor(LTPackets::GREEN);
 
                         if (relativeTimes && bestLapNo != ld.getLapNumber() && ld.getTime().isValid())
                             time = DriverData::calculateGap(ld.getTime(), bestTime);

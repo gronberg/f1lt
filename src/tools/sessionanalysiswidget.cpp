@@ -28,6 +28,7 @@
 #include <QPixmap>
 #include <QTableWidgetItem>
 
+#include "../core/colorsmanager.h"
 #include "../main_gui/ltitemdelegate.h"
 
 
@@ -196,7 +197,7 @@ void SessionAnalysisWidget::setupTables()
 
 //    QList<int> sizes = ui.splitter->sizes();
 
-    SeasonData &sd = SeasonData::getInstance();
+    ColorsManager &sd = ColorsManager::getInstance();
     setItem(ui.lapTimeTableWidget, 0, 0, "P", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
     setItem(ui.lapTimeTableWidget, 0, 1, "Driver", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignLeft | Qt::AlignVCenter, sd.getColor(LTPackets::DEFAULT));
     setItem(ui.lapTimeTableWidget, 0, 2, "Time", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignCenter, sd.getColor(LTPackets::DEFAULT));
@@ -271,16 +272,16 @@ void SessionAnalysisWidget::setupColors()
         QLabel *lab = (QLabel*)ui.gridLayout->itemAtPosition(0, i)->widget();
 
         QPalette palette = lab->palette();
-        palette.setColor(QPalette::Window, SeasonData::getInstance().getDriverColors()[i]);
+        palette.setColor(QPalette::Window, ColorsManager::getInstance().getDriverColors()[i]);
         lab->setPalette(palette);
 
         lab = (QLabel*)ui.gridLayout->itemAtPosition(1, i)->widget();
 
         palette = lab->palette();
-        palette.setColor(QPalette::Window, SeasonData::getInstance().getDriverColors()[i+1]);
+        palette.setColor(QPalette::Window, ColorsManager::getInstance().getDriverColors()[i+1]);
         lab->setPalette(palette);
     }
-    setupIcons(SeasonData::getInstance().getDriverColors());
+    setupIcons(ColorsManager::getInstance().getDriverColors());
 
     update();
 }
@@ -522,7 +523,7 @@ void SessionAnalysisWidget::update(bool repaintCharts)
             if (lapDataArray[i].getCarID() < 0)
                 continue;
 
-            SeasonData &sd = SeasonData::getInstance();
+            ColorsManager &sd = ColorsManager::getInstance();
             setItem(table, rows+1, 0, QString::number(rows+1)+".", Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::CYAN));
 
             QString s = EventData::getInstance().getDriversData()[lapDataArray[i].getCarID()-1].getDriverName();
@@ -537,10 +538,10 @@ void SessionAnalysisWidget::update(bool repaintCharts)
 
             s = QString::number(lapDataArray[i].getLapNumber());
             if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
-                s = sd.correctFPTime(lapDataArray[i].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTPackets::currentEventFPLength()-LTPackets::timeToMins(lapDataArray[i].sessionTime))+")";
+                s = SeasonData::getInstance().correctFPTime(lapDataArray[i].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTPackets::currentEventFPLength()-LTPackets::timeToMins(lapDataArray[i].sessionTime))+")";
 
             else if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
-                s = sd.correctQualiTime(lapDataArray[i].getQualiLapExtraData().getSessionTime(), lapDataArray[i].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
+                s = SeasonData::getInstance().correctQualiTime(lapDataArray[i].getQualiLapExtraData().getSessionTime(), lapDataArray[i].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
 
             setItem(table, rows+1, 4, s, Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
 

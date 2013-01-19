@@ -27,6 +27,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 
+#include "../core/colorsmanager.h"
 #include "../core/seasondata.h"
 #include "../main_gui/ltitemdelegate.h"
 
@@ -123,7 +124,7 @@ void LTFilesManagerDialog::ltFileObtained(QByteArray buf)
             {
                 list.first()->setText(4, currentFile);
                 list.first()->setText(5, "On disk / Online");
-                list.first()->setTextColor(5, SeasonData::getInstance().getDefaultColor(LTPackets::GREEN));
+                list.first()->setTextColor(5, ColorsManager::getInstance().getDefaultColor(LTPackets::GREEN));
             }
 
             QDialog::accept();
@@ -160,7 +161,7 @@ void LTFilesManagerDialog::updateTree(const QStringList &onlineList)
         if (array.size() < 6)
             continue;
 
-        QColor color = array[5].contains("On disk") ? SeasonData::getInstance().getDefaultColor(LTPackets::GREEN) : SeasonData::getInstance().getDefaultColor(LTPackets::CYAN);
+        QColor color = array[5].contains("On disk") ? ColorsManager::getInstance().getDefaultColor(LTPackets::GREEN) : ColorsManager::getInstance().getDefaultColor(LTPackets::CYAN);
 
 //        QTreeWidgetItem *newParent = parent;
         if (!parent || parent->text(0) != array[0])
