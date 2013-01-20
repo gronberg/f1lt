@@ -222,7 +222,7 @@ public:
     void setEventInfo(const LTEvent &ev)
     {
         eventInfo = ev;
-        SeasonData::getInstance().setTrackCoordinates(eventInfo);
+//        SeasonData::getInstance().setTrackCoordinates(eventInfo);
     }
     int getEventId()                    const { return eventId; }
     LTPackets::EventType getEventType()    const { return eventType; }

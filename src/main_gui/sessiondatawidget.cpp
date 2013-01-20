@@ -285,11 +285,11 @@ void SessionDataWidget::updateFastestLaps()
         str = "";
 
     if (eventData.getEventType() == LTPackets::PRACTICE_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getTime().isValid())
-        str = SeasonData::getInstance().correctFPTime(fastestLaps[0].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");
+        str = SeasonData::getInstance().getSessionDefaults().correctFPTime(fastestLaps[0].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");
 
     else if (eventData.getEventType() == LTPackets::QUALI_EVENT && !fastestLaps.isEmpty() && fastestLaps[0].getTime().isValid())
     {
-        QString time = SeasonData::getInstance().correctQualiTime(fastestLaps[0].getQualiLapExtraData().getSessionTime(), fastestLaps[0].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
+        QString time = SeasonData::getInstance().getSessionDefaults().correctQualiTime(fastestLaps[0].getQualiLapExtraData().getSessionTime(), fastestLaps[0].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
         str = QString("%1 (Q%2)").arg(time).arg(fastestLaps[0].getQualiLapExtraData().getQualiPeriod());
     }
 
@@ -313,10 +313,10 @@ void SessionDataWidget::updateFastestLaps()
     else if (eventData.getSessionRecords().getSectorRecord(1).getSessionTime().isValid())
     {
         if (eventData.getEventType() == LTPackets::PRACTICE_EVENT)
-            str = SeasonData::getInstance().correctFPTime(eventData.getSessionRecords().getSectorRecord(1).getSessionTime()).toString("h:mm:ss");
+            str = SeasonData::getInstance().getSessionDefaults().correctFPTime(eventData.getSessionRecords().getSectorRecord(1).getSessionTime()).toString("h:mm:ss");
         else
         {
-            QString time = SeasonData::getInstance().correctQualiTime(eventData.getSessionRecords().getSectorRecord(1).getSessionTime(),
+            QString time = SeasonData::getInstance().getSessionDefaults().correctQualiTime(eventData.getSessionRecords().getSectorRecord(1).getSessionTime(),
                                                                       eventData.getSessionRecords().getSectorRecord(1).getQualiPeriod()).toString("mm:ss");
             str = QString("%1 (Q%2)").arg(time).arg(eventData.getSessionRecords().getSectorRecord(1).getQualiPeriod());
         }
@@ -342,10 +342,10 @@ void SessionDataWidget::updateFastestLaps()
     else if (eventData.getSessionRecords().getSectorRecord(2).getSessionTime().isValid())
     {
         if (eventData.getEventType() == LTPackets::PRACTICE_EVENT)
-            str = SeasonData::getInstance().correctFPTime(eventData.getSessionRecords().getSectorRecord(2).getSessionTime()).toString("h:mm:ss");
+            str = SeasonData::getInstance().getSessionDefaults().correctFPTime(eventData.getSessionRecords().getSectorRecord(2).getSessionTime()).toString("h:mm:ss");
         else
         {
-            QString time = SeasonData::getInstance().correctQualiTime(eventData.getSessionRecords().getSectorRecord(2).getSessionTime(),
+            QString time = SeasonData::getInstance().getSessionDefaults().correctQualiTime(eventData.getSessionRecords().getSectorRecord(2).getSessionTime(),
                                                                       eventData.getSessionRecords().getSectorRecord(2).getQualiPeriod()).toString("mm:ss");
             str = QString("%1 (Q%2)").arg(time).arg(eventData.getSessionRecords().getSectorRecord(2).getQualiPeriod());
         }
@@ -370,10 +370,10 @@ void SessionDataWidget::updateFastestLaps()
     else if (eventData.getSessionRecords().getSectorRecord(3).getSessionTime().isValid())
     {
         if (eventData.getEventType() == LTPackets::PRACTICE_EVENT)
-            str = SeasonData::getInstance().correctFPTime(eventData.getSessionRecords().getSectorRecord(3).getSessionTime()).toString("h:mm:ss");
+            str = SeasonData::getInstance().getSessionDefaults().correctFPTime(eventData.getSessionRecords().getSectorRecord(3).getSessionTime()).toString("h:mm:ss");
         else
         {
-            QString time = SeasonData::getInstance().correctQualiTime(eventData.getSessionRecords().getSectorRecord(3).getSessionTime(),
+            QString time = SeasonData::getInstance().getSessionDefaults().correctQualiTime(eventData.getSessionRecords().getSectorRecord(3).getSessionTime(),
                                                                       eventData.getSessionRecords().getSectorRecord(3).getQualiPeriod()).toString("mm:ss");
             str = QString("%1 (Q%2)").arg(time).arg(eventData.getSessionRecords().getSectorRecord(3).getQualiPeriod());
         }

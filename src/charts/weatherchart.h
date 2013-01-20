@@ -54,14 +54,14 @@ public:
         QString text = QString("L%1").arg(wd.getLap());
         if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
         {
-            QTime t = SeasonData::getInstance().correctFPTime(wd.getSessionTime());
-            text = QString::number(SeasonData::getInstance().timeToMins(t)) + "'";
+            QTime t = SeasonData::getInstance().getSessionDefaults().correctFPTime(wd.getSessionTime());
+            text = QString::number(SeasonData::getInstance().getSessionDefaults().timeToMins(t)) + "'";
         }
 
         if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
         {
-            QTime t = SeasonData::getInstance().correctQualiTime(wd.getSessionTime(), wd.getQualiPeriod());
-            text = QString("Q%1 %2'").arg(wd.getQualiPeriod()).arg(SeasonData::getInstance().timeToMins(t));
+            QTime t = SeasonData::getInstance().getSessionDefaults().correctQualiTime(wd.getSessionTime(), wd.getQualiPeriod());
+            text = QString("Q%1 %2'").arg(wd.getQualiPeriod()).arg(SeasonData::getInstance().getSessionDefaults().timeToMins(t));
         }
         return text;
     }

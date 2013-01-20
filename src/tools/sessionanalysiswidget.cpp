@@ -434,7 +434,7 @@ bool SessionAnalysisWidget::lapInWindow(int j)
 
     else if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
     {
-        int minute = SeasonData::getInstance().getFPLength() - SeasonData::getInstance().timeToMins(lapDataArray[j].getPracticeLapExtraData().getSessionTime());
+        int minute = SeasonData::getInstance().getSessionDefaults().getFPLength() - SeasonData::getInstance().getSessionDefaults().timeToMins(lapDataArray[j].getPracticeLapExtraData().getSessionTime());
         inTimeWindow = minute >= first && minute <= last;
     }
     else if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
@@ -442,18 +442,18 @@ bool SessionAnalysisWidget::lapInWindow(int j)
         int qPeriod = ui.qualiTabWidget->currentIndex();
         if (qPeriod == 0)
         {
-            int minute = SeasonData::getInstance().getQualiLength(lapDataArray[j].getQualiLapExtraData().getQualiPeriod()) -
-                    SeasonData::getInstance().timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
+            int minute = SeasonData::getInstance().getSessionDefaults().getQualiLength(lapDataArray[j].getQualiLapExtraData().getQualiPeriod()) -
+                    SeasonData::getInstance().getSessionDefaults().timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
 
             for (int k = 0; k < lapDataArray[j].getQualiLapExtraData().getQualiPeriod()-1; ++k)
-                minute += SeasonData::getInstance().getQualiLength(k+1);
+                minute += SeasonData::getInstance().getSessionDefaults().getQualiLength(k+1);
 
             inTimeWindow = (minute >= first && minute <= last);
         }
         else
         {
-            int sessLength = SeasonData::getInstance().getQualiLength(qPeriod);
-            int minute = sessLength - SeasonData::getInstance().timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
+            int sessLength = SeasonData::getInstance().getSessionDefaults().getQualiLength(qPeriod);
+            int minute = sessLength - SeasonData::getInstance().getSessionDefaults().timeToMins(lapDataArray[j].getQualiLapExtraData().getSessionTime());
             inTimeWindow = (minute >= first && minute <= last) && lapDataArray[j].getQualiLapExtraData().getQualiPeriod() == qPeriod;
         }
     }
@@ -538,10 +538,10 @@ void SessionAnalysisWidget::update(bool repaintCharts)
 
             s = QString::number(lapDataArray[i].getLapNumber());
             if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
-                s = SeasonData::getInstance().correctFPTime(lapDataArray[i].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTPackets::currentEventFPLength()-LTPackets::timeToMins(lapDataArray[i].sessionTime))+")";
+                s = SeasonData::getInstance().getSessionDefaults().correctFPTime(lapDataArray[i].getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");//lapDataArray[i].sessionTime.toString("h:mm:ss") + " (" + QString::number(LTPackets::currentEventFPLength()-LTPackets::timeToMins(lapDataArray[i].sessionTime))+")";
 
             else if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
-                s = SeasonData::getInstance().correctQualiTime(lapDataArray[i].getQualiLapExtraData().getSessionTime(), lapDataArray[i].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
+                s = SeasonData::getInstance().getSessionDefaults().correctQualiTime(lapDataArray[i].getQualiLapExtraData().getSessionTime(), lapDataArray[i].getQualiLapExtraData().getQualiPeriod()).toString("mm:ss");
 
             setItem(table, rows+1, 4, s, Qt::ItemIsEnabled | Qt::ItemIsSelectable, Qt::AlignRight | Qt::AlignVCenter, sd.getColor(LTPackets::WHITE));
 

@@ -34,6 +34,8 @@
 #include "f1ltcore.h"
 #include "imagesfactory.h"
 #include "ltpackets.h"
+#include "sessiondefaults.h"
+#include "trackmapscoordinates.h"
 
 class DriverData;
 
@@ -59,13 +61,7 @@ struct LTTeam
     QPixmap carImg;
 };
 
-struct LTTrackCoordinates
-{
-    int indexes[3];     //index of S1, S2 and pit out
-    QList<QPoint> coordinates;
-    QString name;
-    int year;
-};
+
 
 struct LTEvent
 {
@@ -85,7 +81,7 @@ struct LTEvent
         return fpDate < event.fpDate;
     }
 
-    LTTrackCoordinates trackCoordinates;
+//    LTTrackCoordinates trackCoordinates;
 };
 
 
@@ -100,23 +96,18 @@ public:
     }
 
     bool loadSeasonFile();
-    bool loadTrackDataFile();
+
 
     QPixmap getCarImg(int no);    
     int getEventNo(QDate);
-    int getFPLength();
-    int getFPLength(int fp);
-    int getQualiLength(int q);
+
 
     LTEvent getEvent(int);
     const LTEvent &getEvent(const QDate&) const;
     const LTEvent &getCurrentEvent() const;
     const LTEvent &getNextEvent() const;
 
-    QTime correctFPTime(const QTime &time);
-    QTime correctQualiTime(const QTime &time, int qualiPeriod);
 
-    void setTrackCoordinates(LTEvent &event);
     QString getDriverName(QString &name);
     QString getDriverLastName(const QString &name);
     QString getDriverShortName(const QString &name);
@@ -131,13 +122,19 @@ public:
     QStringList getDriversListShort();
 
 
+    const SessionDefaults &getSessionDefaults()
+    {
+        return sessionDefaults;
+    }
+
+    const TrackMapsCoordinates &getTrackMapsCoordinates()
+    {
+        return trackMapsCoordinates;
+    }
 
     QVector<LTTeam> &getTeams() { return ltTeams; }
     void setTeams(const QVector<LTTeam> &teams) { ltTeams = teams; }
-    QVector<LTEvent> &getEvents() { return ltEvents; }
-
-    int timeToMins(const QTime &time);
-    int timeToSecs(const QTime &time);
+    QVector<LTEvent> &getEvents() { return ltEvents; }   
 
     void fillEventNamesMap();
 
@@ -147,19 +144,20 @@ private:
     SeasonData();
     SeasonData(const SeasonData &) { }
     int season;
-    int fpLengths[3];
-    int qualiLengths[3];
+
 
     QVector<LTTeam> ltTeams;
     QVector<LTEvent> ltEvents;
-    QVector<LTTrackCoordinates> ltTrackCoordinates;
+
 
     int baseEventId;
     int baseEventInc;
 
 
-
+    SessionDefaults sessionDefaults;
+    TrackMapsCoordinates trackMapsCoordinates;
     QMap<QString, QString> eventNamesMap;    
 };
 
 #endif // SEASONDATA_H
+

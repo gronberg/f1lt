@@ -226,7 +226,7 @@ void SessionTimesWidget::handleQualiEvent()
 
         ++row;
 
-        for (int j = 1; j <= SeasonData::getInstance().getQualiLength(q); ++j)
+        for (int j = 1; j <= SeasonData::getInstance().getSessionDefaults().getQualiLength(q); ++j)
         {
             bool rowInserted = false;
 
@@ -314,7 +314,7 @@ void SessionTimesWidget::handleQualiEvent()
 void SessionTimesWidget::handlePracticeEvent()
 {
     int row = 0;
-    for (int j = 1; j <= SeasonData::getInstance().getFPLength(); ++j)
+    for (int j = 1; j <= SeasonData::getInstance().getSessionDefaults().getFPLength(); ++j)
     {
         bool rowInserted = false;
 

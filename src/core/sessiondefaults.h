@@ -19,63 +19,34 @@
  *******************************************************************************/
 
 
+#ifndef SESSIONDEFAULTS_H
+#define SESSIONDEFAULTS_H
 
-#ifndef SESSIONTIMER_H
-#define SESSIONTIMER_H
-
-#include <QObject>
+#include <QList>
 #include <QTime>
-#include <QTimer>
 
-class SessionTimer : public QObject
+/*!
+ * \brief The SessionDefaults class holds default settings of Formula 1 sessions, like practice and quali lengths
+ */
+
+class SessionDefaults
 {
-    Q_OBJECT
 public:
-    explicit SessionTimer(QObject *parent = 0);    
+    SessionDefaults();
 
-    bool isCounterMode() { return counterMode; }
-    bool isActive() { return timer.isActive(); }
+    int getFPLength() const;
+    int getFPLength(int fp) const;
+    int getQualiLength(int q) const;
 
-    bool isSynchronizing() { return timerDelay > 0; }
-    
-signals:
-    void timeout();
-    void synchronizingTimer(bool);
-    
-public slots:
+    QTime correctFPTime(const QTime &time) const;
+    QTime correctQualiTime(const QTime &time, int qualiPeriod) const;
 
-    void setTime(const QTime &t)
-    {
-        sessionTime = t;
-    }
+    int timeToMins(const QTime &time) const;
+    int timeToSecs(const QTime &time) const;
 
-    void start(int t = 1000)
-    {
-        interval = t;
-        timer.stop();
-        counterMode = false;
-        timer.start(interval);
-    }
-
-    void stop()
-    {
-        timer.stop();
-    }
-    void setCounterMode(bool m)
-    {
-        counterMode = m;
-    }    
-    void setDelay(int prevDelay, int delay);
-
-private slots:
-    void timerTimeout();    
-    
 private:
-    int interval;
-    QTimer timer;
-    QTime sessionTime;
-    bool counterMode;       //in this mode timer will still be running but will not change the session time
-    int timerDelay;
+    QList<int> fpLengths;
+    QList<int> qualiLengths;
 };
 
-#endif // SESSIONTIMER_H
+#endif // SESSIONDEFAULTS_H

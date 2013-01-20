@@ -284,7 +284,7 @@ public:
         for (int i = 0; i < lapData.size(); ++i)
         {
             SeasonData &sd = SeasonData::getInstance();
-            int lapMin = sd.timeToMins(sd.correctFPTime(lapData[i].getPracticeLapExtraData().getSessionTime()));
+            int lapMin = sd.getSessionDefaults().timeToMins(sd.getSessionDefaults().correctFPTime(lapData[i].getPracticeLapExtraData().getSessionTime()));
 
             if (min == lapMin)
                 return lapData[i];
@@ -299,7 +299,7 @@ public:
             SeasonData &sd = SeasonData::getInstance();
             if (qPeriod == lapData[i].getQualiLapExtraData().getQualiPeriod())
             {
-                int lapMin = sd.timeToMins(sd.correctQualiTime(lapData[i].getQualiLapExtraData().getSessionTime(), qPeriod));
+                int lapMin = sd.getSessionDefaults().timeToMins(sd.getSessionDefaults().correctQualiTime(lapData[i].getQualiLapExtraData().getSessionTime(), qPeriod));
 
                 if (min == lapMin)
                     return lapData[i];

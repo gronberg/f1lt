@@ -116,11 +116,11 @@ QVariant DriverLapHistoryModel::data(const QModelIndex & index, int role) const
                     return "";
                 }
                 else if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
-                    return QString("%1 (Q%2)").arg(SeasonData::getInstance().correctQualiTime(ld.getQualiLapExtraData().getSessionTime(), ld.getQualiLapExtraData().getQualiPeriod()).toString("mm:ss")).
+                    return QString("%1 (Q%2)").arg(SeasonData::getInstance().getSessionDefaults().correctQualiTime(ld.getQualiLapExtraData().getSessionTime(), ld.getQualiLapExtraData().getQualiPeriod()).toString("mm:ss")).
                             arg(ld.getQualiLapExtraData().getQualiPeriod());
 
                 else if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
-                    return SeasonData::getInstance().correctFPTime(ld.getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");
+                    return SeasonData::getInstance().getSessionDefaults().correctFPTime(ld.getPracticeLapExtraData().getSessionTime()).toString("h:mm:ss");
             }
 
             if (role == Qt::ForegroundRole)

@@ -36,7 +36,7 @@ void DriverTrackerPositioner::setStartupPosition()
     inPits = false;
     finished = false;
 
-    coordinatesCount = EventData::getInstance().getEventInfo().trackCoordinates.coordinates.size();
+    coordinatesCount = SeasonData::getInstance().getTrackMapsCoordinates().getCurrentTrackCoordinates().coordinates.size();//EventData::getInstance().getEventInfo().trackCoordinates.coordinates.size();
 
     //a very rough estimate ;)
     avgTime = 200 - 30 * log10(laps*laps);
@@ -82,6 +82,7 @@ void DriverTrackerPositioner::calculatePosition()
     if (!ev.isSessionStarted())
         return;
 
+    TrackCoordinates trackCoordinates = SeasonData::getInstance().getTrackMapsCoordinates().getCurrentTrackCoordinates();
     if (/*driverData->getLastLap().getTime().toString() != "OUT" &&*/ currentDeg > 0)
     {
         if (driverData->getLastLap().getSectorTime(1).isValid() &&
@@ -90,14 +91,14 @@ void DriverTrackerPositioner::calculatePosition()
                 currSector == 1)
         {
             currSector = 2;
-            currentDeg = EventData::getInstance().getEventInfo().trackCoordinates.indexes[0];
+            currentDeg = trackCoordinates.indexes[0];
         }
         else if (driverData->getLastLap().getSectorTime(2).isValid() &&
                  !driverData->getLastLap().getSectorTime(3).isValid() && currSector == 2 &&
                  driverData->getLastLap().getTime().toString() != "OUT")
         {
             currSector = 3;
-            currentDeg = EventData::getInstance().getEventInfo().trackCoordinates.indexes[1];
+            currentDeg = trackCoordinates.indexes[1];
         }
         else
         {
@@ -115,7 +116,7 @@ void DriverTrackerPositioner::calculatePosition()
 
 void DriverTrackerPositioner::calculatePitOutPosition()
 {
-    currentDeg = EventData::getInstance().getEventInfo().trackCoordinates.indexes[2];
+    currentDeg = SeasonData::getInstance().getTrackMapsCoordinates().getCurrentTrackCoordinates().indexes[2];
 }
 
 void DriverTrackerPositioner::calculatePitPosition()
@@ -151,8 +152,8 @@ QPoint DriverTrackerPositioner::getCoordinates()
         if (idx == coordinatesCount)
             idx = coordinatesCount - 1;
 
-        double x = mapX + EventData::getInstance().getEventInfo().trackCoordinates.coordinates[idx].x();
-        double y = mapY + EventData::getInstance().getEventInfo().trackCoordinates.coordinates[idx].y();
+        double x = mapX + SeasonData::getInstance().getTrackMapsCoordinates().getCurrentTrackCoordinates().coordinates[idx].x();
+        double y = mapY + SeasonData::getInstance().getTrackMapsCoordinates().getCurrentTrackCoordinates().coordinates[idx].y();
 
         return QPoint(x, y);
     }
@@ -182,8 +183,8 @@ QPoint DriverTrackerPositioner::getSCCoordinates()
         if (!driverData->getLapData().isEmpty() && !driverData->getLapData().last().getRaceLapExtraData().isSCLap())
             idx = 0;
 
-        double x = mapX + EventData::getInstance().getEventInfo().trackCoordinates.coordinates[idx].x();
-        double y = mapY + EventData::getInstance().getEventInfo().trackCoordinates.coordinates[idx].y();
+        double x = mapX + SeasonData::getInstance().getTrackMapsCoordinates().getCurrentTrackCoordinates().coordinates[idx].x();
+        double y = mapY + SeasonData::getInstance().getTrackMapsCoordinates().getCurrentTrackCoordinates().coordinates[idx].y();
 
         return QPoint(x, y);
     }

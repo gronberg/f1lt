@@ -36,7 +36,7 @@ public:
     }
     virtual int getSessionLength()
     {
-        return SeasonData::getInstance().getFPLength();
+        return SeasonData::getInstance().getSessionDefaults().getFPLength();
     }
     virtual void drawAxes(QPainter *p, int firstLap, int lastLap);
     virtual void drawChart(QPainter *p);
@@ -78,7 +78,7 @@ public:
 
     virtual int getSessionLength()
     {
-        return SeasonData::getInstance().getQualiLength(qualiPeriod);
+        return SeasonData::getInstance().getSessionDefaults().getQualiLength(qualiPeriod);
     }
 
     virtual int checkLapDataCoordinates(int x, int y);
@@ -109,7 +109,7 @@ public:
     {
         int sessionLength = 0;
         for (int i = 0; i < 3; ++i)
-            sessionLength += SeasonData::getInstance().getQualiLength(i+1);
+            sessionLength += SeasonData::getInstance().getSessionDefaults().getQualiLength(i+1);
 
         return sessionLength;
     }

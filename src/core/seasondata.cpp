@@ -31,16 +31,6 @@
 
 SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
 {
-    fpLengths[0] = 90;
-    fpLengths[1] = 90;
-    fpLengths[2] = 60;
-
-    qualiLengths[0] = 20;
-    qualiLengths[1] = 15;
-    qualiLengths[2] = 10;
-
-
-
     ltTeams.clear();
     fillEventNamesMap();
 }
@@ -103,72 +93,13 @@ bool SeasonData::loadSeasonFile()
     qSort(ltEvents);
 
     bool ok;
-    ok = loadTrackDataFile();
+    ok = trackMapsCoordinates.loadTrackDataFile();
 
-    ok = TrackRecords::getInstance().loadTrackRecords(F1LTCore::trackRercordsFile());
+    ok = TrackRecords::getInstance().loadTrackRecords(F1LTCore::trackRercordsFile());    
     return ok;
 }
 
-bool SeasonData::loadTrackDataFile()
-{
-    QString fName = F1LTCore::trackDataFile();
-    if (!fName.isNull())
-    {
-        QFile f(fName);
-        if (f.open(QIODevice::ReadOnly))
-        {
-            QDataStream stream(&f);
 
-            int size;
-            stream >> size;
-
-            qDebug() << size;
-            for (int i = 0; i < size; ++i)
-            {
-                LTTrackCoordinates trackCoordinates;
-
-                int coordSize;
-                stream >> trackCoordinates.name;
-                stream >> trackCoordinates.year;
-                stream >> trackCoordinates.indexes[0];
-                stream >> trackCoordinates.indexes[1];
-                stream >> trackCoordinates.indexes[2];
-                stream >> coordSize;
-
-                for (int j = 0; j < coordSize; ++j)
-                {
-                    QPoint p;
-                    stream >> p;
-                    trackCoordinates.coordinates.append(p);
-                }
-                ltTrackCoordinates.append(trackCoordinates);
-
-                for (int j = 0; j < ltEvents.size(); ++j)
-                {
-                    if (ltEvents[j].eventShortName.toLower() == trackCoordinates.name.toLower())
-                    {
-                        ltEvents[j].trackCoordinates = trackCoordinates;
-                        break;
-                    }
-                }
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-void SeasonData::setTrackCoordinates(LTEvent &event)
-{
-    for (int i = 0; i < ltTrackCoordinates.size(); ++i)
-    {
-        if (ltTrackCoordinates[i].name.toLower() == event.eventShortName.toLower())
-        {
-            event.trackCoordinates = ltTrackCoordinates[i];
-            return;
-        }
-    }
-}
 
 QPixmap SeasonData::getCarImg(int no)
 {
@@ -386,78 +317,7 @@ QString SeasonData::getEventNameFromShort(const QString &shortName)
 //    return shortName;
 }
 
-int SeasonData::timeToMins(const QTime &time)
-{
-    int hour = time.hour();
-    int min = time.minute();
 
-    return hour * 60 + min;
-}
-
-int SeasonData::timeToSecs(const QTime &time)
-{
-    int hour = time.hour();
-    int min = time.minute();
-    int sec = time.second();
-
-    return hour * 3600 + min * 60 + sec;
-}
-
-
-
-int SeasonData::getFPLength()
-{
-    return getFPLength(EventData::getInstance().getFPNumber());
-}
-
-int SeasonData::getFPLength(int fp)
-{
-    if (fp >= 1 && fp <= 3)
-        return fpLengths[fp-1];
-
-    return 0;
-}
-
-QTime SeasonData::correctFPTime(const QTime &time)
-{
-    int hour = time.hour();
-    int min = time.minute();
-    int sec = time.second();
-
-    int t = getFPLength() * 60 - hour * 3600 - min * 60 - sec;
-    hour = t/3600;
-    min = (t%3600)/60;
-    sec = (t%3600)%60;
-    QTime newTime(hour, min, sec);
-
-    return newTime;
-}
-
-QTime SeasonData::correctQualiTime(const QTime &time, int qualiPeriod)
-{
-    int hour = time.hour();
-    int min = time.minute();
-    int sec = time.second();
-
-    int sLength = 10 + (3-qualiPeriod)*5;
-
-    int t = sLength * 60 - hour * 3600 - min * 60 - sec;
-
-    hour = t/3600;
-    min = (t%3600)/60;
-    sec = (t%3600)%60;
-    QTime newTime(hour, min, sec);
-
-    return newTime;
-}
-
-int SeasonData::getQualiLength(int q)
-{
-    if (q >= 1 && q <= 3)
-        return qualiLengths[q-1];
-
-    return 0;
-}
 
 void SeasonData::fillEventNamesMap()
 {
