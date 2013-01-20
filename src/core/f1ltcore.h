@@ -29,10 +29,12 @@
 #include <QDir>
 #include <QDebug>
 
+/*!
+ * \brief The F1LTCore class stores paths to application files. No object of this class can be created, all methods are static.
+ */
 class F1LTCore
 {
-public:
-    F1LTCore();
+public:    
 
     static QString programVersion() { return "2.0.0"; }
 
@@ -129,15 +131,8 @@ public:
 #endif
     }
 
-    static QString ltDataUrl()
-    {
-        return "http://lt.f1lt.pl/";
-    }
-
-    static QString ltDataList()
-    {
-        return "http://lt.f1lt.pl/lis.php";
-    }
+private:
+    F1LTCore();
 };
 
 #endif // F1LTCORE_H

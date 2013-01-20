@@ -49,11 +49,16 @@ int DriverColorsDialog::exec()
     int i = 0;
     for (; i < sd.getTeams().size(); ++i)
     {
+        QList<LTDriver> drivers = sd.getMainDrivers(sd.getTeams()[i]);
+        if (drivers.size() != 2)
+            continue;
+
         if ((ui->verticalLayout->count()-2) <= i)
         {
             QHBoxLayout *layout = new QHBoxLayout();
-            QLabel *label = new QLabel(this);
-            label->setText(QString("%1 %2").arg(sd.getTeams()[i].driver1No).arg(sd.getTeams()[i].driver1Name));
+            QLabel *label = new QLabel(this);                        
+
+            label->setText(QString("%1 %2").arg(drivers[0].no).arg(drivers[0].name));
             label->updateGeometry();
             QToolButton *button = new QToolButton(this);
             button->setMaximumHeight(16);
@@ -73,7 +78,7 @@ int DriverColorsDialog::exec()
 
 //            layout = new QHBoxLayout(this);
             label = new QLabel(this);
-            label->setText(QString("%1 %2").arg(sd.getTeams()[i].driver2No).arg(sd.getTeams()[i].driver2Name));
+            label->setText(QString("%1 %2").arg(drivers[1].no).arg(drivers[1].name));
             label->updateGeometry();
             button = new QToolButton(this);
             button->setMaximumHeight(16);
@@ -99,8 +104,8 @@ int DriverColorsDialog::exec()
             QLabel *label = static_cast<QLabel*>(layout->itemAt(2)->widget());
             QToolButton *button = static_cast<QToolButton*>(layout->itemAt(0)->widget());
 
-            label->setText(QString("%1 %2").arg(sd.getTeams()[i].driver1No).arg(sd.getTeams()[i].driver1Name));
-            setButtonColor(button, ColorsManager::getInstance().getCarColor(sd.getTeams()[i].driver1No));
+            label->setText(QString("%1 %2").arg(drivers[0].no).arg(drivers[0].name));
+            setButtonColor(button, ColorsManager::getInstance().getCarColor(drivers[0].no));
 
             label->setVisible(true);
             button->setVisible(true);
@@ -111,8 +116,8 @@ int DriverColorsDialog::exec()
             label = static_cast<QLabel*>(layout->itemAt(5)->widget());
             button = static_cast<QToolButton*>(layout->itemAt(3)->widget());
 
-            label->setText(QString("%1 %2").arg(sd.getTeams()[i].driver2No).arg(sd.getTeams()[i].driver2Name));
-            setButtonColor(button, ColorsManager::getInstance().getCarColor(sd.getTeams()[i].driver2No));
+            label->setText(QString("%1 %2").arg(drivers[1].no).arg(drivers[1].name));
+            setButtonColor(button, ColorsManager::getInstance().getCarColor(drivers[1].no));
 
             label->setVisible(true);
             button->setVisible(true);

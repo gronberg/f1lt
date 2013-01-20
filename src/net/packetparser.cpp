@@ -335,6 +335,10 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
             {
                 s = packet.longData;
                 eventData.driversData[packet.carID-1].driver = SeasonData::getInstance().getDriverName(s);
+
+                //for every driver this code is executed only once since drivers list is sent only at the beginnig of the session
+                //after whole list is updated, SeasonData singleton will contain fresh list of the main drivers that take a part in this session
+                SeasonData::getInstance().updateTeamList(eventData.driversData[packet.carID-1]);
             }
             eventData.driversData[packet.carID-1].colorData.driverColor() = (LTPackets::Colors)packet.data;
             break;

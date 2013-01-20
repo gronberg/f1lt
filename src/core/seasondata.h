@@ -39,30 +39,57 @@
 
 class DriverData;
 
-//Two additional stuctures that hold the basic info about all teams and events. Data is loaded from the file.
-struct LTTeam
+
+/*!
+ * \brief The LTDriver struct stores basic informations about a driver loaded from the season.dat file.
+ */
+struct LTDriver
 {
+    QString name;
+    QString shortName;
+    int no;
+    QPixmap helmet;
+
+    bool mainDriver;    //during a session team contains 2 main drivers, however it can have more than 2 saved in the file (test drivers, reserved, etc.)
+
+    bool operator==(const LTDriver &drv) const
+    {
+        return name == drv.name;
+    }
+};
+
+/*!
+ * \brief The LTTeam struct stores informations about a team loaded from the season.dat file.
+ */
+struct LTTeam
+{    
+    QString teamName;
+    QVector<LTDriver> drivers;
+
+    QPixmap carImg;
+
     //used for sorting
     bool operator < (const LTTeam &lt) const
     {
-        return driver1No < lt.driver1No;
+        if (!drivers.isEmpty() && !lt.drivers.isEmpty())
+            return drivers.first().no < lt.drivers.first().no;
+
+        if (lt.drivers.isEmpty())
+            return true;
+
+        return false;
     }
 
-    QString teamName;
-
-    QString driver1Name;
-    QString driver1ShortName;
-    int driver1No;
-
-    QString driver2Name;
-    QString driver2ShortName;
-    int driver2No;
-
-    QPixmap carImg;
+    bool operator==(const LTTeam &team) const
+    {
+        return teamName == team.teamName;
+    }
 };
 
 
-
+/*!
+ * \brief The LTEvent struct stores informations about an event loaded from the season.dat file.
+ */
 struct LTEvent
 {
     LTEvent() : eventNo(0), laps(0), trackImg(100,100) { }
@@ -85,7 +112,10 @@ struct LTEvent
 };
 
 
-//this class contains all the basic informations about the season, like quali and fp lengths, etc.
+/*!
+ * \brief The SeasonData class stores all basic informations loaded from season.dat file plus it gives access to session defaults and track map coordinates.
+ * This is a singleton.
+ */
 class SeasonData
 {
 public:
@@ -96,6 +126,11 @@ public:
     }
 
     bool loadSeasonFile();
+    bool loadSeasonData(int season);
+    void loadSeasonData(QDataStream &stream);
+
+    void updateTeamList(const QVector<LTTeam> &teams);
+    void updateTeamList(const DriverData &dd);
 
 
     QPixmap getCarImg(int no);    
@@ -118,22 +153,23 @@ public:
     QString getTeamName(int no);
     QString getTeamName(const QString &driver);
 
+    QList<LTDriver> getMainDrivers(const LTTeam &team);
+
     QStringList getDriversList();
     QStringList getDriversListShort();
 
 
-    const SessionDefaults &getSessionDefaults()
+    const SessionDefaults &getSessionDefaults() const
     {
         return sessionDefaults;
     }
 
-    const TrackMapsCoordinates &getTrackMapsCoordinates()
+    const TrackMapsCoordinates &getTrackMapsCoordinates() const
     {
         return trackMapsCoordinates;
     }
 
     QVector<LTTeam> &getTeams() { return ltTeams; }
-    void setTeams(const QVector<LTTeam> &teams) { ltTeams = teams; }
     QVector<LTEvent> &getEvents() { return ltEvents; }   
 
     void fillEventNamesMap();
@@ -145,14 +181,9 @@ private:
     SeasonData(const SeasonData &) { }
     int season;
 
-
+    QMap<int, int> seasonOffsets;        //only one season data from season.dat file will be kept in the memory during runtime, this map holds offsets of all seasons in the file
     QVector<LTTeam> ltTeams;
     QVector<LTEvent> ltEvents;
-
-
-    int baseEventId;
-    int baseEventInc;
-
 
     SessionDefaults sessionDefaults;
     TrackMapsCoordinates trackMapsCoordinates;

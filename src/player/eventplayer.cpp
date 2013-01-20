@@ -90,30 +90,30 @@ bool EventPlayer::loadFromFile(QString fName)
         int size;
         stream >> size;
         ltTeamList.resize(size);
-        for (int i = 0; i < size; ++i)
-        {
-            stream >> sbuf; ltTeamList[i].teamName = sbuf;
-            stream >> sbuf; ltTeamList[i].driver1Name = sbuf;
-            stream >> sbuf; ltTeamList[i].driver1ShortName = sbuf;
-            stream >> ibuf; ltTeamList[i].driver1No = ibuf;
-            stream >> sbuf; ltTeamList[i].driver2Name = sbuf;
-            stream >> sbuf; ltTeamList[i].driver2ShortName = sbuf;
-            stream >> ibuf; ltTeamList[i].driver2No = ibuf;
-            stream >> ltTeamList[i].carImg;
-        }
-        SeasonData::getInstance().setTeams(ltTeamList);
+//        for (int i = 0; i < size; ++i)
+//        {
+//            stream >> sbuf; ltTeamList[i].teamName = sbuf;
+//            stream >> sbuf; ltTeamList[i].driver1Name = sbuf;
+//            stream >> sbuf; ltTeamList[i].driver1ShortName = sbuf;
+//            stream >> ibuf; ltTeamList[i].driver1No = ibuf;
+//            stream >> sbuf; ltTeamList[i].driver2Name = sbuf;
+//            stream >> sbuf; ltTeamList[i].driver2ShortName = sbuf;
+//            stream >> ibuf; ltTeamList[i].driver2No = ibuf;
+//            stream >> ltTeamList[i].carImg;
+//        }
+//        SeasonData::getInstance().updateTeamList(ltTeamList);
 
-        stream >> size;
-        packets.resize(size);
-        for (int i = 0; i < size; ++i)
-        {
-            stream >> packets[i].first;
-            stream >> packets[i].second.type;
-            stream >> packets[i].second.carID;
-            stream >> packets[i].second.data;
-            stream >> packets[i].second.length;
-            stream >> packets[i].second.longData;
-        }   
+//        stream >> size;
+//        packets.resize(size);
+//        for (int i = 0; i < size; ++i)
+//        {
+//            stream >> packets[i].first;
+//            stream >> packets[i].second.type;
+//            stream >> packets[i].second.carID;
+//            stream >> packets[i].second.data;
+//            stream >> packets[i].second.length;
+//            stream >> packets[i].second.longData;
+//        }
         return true;
     }
     return false;

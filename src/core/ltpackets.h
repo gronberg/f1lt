@@ -25,6 +25,9 @@
 #ifndef LTDATA_H
 #define LTDATA_H
 
+/*!
+ * \brief The LTPackets class defines enums and methods used to manipulate data obtained from the LT server.
+ */
 class LTPackets
 {
 public:

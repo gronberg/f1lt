@@ -29,6 +29,9 @@
 class DriverData;
 class PacketParser;
 
+/*!
+ * \brief The PitData class stores basic informations about a pitstop - pit time and a lap when pitstop was made.
+ */
 class PitData
 {
 public:
@@ -55,6 +58,9 @@ private:
 
 //------------------------------------------------------
 
+/*!
+ * \brief The ColorData class - a helper class used to color driver data output in the live timing view.
+ */
 class ColorData
 {
 public:
@@ -108,6 +114,9 @@ private:
 
 //------------------------------------------------------
 
+/*!
+ * \brief The DriverRecords class stores driver records - best lap time, best sector times and best quali times from all periods.
+ */
 class DriverRecords
 {
 public:
@@ -175,6 +184,9 @@ private:
 
 //------------------------------------------------------
 
+/*!
+ * \brief The DriverData class contains all informations about a driver - his personal (name, number) and session (lap times, pit stops, position history, etc.) data
+ */
 class DriverData
 {
 public:

@@ -27,6 +27,9 @@
 #include <QTime>
 #include <QTimer>
 
+/*!
+ * \brief The SessionTimer class defines a session timer.
+ */
 class SessionTimer : public QObject
 {
     Q_OBJECT

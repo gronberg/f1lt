@@ -58,6 +58,9 @@ EventData::EventData()
 
     sessionStarted = false;
     sessionFinished = false;
+
+    baseEventId = 7066;
+    baseEventInc = 6;
 }
 
 void EventData::clear()
@@ -204,7 +207,7 @@ int EventData::getFPNumber() const
         return 1;
 
     else
-        return (getEventId() - 7066)%6;
+        return (getEventId() - baseEventId) % baseEventInc;
 }
 
 int EventData::correctPosition(const LapTime &ld) const

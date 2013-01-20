@@ -28,9 +28,10 @@
 #include <QPixmap>
 
 class ImagesFactory;
+class LTDriver;
 
 /*!
- * \brief The CarThumbnailsFactory class holds car thumbnails of all required sizes. All objects have access to car thumbnails using this class.
+ * \brief The CarThumbnailsFactory class stores car thumbnails of all required sizes. All objects have access to car thumbnails using this class.
  * Only constructor of CarThumbnailsFactory is private, access to object of this class is available by ImagesFactory singleton only.
  */
 class CarThumbnailsFactory
@@ -49,7 +50,7 @@ private:
 };
 
 /*!
- * \brief The HelmetsFactory class holds helmet images of all required sizes. All objects have access to helmet images using this class.
+ * \brief The HelmetsFactory class stores helmet images of all required sizes. All objects have access to helmet images using this class.
  * Only constructor of CarThumbnailsFactory is private, access to object of this class is available by ImagesFactory singleton only.
  */
 class HelmetsFactory
@@ -59,7 +60,7 @@ public:
     QList<QPixmap*> *loadHelmets(int size, bool clear = true);
     QPixmap &getHelmet(int no, int size);
 
-    QPixmap *loadHelmet(int no, int size);
+    QPixmap *loadHelmet(const LTDriver &driver, int size);
 
     void reloadHelmets();
 

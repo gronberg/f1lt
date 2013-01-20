@@ -37,6 +37,10 @@ struct EventData;
 class DriverData;
 class PacketParser;
 
+/*!
+ * \brief The LapTime class stores lap and sector times. Contains methods to easily manipulate time data, including conversion to and from seconds and miliseconds.
+ * LapTime objects can be constructed using a QString in format "m:ss.zzz" (minutes, seconds, miliseconds) or from integer values.
+ */
 class LapTime
 {
 public:
@@ -97,6 +101,9 @@ Q_DECLARE_METATYPE(LapTime)
 
 //-----------------------------------------------------------
 
+/*!
+ * \brief The PracticeLapExtraData class stores extra information about practice session used in LapData
+ */
 class PracticeLapExtraData
 {
 public:
@@ -118,6 +125,9 @@ protected:
 
 //-----------------------------------------------------------
 
+/*!
+ * \brief The QualiLapExtraData class stores extra information about quali session used in LapData
+ */
 class QualiLapExtraData : public PracticeLapExtraData
 {
 public:
@@ -135,6 +145,9 @@ protected:
 
 //-----------------------------------------------------------
 
+/*!
+ * \brief The RaceLapExtraData class stores extra information about race session used in LapData
+ */
 class RaceLapExtraData
 {
 public:
@@ -155,6 +168,9 @@ protected:
 
 //-----------------------------------------------------------
 
+/*!
+ * \brief The LapData class stores all necessary informations about a lap - lap time, sector times, lap number, gap to leader, gap to driver in front, etc.
+ */
 class LapData
 {
 public:

@@ -52,6 +52,9 @@ enum eSession
     RACE
 };
 
+/*!
+ * \brief The Record struct defines a single record data including time, driver, team, year and session info.
+ */
 struct Record
 {
     LapTime time;
@@ -61,6 +64,9 @@ struct Record
     QString session;
 };
 
+/*!
+ * \brief The DriverWeekendRecords struct stores session records of a driver.
+ */
 struct DriverWeekendRecords
 {
     QString driver;
@@ -97,6 +103,9 @@ struct DriverWeekendRecords
     }
 };
 
+/*!
+ * \brief The TrackWeekendRecords struct stores weekend (best sector times and lap time) and driver records for a track.
+ */
 struct TrackWeekendRecords
 {
     int year;
@@ -154,6 +163,9 @@ struct TrackWeekendRecords
     }
 };
 
+/*!
+ * \brief The TrackVersion struct stores information about a track. Since tracks are being rebuilt from time to time, one track can have many versions with different layouts and records.
+ */
 struct TrackVersion
 {
     QPixmap map;
@@ -234,6 +246,9 @@ struct TrackVersion
 
 };
 
+/*!
+ * \brief The Track struct describes a single track with a given name and all available versions.
+ */
 struct Track
 {
     QString name;
@@ -290,6 +305,9 @@ struct Track
     }
 };
 
+/*!
+ * \brief The TrackRecords class stores records from all tracks. Records are loaded from a file during application startup, updated during session (also when the session is played from a .lt file) and saved before the application quits.
+ */
 class TrackRecords
 {
 public:   
@@ -343,79 +361,4 @@ private:
 
 };
 
-
-
-//struct TrackRecordsAtom
-//{
-//    QString trackName;
-//    QPixmap trackMap;
-//    Record trackRecords[2];
-//    Record sessionRecords[4];
-//    QList<DriverWeekendRecords> driverRecords;
-
-////    Record getDriverSessionRecord(QString driver, eSectorRecord sector, eSession session)
-////    {
-////        QList<Record> foundRecords;
-////        for (int i = 0; i < driverRecords.size(); ++i)
-////        {
-////            if (driver == driverRecords[i].driver)
-////            {
-////                if (session == WEEKEND)
-////                    foundRecords.append(driverRecords[i].sessionRecords[sector]);
-////                else
-////                {
-////                    if (driverRecords[i].sessionRecords[sector].session == "FP1" && session == FP1)
-////                        return driverRecords[i].sessionRecords[sector];
-
-////                    if (driverRecords[i].sessionRecords[sector].session == "FP2" && session == FP2)
-////                        return driverRecords[i].sessionRecords[sector];
-
-////                    if (driverRecords[i].sessionRecords[sector].session == "FP3" && session == FP3)
-////                        return driverRecords[i].sessionRecords[sector];
-
-////                    if (driverRecords[i].sessionRecords[sector].session == "Race" && session == Race)
-////                        return driverRecords[i].sessionRecords[sector];
-
-////                    if (driverRecords[i].sessionRecords[sector].session.contains("Q") && session == Quali)
-////                        return driverRecords[i].sessionRecords[sector];
-////                }
-////            }
-////        }
-
-////        //search for a weekend record
-////        if (session == WEEKEND && foundRecords.size() > 0)
-////        {
-////            Record rec = foundRecords[0];
-
-////            for (int i = 1; i < foundRecords.size(); ++i)
-////            {
-////                if (foundRecords[i].time < rec.time)
-////                    rec = foundRecords[i];
-////            }
-////            return rec;
-////        }
-////        return Record();
-////    }
-
-//    static TrackRecordsAtom &null()
-//    {
-//        static TrackRecordsAtom nullTR;
-//        return nullTR;
-//    }
-
-//    bool operator < (const TrackRecordsAtom &tr) const
-//    {
-//        return trackName < tr.trackName;
-//    }
-
-//    bool operator == (const TrackRecordsAtom &tr) const
-//    {
-//        return (trackName == tr.trackName);
-//    }
-
-//    bool operator != (const TrackRecordsAtom &tr) const
-//    {
-//        return (trackName != tr.trackName);
-//    }
-//};
 #endif // TRACKRECORDS_H

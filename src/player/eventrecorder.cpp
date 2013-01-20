@@ -780,32 +780,32 @@ void EventRecorder::saveLTInfo(QDataStream &stream)
 
     size = ltTeamList.size();
     stream << size;
-    for (int i = 0; i < size; ++i)
-    {
-        sbuf = ltTeamList[i].teamName;
-        stream << sbuf;
+//    for (int i = 0; i < size; ++i)
+//    {
+//        sbuf = ltTeamList[i].teamName;
+//        stream << sbuf;
 
-        sbuf = ltTeamList[i].driver1Name;
-        stream << sbuf;
+//        sbuf = ltTeamList[i].driver1Name;
+//        stream << sbuf;
 
-        sbuf = ltTeamList[i].driver1ShortName;
-        stream << sbuf;
+//        sbuf = ltTeamList[i].driver1ShortName;
+//        stream << sbuf;
 
-        ibuf = ltTeamList[i].driver1No;
-        stream << ibuf;
+//        ibuf = ltTeamList[i].driver1No;
+//        stream << ibuf;
 
-        sbuf = ltTeamList[i].driver2Name;
-        stream << sbuf;
+//        sbuf = ltTeamList[i].driver2Name;
+//        stream << sbuf;
 
-        sbuf = ltTeamList[i].driver2ShortName;
-        stream << sbuf;
+//        sbuf = ltTeamList[i].driver2ShortName;
+//        stream << sbuf;
 
-        ibuf = ltTeamList[i].driver2No;
-        stream << ibuf;
+//        ibuf = ltTeamList[i].driver2No;
+//        stream << ibuf;
 
-        pixBuf = ltTeamList[i].carImg;
-        stream << pixBuf;
-    }
+//        pixBuf = ltTeamList[i].carImg;
+//        stream << pixBuf;
+//    }
 }
 
 void EventRecorder::savePackets(QDataStream &stream)

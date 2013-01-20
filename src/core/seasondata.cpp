@@ -29,7 +29,7 @@
 #include "trackrecords.h"
 
 
-SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
+SeasonData::SeasonData() : season(2012)
 {
     ltTeams.clear();
     fillEventNamesMap();
@@ -38,59 +38,11 @@ SeasonData::SeasonData() : season(2012), baseEventId (7066), baseEventInc (6)
 bool SeasonData::loadSeasonFile()
 {
     ltTeams.clear();
-    QString fName = F1LTCore::seasonDataFile();
-    if (!fName.isNull())
-    {
-        QFile f(fName);
-        if (f.open(QIODevice::ReadOnly))
-        {
-            QDataStream stream(&f);
-            int size;
-            QString sbuf;
 
-            stream >> season;
-//            ui->spinBox->setValue(ibuf);
+    season = 0;
 
-            stream >> size;
-            ltEvents.resize(size);
-            for (int i = 0; i < size; ++i)
-            {
-                stream >> ltEvents[i].eventNo;
-                stream >> ltEvents[i].eventName;
-                stream >> ltEvents[i].eventShortName;
-                stream >> ltEvents[i].eventPlace;
-                stream >> ltEvents[i].laps;
-
-                stream >> sbuf;
-                ltEvents[i].fpDate = QDate::fromString(sbuf, "dd-MM-yyyy");
-
-                stream >> sbuf;
-                ltEvents[i].raceDate = QDate::fromString(sbuf, "dd-MM-yyyy");
-
-                stream >> ltEvents[i].trackImg;
-
-            }
-            stream >> size;
-            ltTeams.resize(size);
-            for (int i = 0; i < size; ++i)
-            {
-                stream >> ltTeams[i].teamName;
-                stream >> ltTeams[i].driver1Name;
-                stream >> ltTeams[i].driver1ShortName;
-                stream >> ltTeams[i].driver1No;
-                stream >> ltTeams[i].driver2Name;
-                stream >> ltTeams[i].driver2ShortName;
-                stream >> ltTeams[i].driver2No;
-                stream >> ltTeams[i].carImg;
-            }
-        }
-        else
-            return false;
-    }
-    else
-        return false;
-    qSort(ltTeams);
-    qSort(ltEvents);
+    //on startup try to load current seasons data
+    loadSeasonData(2012);
 
     bool ok;
     ok = trackMapsCoordinates.loadTrackDataFile();
@@ -99,14 +51,197 @@ bool SeasonData::loadSeasonFile()
     return ok;
 }
 
+bool SeasonData::loadSeasonData(int season)
+{
+    if (this->season != season)
+    {
+        ltTeams.clear();
+
+        QString fName = F1LTCore::seasonDataFile();
+        if (!fName.isNull())
+        {
+            QFile f(fName);
+            if (f.open(QIODevice::ReadOnly))
+            {
+                QDataStream stream(&f);
+                char *tab;
+                stream >> tab;  //F1LT2_SD
+
+                QString sbuf(tab);
+                if (sbuf != "F1LT2_SD")
+                    return false;
+
+                int size;
+
+                stream >> size;
+
+                //first load offsets
+                for (int i = 0; i < size; ++i)
+                {
+                    int season, offset;
+                    stream >> season;
+                    stream >> offset;
+
+                    seasonOffsets.insert(season, offset);
+                }
+
+                //store current position
+                int headerPos = f.pos();
+
+                if (!seasonOffsets.contains(season))
+                    return false;
+
+                int offset = seasonOffsets[season];
+                f.seek(headerPos + offset);
+
+                loadSeasonData(stream);
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+
+        qSort(ltTeams);
+        qSort(ltEvents);
+    }
+
+    return true;
+}
+
+void SeasonData::loadSeasonData(QDataStream &stream)
+{
+    int size;
+    stream >> season;
+    stream >> size;
+
+    ltEvents.resize(size);
+    for (int i = 0; i < size; ++i)
+    {
+        stream >> ltEvents[i].eventNo;
+        stream >> ltEvents[i].eventName;
+        stream >> ltEvents[i].eventShortName;
+        stream >> ltEvents[i].eventPlace;
+        stream >> ltEvents[i].laps;
+
+        QString sbuf;
+        stream >> sbuf;
+        ltEvents[i].fpDate = QDate::fromString(sbuf, "dd-MM-yyyy");
+
+        stream >> sbuf;
+        ltEvents[i].raceDate = QDate::fromString(sbuf, "dd-MM-yyyy");
+
+        stream >> ltEvents[i].trackImg;
+
+    }
+    stream >> size;
+    ltTeams.resize(size);
+    for (int i = 0; i < size; ++i)
+    {
+        stream >> ltTeams[i].teamName;
+        stream >> ltTeams[i].carImg;
+
+        int dsize;
+        stream >> dsize;
+
+        ltTeams[i].drivers.resize(dsize);
+
+        for (int j = 0; j < dsize; ++j)
+        {
+            stream >> ltTeams[i].drivers[j].name;
+            stream >> ltTeams[i].drivers[j].shortName;
+            stream >> ltTeams[i].drivers[j].no;
+            stream >> ltTeams[i].drivers[j].helmet;
+
+            //first 2 drivers are always main by default
+            if (j < 2)
+                ltTeams[i].drivers[j].mainDriver = true;
+            else
+                ltTeams[i].drivers[j].mainDriver = false;
+        }
+    }
+}
+
+void SeasonData::updateTeamList(const QVector<LTTeam> &teams)
+{
+    for (int i = 0; i < teams.size(); ++i)
+    {
+        if (!ltTeams.contains(teams[i]))
+            ltTeams.append(teams[i]);
+
+        int idx = ltTeams.indexOf(teams[i]);
+
+        if (teams[i].teamName == ltTeams[idx].teamName)
+        {
+            //clear main drivers
+            for (int k = 0; k < ltTeams[idx].drivers.size(); ++k)
+            {
+                ltTeams[idx].drivers[k].mainDriver = false;
+            }
+
+            for (int k = 0; k < teams[i].drivers.size(); ++k)
+            {
+                int didx = ltTeams[idx].drivers.indexOf(teams[i].drivers[k]);
+                if (didx == -1)
+                {
+                    ltTeams[idx].drivers.append(teams[i].drivers[k]);
+                    ltTeams[idx].drivers.last().mainDriver = true;
+                }
+                else
+                {
+                    ltTeams[idx].drivers[didx].mainDriver = true;
+                }
+            }
+        }
+    }
+}
+
+
+//this updates team list from eventdata drivers list
+void SeasonData::updateTeamList(const DriverData &dd)
+{
+    for (int j = 0; j < ltTeams.size(); ++j)
+    {
+        bool foundNumberWithoutName = false;
+
+        for (int k = 0; k < ltTeams[j].drivers.size(); ++k)
+        {
+            if (ltTeams[j].drivers[k].no == dd.getNumber())
+            {
+                ltTeams[j].drivers[k].mainDriver = false;
+                foundNumberWithoutName = true;
+            }
+
+            if (ltTeams[j].drivers[k].name == dd.getDriverName())
+            {
+                ltTeams[j].drivers[k].mainDriver = true;
+                foundNumberWithoutName = false;
+            }
+        }
+
+        if (foundNumberWithoutName)
+        {
+            LTDriver driver;
+            driver.name = dd.getDriverName();
+            driver.no = dd.getNumber();
+            driver.shortName = getDriverShortName(dd.getDriverName());
+            driver.mainDriver = true;
+
+            ltTeams[j].drivers.append(driver);
+        }
+    }
+}
 
 
 QPixmap SeasonData::getCarImg(int no)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
-        if (ltTeams[i].driver1No == no || ltTeams[i].driver2No == no)
-            return ltTeams[i].carImg;
+        for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
+        {
+            if (ltTeams[i].drivers[j].no == no)
+                return ltTeams[i].carImg;
+        }
     }
     return QPixmap();
 }
@@ -115,14 +250,11 @@ QString SeasonData::getDriverName(QString &name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
-        QString buf1 = ltTeams[i].driver1Name.toUpper();
-        QString buf2 = ltTeams[i].driver2Name.toUpper();
-
-        if (buf1 == name)
-            return ltTeams[i].driver1Name;
-
-        if (buf2 == name)
-            return ltTeams[i].driver2Name;
+        for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
+        {
+            if (ltTeams[i].drivers[j].name.toUpper() == name.toUpper())
+                return ltTeams[i].drivers[j].name;
+        }
     }
     name = name.left(4) + name.right(name.size()-4).toLower();
     int idx = name.indexOf(" ");
@@ -146,14 +278,11 @@ QString SeasonData::getDriverShortName(const QString &name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
-        QString buf1 = ltTeams[i].driver1Name.toUpper();
-        QString buf2 = ltTeams[i].driver2Name.toUpper();
-
-        if (buf1 == name.toUpper())
-            return ltTeams[i].driver1ShortName;
-
-        if (buf2 == name.toUpper())
-            return ltTeams[i].driver2ShortName;
+        for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
+        {
+            if (ltTeams[i].drivers[j].name.toUpper() == name.toUpper())
+                return ltTeams[i].drivers[j].shortName;
+        }
     }
     return name.toUpper().mid(3, 3);
 }
@@ -162,14 +291,11 @@ QString SeasonData::getDriverNameFromShort(const QString &name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
-        QString buf1 = ltTeams[i].driver1ShortName;
-        QString buf2 = ltTeams[i].driver2ShortName;
-
-        if (buf1 == name)
-            return ltTeams[i].driver1Name;
-
-        if (buf2 == name)
-            return ltTeams[i].driver2Name;
+        for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
+        {
+            if (ltTeams[i].drivers[j].shortName.toUpper() == name.toUpper())
+                return ltTeams[i].drivers[j].name;
+        }
     }
     return name.left(1) + name.right(name.size()-1).toLower();
 }
@@ -178,18 +304,43 @@ QString SeasonData::getTeamName(const QString &driver)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
-        if (ltTeams[i].driver1Name == driver || ltTeams[i].driver2Name == driver)
-            return ltTeams[i].teamName;
+        for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
+        {
+            if (ltTeams[i].drivers[j].name.toUpper() == driver.toUpper())
+                return ltTeams[i].teamName;
+        }
     }
     return QString();
+}
+
+QList<LTDriver> SeasonData::getMainDrivers(const LTTeam &team)
+{
+    int idx = ltTeams.indexOf(team);
+    if (idx == -1)
+        return QList<LTDriver>();
+
+    QList<LTDriver> drivers;
+    for (int i = 0; i < ltTeams[idx].drivers.size(); ++i)
+    {
+        if (ltTeams[idx].drivers[i].mainDriver == true)
+            drivers.append(ltTeams[idx].drivers[i]);
+
+        if (drivers.size() == 2)
+            break;
+    }
+
+    return drivers;
 }
 
 QString SeasonData::getTeamName(int no)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
-        if (ltTeams[i].driver1No == no || ltTeams[i].driver2No == no)
-            return ltTeams[i].teamName;
+        for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
+        {
+            if (ltTeams[i].drivers[j].no == no)
+                return ltTeams[i].teamName;
+        }
     }
     return QString();
 }
@@ -248,11 +399,11 @@ int SeasonData::getDriverNo(const QString &name)
 {
     for (int i = 0; i < ltTeams.size(); ++i)
     {
-        if (ltTeams[i].driver1Name == name)
-            return ltTeams[i].driver1No;
-
-        if (ltTeams[i].driver2Name == name)
-            return ltTeams[i].driver2No;
+        for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
+        {
+            if (ltTeams[i].drivers[j].name.toUpper() == name.toUpper())
+                return ltTeams[i].drivers[j].no;
+        }
     }
     return -1;
 }
@@ -274,8 +425,9 @@ QStringList SeasonData::getDriversList()
     {
         for (int i = 0; i < ltTeams.size(); ++i)
         {
-            list.append(QString::number(ltTeams[i].driver1No) + " " + ltTeams[i].driver1Name);
-            list.append(QString::number(ltTeams[i].driver2No) + " " + ltTeams[i].driver2Name);
+            QList<LTDriver> drivers = getMainDrivers(ltTeams[i]);
+            for (int j = 0; j < drivers.size(); ++j)
+                list.append(QString::number(drivers[j].no) + " " + drivers[j].name);
         }
     }
 
@@ -298,8 +450,9 @@ QStringList SeasonData::getDriversListShort()
     {
         for (int i = 0; i < ltTeams.size(); ++i)
         {
-            list.append(QString::number(ltTeams[i].driver1No) + " " + ltTeams[i].driver1ShortName);
-            list.append(QString::number(ltTeams[i].driver2No) + " " + ltTeams[i].driver2ShortName);
+            QList<LTDriver> drivers = getMainDrivers(ltTeams[i]);
+            for (int j = 0; j < drivers.size(); ++j)
+                list.append(QString::number(drivers[j].no) + " " + drivers[j].shortName);
         }
     }
 
@@ -343,5 +496,7 @@ void SeasonData::fillEventNamesMap()
     eventNamesMap.insert("usa", "US");
     eventNamesMap.insert("bra", "Brazilian");
 }
+
+
 
 

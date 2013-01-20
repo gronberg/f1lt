@@ -31,6 +31,9 @@ class PacketParser;
 class SessionRecords;
 class Weather;
 
+/*!
+ * \brief The WeatherData class stores single value of weather data, including informations when this value was stored (lap, session time).
+ */
 class WeatherData
 {
 public:
@@ -52,6 +55,9 @@ private:
     int qPeriod;
 };
 
+/*!
+ * \brief The Weather class stores all weather data that is gathered during a session, including air and track temperatures, wind speed and direction, pressure, humidity and wether the track is dry or wet.
+ */
 class Weather
 {
 public:
@@ -101,6 +107,9 @@ private:
     WeatherData currentWeather[7];
 };
 
+/*!
+ * \brief The SectorRecordData class stores session record from a single sector or a lap time, including driver name and number, lap time and when the record was stored (lap number, session time).
+ */
 class SectorRecordData
 {
 public:
@@ -124,6 +133,9 @@ private:
     int qPeriod;
 };
 
+/*!
+ * \brief The SpeedRecordData class stores single speed record data (driver name and speed).
+ */
 class SpeedRecordData
 {    
 public:
@@ -138,6 +150,9 @@ private:
     double speed;
 };
 
+/*!
+ * \brief The SessionRecords class stores session records, including sector records, fastest lap, and speed records.
+ */
 class SessionRecords
 {
 public:
@@ -178,6 +193,10 @@ private:
     SectorRecordData secRecord[3];
 };
 
+/*!
+ * \brief The EventData class contains all informations about an event. Access to all drivers data, weather and session records data, event type (practice, quali, race), commentary, etc.
+ * is available through this singleton.
+ */
 class EventData
 {
 public:
@@ -282,7 +301,10 @@ private:
     SessionRecords sessionRecords;
 
     QVector<DriverData> driversData;
-    int qualiPeriod;           
+    int qualiPeriod;
+
+    int baseEventId;
+    int baseEventInc;
 };
 
 inline int EventData::getDriverId(const QString &name) const

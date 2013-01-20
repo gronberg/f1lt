@@ -118,10 +118,20 @@ QList<QPixmap*> *HelmetsFactory::loadHelmets(int size, bool clear)
             return images;
     }
 
+    qDebug() << "LOADING HELMETS";
     for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
     {
-        images->append(loadHelmet(SeasonData::getInstance().getTeams()[i].driver1No, size));
-        images->append(loadHelmet(SeasonData::getInstance().getTeams()[i].driver2No, size));
+
+        QList<LTDriver> mainDrivers = SeasonData::getInstance().getMainDrivers(SeasonData::getInstance().getTeams()[i]);
+
+        for (int j = 0; j < mainDrivers.size(); ++j)
+        {
+            qDebug() << SeasonData::getInstance().getTeams()[i].teamName << mainDrivers[j].no << mainDrivers[j].name;
+            images->append(loadHelmet(mainDrivers[j], size));
+        }
+//        for (int j = )
+//        images->append(loadHelmet(SeasonData::getInstance().getTeams()[i].driver1No, size));
+//        images->append(loadHelmet(SeasonData::getInstance().getTeams()[i].driver2No, size));
     }
 
     return images;
@@ -142,13 +152,16 @@ QPixmap &HelmetsFactory::getHelmet(int no, int size)
     return nullPixmap;
 }
 
-QPixmap *HelmetsFactory::loadHelmet(int no, int size)
+QPixmap *HelmetsFactory::loadHelmet(const LTDriver &driver, int size)
 {
+    if (!driver.helmet.isNull())
+        return new QPixmap(driver.helmet.scaledToHeight(size, Qt::SmoothTransformation));
+
     QImage helmet = QImage(":/ui_icons/helmet.png").scaledToHeight(size, Qt::SmoothTransformation);
     QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(size, Qt::SmoothTransformation);
 
     QImage hl(helmet.size(), helmet.format());
-    QColor drvColor = ColorsManager::getInstance().getCarColor(no);
+    QColor drvColor = ColorsManager::getInstance().getCarColor(driver.no);
     QPainter phl;
     phl.begin(&hl);
     phl.setBrush(QBrush(drvColor));
