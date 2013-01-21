@@ -103,7 +103,7 @@ bool SeasonData::loadSeasonData(int season)
             return false;
 
         qSort(ltTeams);
-        qSort(ltEvents);
+        qSort(ltEvents);        
     }
 
     return true;
@@ -193,7 +193,8 @@ void SeasonData::updateTeamList(const QVector<LTTeam> &teams)
                 }
             }
         }
-    }
+    }    
+    ImagesFactory::getInstance().getHelmetsFactory().reloadHelmets();
 }
 
 
@@ -229,7 +230,7 @@ void SeasonData::updateTeamList(const DriverData &dd)
 
             ltTeams[j].drivers.append(driver);
         }
-    }
+    }    
 }
 
 
@@ -457,6 +458,38 @@ QStringList SeasonData::getDriversListShort()
     }
 
     return list;
+}
+
+QVector<LTTeam> SeasonData::getTeamsFromCurrentSession()
+{
+    QVector<LTTeam> teams;
+
+    for (int i = 0; i < ltTeams.size(); ++i)
+    {
+        LTTeam team;
+        team.teamName = ltTeams[i].teamName;
+
+        for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
+        {
+            if (ltTeams[i].drivers[j].mainDriver)
+                team.drivers.append(ltTeams[i].drivers[j]);
+        }
+        teams.append(team);
+    }
+
+    return teams;
+}
+
+void SeasonData::getTrackMap(LTEvent &ev)
+{
+    for (int i = 0; i < ltEvents.size(); ++i)
+    {
+        if (ltEvents[i] == ev)
+        {
+            ev.trackImg = ltEvents[i].trackImg;
+            return;
+        }
+    }
 }
 
 QString SeasonData::getEventNameFromShort(const QString &shortName)

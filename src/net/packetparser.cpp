@@ -339,6 +339,10 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
                 //for every driver this code is executed only once since drivers list is sent only at the beginnig of the session
                 //after whole list is updated, SeasonData singleton will contain fresh list of the main drivers that take a part in this session
                 SeasonData::getInstance().updateTeamList(eventData.driversData[packet.carID-1]);
+
+                //driver names are usually sent sorted, so after we got last driver we can reload helmets
+                if (packet.carID == eventData.driversData.size())
+                    ImagesFactory::getInstance().getHelmetsFactory().reloadHelmets();
             }
             eventData.driversData[packet.carID-1].colorData.driverColor() = (LTPackets::Colors)packet.data;
             break;

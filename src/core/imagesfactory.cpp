@@ -155,7 +155,10 @@ QPixmap &HelmetsFactory::getHelmet(int no, int size)
 QPixmap *HelmetsFactory::loadHelmet(const LTDriver &driver, int size)
 {
     if (!driver.helmet.isNull())
+    {
+        qDebug() << "helmet for" << driver.name;
         return new QPixmap(driver.helmet.scaledToHeight(size, Qt::SmoothTransformation));
+    }
 
     QImage helmet = QImage(":/ui_icons/helmet.png").scaledToHeight(size, Qt::SmoothTransformation);
     QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(size, Qt::SmoothTransformation);

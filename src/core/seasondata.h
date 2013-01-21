@@ -108,6 +108,17 @@ struct LTEvent
         return fpDate < event.fpDate;
     }
 
+    bool operator==(const LTEvent &event) const
+    {
+        if (eventNo == event.eventNo &&
+            eventName == event.eventName &&
+            event.fpDate == event.fpDate &&
+            event.raceDate == event.raceDate)
+            return true;
+
+        return false;
+    }
+
 //    LTTrackCoordinates trackCoordinates;
 };
 
@@ -170,7 +181,10 @@ public:
     }
 
     QVector<LTTeam> &getTeams() { return ltTeams; }
+    QVector<LTTeam> getTeamsFromCurrentSession();
     QVector<LTEvent> &getEvents() { return ltEvents; }   
+
+    void getTrackMap(LTEvent &ev);
 
     void fillEventNamesMap();
 

@@ -240,8 +240,8 @@ public:
     const LTEvent &getEventInfo()              const { return eventInfo; }
     void setEventInfo(const LTEvent &ev)
     {
-        eventInfo = ev;
-//        SeasonData::getInstance().setTrackCoordinates(eventInfo);
+        eventInfo = ev;        
+        SeasonData::getInstance().getTrackMap(eventInfo);
     }
     int getEventId()                    const { return eventId; }
     LTPackets::EventType getEventType()    const { return eventType; }

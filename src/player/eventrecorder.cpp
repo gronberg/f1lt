@@ -20,6 +20,7 @@
 
 
 #include "eventrecorder.h"
+#include "ltfilesloader.h"
 #include <QDataStream>
 #include <QFile>
 
@@ -723,23 +724,25 @@ void EventRecorder::saveToFile(QString)
         if (!dir.exists())
             dir.mkpath(F1LTCore::ltDataHomeDir());
 
-        QFile f(F1LTCore::ltDataHomeDir()+fName);
-        if (f.open(QIODevice::WriteOnly))
-        {
-            QDataStream stream(&f);
+        LTFilesLoader loader;
+        loader.saveFile(F1LTCore::ltDataHomeDir()+fName, packets.toVector());
+//        QFile f(F1LTCore::ltDataHomeDir()+fName);
+//        if (f.open(QIODevice::WriteOnly))
+//        {
+//            QDataStream stream(&f);
 
-            const char tab[5] = "F1LT";
+//            const char tab[5] = "F1LT";
 
-            stream << tab;
-            //save the teams and events info
-            saveLTInfo(stream);
-            savePackets(stream);
+//            stream << tab;
+//            //save the teams and events info
+//            saveLTInfo(stream);
+//            savePackets(stream);
 
-            //now save events
-//            saveEventData(stream);
+//            //now save events
+////            saveEventData(stream);
 
-//            saveLapData(stream);
-        }
+////            saveLapData(stream);
+//        }
     }
 }
 

@@ -20,6 +20,7 @@
 
 
 #include "eventplayer.h"
+#include "ltfilesloader.h"
 #include "ui_eventplayer.h"
 
 #include <QDataStream>
@@ -41,82 +42,89 @@ EventPlayer::~EventPlayer()
 bool EventPlayer::loadFromFile(QString fName)
 {       
     fileName = fName;
-    QFile file(fName);
+    LTFilesLoader loader;
 
-    if (file.open(QIODevice::ReadOnly))
-    {                
-        QDataStream stream(&file);
+    return loader.loadFile(fName, packets);
+//    QFile file(fName);
 
-        ltTeamList.clear();
-        packets.clear();
+////    if (file.open(QIODevice::ReadOnly))
+////    {
+////        QDataStream stream(&file);
 
-        char *tab;
-        stream >> tab;
+////        ltTeamList.clear();
+////        packets.clear();
 
-        QString sbuf(tab);
+////        char *tab;
+////        stream >> tab;
 
-        delete [] tab;
-        if (sbuf != "F1LT")
-            return false;
+////        QString sbuf(tab);
 
-        int ibuf;
-        QPixmap pixBuf;
+////        delete [] tab;
+////        if (sbuf != "F1LT")
+////            return false;
 
-        stream >> ibuf;
-        ltEvent.eventNo = ibuf;
+////        int ibuf;
+////        QPixmap pixBuf;
 
-        stream >> sbuf;
-        ltEvent.eventName = sbuf;
+////        stream >> ibuf;
+////        ltEvent.eventNo = ibuf;
 
-        stream >> sbuf;
-        ltEvent.eventShortName = sbuf;
+////        stream >> sbuf;
+////        ltEvent.eventName = sbuf;
 
-        stream >> sbuf;
-        ltEvent.eventPlace = sbuf;
+////        stream >> sbuf;
+////        ltEvent.eventShortName = sbuf;
 
-        stream >> sbuf;
-        ltEvent.fpDate = QDate::fromString(sbuf, "dd-MM-yyyy");
+////        stream >> sbuf;
+////        ltEvent.eventPlace = sbuf;
 
-        stream >> sbuf;
-        ltEvent.raceDate = QDate::fromString(sbuf, "dd-MM-yyyy");
+////        stream >> sbuf;
+////        ltEvent.fpDate = QDate::fromString(sbuf, "dd-MM-yyyy");
 
-        stream >> ibuf;
-        ltEvent.laps = ibuf;
+////        stream >> sbuf;
+////        ltEvent.raceDate = QDate::fromString(sbuf, "dd-MM-yyyy");
 
-        stream >> pixBuf;
-        ltEvent.trackImg = pixBuf;
+////        stream >> ibuf;
+////        ltEvent.laps = ibuf;
 
-        eventData.setEventInfo(ltEvent);
-        int size;
-        stream >> size;
-        ltTeamList.resize(size);
-//        for (int i = 0; i < size; ++i)
-//        {
-//            stream >> sbuf; ltTeamList[i].teamName = sbuf;
-//            stream >> sbuf; ltTeamList[i].driver1Name = sbuf;
-//            stream >> sbuf; ltTeamList[i].driver1ShortName = sbuf;
-//            stream >> ibuf; ltTeamList[i].driver1No = ibuf;
-//            stream >> sbuf; ltTeamList[i].driver2Name = sbuf;
-//            stream >> sbuf; ltTeamList[i].driver2ShortName = sbuf;
-//            stream >> ibuf; ltTeamList[i].driver2No = ibuf;
-//            stream >> ltTeamList[i].carImg;
-//        }
-//        SeasonData::getInstance().updateTeamList(ltTeamList);
+////        stream >> pixBuf;
+////        ltEvent.trackImg = pixBuf;
 
-//        stream >> size;
-//        packets.resize(size);
-//        for (int i = 0; i < size; ++i)
-//        {
-//            stream >> packets[i].first;
-//            stream >> packets[i].second.type;
-//            stream >> packets[i].second.carID;
-//            stream >> packets[i].second.data;
-//            stream >> packets[i].second.length;
-//            stream >> packets[i].second.longData;
-//        }
-        return true;
-    }
-    return false;
+////        eventData.setEventInfo(ltEvent);
+////        int size;
+////        stream >> size;
+////        ltTeamList.resize(size);
+////        for (int i = 0; i < size; ++i)
+////        {
+////            ltTeamList[i].drivers.resize(2);
+
+////            stream >> sbuf; ltTeamList[i].teamName = sbuf;
+
+////            stream >> sbuf; ltTeamList[i].drivers[0].name = sbuf;
+////            stream >> sbuf; ltTeamList[i].drivers[0].shortName = sbuf;
+////            stream >> ibuf; ltTeamList[i].drivers[0].no = ibuf;
+
+////            stream >> sbuf; ltTeamList[i].drivers[1].name = sbuf;
+////            stream >> sbuf; ltTeamList[i].drivers[1].shortName = sbuf;
+////            stream >> ibuf; ltTeamList[i].drivers[1].no = ibuf;
+
+////            stream >> ltTeamList[i].carImg;
+////        }
+////        SeasonData::getInstance().loadSeasonData(ltEvent.fpDate.year());
+////        SeasonData::getInstance().updateTeamList(ltTeamList);        stream >> size;
+////        packets.resize(size);
+////        for (int i = 0; i < size; ++i)
+////        {
+////            stream >> packets[i].first;
+////            stream >> packets[i].second.type;
+////            stream >> packets[i].second.carID;
+////            stream >> packets[i].second.data;
+////            stream >> packets[i].second.length;
+////            stream >> packets[i].second.longData;
+////        }
+////        return true;
+////    }
+////    return false;
 }
 
 void EventPlayer::startPlaying()

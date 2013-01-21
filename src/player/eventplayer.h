@@ -88,9 +88,6 @@ private:
     Ui::EventPlayer *ui;
     QVector< QPair<int, Packet> > packets;
 
-    LTEvent ltEvent;
-    QVector<LTTeam> ltTeamList;
-
     int currentPos;
     bool playing;
     bool paused;

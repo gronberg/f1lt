@@ -87,7 +87,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/drivercolorsdialog.cpp \
     src/core/colorsmanager.cpp \
     src/core/sessiondefaults.cpp \
-    src/core/trackmapscoordinates.cpp
+    src/core/trackmapscoordinates.cpp \
+    src/player/ltfilesloader.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -151,7 +152,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/drivercolorsdialog.h \
     src/core/colorsmanager.h \
     src/core/sessiondefaults.h \
-    src/core/trackmapscoordinates.h
+    src/core/trackmapscoordinates.h \
+    src/player/ltfilesloader.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
