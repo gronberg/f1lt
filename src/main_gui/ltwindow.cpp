@@ -1052,15 +1052,13 @@ void LTWindow::eventPlayerOpenFile(QString fName)
     delayWidgetAction->setVisible(false);
 
     streamReader->disconnectFromLTServer();
-    streamReader->clearData();
-
-    setupDialogs();
+//    streamReader->clearData();
 
     playing = true;
 
     eventPlayer->startPlaying();
+    setupDialogs();
     saw->resetView();
-    driverTrackerWidget->setup();
 }
 
 void LTWindow::eventPlayerPlayClicked(int interval)
@@ -1078,11 +1076,12 @@ void LTWindow::eventPlayerPauseClicked()
 void LTWindow::eventPlayerRewindToStartClicked()
 {
     sessionTimer->stop();
-    driverTrackerWidget->stopTimer();
-    streamReader->clearData();
+    driverTrackerWidget->stopTimer();    
+    streamReader->clearData();    
     ui->sessionDataWidget->clearData();
 
     eventPlayer->startPlaying();
+    driverTrackerWidget->setup();
 }
 
 void LTWindow::eventPlayerForwardToEndClicked()
@@ -1097,6 +1096,9 @@ void LTWindow::eventPlayerRewindClicked()
     ui->sessionDataWidget->clearFastestLaps();
     ui->ltWidget->clearModelsData();
     streamReader->clearData();
+
+    //it should be safe here - drivers vector will remain the same in eventdata
+//    driverTrackerWidget->setup();
 }
 
 void LTWindow::eventPlayerStopClicked(bool connect)

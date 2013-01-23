@@ -245,6 +245,11 @@ public:
     }
     int getEventId()                    const { return eventId; }
     LTPackets::EventType getEventType()    const { return eventType; }
+    void setEventType(LTPackets::EventType type)
+    {
+        eventType = type;
+    }
+
     LTPackets::FlagStatus getFlagStatus()  const { return flagStatus; }
 
     const QTime &getRemainingTime()            const { return remainingTime; }
@@ -263,6 +268,10 @@ public:
     int getQualiPeriod()                const { return qualiPeriod; }
 
     int getFPNumber() const;
+    void setFPNumber(int fp)
+    {
+        fpNumber = fp;
+    }
 
     const SessionRecords &getSessionRecords()  const { return sessionRecords; }
 
@@ -302,6 +311,7 @@ private:
 
     QVector<DriverData> driversData;
     int qualiPeriod;
+    int fpNumber;
 
     int baseEventId;
     int baseEventInc;

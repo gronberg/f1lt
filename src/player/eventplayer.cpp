@@ -383,12 +383,17 @@ void EventPlayer::on_seekSlider_sliderMoved(int position)
     }
     setTimeLabel();
 
-    if (value == 0 || value == packets.last().first)
+    if (value == 0)
+        on_rewindToStartButton_clicked();
+
+    if (value == packets.last().first)
+        on_forwardToEndButton_clicked();
+
     {/*
         currentPos = (value == 0) ? 0 : packets.size()-1;
         elapsedSeconds = value;
         setTimeLabel();*/
-        stopPlaying();
+//        stopPlaying();
     }
 }
 

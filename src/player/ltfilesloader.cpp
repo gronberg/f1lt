@@ -22,10 +22,24 @@ bool LTFilesLoader::loadFile(QString fName, QVector<QPair<int, Packet> > &packet
 
         delete [] tab;
         if (sbuf == "F1LT")
-            return loadV1File(stream, packets);
+        {
+            EventData::getInstance().clear();
+
+            //old files didn't contain any info about FP number, try to guess it from the file name
+            QFileInfo fInfo(fName);
+            QRegExp reg("fp(\\d)");
+
+            if (reg.indexIn(fInfo.fileName()) != -1)
+                EventData::getInstance().setFPNumber(reg.cap(1).toInt());
+
+            return loadV1File(stream, packets);                        
+        }
 
         if (sbuf == "F1LT2_LT")
-            return loadV2File(stream, packets);
+        {
+            EventData::getInstance().clear();
+            return loadV2File(stream, packets);                
+        }
     }
     return false;
 }
@@ -117,22 +131,30 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
     ltEvent.eventNo = ibuf;
 
     stream >> cbuf;
-    ltEvent.eventName = QString(cbuf);
+    ltEvent.eventName = encrypt(QString(cbuf));
 
     stream >> cbuf;
-    ltEvent.eventShortName = QString(cbuf);
+    ltEvent.eventShortName = encrypt(QString(cbuf));
 
     stream >> cbuf;
-    ltEvent.eventPlace = QString(cbuf);
+    ltEvent.eventPlace = encrypt(QString(cbuf));
 
     stream >> cbuf;
-    ltEvent.fpDate = QDate::fromString(QString(cbuf), "dd-MM-yyyy");
+    ltEvent.fpDate = QDate::fromString(encrypt(QString(cbuf)), "dd-MM-yyyy");
 
     stream >> cbuf;
-    ltEvent.raceDate = QDate::fromString(QString(cbuf), "dd-MM-yyyy");
+    ltEvent.raceDate = QDate::fromString(encrypt(QString(cbuf)), "dd-MM-yyyy");
 
     stream >> ibuf;
     ltEvent.laps = ibuf;
+
+    stream >> ibuf;
+    EventData::getInstance().setEventType((LTPackets::EventType)ibuf);
+
+    stream >> ibuf;
+    if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
+        EventData::getInstance().setFPNumber(ibuf);
+
 
     SeasonData::getInstance().loadSeasonData(ltEvent.fpDate.year());
     EventData::getInstance().setEventInfo(ltEvent);
@@ -142,8 +164,7 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
     ltTeamList.resize(size);
     for (int i = 0; i < size; ++i)
     {
-        stream >> cbuf; ltTeamList[i].teamName = QString(cbuf);
-        qDebug() << "TEAM=" << ltTeamList[i].teamName;
+        stream >> cbuf; ltTeamList[i].teamName = encrypt(QString(cbuf));
 
         int dsize;
         stream >> dsize;
@@ -151,8 +172,8 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
         ltTeamList[i].drivers.resize(dsize);
         for (int j = 0; j < dsize; ++j)
         {
-            stream >> cbuf; ltTeamList[i].drivers[j].name = QString(cbuf);
-            stream >> cbuf; ltTeamList[i].drivers[j].shortName = QString(cbuf);
+            stream >> cbuf; ltTeamList[i].drivers[j].name = encrypt(QString(cbuf));
+            stream >> cbuf; ltTeamList[i].drivers[j].shortName = encrypt(QString(cbuf));
             stream >> ibuf; ltTeamList[i].drivers[j].no = ibuf;
         }
     }
@@ -168,7 +189,10 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
         stream >> packets[i].second.data;
         stream >> packets[i].second.length;
         stream >> cbuf;
-        packets[i].second.longData = QByteArray(cbuf);
+        packets[i].second.longData.clear();
+//        packets[i].second.longData.append(encrypt(std::string(cbuf)).c_str());
+//        packets[i].second.longData.append(encrypt(sbuf));
+        packets[i].second.longData.append(encrypt(QString(cbuf)));
     }
     return true;
 }
@@ -195,24 +219,26 @@ void LTFilesLoader::saveMainData(QDataStream &stream)
     LTEvent event = EventData::getInstance().getEventInfo();
 
     stream << event.eventNo;
-    stream << event.eventName.toStdString().c_str();
-    stream << event.eventShortName.toStdString().c_str();
-    stream << event.eventPlace.toStdString().c_str();
-    stream << event.fpDate.toString("dd-MM-yyyy").toStdString().c_str();
-    stream << event.raceDate.toString("dd-MM-yyyy").toStdString().c_str();
+    stream << encrypt(event.eventName).toStdString().c_str();
+    stream << encrypt(event.eventShortName).toStdString().c_str();
+    stream << encrypt(event.eventPlace).toStdString().c_str();
+    stream << encrypt(event.fpDate.toString("dd-MM-yyyy")).toStdString().c_str();
+    stream << encrypt(event.raceDate.toString("dd-MM-yyyy")).toStdString().c_str();
     stream << event.laps;
+    stream << EventData::getInstance().getEventType();
+    stream << EventData::getInstance().getFPNumber();
 
     QVector<LTTeam> teams = SeasonData::getInstance().getTeamsFromCurrentSession();
     stream << teams.size();
     for (int i = 0; i < teams.size(); ++i)
     {
-        stream << teams[i].teamName.toStdString().c_str();
+        stream << encrypt(teams[i].teamName).toStdString().c_str();
         stream << teams[i].drivers.size();
 
         for (int j = 0; j < teams[i].drivers.size(); ++j)
         {
-            stream << teams[i].drivers[j].name.toStdString().c_str();
-            stream << teams[i].drivers[j].shortName.toStdString().c_str();
+            stream << encrypt(teams[i].drivers[j].name).toStdString().c_str();
+            stream << encrypt(teams[i].drivers[j].shortName).toStdString().c_str();
             stream << teams[i].drivers[j].no;
         }
     }
@@ -229,6 +255,10 @@ void LTFilesLoader::savePackets(QDataStream &stream, const QVector<QPair<int, Pa
         stream << packets[i].second.carID;
         stream << packets[i].second.data;
         stream << packets[i].second.length;
-        stream << packets[i].second.longData.constData();
+
+//        qDebug() << encrypt(QString(packets[i].second.longData)).size() << QString(packets[i].second.longData);
+//        stream << encrypt(QString(packets[i].second.longData).toStdString()).c_str();
+        stream << encrypt(QString(packets[i].second.longData)).toStdString().c_str();
+//        stream << QString(packets[i].second.longData).toStdString().c_str();
     }
 }

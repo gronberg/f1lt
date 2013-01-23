@@ -48,6 +48,9 @@ void DriverTrackerWidget::update()
 
 void DriverTrackerWidget::setup()
 {    
+    ui->driverRadar->loadDriversList();
+    ui->driverTracker->loadDriversList();
+
     ui->driverRadar->setupDrivers(speed);
     ui->driverTracker->setupDrivers(speed);
 }

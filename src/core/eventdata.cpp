@@ -55,6 +55,7 @@ EventData::EventData()
     flagStatus = LTPackets::GREEN_FLAG;
 
     qualiPeriod = 0;
+    fpNumber = 0;
 
     sessionStarted = false;
     sessionFinished = false;
@@ -81,6 +82,7 @@ void EventData::clear()
     sessionStarted = false;
     sessionFinished = false;
     qualiPeriod = 0;
+    fpNumber = 0;
 
     commentary = "";    
 
@@ -203,6 +205,9 @@ QString EventData::calculateInterval(const DriverData &d1, const DriverData &d2,
 
 int EventData::getFPNumber() const
 {
+    if (fpNumber > 0)
+        return fpNumber;
+
     if (getEventId() == 0)
         return 1;
 

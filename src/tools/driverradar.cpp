@@ -75,6 +75,7 @@ void DriverRadar::setupDrivers(int speed)
         drp[i]->setSpeed(speed);
     }
 
+    resizeEvent(0);
     repaint();
 
     if (dti)
@@ -137,7 +138,9 @@ void DriverRadar::resizeEvent(QResizeEvent *)
     }
 
     for (int i = 0; i < drp.size(); ++i)
+    {
         drp[i]->setRadarCoords(radarX, radarY, radarR, radarPitR, radarLappedR);
+    }
 
 }
 

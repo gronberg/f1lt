@@ -70,6 +70,8 @@ void DriverRadarPositioner::setStartupPosition()
     {
         inPits = true;
         calculatePitPosition();
+
+        qDebug() << "1111" << getCoordinates().x() << getCoordinates().y();
     }
 
     else if (EventData::getInstance().getEventType() == LTPackets::RACE_EVENT &&
@@ -78,6 +80,8 @@ void DriverRadarPositioner::setStartupPosition()
         inPits = false;
         currentDeg = 360 - driverData->getPosition()*2;
         currentLapTime = -(avgTime-(avgTime * currentDeg) / 360);
+
+        qDebug() << "2222" << currentDeg << currentLapTime << getCoordinates().x() << getCoordinates().y() << radarX << radarY << radarR;
     }
     else
     {
@@ -86,6 +90,8 @@ void DriverRadarPositioner::setStartupPosition()
             currentLapTime += driverData->getLastLap().getSectorTime(i+1).toDouble();
 
         calculatePosition();
+
+        qDebug() << "3333" << currentDeg << currentLapTime;
     }
 }
 
