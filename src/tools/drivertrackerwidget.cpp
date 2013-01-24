@@ -33,6 +33,7 @@ DriverTrackerWidget::DriverTrackerWidget(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     connect(ui->driverTracker, SIGNAL(driverExcluded(int,bool)), ui->driverRadar, SLOT(excludeDriver(int,bool)));
     connect(ui->driverTracker, SIGNAL(driverSelected(int)), ui->driverRadar, SLOT(selectDriver(int)));
+    connect(ui->driverRadar, SIGNAL(driverSelected(int)), ui->driverTracker, SLOT(selectDriver(int)));
 }
 
 DriverTrackerWidget::~DriverTrackerWidget()

@@ -279,6 +279,27 @@ void DriverTracker::mousePressEvent(QMouseEvent *event)
         }
         emit driverSelected(selectedDriver);
     }
+    else
+    {
+        bool found = false;
+        for (int i = 0; i < drp.size(); ++i)
+        {
+            if (drp[i]->isSelected(event->pos()))
+            {
+                if (selectedDriver != drp[i]->getDriverId())
+                    selectedDriver = drp[i]->getDriverId();
+                else
+                    selectedDriver = -1;
+
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            selectedDriver = -1;
+
+        emit driverSelected(selectedDriver);
+    }
     repaint();
 }
 

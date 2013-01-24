@@ -37,6 +37,15 @@ bool TrackMapsCoordinates::loadTrackDataFile()
         {
             QDataStream stream(&f);
 
+            char *cbuf;
+
+            stream >> cbuf;
+            QString sbuf(cbuf);
+            delete [] cbuf;
+
+            if (sbuf != "F1LT_TD")
+                return false;
+
             int size;
             stream >> size;
 
@@ -45,7 +54,10 @@ bool TrackMapsCoordinates::loadTrackDataFile()
                 TrackCoordinates trackCoordinates;
 
                 int coordSize;
-                stream >> trackCoordinates.name;
+                stream >> cbuf;
+                trackCoordinates.name = QString(cbuf);
+                delete [] cbuf;
+
                 stream >> trackCoordinates.year;
                 stream >> trackCoordinates.indexes[0];
                 stream >> trackCoordinates.indexes[1];

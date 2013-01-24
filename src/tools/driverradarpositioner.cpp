@@ -221,7 +221,26 @@ void DriverRadarPositioner::calculatePitPosition()
     if (ev.getEventType() == LTPackets::QUALI_EVENT &&
         ((ev.getQualiPeriod() == 2 && driverData->getPosition() > 17) ||
          (ev.getQualiPeriod() == 3 && driverData->getPosition() > 10)))
-         qualiOut = true;
+        qualiOut = true;
+}
+
+bool DriverRadarPositioner::isSelected(QPoint p)
+{
+    QPoint coord = getCoordinates();
+
+    if (inPits)
+    {
+        if ((abs(p.x() - coord.x())) <= 13 && (abs(coord.y() - p.y()) <= 10))
+            return true;
+
+        if ((p.y() - coord.y() >= 0) && (p.y() - coord.y() <= 16) &&
+            (coord.x() - p.x() >= 12) && (coord.x() - p.x() <= 48))
+            return true;
+    }
+    else if ((abs(p.x() - coord.x())) <= 13 && ((coord.y() - p.y() <= 13) && (p.y() - coord.y() <= 26)))
+        return true;
+
+    return false;
 }
 
 void DriverRadarPositioner::calculateAvgs()

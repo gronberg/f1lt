@@ -46,6 +46,7 @@ public:
 
 signals:
     void driverExcluded(int, bool);
+    void driverSelected(int);
     
 public slots:
     void excludeDriver(int id, bool exclude);
@@ -70,6 +71,7 @@ public slots:
 protected:
     void resizeEvent(QResizeEvent *);
     void paintEvent(QPaintEvent *);
+    void mousePressEvent(QMouseEvent *);
 
     QVector<DriverRadarPositioner*> drp;
 

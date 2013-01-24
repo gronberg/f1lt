@@ -68,6 +68,8 @@ bool SeasonData::loadSeasonData(int season)
                 stream >> tab;  //F1LT2_SD
 
                 QString sbuf(tab);
+
+                delete [] tab;
                 if (sbuf != "F1LT2_SD")
                     return false;
 

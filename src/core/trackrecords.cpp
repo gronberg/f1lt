@@ -39,7 +39,7 @@ bool TrackRecords::loadTrackRecords(QString fileName)
         stream >> tab;
 
         QString sbuf(tab);
-        delete tab;
+        delete [] tab;
 
         if (QString(sbuf) != "F1LT2_TR")
         {

@@ -126,7 +126,17 @@ void DriverTrackerPositioner::calculatePitPosition()
     if (ev.getEventType() == LTPackets::QUALI_EVENT &&
         ((ev.getQualiPeriod() == 2 && driverData->getPosition() > 17) ||
          (ev.getQualiPeriod() == 3 && driverData->getPosition() > 10)))
-         qualiOut = true;
+        qualiOut = true;
+}
+
+bool DriverTrackerPositioner::isSelected(QPoint p)
+{
+    QPoint coord = getCoordinates();
+
+    if ((abs(p.x() - coord.x())) <= 13 && ((coord.y() - p.y() <= 13) && (p.y() - coord.y() <= 26)))
+        return true;
+
+    return false;
 }
 
 QPoint DriverTrackerPositioner::getCoordinates()

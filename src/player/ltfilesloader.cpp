@@ -132,18 +132,23 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
 
     stream >> cbuf;
     ltEvent.eventName = encrypt(QString(cbuf));
+    delete [] cbuf;
 
     stream >> cbuf;
     ltEvent.eventShortName = encrypt(QString(cbuf));
+    delete [] cbuf;
 
     stream >> cbuf;
     ltEvent.eventPlace = encrypt(QString(cbuf));
+    delete [] cbuf;
 
     stream >> cbuf;
     ltEvent.fpDate = QDate::fromString(encrypt(QString(cbuf)), "dd-MM-yyyy");
+    delete [] cbuf;
 
     stream >> cbuf;
     ltEvent.raceDate = QDate::fromString(encrypt(QString(cbuf)), "dd-MM-yyyy");
+    delete [] cbuf;
 
     stream >> ibuf;
     ltEvent.laps = ibuf;
@@ -165,6 +170,7 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
     for (int i = 0; i < size; ++i)
     {
         stream >> cbuf; ltTeamList[i].teamName = encrypt(QString(cbuf));
+        delete [] cbuf;
 
         int dsize;
         stream >> dsize;
@@ -173,7 +179,11 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
         for (int j = 0; j < dsize; ++j)
         {
             stream >> cbuf; ltTeamList[i].drivers[j].name = encrypt(QString(cbuf));
+            delete [] cbuf;
+
             stream >> cbuf; ltTeamList[i].drivers[j].shortName = encrypt(QString(cbuf));
+            delete [] cbuf;
+
             stream >> ibuf; ltTeamList[i].drivers[j].no = ibuf;
         }
     }
@@ -193,6 +203,7 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
 //        packets[i].second.longData.append(encrypt(std::string(cbuf)).c_str());
 //        packets[i].second.longData.append(encrypt(sbuf));
         packets[i].second.longData.append(encrypt(QString(cbuf)));
+        delete [] cbuf;
     }
     return true;
 }

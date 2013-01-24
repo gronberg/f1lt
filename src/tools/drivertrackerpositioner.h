@@ -52,6 +52,8 @@ public:
         return coordinatesCount;
     }
 
+    virtual bool isSelected(QPoint p);
+
     virtual void calculatePitOutPosition();
 
 

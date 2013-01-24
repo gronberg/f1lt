@@ -77,6 +77,8 @@ public:
         return -1;
     }
 
+    virtual bool isSelected(QPoint p);
+
     bool isExcluded()
     {
         return excluded;
