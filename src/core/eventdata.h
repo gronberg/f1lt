@@ -220,6 +220,7 @@ public:
     } 
 
     void clear();    
+    void reset();
 
     int getDriverId(const QString&) const;
     int getDriverId(int no) const;

@@ -103,6 +103,20 @@ bool LapTime::operator <= (const LapTime &lt) const
 
 //----------------------------------
 
+bool LapTime::operator >(const LapTime &lt) const
+{
+    return !(*this <= lt);
+}
+
+//----------------------------------
+
+bool LapTime::operator >=(const LapTime &lt) const
+{
+    return !(*this < lt);
+}
+
+//----------------------------------
+
 bool LapTime::operator == (const LapTime &lt) const
 {
     if (isValid() && lt.isValid())

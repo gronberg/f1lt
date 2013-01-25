@@ -39,7 +39,7 @@ int SessionDefaults::timeToMins(const QTime &time) const
     int hour = time.hour();
     int min = time.minute();
 
-    return hour * 60 + min;
+    return hour * 60 + min + 1;
 }
 
 int SessionDefaults::timeToSecs(const QTime &time) const

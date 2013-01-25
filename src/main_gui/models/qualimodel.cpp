@@ -73,7 +73,7 @@ void QualiModel::updateLT()
     gatherDriversData();
     int qPeriod = qualiPeriodSelected >= 10 ? qualiPeriodSelected / 10 : qualiPeriodSelected;
 
-    qSort(driversData.begin(), driversData.end(), QualiLessThan(qPeriod));
+    qSort(driversData.begin(), driversData.end(), QualiLessThan(qPeriod, findBestQ1Time().calc107p()));
 
     QModelIndex topLeft = QAbstractTableModel::index(firstRow(), 0);
     QModelIndex bottomRight = QAbstractTableModel::index(rowCount()-1, columnCount()-1);

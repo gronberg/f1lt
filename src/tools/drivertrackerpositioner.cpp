@@ -188,7 +188,7 @@ QPoint DriverTrackerPositioner::getSCCoordinates()
 
 //    if ((int)round(currentDeg) >= 0 && (int)round(currentDeg) < coordinatesCount)
     {
-        int idx = (int)round(currentDeg + 5 * ((double)coordinatesCount / avgTime) / speed) % coordinatesCount;
+        int idx = (int)round(currentDeg + 3 * ((double)coordinatesCount / avgTime) / speed) % coordinatesCount;
 
         if (!driverData->getLapData().isEmpty() && !driverData->getLapData().last().getRaceLapExtraData().isSCLap())
             idx = 0;

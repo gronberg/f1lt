@@ -138,8 +138,8 @@ void DriverTrackerInfo::paintLapsInfo(QPainter *p)
     nX = x + 115;
     LapData lap = driverData->getLastLap();
 
-    if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
-        lap = driverData->getSessionRecords().getBestQualiLap(EventData::getInstance().getQualiPeriod());
+//    if (EventData::getInstance().getEventType() == LTPackets::QUALI_EVENT)
+//        lap = driverData->getSessionRecords().getBestQualiLap(EventData::getInstance().getQualiPeriod());
 
 
     //===== Current lap time=======
@@ -147,8 +147,10 @@ void DriverTrackerInfo::paintLapsInfo(QPainter *p)
 
     if (EventData::getInstance().getEventType() != LTPackets::RACE_EVENT && !driverData->getLapData().isEmpty())
         txt = driverData->getLapData().last().getTime().toString();
+
     else
         txt = lap.getTime().toString();
+
 
     p->drawText(nX, nY, txt);
 

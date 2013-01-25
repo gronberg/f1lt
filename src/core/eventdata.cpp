@@ -70,10 +70,30 @@ void EventData::clear()
 //    eventInfo.eventNo = 0;
     eventId = 0;
     key = 0;
-    frame = 0;
-    remainingTime = QTime();
-    lapsCompleted = 0;
+    frame = 0;        
 
+    fpNumber = 0;
+
+    driversData.resize(SeasonData::getInstance().getTeams().size()*2);
+
+    reset();
+
+
+//    driversData.clear();
+//    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
+//    {
+//        driversData.append(DriverData());
+//        driversData.append(DriverData());
+    //    }
+}
+
+/*!
+ * \brief EventData::reset - resets only some parameters, can be used ie. during session playback
+ */
+void EventData::reset()
+{
+    lapsCompleted = 0;
+    remainingTime = QTime();
     weather = Weather();
     sessionRecords = SessionRecords();
 
@@ -82,20 +102,10 @@ void EventData::clear()
     sessionStarted = false;
     sessionFinished = false;
     qualiPeriod = 0;
-    fpNumber = 0;
+    commentary = "";
 
-    commentary = "";    
-
-    driversData.resize(SeasonData::getInstance().getTeams().size()*2);
     for (int i = 0; i < driversData.size(); ++i)
         driversData[i] = DriverData();
-
-//    driversData.clear();
-//    for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
-//    {
-//        driversData.append(DriverData());
-//        driversData.append(DriverData());
-//    }
 }
 
 

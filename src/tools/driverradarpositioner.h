@@ -106,6 +106,7 @@ protected:
     bool qualiOut;
 
     bool excluded;
+    bool wetTrack;
 
     int speed;
 

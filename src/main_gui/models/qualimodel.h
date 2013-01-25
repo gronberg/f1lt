@@ -27,18 +27,32 @@
 #include "ltmodel.h"
 #include "../../core/eventdata.h"
 
+#include <QDebug>
+
 class QualiLessThan
 {
 public:
-    QualiLessThan(int period) : qPeriod(period) { }
+    QualiLessThan(int period, const LapTime &time107) : qPeriod(period), time107p(time107) { }
     bool operator()(DriverData *d1, DriverData *d2)
-    {        
-        if (qPeriod > 0 && d1->getQualiTime(qPeriod).isValid() && d2->getQualiTime(qPeriod).isValid())
-        {
-            if (d1->getQualiTime(qPeriod) == d2->getQualiTime(qPeriod))
-                return (d1->getPosition() < d2->getPosition());
+    {
+        if (qPeriod > 0)
+        {            
+            if (d1->getQualiTime(qPeriod).isValid() && d2->getQualiTime(qPeriod).isValid())
+            {
+                if (d1->getQualiTime(qPeriod) == d2->getQualiTime(qPeriod))
+                    return (d1->getPosition() < d2->getPosition());
 
-            return (d1->getQualiTime(qPeriod) < d2->getQualiTime(qPeriod));
+                return (d1->getQualiTime(qPeriod) < d2->getQualiTime(qPeriod));
+            }
+        }
+
+        //this is only because LT server likes to mess things up when drivers are out of 107%
+        //during Q1 and doesn't sort them properly
+        if (((!d1->getQualiTime(1).isValid() || d1->getQualiTime(1) > time107p) ||
+            (!d2->getQualiTime(1).isValid() || d2->getQualiTime(1) > time107p)) &&
+            (d1->getQualiTime(1).isValid() != d2->getQualiTime(1).isValid()))
+        {
+            return d1->getQualiTime(1) < d2->getQualiTime(1);
         }
 
 //        if (qPeriod == 0 && EventData::getInstance().isSessionStarted() && d1->getLastLap().getTime().isValid() && d2->getLastLap().getTime().isValid())
@@ -49,6 +63,7 @@ public:
 
 private:
     int qPeriod;
+    LapTime time107p;
 };
 
 class QualiModel : public LTModel

@@ -385,6 +385,13 @@ void DriverData::addFPQLap(const EventData &ed)
             }
             lapData.last().qualiLapExtraData.sessionTime = ed.getRemainingTime();
             lapData.last().practiceLapExtraData.sessionTime = ed.getRemainingTime();
+
+            if (ed.getEventType() == LTPackets::QUALI_EVENT)
+            {
+                int qPeriod = ed.getQualiPeriod() > 0 ? ed.getQualiPeriod() : 1;
+                lastLap.qualiLapExtraData.qualiPeriod = qPeriod;
+                lapData.last().qualiLapExtraData.qualiPeriod = qPeriod;
+            }
         }
     }
 }
@@ -424,6 +431,13 @@ void DriverData::addInLap(const EventData &ed)
 
     lapData.last().qualiLapExtraData.sessionTime = ed.getRemainingTime();
     lapData.last().practiceLapExtraData.sessionTime = ed.getRemainingTime();
+
+    if (ed.getEventType() == LTPackets::QUALI_EVENT)
+    {
+        int qPeriod = ed.getQualiPeriod() > 0 ? ed.getQualiPeriod() : 1;
+        lastLap.qualiLapExtraData.qualiPeriod = qPeriod;
+        lapData.last().qualiLapExtraData.qualiPeriod = qPeriod;
+    }
 }
 
 void DriverData::updateLastLap()

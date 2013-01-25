@@ -623,6 +623,7 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                     TrackRecords::getInstance().gatherSessionRecords();
 
                 }
+
                 eventData.qualiPeriod = 1;
             }
 

@@ -81,6 +81,9 @@ public:
 
     bool operator < (const LapTime &) const;
     bool operator <= (const LapTime &) const;
+
+    bool operator > (const LapTime &) const;
+    bool operator >= (const LapTime &) const;
     operator QString() const
     {
         return toString();

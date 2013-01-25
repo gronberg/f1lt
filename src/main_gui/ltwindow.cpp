@@ -1077,7 +1077,7 @@ void LTWindow::eventPlayerRewindToStartClicked()
 {
     sessionTimer->stop();
     driverTrackerWidget->stopTimer();    
-    streamReader->clearData();    
+    eventData.reset();
     ui->sessionDataWidget->clearData();
 
     eventPlayer->startPlaying();
@@ -1095,7 +1095,7 @@ void LTWindow::eventPlayerRewindClicked()
     //clear all data
     ui->sessionDataWidget->clearFastestLaps();
     ui->ltWidget->clearModelsData();
-    streamReader->clearData();
+    eventData.reset();
 
     //it should be safe here - drivers vector will remain the same in eventdata
 //    driverTrackerWidget->setup();

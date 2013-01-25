@@ -48,6 +48,7 @@ void DriverRadarPositioner::setStartupPosition()
     qualiOut = false;
     inPits = false;
     finished = false;
+    wetTrack = false;
 
     sectorPositions[0] = 0;
     sectorPositions[1] = 0;
@@ -264,11 +265,15 @@ void DriverRadarPositioner::calculateAvgs()
                 !last.getRaceLapExtraData().isSCLap())
             last = driverData->getSessionRecords().getBestLap();
 
+        //if the session wasn't dry, durig quali and fp avg time will be calculated using last lap, not the best one
+        if (EventData::getInstance().getEventType() != LTPackets::RACE_EVENT && !wetTrack && EventData::getInstance().getWeather().getWetDry().getValue() < 1)
+            wetTrack = true;
+
         for (i = driverData->getLapData().size()-1; i >= driverData->getLapData().size()-4 && i >= 0; --i)
         {
             LapData ld = driverData->getLapData()[i];            
 
-            if (EventData::getInstance().getEventType() != LTPackets::RACE_EVENT)
+            if ((EventData::getInstance().getEventType() != LTPackets::RACE_EVENT) && !wetTrack)
                 last = driverData->getSessionRecords().getBestLap();
 
             if (ld.getTime().isValid() &&
