@@ -22,9 +22,10 @@
 #ifndef SESSIONTIMESWIDGET_H
 #define SESSIONTIMESWIDGET_H
 
-
+#include <QKeyEvent>
 #include <QSettings>
 #include <QTableWidgetItem>
+#include <QToolButton>
 #include <QWidget>
 
 #include "../core/colorsmanager.h"
@@ -63,6 +64,9 @@ public:
     void saveCheckedArray();
     void restoreCheckedArray();
 
+protected:
+    void keyPressEvent(QKeyEvent *);
+
 private slots:
     void onHeaderClicked(int);
     void onHeaderDoubleClicked(int);
@@ -76,6 +80,8 @@ private slots:
     void on_relativeButton_toggled(bool checked);
 
     void on_driversListWidget_doubleClicked(const QModelIndex &index);
+
+    void on_top10Button_toggled(bool checked);
 
 private:
 

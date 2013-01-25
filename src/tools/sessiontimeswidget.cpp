@@ -85,7 +85,7 @@ void SessionTimesWidget::loadDriversList()
     list.removeFirst();
 
     ui->driversListWidget->clear();
-    ui->driversListWidget->addItems(list);
+    ui->driversListWidget->addItems(list);   
 
     for (int i = ui->timesTableWidget->columnCount(); i < list.size(); ++i)
     {
@@ -130,6 +130,9 @@ void SessionTimesWidget::update()
         case LTPackets::QUALI_EVENT:    handleQualiEvent(); break;
         case LTPackets::PRACTICE_EVENT: handlePracticeEvent(); break;
     }
+
+    if (ui->top10Button->isChecked())
+        on_top10Button_toggled(true);
 }
 
 void SessionTimesWidget::handleRaceEvent()
@@ -145,7 +148,8 @@ void SessionTimesWidget::handleRaceEvent()
             LapTime bestTime = dd->getSessionRecords().getBestLap().getTime();
             int bestLapNo = dd->getSessionRecords().getBestLap().getLapNumber();
 
-            for (int j = 1; j <= EventData::getInstance().getCompletedLaps(); ++j)
+//            for (int j = 1; j <= EventData::getInstance().getCompletedLaps(); ++j)
+            for (int j = EventData::getInstance().getCompletedLaps(); j >= 1; --j)
             {
                 LapData ld = dd->getLapData(j);
                 QColor color = ((!relativeTimes || bestLapNo == j) && ld.getTime().isValid()) ? ColorsManager::getInstance().getColor(LTPackets::WHITE) : ColorsManager::getInstance().getColor(LTPackets::YELLOW);
@@ -184,7 +188,7 @@ void SessionTimesWidget::handleRaceEvent()
                         if (relativeTimes && bestLapNo != j && ld.getTime().isValid())
                             time = DriverData::calculateGap(ld.getTime(), bestTime);
                     }
-                    setItem(j-1, i, time, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color);
+                    setItem(EventData::getInstance().getCompletedLaps()-j, i, time, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color);
 
 
                     QTableWidgetItem *item = ui->timesTableWidget->verticalHeaderItem(j-1);
@@ -195,10 +199,10 @@ void SessionTimesWidget::handleRaceEvent()
                         item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
                         ui->timesTableWidget->setVerticalHeaderItem(j-1, item);
                     }
-                    item->setText(QString::number(j));
+                    item->setText(QString::number(EventData::getInstance().getCompletedLaps()-j+1));
                 }
                 else
-                    setItem(j-1, i, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color);
+                    setItem(EventData::getInstance().getCompletedLaps()-j, i, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color);
 
             }
         }
@@ -209,7 +213,7 @@ void SessionTimesWidget::handleRaceEvent()
 void SessionTimesWidget::handleQualiEvent()
 {
     int row = 0;
-    for (int q = 1; q <= 3; ++q)
+    for (int q = 3; q >= 1; --q)
     {
         for (int i = 0; i < ui->timesTableWidget->columnCount(); ++i)
             setItem(row, i, QString("Q%1").arg(q), Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter,
@@ -226,7 +230,8 @@ void SessionTimesWidget::handleQualiEvent()
 
         ++row;
 
-        for (int j = 1; j <= SeasonData::getInstance().getSessionDefaults().getQualiLength(q); ++j)
+//        for (int j = 1; j <= SeasonData::getInstance().getSessionDefaults().getQualiLength(q); ++j)
+        for (int j = SeasonData::getInstance().getSessionDefaults().getQualiLength(q); j >= 1; --j)
         {
             bool rowInserted = false;
 
@@ -290,6 +295,8 @@ void SessionTimesWidget::handleQualiEvent()
                         setItem(row, i, time, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color);
                         rowInserted = true;
                     }
+                    else
+                        setItem(row, i, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter);
                 }
             }
             if (rowInserted)
@@ -298,10 +305,10 @@ void SessionTimesWidget::handleQualiEvent()
 
                 if (item == 0)
                 {
-                    item = new QTableWidgetItem();
-                    item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
+                    item = new QTableWidgetItem();                   
                     ui->timesTableWidget->setVerticalHeaderItem(row, item);
                 }
+                item->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
                 item->setText(QString::number(j));
 
                 ++row;
@@ -314,7 +321,8 @@ void SessionTimesWidget::handleQualiEvent()
 void SessionTimesWidget::handlePracticeEvent()
 {
     int row = 0;
-    for (int j = 1; j <= SeasonData::getInstance().getSessionDefaults().getFPLength(); ++j)
+//    for (int j = 1; j <= SeasonData::getInstance().getSessionDefaults().getFPLength(); ++j)
+    for (int j = SeasonData::getInstance().getSessionDefaults().getFPLength(); j >= 1; --j)
     {
         bool rowInserted = false;
 
@@ -369,7 +377,9 @@ void SessionTimesWidget::handlePracticeEvent()
                     setItem(row, i, time, Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter, color);
                     rowInserted = true;
                 }
-            }
+                else
+                    setItem(row, i, "", Qt::ItemIsSelectable | Qt::ItemIsEnabled, Qt::AlignCenter);
+            }            
         }
         if (rowInserted)
         {
@@ -417,12 +427,17 @@ QString SessionTimesWidget::getName(int row)
     if (item)
     {
         QString text = item->text();
+        QRegExp reg("(\\d+)\\s(\\D+)");
 
-        int idx = text.indexOf(" ");
-        if (idx != -1)
+        if (reg.indexIn(text) != -1)
         {
-            return text.right(text.size()-idx-1);
+            return SeasonData::getInstance().getDriverShortName(reg.cap(2));
         }
+//        int idx = text.indexOf(" ");
+//        if (idx != -1)
+//        {
+//            return text.right(text.size()-idx-1);
+//        }
     }
     return QString();
 }
@@ -445,6 +460,12 @@ void SessionTimesWidget::saveSettings(QSettings &settings)
     settings.setValue("ui/session_times_table", ui->timesTableWidget->saveGeometry());
 
     settings.setValue("ui/session_times_columns", checkedArray);
+
+    QList<QVariant> columnSizes;
+    for (int i = 0; i < ui->timesTableWidget->columnCount(); ++i)
+        columnSizes << ui->timesTableWidget->columnWidth(i);
+
+    settings.setValue("ui/session_times_column_sizes", columnSizes);
 }
 
 void SessionTimesWidget::loadSettings(QSettings &settings)
@@ -454,6 +475,13 @@ void SessionTimesWidget::loadSettings(QSettings &settings)
     ui->timesTableWidget->restoreGeometry(settings.value("ui/session_times_table").toByteArray());
 
     checkedArray = settings.value("ui/session_times_columns", QByteArray(ui->driversListWidget->count(), 2)).toByteArray();
+
+    QList<QVariant> columnSizes = settings.value("ui/session_times_column_sizes").toList();
+    for (int i = 0; i < columnSizes.size(); ++i)
+    {
+        if (columnSizes[i].toInt() > 0)
+            ui->timesTableWidget->setColumnWidth(i, columnSizes[i].toInt());
+    }
 }
 
 void SessionTimesWidget::saveCheckedArray()
@@ -483,6 +511,14 @@ void SessionTimesWidget::restoreCheckedArray()
         else
             item->setCheckState(Qt::Checked);
     }
+}
+
+void SessionTimesWidget::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape)
+        on_closeButton_clicked();
+
+    QWidget::keyPressEvent(event);
 }
 
 void SessionTimesWidget::on_closeButton_clicked()
@@ -545,6 +581,7 @@ void SessionTimesWidget::on_driversListWidget_doubleClicked(const QModelIndex &i
     on_driversListWidget_clicked(index);
 }
 
+
 void SessionTimesWidget::on_relativeButton_toggled(bool)
 {
     update();
@@ -572,3 +609,35 @@ void SessionTimesWidget::onHeaderDoubleClicked(int col)
 }
 
 
+
+void SessionTimesWidget::on_top10Button_toggled(bool toggled)
+{
+    for (int i = 0; i < ui->driversListWidget->count(); ++i)
+    {
+        QRegExp reg("(\\d+)\\s\\D+");
+
+        if (reg.indexIn(ui->driversListWidget->item(i)->text()) != -1)
+        {
+            int no = reg.cap(1).toInt();
+
+            if (toggled)
+            {
+                if (EventData::getInstance().getDriverDataPtr(no)->getPosition() > 10)
+                {
+                    ui->driversListWidget->item(i)->setCheckState(Qt::Unchecked);
+                    ui->timesTableWidget->setColumnHidden(i, true);
+                }
+                else
+                {
+                    ui->driversListWidget->item(i)->setCheckState(Qt::Checked);
+                    ui->timesTableWidget->setColumnHidden(i, false);
+                }
+            }
+            else
+            {
+                ui->driversListWidget->item(i)->setCheckState(Qt::Checked);
+                ui->timesTableWidget->setColumnHidden(i, false);
+            }
+        }
+    }
+}
