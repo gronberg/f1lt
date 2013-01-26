@@ -190,7 +190,7 @@ bool PacketParser::parsePacket(const QByteArray &buf, Packet &packet, int &pos)
         }
     }
 
-    decryptPacket = false;
+//    decryptPacket = false;
     packet.encrypted = decryptPacket;
 
     if (packet.length > 0)
@@ -922,6 +922,11 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
     }
 }
 
+void PacketParser::clearBuffer()
+{
+    packetBuffer->clear();
+}
+
 void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 {
 //    if (packet.type != LTPackets::SYS_COMMENTARY && packet.type != LTPackets::SYS_TIMESTAMP)
@@ -1007,14 +1012,14 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 
              if (!eventData.frame || number == 1) // || decryption_failure
              {
-                eventData.frame = number;
+//                eventData.frame = number;
 //                emit requestKeyFrame(number);
 
 //                httpReader.obtainKeyFrame(number);
 
 
-                 /*onDecryptionKeyObtained(2841044872);*/   //valencia race
-//                  decryptionKeyObtained(2971732062);      //valencia qual
+//                 decryptionKeyObtained(2841044872);   //valencia race
+                  decryptionKeyObtained(2971732062);      //valencia qual
 //                onDecryptionKeyObtained(3585657959);  //?
 //                onDecryptionKeyObtained(2488580439);  //qual
 //                 onDecryptionKeyObtained(2438680630);  //race

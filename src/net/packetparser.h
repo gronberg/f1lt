@@ -104,6 +104,8 @@ public:
         eventData.clear();
     }
 
+    void clearBuffer();
+
 public slots:
      void parsePackets(const QVector<Packet> &);
      void parseBufferedPackets(const QVector< QPair<Packet, qint64> > &);

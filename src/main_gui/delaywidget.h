@@ -37,6 +37,11 @@ public:
     explicit DelayWidget(QWidget *parent = 0);
     ~DelayWidget();
 
+    int getDelay() const
+    {
+        return delay;
+    }
+
 signals:
     void delayChanged(int previousDelay, int delay);
 

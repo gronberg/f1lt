@@ -28,8 +28,8 @@ NetworkSettings::NetworkSettings()
     httpKeyFrameUrl = "http://live-timing.formula1.com/keyframe";
     httpDecryptionKeyUrl = "http://live-timing.formula1.com/reg/getkey/";
 
-//    socketHost = "live-timing.formula1.com";
-//    socketPort = 4321;
+    socketHost = "live-timing.formula1.com";
+    socketPort = 4321;
 
     socketHost = "192.168.1.2";
     socketPort = 6666;

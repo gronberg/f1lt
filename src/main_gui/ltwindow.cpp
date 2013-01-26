@@ -426,10 +426,12 @@ void LTWindow::sessionStarted()
         sessionTimer->start(1000);
         driverTrackerWidget->startTimer(1000);
 
-        if (eventData.isSessionStarted() && !playing && !recording && settings->value("ui/auto_record").toBool() && !eventRecorder->isSessionRecorded())
+        if (eventData.isSessionStarted() && !playing)
         {
-            qDebug() << "START RECORDING";
-            startRecording(true);
+            delayWidget->setEnabled(true);
+
+            if (!recording && settings->value("ui/auto_record").toBool() && !eventRecorder->isSessionRecorded())
+                startRecording(true);
         }
     }
 }
@@ -938,7 +940,7 @@ void LTWindow::startRecording(bool autoRecord)
     ui->actionLT_files_data_base->setEnabled(false);
 //        ui->actionRecord->setIcon(QIcon(":/ui_icons/stop.png"));
     ui->actionOpen->setEnabled(false);
-    eventRecorder->startRecording();
+    eventRecorder->startRecording(delayWidget->getDelay());
 //    connect(streamReader, SIGNAL(packetParsed(Packet)), eventRecorder, SLOT(appendPacket(Packet)));
     connect(streamReader, SIGNAL(packetParsed(QPair<Packet, qint64>)), eventRecorder, SLOT(appendPacket(QPair<Packet, qint64>)));
 
@@ -1151,7 +1153,7 @@ void LTWindow::showSessionBoard(bool show)
         ui->messageBoardWidget->setVisible(show);
         ui->eventStatusWidget->setVisible(!show);
         ui->splitter->setVisible(!show);
-        delayWidget->setEnabled(true);
+//        delayWidget->setEnabled(true);
     }
 	ui->actionRecord->setEnabled(!show);
     ui->actionHead_to_head->setEnabled(!show);

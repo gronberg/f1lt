@@ -128,7 +128,7 @@ void LTTableView::mousePressEvent(QMouseEvent *event)
         QModelIndex index = indexAt(event->pos());
         LTModel *ltModel = static_cast<LTModel*>(model());
 
-        if (ltModel->indexInDriverRowsData(index))
+        if (ltModel && ltModel->indexInDriverRowsData(index))
             QTableView::mousePressEvent(event);
 
         if (index.row() == 0)

@@ -30,10 +30,12 @@ EventRecorder::EventRecorder(SessionTimer *st, QObject *parent) :
 {
 }
 
-void EventRecorder::startRecording()
-{
+void EventRecorder::startRecording(int delay)
+{    
     sessionRecorded = false;
-    recordStartTime = QDateTime::currentMSecsSinceEpoch();
+    recordStartTime = QDateTime::currentMSecsSinceEpoch() - delay * 1000;
+
+    qDebug() << "RECORD DELAY" << delay << recordStartTime;
     //prepare everyting for record, clear old records and store the LTTeam and LTEvent data
     ltTeamList = SeasonData::getInstance().getTeams();
     ltEvent = eventData.getEventInfo();
@@ -518,23 +520,29 @@ void EventRecorder::stopRecording()
 
 void EventRecorder::appendPacket(const Packet &p)
 {
-    packets.append(QPair<int, Packet>(elapsedSeconds, p));
+    packets.append(QPair<int, Packet>(elapsedSeconds, p));    
 }
 
 void EventRecorder::appendPacket(const QPair<Packet, qint64> &packet)
 {
     elapsedSeconds = round((double(packet.second) - double(recordStartTime)) / 1000.0);    
 
+    if (elapsedSeconds < 0)
+    {        
+        recordStartTime += elapsedSeconds * 1000;
+        elapsedSeconds = 0;
+    }
+
     appendSessionTimer();
 
-//    qDebug() << "RECORDER:" << elapsedSeconds;
-    packets.append(QPair<int, Packet>(elapsedSeconds, packet.first));
+    qDebug() << "RECORDER:" << elapsedSeconds;
+    packets.append(QPair<int, Packet>(elapsedSeconds, packet.first));    
 
     if (packet.first.type == LTPackets::SYS_WEATHER && packet.first.data == LTPackets::WEATHER_SESSION_CLOCK)
     {
         lastSavedTime.first = elapsedSeconds;
         lastSavedTime.second = eventData.getRemainingTime();
-    }
+    }    
 }
 
 void EventRecorder::appendSessionTimer()
@@ -574,7 +582,7 @@ void EventRecorder::appendSessionTimer()
         packet.length = packet.longData.size();
 
         qDebug() << "RECORDER TIME:" << i << lastSavedTime.second.toString("h:mm:ss");
-        packets.append(QPair<int, Packet>(i, packet));
+        packets.append(QPair<int, Packet>(i, packet));        
 
         lastSavedTime.first = i;
     }

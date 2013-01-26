@@ -38,6 +38,12 @@ public:
 
     void addPacket(Packet &);
     bool hasToBeBuffered();
+
+    void clear()
+    {
+        timer->stop();
+        packetsQueue.clear();
+    }
     
 signals:
     

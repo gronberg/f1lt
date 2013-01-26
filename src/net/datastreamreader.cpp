@@ -67,6 +67,7 @@ void DataStreamReader::connectToLTServer()
 void DataStreamReader::disconnectFromLTServer()
 {
     socketReader.disconnectFromHost();
+    parser.clearBuffer();
 }
 
 void DataStreamReader::onCookieReceived(QString cookie)

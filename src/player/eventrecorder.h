@@ -64,7 +64,7 @@ signals:
 	void recordingStopped();
     
 public slots:
-    void startRecording();
+    void startRecording(int delay);
     void stopRecording();
     void timeout();
     void appendPacket(const Packet&);
@@ -90,6 +90,7 @@ private:
     int autoSaveRecord;
     int autoSaveCounter;
     int elapsedTimeToStop;
+
     bool sessionRecorded;
 
     QPair<int, QTime> lastSavedTime;

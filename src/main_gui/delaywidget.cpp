@@ -41,8 +41,6 @@ DelayWidget::~DelayWidget()
 
 void DelayWidget::on_spinBox_valueChanged(int arg1)
 {
-    qDebug() << "DELAYWIDGET" << delay << arg1;
-
     int prevDelay = delay;
     delay = arg1;
 
