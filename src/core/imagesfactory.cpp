@@ -86,49 +86,51 @@ QPixmap &CarThumbnailsFactory::getCarThumbnail(int no, int size)
 
 HelmetsFactory::~HelmetsFactory()
 {
-    QMap<int, QList<QPixmap*> >::Iterator iter = helmets.begin();
+    QMap<int, QMap<int, QPixmap*> >::Iterator iter = helmets.begin();
     while (iter != helmets.end())
     {
-        QList<QPixmap*> *images = &iter.value();
+        QList<int> keys = iter.value().keys();
 
-        while (!images->isEmpty())
+        for (int i = 0; i < keys.size(); ++i)
         {
-            delete images->takeFirst();
+            delete iter.value().take(keys[i]);
         }
+
         ++iter;
     }
 }
 
-QList<QPixmap*> *HelmetsFactory::loadHelmets(int size, bool clear)
+QMap<int, QPixmap *> *HelmetsFactory::loadHelmets(int size, bool clear)
 {
-    QList<QPixmap*> *images = &helmets[size];
+    QMap<int, QPixmap *> *images = &helmets[size];
 
     if (!images->isEmpty())
     {
         if (clear)
         {
-            for (int i = 0; i < images->size(); ++i)
-            {
-                delete (*images)[i];
-            }
+            QList<int> keys = images->keys();
 
-            images->clear();
+            for (int i = 0; i < keys.size(); ++i)
+            {
+                delete images->take(keys[i]);
+            }
         }
         else
             return images;
     }
 
-    qDebug() << "LOADING HELMETS";
     for (int i = 0; i < SeasonData::getInstance().getTeams().size(); ++i)
     {
 
         QList<LTDriver> mainDrivers = SeasonData::getInstance().getMainDrivers(SeasonData::getInstance().getTeams()[i]);
+        qSort(mainDrivers);
 
-        for (int j = 0; j < mainDrivers.size(); ++j)
+        for (int j = 0; j < mainDrivers.size(); ++j)        
         {
-            qDebug() << SeasonData::getInstance().getTeams()[i].teamName << mainDrivers[j].no << mainDrivers[j].name;
-            images->append(loadHelmet(mainDrivers[j], size));
+            qDebug() << j << mainDrivers[j].no << mainDrivers[j].name;
+            images->insert(mainDrivers[j].no, loadHelmet(mainDrivers[j], size));
         }
+
 //        for (int j = )
 //        images->append(loadHelmet(SeasonData::getInstance().getTeams()[i].driver1No, size));
 //        images->append(loadHelmet(SeasonData::getInstance().getTeams()[i].driver2No, size));
@@ -142,23 +144,19 @@ QPixmap &HelmetsFactory::getHelmet(int no, int size)
     if (no < 1)
         return nullPixmap;
 
-    const QList<QPixmap*> *images = loadHelmets(size, false);
+    const QMap<int, QPixmap *> *images = loadHelmets(size, false);
 
-    int idx = (no > 13 ? no-2 : no-1);
-
-    if (idx >= 0 && idx < images->size())
-        return *(*images)[idx];
+    if (images->contains(no))
+        return *(*images)[no];
 
     return nullPixmap;
 }
 
 QPixmap *HelmetsFactory::loadHelmet(const LTDriver &driver, int size)
 {
-    if (!driver.helmet.isNull())
-    {
-        qDebug() << "helmet for" << driver.name;
+    if (!driver.helmet.isNull())            
         return new QPixmap(driver.helmet.scaledToHeight(size, Qt::SmoothTransformation));
-    }
+
 
     QImage helmet = QImage(":/ui_icons/helmet.png").scaledToHeight(size, Qt::SmoothTransformation);
     QImage helmetMask = QImage(":/ui_icons/helmet_mask.png").scaledToHeight(size, Qt::SmoothTransformation);

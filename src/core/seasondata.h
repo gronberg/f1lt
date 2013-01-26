@@ -56,6 +56,11 @@ struct LTDriver
     {
         return name == drv.name;
     }
+
+    bool operator < (const LTDriver &drv) const
+    {
+        return no < drv.no;
+    }
 };
 
 /*!

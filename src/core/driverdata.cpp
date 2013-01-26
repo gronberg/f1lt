@@ -195,40 +195,7 @@ void DriverData::addRaceLap(const EventData &ed)
 //                bestSectors[1].second = lapData.last().numLap;
 //            }
 
-        if (((driver != ed.getSessionRecords().getSectorRecord(1).getDriverName()) ||
-             (ed.getSessionRecords().getSectorRecord(1).getTime() == lapData.last().getSectorTime(1) &&
-              lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(1).getLapNumber())) &&
-            ((lapData.last().getSectorTime(1) <= sessionRecords.bestSectors[0].first &&
-              sessionRecords.bestSectors[0].second != 0) || sessionRecords.bestSectors[0].second == 0))
-        {
-            sessionRecords.bestSectors[0] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(1)), lapData.last().lapNum);
-        }
-
-        if (((driver != ed.getSessionRecords().getSectorRecord(2).getDriverName()) ||
-             (ed.getSessionRecords().getSectorRecord(2).getTime() == lapData.last().getSectorTime(2) &&
-              lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(2).getLapNumber())) &&
-            ((lapData.last().getSectorTime(2) <= sessionRecords.bestSectors[1].first &&
-              sessionRecords.bestSectors[1].second != 0) || sessionRecords.bestSectors[1].second == 0))
-        {
-            sessionRecords.bestSectors[1] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(2)), lapData.last().lapNum);
-        }
-
-        if (((driver != ed.getSessionRecords().getSectorRecord(3).getDriverName()) ||
-             (ed.getSessionRecords().getSectorRecord(3).getTime() == lapData.last().getSectorTime(3) &&
-              lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(3).getLapNumber())) &&
-            ((lapData.last().getSectorTime(3) <= sessionRecords.bestSectors[2].first &&
-              sessionRecords.bestSectors[2].second != 0) || sessionRecords.bestSectors[2].second == 0))
-        {
-            sessionRecords.bestSectors[2] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(3)), lapData.last().lapNum);
-        }
-
-
-//            if (lastLap.lapTime == bestLap.lapTime && lastLap.numLap == bestLap.numLap && bestLap.sector1.toString() == "")
-//            {
-//                bestLap.sector1 = lastLap.sector1;
-//                bestLap.sector2 = lastLap.sector2;
-//                bestLap.sector3 = lastLap.sector3;
-//            }
+        updateSectorRecords();
 
         if (ed.getFlagStatus() == LTPackets::SAFETY_CAR_DEPLOYED || ed.getFlagStatus() == LTPackets::RED_FLAG)
             lapData.last().raceLapExtraData.scLap = true;
@@ -286,31 +253,8 @@ void DriverData::addFPQLap(const EventData &ed)
                 lapData.last().qualiLapExtraData.qualiPeriod = qPeriod;
 
             }
-            if (/*((driver != ed.getSessionRecords().getSectorRecord(1).getDriverName()) ||
-                 (ed.getSessionRecords().getSectorRecord(1).getTime() == lapData.last().getSectorTime(1) &&
-                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(1).getLapNumber())) &&*/
-                ((lapData.last().getSectorTime(1) <= sessionRecords.bestSectors[0].first &&
-                  sessionRecords.bestSectors[0].second != 0) || sessionRecords.bestSectors[0].second == 0))
-            {
-                sessionRecords.bestSectors[0] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(1)), lapData.last().lapNum);
-            }
 
-            if (/*((driver != ed.getSessionRecords().getSectorRecord(2).getDriverName()) ||
-                 (ed.getSessionRecords().getSectorRecord(2).getTime() == lapData.last().getSectorTime(2) &&
-                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(2).getLapNumber())) &&*/
-                ((lapData.last().getSectorTime(2) <= sessionRecords.bestSectors[1].first &&
-                  sessionRecords.bestSectors[1].second != 0) || sessionRecords.bestSectors[1].second == 0))
-            {
-                sessionRecords.bestSectors[1] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(2)), lapData.last().lapNum);
-            }
-            if (/*((driver != ed.getSessionRecords().getSectorRecord(3).getDriverName()) ||
-                 (ed.getSessionRecords().getSectorRecord(3).getTime() == lapData.last().getSectorTime(3) &&
-                  lapData.last().lapNum == ed.getSessionRecords().getSectorRecord(3).getLapNumber())) &&*/
-                ((lapData.last().getSectorTime(3) <= sessionRecords.bestSectors[2].first &&
-                  sessionRecords.bestSectors[2].second != 0) || sessionRecords.bestSectors[2].second == 0))
-            {
-                sessionRecords.bestSectors[2] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(3)), lapData.last().lapNum);
-            }
+            updateSectorRecords();
         }
 
         if (!correction)
@@ -454,11 +398,7 @@ void DriverData::updateLastLap()
 
             lapData.last().sectorTimes[2] = lastLap.sectorTimes[2];
 
-            if ((lapData.last().sectorTimes[2] <= sessionRecords.bestSectors[2].first &&
-                 sessionRecords.bestSectors[2].second != 0) || sessionRecords.bestSectors[0].second == 0)
-			{
-                sessionRecords.bestSectors[2] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(3)), lapData.last().lapNum);
-			}
+            updateSectorRecords();
 
             if (lapData.last().lapNum == sessionRecords.bestLap.lapNum)
             {
@@ -489,6 +429,21 @@ void DriverData::updateGaps(const EventData &ed)
         lapData[i].gap = QString::number((lapData[i].lapTime - ed.getSessionRecords().getFastestLap().getTime()).toDouble());
 
 
+}
+
+void DriverData::updateSectorRecords()
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        if ( sessionRecords.bestSectors[i].second == 0 ||
+             (((lapData.last().getSectorTime(i + 1) < sessionRecords.bestSectors[i].first) ||
+               ((lapData.last().getSectorTime(i + 1) == sessionRecords.bestSectors[i].first) &&
+                (colorData.sectorColor(i + 1) == LTPackets::VIOLET || colorData.sectorColor(i + 1) == LTPackets::GREEN))) &&
+              sessionRecords.bestSectors[i].second != 0))
+        {
+            sessionRecords.bestSectors[i] = QPair<LapTime, int>(LapTime(lapData.last().getSectorTime(i + 1)), lapData.last().lapNum);
+        }
+    }
 }
 
 int DriverData::lapDiff(LapTime *lap)

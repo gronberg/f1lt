@@ -73,7 +73,8 @@ void QualiModel::updateLT()
     gatherDriversData();
     int qPeriod = qualiPeriodSelected >= 10 ? qualiPeriodSelected / 10 : qualiPeriodSelected;
 
-    qSort(driversData.begin(), driversData.end(), QualiLessThan(qPeriod, findBestQ1Time().calc107p()));
+    qSort(driversData.begin(), driversData.end(),
+          QualiLessThan(qPeriod, EventData::getInstance().getSessionRecords().getQualiBestTime(1).calc107p()));
 
     QModelIndex topLeft = QAbstractTableModel::index(firstRow(), 0);
     QModelIndex bottomRight = QAbstractTableModel::index(rowCount()-1, columnCount()-1);
@@ -315,7 +316,7 @@ QVariant QualiModel::extraRowData(const QModelIndex &index, int role) const
             case 3: return "Q1 107% time";
             case 4:
 
-                LapTime q1Best = findBestQ1Time();
+                LapTime q1Best = EventData::getInstance().getSessionRecords().getQualiBestTime(1);//findBestQ1Time();
                 if (qualiPeriodSelected == 10)
                     return DriverData::calculateGap(q1Best.calc107p(), q1Best);
 

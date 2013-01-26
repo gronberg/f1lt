@@ -325,6 +325,16 @@ void DriverDataWidget::printDriverRecords(int id)
     TrackRecords::getInstance().gatherSessionRecords(true);
     TrackRecords::getInstance().getCurrentTrackRecords(&twr, &tv);
 
+    ui->s1BLabel->clear();
+    ui->s2BLabel->clear();
+    ui->s3BLabel->clear();
+    ui->tBLabel->clear();
+
+    ui->s1RLabel->clear();
+    ui->s2RLabel->clear();
+    ui->s3RLabel->clear();
+    ui->tRLabel->clear();
+
     if (twr != 0 && tv != 0)
     {
         QPalette palette;

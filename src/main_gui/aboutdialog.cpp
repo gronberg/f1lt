@@ -32,7 +32,9 @@ AboutDialog::AboutDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->versionLabel->setText("F1LT " + F1LTCore::programVersion());
+
     loadChangelog();
+    loadLicense();
 }
 
 AboutDialog::~AboutDialog()
@@ -46,5 +48,14 @@ void AboutDialog::loadChangelog()
     if (file.open(QIODevice::ReadOnly))
     {
         ui->textEdit->setText(file.readAll());
+    }
+}
+
+void AboutDialog::loadLicense()
+{
+    QFile licenseFile(":/files/LICENSE");
+    if (licenseFile.open(QIODevice::ReadOnly))
+    {
+        ui->licenseEdit->setText(licenseFile.readAll());
     }
 }

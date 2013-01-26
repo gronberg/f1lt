@@ -25,6 +25,7 @@
 #include <QMouseEvent>
 
 #include "../core/colorsmanager.h"
+#include "../main_gui/models/qualimodel.h"
 
 DriverTracker::DriverTracker(QWidget *parent) : DriverRadar(parent), drawClassification(true)
 {
@@ -151,9 +152,16 @@ void DriverTracker::paintEvent(QPaintEvent *)
 
 void DriverTracker::paintClassification(QPainter &p)
 {
+    QList<DriverData *> drivers;
     for (int i = 0; i < EventData::getInstance().getDriversData().size(); ++i)
     {
-        DriverData *dd = EventData::getInstance().getDriverDataByPosPtr(i+1);
+        drivers.append(&EventData::getInstance().getDriversData()[i]);
+    }
+    qSort(drivers.begin(), drivers.end(), QualiLessThan(0, EventData::getInstance().getSessionRecords().getQualiBestTime(1).calc107p()));
+
+    for (int i = 0; i < drivers.size(); ++i)
+    {
+        DriverData *dd = drivers[i];//EventData::getInstance().getDriverDataByPosPtr(i+1);
         if (dd != 0)
         {
             QString number = QString::number(dd->getNumber());

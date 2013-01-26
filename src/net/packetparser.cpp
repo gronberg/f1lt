@@ -571,6 +571,8 @@ void PacketParser::handleRaceEvent(const Packet &packet)
                 eventData.sessionRecords.secRecord[2].number = eventData.driversData[packet.carID-1].number;
 
                 TrackRecords::getInstance().gatherSessionRecords();
+
+                eventData.driversData[packet.carID-1].updateSectorRecords();
             }
 
 
@@ -622,6 +624,7 @@ void PacketParser::handleQualiEvent(const Packet &packet)
 
                     TrackRecords::getInstance().gatherSessionRecords();
 
+                    eventData.sessionRecords.qualiRecords[0] = eventData.driversData[packet.carID-1].qualiTimes[0];
                 }
 
                 eventData.qualiPeriod = 1;
@@ -661,6 +664,8 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                         eventData.driversData[i].updateGaps(eventData);
 
                     TrackRecords::getInstance().gatherSessionRecords();
+
+                    eventData.sessionRecords.qualiRecords[1] = eventData.driversData[packet.carID-1].qualiTimes[1];
                 }
                 eventData.qualiPeriod = 2;
             }
@@ -685,6 +690,8 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                         eventData.driversData[i].updateGaps(eventData);
 
                     TrackRecords::getInstance().gatherSessionRecords();
+
+                    eventData.sessionRecords.qualiRecords[2] = eventData.driversData[packet.carID-1].qualiTimes[2];
                 }
                 eventData.qualiPeriod = 3;
             }
@@ -712,6 +719,9 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                 }
                 TrackRecords::getInstance().gatherSessionRecords();
             }
+
+            if (eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString() == "STOP" && eventData.flagStatus != LTPackets::RED_FLAG)
+                eventData.driversData[packet.carID-1].retired = true;
             break;
 
         case LTPackets::QUALI_SECTOR_2:
@@ -736,6 +746,9 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                 }
                 TrackRecords::getInstance().gatherSessionRecords();
             }
+
+            if (eventData.driversData[packet.carID-1].lastLap.sectorTimes[1].toString() == "STOP" && eventData.flagStatus != LTPackets::RED_FLAG)
+                eventData.driversData[packet.carID-1].retired = true;
             break;
 
         case LTPackets::QUALI_SECTOR_3:
@@ -760,6 +773,9 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                 }
                 TrackRecords::getInstance().gatherSessionRecords();
             }
+
+            if (eventData.driversData[packet.carID-1].lastLap.sectorTimes[2].toString() == "STOP" && eventData.flagStatus != LTPackets::RED_FLAG)
+                eventData.driversData[packet.carID-1].retired = true;
             break;
 
         case LTPackets::QUALI_LAP:
@@ -833,6 +849,9 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
                 }
                 TrackRecords::getInstance().gatherSessionRecords();
             }
+
+            if (eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString() == "STOP" && eventData.flagStatus != LTPackets::RED_FLAG)
+                eventData.driversData[packet.carID-1].retired = true;
             break;
 
         case LTPackets::PRACTICE_SECTOR_2:
@@ -856,6 +875,9 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
                 }
                 TrackRecords::getInstance().gatherSessionRecords();
             }
+
+            if (eventData.driversData[packet.carID-1].lastLap.sectorTimes[1].toString() == "STOP" && eventData.flagStatus != LTPackets::RED_FLAG)
+                eventData.driversData[packet.carID-1].retired = true;
             break;
 
         case LTPackets::PRACTICE_SECTOR_3:
@@ -879,6 +901,9 @@ void PacketParser::handlePracticeEvent(const Packet &packet)
                 }
                 TrackRecords::getInstance().gatherSessionRecords();
             }
+
+            if (eventData.driversData[packet.carID-1].lastLap.sectorTimes[2].toString() == "STOP" && eventData.flagStatus != LTPackets::RED_FLAG)
+                eventData.driversData[packet.carID-1].retired = true;
             break;
 
         case LTPackets::PRACTICE_LAP:

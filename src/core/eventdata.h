@@ -183,6 +183,14 @@ public:
         return SectorRecordData();
     }
 
+    LapTime getQualiBestTime(int period) const
+    {
+        if (period >= 1 && period <= 3)
+            return qualiRecords[period-1];
+
+        return LapTime();
+    }
+
     friend class EventData;
     friend class PacketParser;
 private:
@@ -191,6 +199,8 @@ private:
 
     SectorRecordData fastestLap;
     SectorRecordData secRecord[3];
+
+    LapTime qualiRecords[3];
 };
 
 /*!

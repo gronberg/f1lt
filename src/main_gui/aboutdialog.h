@@ -39,6 +39,7 @@ public:
     ~AboutDialog();
 
     void loadChangelog();
+    void loadLicense();
     
 private:
     Ui::AboutDialog *ui;

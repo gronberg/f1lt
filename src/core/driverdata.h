@@ -278,6 +278,8 @@ public:
     void updateInPit();
     void updateGaps(const EventData &ed);
 
+    void updateSectorRecords();
+
     void addPitStop(const PitData &pd);
 
 

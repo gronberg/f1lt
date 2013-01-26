@@ -325,8 +325,7 @@ void TrackRecords::gatherSessionRecords(bool withDriverRecords)
             if (i == 3)
                 sessionRecord = ed.getSessionRecords().getFastestLap().getTime();
 
-            qDebug() << sessionRecord.toString() << twr->sessionRecords[i].time.toString();
-            if (sessionRecord.isValid() && sessionRecord < twr->sessionRecords[i].time)
+            if (sessionRecord.isValid() && sessionRecord <= twr->sessionRecords[i].time)
             {
                 twr->sessionRecords[i].time = sessionRecord;
 
@@ -340,13 +339,14 @@ void TrackRecords::gatherSessionRecords(bool withDriverRecords)
                 {
                     twr->sessionRecords[i].driver = ed.getSessionRecords().getFastestLap().getDriverName();
                     no = ed.getSessionRecords().getFastestLap().getNumber();
-                }
-
+                }                
 
                 twr->sessionRecords[i].team = SeasonData::getInstance().getTeamName(no);
                 twr->sessionRecords[i].session = getCurrentSessionAsString();
             }
         }
+
+        qDebug() << twr->sessionRecords[1].driver << ed.getSessionRecords().getSectorRecord(2).getDriverName();
 
         if (ed.getEventType() != LTPackets::PRACTICE_EVENT)
         {

@@ -57,7 +57,7 @@ class HelmetsFactory
 {
 public:
     ~HelmetsFactory();
-    QList<QPixmap*> *loadHelmets(int size, bool clear = true);
+    QMap<int, QPixmap*> *loadHelmets(int size, bool clear = true);
     QPixmap &getHelmet(int no, int size);
 
     QPixmap *loadHelmet(const LTDriver &driver, int size);
@@ -68,7 +68,7 @@ public:
 
 private:
     HelmetsFactory() { }
-    QMap<int, QList<QPixmap*> > helmets;
+    QMap<int, QMap<int, QPixmap*> > helmets;
     QPixmap nullPixmap;
 };
 
