@@ -61,10 +61,8 @@ void SocketDataReader::connectToHost()
     else
         socket->setProxy(QNetworkProxy::NoProxy);
 
-    socket->connectToHost(NetworkSettings::getInstance().getSocketHost(), NetworkSettings::getInstance().getSocketPort(), QIODevice::ReadWrite);
-    qDebug() << "connected";
-    socket->waitForReadyRead();
-    qDebug() << "ready";
+    socket->connectToHost(NetworkSettings::getInstance().getSocketHost(), NetworkSettings::getInstance().getSocketPort(), QIODevice::ReadWrite);    
+    socket->waitForReadyRead();    
 }
 
 void SocketDataReader::disconnectFromHost()

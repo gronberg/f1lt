@@ -210,10 +210,9 @@ bool PacketParser::parsePacket(const QByteArray &buf, Packet &packet, int &pos)
     {
         packet.longData.append(pbuf.mid(2, packet.length));
 
-        if (decryptPacket)// && eventData.frame)
+        if (decryptPacket)
         {
-//            qDebug() << " KEY=" << decrypter.key;
-            if (!decrypter.key)// || encryptedPackets.size())
+            if (!decrypter.key)
                 encryptedPackets.push_back(packet);
 
             else
@@ -301,6 +300,8 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
                             eventData.driversData[packet.carID-1].posHistory.last() = ibuf;
 
                     }
+
+                    qDebug() << "POS=" << eventData.driversData[packet.carID-1].getDriverName() << eventData.driversData[packet.carID-1].lastLap.lapTime << eventData.driversData[packet.carID-1].getPosition();
             }
 //            else
                 if ((eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString() == "STOP" ||
@@ -621,7 +622,6 @@ void PacketParser::handleQualiEvent(const Packet &packet)
                     for (int i = 0; i < eventData.driversData.size(); ++i)
                         eventData.driversData[i].updateGaps(eventData);
 
-
                     TrackRecords::getInstance().gatherSessionRecords();
 
                     eventData.sessionRecords.qualiRecords[0] = eventData.driversData[packet.carID-1].qualiTimes[0];
@@ -676,6 +676,8 @@ void PacketParser::handleQualiEvent(const Packet &packet)
             eventData.driversData[packet.carID-1].lastLap.lapTime = LapTime(packet.longData.constData());
             eventData.driversData[packet.carID-1].qualiTimes[2] = LapTime(packet.longData.constData());
             eventData.driversData[packet.carID-1].colorData.qualiTimeColor(3) = (LTPackets::Colors)packet.data;
+
+            qDebug() << eventData.driversData[packet.carID-1].getDriverName() << eventData.driversData[packet.carID-1].lastLap.lapTime << eventData.driversData[packet.carID-1].getPosition();
 
             if (eventData.driversData[packet.carID-1].pos == 1 && eventData.driversData[packet.carID-1].qualiTimes[2].isValid())
             {
@@ -932,8 +934,6 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 //    if (packet.type != LTPackets::SYS_COMMENTARY && packet.type != LTPackets::SYS_TIMESTAMP)
         qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTPackets::SYS_COMMENTARY) ? packet.longData.constData() : "");
 
-//    qDebug() << "EVENT TYPE=" << eventData.eventType;
-
     unsigned int number, i;
 //    unsigned char packetLongData[129];
     unsigned char uc;
@@ -973,7 +973,6 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
             {
                 eventData.eventId = number;
                 emit requestDecryptionKey(number);
-                //httpReader.obtainDecryptionKey(number);
             }
             else
                 eventData.frame = 0;
@@ -993,9 +992,6 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 
             eventData.lapsCompleted = 0;
 
-
-
-//            decrypter.resetDecryption();
             break;
 
         case LTPackets::SYS_KEY_FRAME:
@@ -1008,18 +1004,14 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                 uc = packet.longData[--i];
                 number |= uc;
             }
-//            decrypter.resetDecryption();
 
              if (!eventData.frame || number == 1) // || decryption_failure
              {
-//                eventData.frame = number;
-//                emit requestKeyFrame(number);
-
-//                httpReader.obtainKeyFrame(number);
-
+                eventData.frame = number;
+                emit requestKeyFrame(number);
 
 //                 decryptionKeyObtained(2841044872);   //valencia race
-                  decryptionKeyObtained(2971732062);      //valencia qual
+//                  decryptionKeyObtained(2971732062);      //valencia qual
 //                onDecryptionKeyObtained(3585657959);  //?
 //                onDecryptionKeyObtained(2488580439);  //qual
 //                 onDecryptionKeyObtained(2438680630);  //race
@@ -1037,8 +1029,6 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 //                decryptionKeyObtained(3195846070);	//gbr quali
 //                 onDecryptionKeyObtained(3397635038);	//gbr fp3
 //                 onDecryptionKeyObtained(4071769653);	//gbr fp1
-
-//                resetDecryption();
 
              }
              else
@@ -1189,7 +1179,8 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                     }
                     break;
                 case LTPackets::FL_CAR:
-                    eventData.sessionRecords.fastestLap.number = copyPacket.longData.mid(1, copyPacket.longData.size()-1).toInt();
+                    if(eventData.eventType == LTPackets::RACE_EVENT)
+                        eventData.sessionRecords.fastestLap.number = copyPacket.longData.mid(1, copyPacket.longData.size()-1).toInt();
                     break;
 
                 case LTPackets::FL_DRIVER:

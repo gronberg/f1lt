@@ -127,7 +127,6 @@ QMap<int, QPixmap *> *HelmetsFactory::loadHelmets(int size, bool clear)
 
         for (int j = 0; j < mainDrivers.size(); ++j)        
         {
-            qDebug() << j << mainDrivers[j].no << mainDrivers[j].name;
             images->insert(mainDrivers[j].no, loadHelmet(mainDrivers[j], size));
         }
 

@@ -87,9 +87,13 @@ void DriverData::correctNumLap(int raceNumLap)
 //during Q1 when the drivers time is worse than 107% lt server doesn't update his position, we have to do this manually
 void DriverData::correctPosition(const EventData &ed)
 {
-    if (ed.getSessionRecords().getFastestLap().getTime().calc107p() < qualiTimes[0])
+    if (ed.getQualiPeriod() == 1 && ed.getSessionRecords().getFastestLap().getTime().isValid() &&
+        ((ed.getSessionRecords().getFastestLap().getTime().calc107p() < qualiTimes[0]) ||
+         !qualiTimes[0].isValid()))
     {
         int position = ed.correctPosition(qualiTimes[0]);
+
+        qDebug() << "CORRECT" << driver << position;
         if (position >= 1)
         {
             pos = position;
@@ -336,6 +340,8 @@ void DriverData::addFPQLap(const EventData &ed)
                 lastLap.qualiLapExtraData.qualiPeriod = qPeriod;
                 lapData.last().qualiLapExtraData.qualiPeriod = qPeriod;
             }
+
+            updateSectorRecords();
         }
     }
 }
@@ -382,6 +388,7 @@ void DriverData::addInLap(const EventData &ed)
         lastLap.qualiLapExtraData.qualiPeriod = qPeriod;
         lapData.last().qualiLapExtraData.qualiPeriod = qPeriod;
     }
+    updateSectorRecords();
 }
 
 void DriverData::updateLastLap()

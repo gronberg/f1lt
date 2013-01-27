@@ -241,6 +241,8 @@ int EventData::correctPosition(const LapTime &ld) const
     }
     qSort(timeList);
 
+    qDebug() << ld << timeList;
+
     return timeList.indexOf(ld) + 1;
 }
 

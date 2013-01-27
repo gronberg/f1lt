@@ -153,10 +153,11 @@ void SessionDataWidget::updateEventInfo()
         }
     }
 
+    Track *track = 0;
     TrackVersion *tv = 0;
     TrackWeekendRecords *twr = 0;
 
-    TrackRecords::getInstance().getCurrentTrackRecords(&twr, &tv);
+    TrackRecords::getInstance().getCurrentTrackRecords(&track, &twr, &tv);
 
     if (tv != 0)
     {

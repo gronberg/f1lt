@@ -77,14 +77,6 @@ void SessionTimer::timerTimeout()
 
 void SessionTimer::setDelay(int prevDelay, int delay)
 {
-//    EventData &eventData = EventData::getInstance();
-
-//    int hours = eventData.getRemainingTime().hour();
-//    int minutes = eventData.getRemainingTime().minute();
-//    int secs = eventData.getRemainingTime().second();
-
-//    secs -= prevDelay - delay;
-
     EventData &eventData = EventData::getInstance();
 
     if (!eventData.isSessionStarted() || eventData.isSessionFinished() || (prevDelay == delay))
@@ -127,44 +119,4 @@ void SessionTimer::setDelay(int prevDelay, int delay)
         }
         eventData.setRemainingTime(QTime(hours, minutes, secs));
     }
-
-
-//    qDebug() << "SESSIONTIMER" << secs << timerDelay;
-
-//    if (secs >= 60)
-//    {
-//        ++minutes;
-//        secs = secs - 60;
-
-//        if (minutes >= 60)
-//        {
-//            ++hours;
-//            minutes = minutes - 60;
-//        }
-//    }
-
-
-
-//    int mins = minutes + 60 * hours;
-//    if (eventData.getEventType() == LTPackets::RACE_EVENT && hours > 2)
-//    {
-//        hours = 2;
-//        minutes = secs = 0;
-//    }
-//    else if (eventData.getEventType() == LTPackets::PRACTICE_EVENT && mins >= SeasonData::getInstance().getFPLength())
-//    {
-//        hours = 1;
-//        minutes = SeasonData::getInstance().getFPLength() - 60;
-//        secs = 0;
-//    }
-//    else if (eventData.getEventType() == LTPackets::QUALI_EVENT && minutes >= SeasonData::getInstance().getQualiLength(eventData.getQualiPeriod()))
-//    {
-//        hours = 0;
-//        minutes = SeasonData::getInstance().getQualiLength(eventData.getQualiPeriod());
-//        secs = 0;
-//    }
-//    else
-//        timerDelay = 0;
-
-//    eventData.setRemainingTime(QTime(hours, minutes, secs));
 }

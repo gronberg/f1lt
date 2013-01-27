@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Sat Jan 26 20:30:45 2013
+** Created: Sun Jan 27 12:55:57 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -60,6 +60,7 @@ public:
     QLabel *label_10;
     QCheckBox *thumbnailsCheckBox;
     QCheckBox *trackerBox;
+    QSpacerItem *verticalSpacer_2;
     QWidget *Co;
     QGridLayout *gridLayout_3;
     QToolButton *colorCyanButton;
@@ -105,13 +106,14 @@ public:
     QLineEdit *proxyHostEdit;
     QLineEdit *proxyUserEdit;
     QLineEdit *proxyPasswordEdit;
+    QSpacerItem *verticalSpacer;
     QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *PreferencesDialog)
     {
         if (PreferencesDialog->objectName().isEmpty())
             PreferencesDialog->setObjectName(QString::fromUtf8("PreferencesDialog"));
-        PreferencesDialog->resize(447, 367);
+        PreferencesDialog->resize(447, 389);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PreferencesDialog->setWindowIcon(icon);
@@ -227,6 +229,10 @@ public:
         trackerBox->setObjectName(QString::fromUtf8("trackerBox"));
 
         verticalLayout_4->addWidget(trackerBox);
+
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_4->addItem(verticalSpacer_2);
 
         tabWidget->addTab(tab, QString());
         Co = new QWidget();
@@ -492,6 +498,10 @@ public:
 
         verticalLayout_3->addWidget(proxyBox);
 
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_3->addItem(verticalSpacer);
+
         tabWidget->addTab(tab_2, QString());
 
         verticalLayout->addWidget(tabWidget);
@@ -508,7 +518,7 @@ public:
         QObject::connect(buttonBox, SIGNAL(accepted()), PreferencesDialog, SLOT(accept()));
         QObject::connect(buttonBox, SIGNAL(rejected()), PreferencesDialog, SLOT(reject()));
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(PreferencesDialog);

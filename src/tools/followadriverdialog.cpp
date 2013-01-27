@@ -60,7 +60,6 @@ void FollowADriverDialog::loadDriversList()
     {
         QStringList list = SeasonData::getInstance().getDriversList();
 
-        qDebug() << "loading drivers" << list.size();
         if (list.size() > 1)
             ui->comboBox->addItems(SeasonData::getInstance().getDriversList());
     }

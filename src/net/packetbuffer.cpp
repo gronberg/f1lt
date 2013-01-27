@@ -57,7 +57,6 @@ void PacketBuffer::timeout()
     QVector< QPair<Packet, qint64> > packetsToHandle;
     while (!packetsQueue.isEmpty())
     {
-//        qDebug() << currTime/1000 << packetsQueue.head().second/1000;
         if (packetsQueue.head().second  <= currTime)
             packetsToHandle.append(packetsQueue.dequeue());
 
@@ -69,8 +68,6 @@ void PacketBuffer::timeout()
 
 void PacketBuffer::setDelay(int del)
 {
-//    if (!packetsQueue.isEmpty())
-//        qDebug() << "BEFORE" << delay <<(QDateTime::currentMSecsSinceEpoch() - delay * 1000)/1000 << packetsQueue.head().second/1000;
     delay = del;
     if (delay != 0 && !timer->isActive())
         timer->start(100);
@@ -80,6 +77,4 @@ void PacketBuffer::setDelay(int del)
         timer->stop();
         timeout();
     }
-
-//    qDebug() << "DELAY=" << del << packetsQueue.size();
 }

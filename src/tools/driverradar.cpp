@@ -122,8 +122,6 @@ void DriverRadar::resizeEvent(QResizeEvent *)
     if (dti)
     {
         size = dti->minimumSize();
-
-        qDebug() << size.height();
     }
     radarR = width() < (height() - 30 - size.height()) ? (double)width() / 2.0 - 20.0 : (double)(height() - 30 - size.height()) / 2.0 - 20.0;
     radarX = width()/2;
@@ -135,7 +133,6 @@ void DriverRadar::resizeEvent(QResizeEvent *)
     if (dti)
     {
         dti->setGeometry(0, radarR*2 + 60, width(), height() - (radarR*2 + 60));
-        qDebug() << radarR*2 + 60 << height() - (radarR*2 + 60);
     }
 
     for (int i = 0; i < drp.size(); ++i)

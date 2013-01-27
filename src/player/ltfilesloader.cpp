@@ -267,7 +267,6 @@ void LTFilesLoader::savePackets(QDataStream &stream, const QVector<QPair<int, Pa
         stream << packets[i].second.data;
         stream << packets[i].second.length;
 
-//        qDebug() << encrypt(QString(packets[i].second.longData)).size() << QString(packets[i].second.longData);
 //        stream << encrypt(QString(packets[i].second.longData).toStdString()).c_str();
         stream << encrypt(QString(packets[i].second.longData)).toStdString().c_str();
 //        stream << QString(packets[i].second.longData).toStdString().c_str();

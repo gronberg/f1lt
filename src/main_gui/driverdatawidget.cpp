@@ -320,10 +320,11 @@ void DriverDataWidget::printDriverRecords(int id)
 
     DriverData *driverData = eventData.getDriverDataByIdPtr(id);
 
+    Track *tr = 0;
     TrackWeekendRecords *twr = 0;
     TrackVersion *tv = 0;
     TrackRecords::getInstance().gatherSessionRecords(true);
-    TrackRecords::getInstance().getCurrentTrackRecords(&twr, &tv);
+    TrackRecords::getInstance().getCurrentTrackRecords(&tr, &twr, &tv);
 
     ui->s1BLabel->clear();
     ui->s2BLabel->clear();
@@ -507,7 +508,6 @@ void DriverDataWidget::resizeEvent(QResizeEvent *event)
 
 void DriverDataWidget::on_tabWidget_currentChanged(int index)
 {
-    qDebug() << ui->tableView->model()->rowCount();
     int w;
     switch (index)
     {

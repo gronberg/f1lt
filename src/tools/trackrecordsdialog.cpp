@@ -29,7 +29,7 @@ bool loadingRecords = false;
 
 TrackRecordsDialog::TrackRecordsDialog(QWidget *parent) :
     QDialog(parent, Qt::Window),
-    ui(new Ui::TrackRecordsDialog), currentIndex(0), currentTV(0), currentTWR(0)
+    ui(new Ui::TrackRecordsDialog), currentIndex(-1), currentTV(0), currentTWR(0)
 {
     ui->setupUi(this);
     drDialog = new DriverRecordsDialog(this);
@@ -77,7 +77,9 @@ void TrackRecordsDialog::loadTrackRecords()
 
     if (currentIndex == -1)
     {
-        TrackRecords::getInstance().getCurrentTrackRecords(&twr, &tv);
+        TrackRecords::getInstance().getCurrentTrackRecords(&tr, &twr, &tv);
+
+        qDebug() << twr << tv;
 
         if (twr == 0 || tv == 0)
         {
@@ -92,6 +94,7 @@ void TrackRecordsDialog::loadTrackRecords()
     else
     {
         tr = &TrackRecords::getInstance()[currentIndex];
+        tr->getTrackRecords(&tv, &twr, EventData::getInstance().getEventInfo().fpDate.year());
         if (tv == 0 || twr == 0)
         {
             tv = &(*tr)[0];
@@ -296,8 +299,6 @@ void TrackRecordsDialog::update()
     {
         TrackRecords::getInstance().gatherSessionRecords(true);
         loadTrackRecords();
-
-        qDebug() << "UPDATE";
 
         if (drDialog->isVisible())
         {

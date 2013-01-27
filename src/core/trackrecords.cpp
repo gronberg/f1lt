@@ -208,7 +208,7 @@ bool TrackRecords::saveTrackRecords(QString fileName)
     return true;
 }
 
-void TrackRecords::getCurrentTrackRecords(TrackWeekendRecords **twr, TrackVersion **tv)
+void TrackRecords::getCurrentTrackRecords(Track **track, TrackWeekendRecords **twr, TrackVersion **tv)
 {
     LTEvent event = EventData::getInstance().getEventInfo();
 
@@ -226,6 +226,7 @@ void TrackRecords::getCurrentTrackRecords(TrackWeekendRecords **twr, TrackVersio
 
                 if (*t != TrackWeekendRecords::null())
                 {
+                    *track = &trackRecords[i];
                     *twr = t;
                     *tv = &trackRecords[i].trackVersions[j];
                     return;
@@ -243,6 +244,7 @@ void TrackRecords::getCurrentTrackRecords(TrackWeekendRecords **twr, TrackVersio
             TrackWeekendRecords *t = &trackRecords[i].trackVersions[j].getTrackWeekendRecords(event.fpDate.year());
             if (*t != TrackWeekendRecords::null())
             {
+                *track = &trackRecords[i];
                 *twr = t;
                 *tv = &trackRecords[i].trackVersions[j];
                 return;
@@ -315,7 +317,8 @@ void TrackRecords::gatherSessionRecords(bool withDriverRecords)
     EventData &ed = EventData::getInstance();
     TrackWeekendRecords *twr = 0;
     TrackVersion *tv = 0;
-    getCurrentTrackRecords(&twr, &tv);
+    Track *track;
+    getCurrentTrackRecords(&track, &twr, &tv);
 
     if (twr != 0 && tv != 0)
     {
@@ -340,13 +343,10 @@ void TrackRecords::gatherSessionRecords(bool withDriverRecords)
                     twr->sessionRecords[i].driver = ed.getSessionRecords().getFastestLap().getDriverName();
                     no = ed.getSessionRecords().getFastestLap().getNumber();
                 }                
-
                 twr->sessionRecords[i].team = SeasonData::getInstance().getTeamName(no);
                 twr->sessionRecords[i].session = getCurrentSessionAsString();
             }
         }
-
-        qDebug() << twr->sessionRecords[1].driver << ed.getSessionRecords().getSectorRecord(2).getDriverName();
 
         if (ed.getEventType() != LTPackets::PRACTICE_EVENT)
         {
@@ -437,3 +437,23 @@ void TrackRecords::gatherDriverRecords(TrackWeekendRecords *twr, TrackVersion *t
 }
 
 //TrackRecordsAtom TrackRecords::nullRecord;
+
+
+void Track::getTrackRecords(TrackVersion **tv, TrackWeekendRecords **trw, int year)
+{
+    int j = 0;
+    for (; j < trackVersions.size(); ++j)
+    {
+        if (trackVersions[j].year > year)
+            break;
+
+        TrackWeekendRecords *t = &trackVersions[j].getTrackWeekendRecords(year);
+
+        if (*t != TrackWeekendRecords::null())
+        {
+            *trw = t;
+            *tv = &trackVersions[j];
+            return;
+        }
+    }
+}

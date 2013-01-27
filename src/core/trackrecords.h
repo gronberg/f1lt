@@ -288,6 +288,8 @@ struct Track
         return TrackVersion::null();
     }
 
+    void getTrackRecords(TrackVersion **tv, TrackWeekendRecords **trw, int year);
+
     TrackVersion &removeTrackVersion(TrackVersion &tv)
     {
         int idx = trackVersions.indexOf(tv);
@@ -331,7 +333,7 @@ public:
         return Track::null();
     }
 
-    void getCurrentTrackRecords(TrackWeekendRecords **twr, TrackVersion **tv);
+    void getCurrentTrackRecords(Track **track, TrackWeekendRecords **twr, TrackVersion **tv);
     void gatherSessionRecords(bool withDriverRecords = false);
     void gatherDriverRecords(TrackWeekendRecords *twr, TrackVersion *tv);
 

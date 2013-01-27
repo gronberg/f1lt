@@ -32,10 +32,8 @@ class EventRecorder : public QObject
     Q_OBJECT
 public:
     explicit EventRecorder(SessionTimer *st, QObject *parent = 0);
-    void saveToFile(QString fName);
-    void saveLTInfo(QDataStream &);
-    void savePackets(QDataStream &);
 
+    void saveToFile(QString);
     void gatherInitialData();
     void gatherSysData();
     void gatherDriverData();
@@ -55,10 +53,6 @@ public:
     }
 
     void appendSessionTimer();
-//    void saveEventData(QDataStream &);
-//    void saveLapData(QDataStream &);
-
-//    void storeLapData(const DriverData &);
     
 signals:
 	void recordingStopped();

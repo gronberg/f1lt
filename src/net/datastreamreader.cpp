@@ -74,15 +74,6 @@ void DataStreamReader::onCookieReceived(QString cookie)
 {    
     eventData.cookie = cookie;
     socketReader.openStream();
-//    socketReader.openStream("localhost", 6666);
-//    socketReader.openStream("192.168.1.2", 6666);
-//    eventData.key = 2976363859;
-//    eventData.key = 2462388168;     //bahrain quali
-//    eventData.key = 3875488254; //fp1
-//    eventData.key = 2488580439; //qual
-//        eventData.key = 2438680630; //race
-    //socketReader.start();    
-    qDebug() << "opened";
     emit authorized(cookie);
 }
 

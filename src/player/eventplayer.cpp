@@ -183,24 +183,11 @@ void EventPlayer::timeout()
         return;
     }
 
-//    QTime prevTime = packets[currentPos].first;
     QVector<Packet> LTpackets;
 
-//    LTpackets.append(packets[currentPos].second);
-//    bool appendPacket = true;
-
-    if (currentPos < packets.size() - 1)
-        qDebug() << "NEXT PACKET" << elapsedSeconds << packets[currentPos].first << packets[currentPos].second.carID << packets[currentPos].second.type << packets[currentPos].second.data;
-
     while (currentPos < packets.size() && elapsedSeconds == packets[currentPos].first)
-    {                
-//        QTime currTime = packets[currentPos].first;
-
-//        if (prevTime.second() == currTime.second())
-            LTpackets.append(packets[currentPos].second);
-
-//        else
-//            break;
+    {
+        LTpackets.append(packets[currentPos].second);
         ++currentPos;
     }
     emit nextPackets(LTpackets);
