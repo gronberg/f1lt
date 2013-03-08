@@ -987,7 +987,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                 emit noLiveSession(true, s.right(s.size()-1));
             }
 
-            eventData.eventInfo = SeasonData::getInstance().getEvent(QDate::fromString("18.11.2012", "dd.MM.yyyy"));//QDate::currentDate());//(int)(packet.longData[0]);
+            eventData.eventInfo = SeasonData::getInstance().getEvent(/*QDate::fromString("18.11.2012", "dd.MM.yyyy"));*/QDate::currentDate());//(int)(packet.longData[0]);
             eventData.eventType = (LTPackets::EventType)copyPacket.data;
 
             eventData.lapsCompleted = 0;

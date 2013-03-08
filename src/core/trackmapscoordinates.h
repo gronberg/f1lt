@@ -36,6 +36,14 @@ struct TrackCoordinates
     QVector<QPoint> coordinates;
     QString name;       //track name
     int year;           //track version
+
+    TrackCoordinates()
+    {
+        indexes[0] = 0;
+        indexes[1] = 0;
+        indexes[2] = 0;
+        year = 0;
+    }
 };
 
 

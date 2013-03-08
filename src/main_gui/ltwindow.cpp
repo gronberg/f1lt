@@ -63,6 +63,8 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
     connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(showNoSessionBoard(bool, QString)));
 
+    connect(&SeasonData::getInstance(), SIGNAL(seasonDataChanged()), &ImagesFactory::getInstance(), SLOT(reloadGraphics()));
+
     connect(prefs, SIGNAL(driversColorsChanged()), saw, SLOT(setupColors()));
 
     sessionTimer = new SessionTimer(this);
@@ -829,6 +831,7 @@ void LTWindow::on_actionConnect_triggered()
         NetworkSettings::getInstance().setUserPassword(email, passwd);
         NetworkSettings::getInstance().setProxy(loginDialog->getProxy(), loginDialog->proxyEnabled());
 
+        SeasonData::getInstance().checkSeasonData();
         streamReader->connectToLTServer();
 
 //        settings->setValue("login/email", email);
@@ -856,6 +859,8 @@ void LTWindow::connectToServer()
 
             NetworkSettings::getInstance().setUserPassword(email, passwd);
             NetworkSettings::getInstance().setProxy(loginDialog->getProxy(), loginDialog->proxyEnabled());
+
+            SeasonData::getInstance().checkSeasonData();
             streamReader->connectToLTServer();
 
             driverTrackerWidget->setup();

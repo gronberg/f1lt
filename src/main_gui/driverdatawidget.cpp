@@ -601,6 +601,7 @@ void DriverDataWidget::clearData()
     ui->textEdit->clear();
 
     ui->carImageLabel->clear();
+    ui->driverInfoLabel->clear();
     ui->gridLabel->setText("Grid position");
     ui->gridPositionLabel->clear();
 
@@ -620,6 +621,8 @@ void DriverDataWidget::clearData()
     gapChart->clearData();
     posChart->clearData();
     lapTimeChart->clearData();
+
+
 
     driverLapHistoryModel->clear();
     ui->tableView->setModel(0);

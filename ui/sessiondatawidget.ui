@@ -233,7 +233,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -288,7 +288,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -306,7 +306,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -361,7 +361,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -387,7 +387,7 @@
               <item>
                <widget class="QLabel" name="eventMapLabel">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -588,7 +588,7 @@
                    </palette>
                   </property>
                   <property name="text">
-                   <string>time</string>
+                   <string/>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -638,7 +638,7 @@
                    </palette>
                   </property>
                   <property name="text">
-                   <string>time</string>
+                   <string/>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -691,7 +691,7 @@
                    </palette>
                   </property>
                   <property name="text">
-                   <string>driver</string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -779,7 +779,7 @@
                    </palette>
                   </property>
                   <property name="text">
-                   <string>team</string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -823,7 +823,7 @@
                    </palette>
                   </property>
                   <property name="text">
-                   <string>year</string>
+                   <string/>
                   </property>
                   <property name="indent">
                    <number>5</number>
@@ -870,7 +870,7 @@
                    </palette>
                   </property>
                   <property name="text">
-                   <string>team</string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -914,7 +914,7 @@
                    </palette>
                   </property>
                   <property name="text">
-                   <string>driver</string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -958,7 +958,7 @@
                    </palette>
                   </property>
                   <property name="text">
-                   <string>year</string>
+                   <string/>
                   </property>
                   <property name="indent">
                    <number>5</number>

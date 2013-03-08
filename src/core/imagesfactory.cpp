@@ -82,6 +82,14 @@ QPixmap &CarThumbnailsFactory::getCarThumbnail(int no, int size)
     return nullPixmap;
 }
 
+void CarThumbnailsFactory::reloadCarThumbnails()
+{
+    QList<int> keys = carThumbnails.keys();
+
+    for (int i = 0; i < keys.size(); ++i)
+        loadCarThumbnails(keys[i], true);
+}
+
 //====================================================
 
 HelmetsFactory::~HelmetsFactory()

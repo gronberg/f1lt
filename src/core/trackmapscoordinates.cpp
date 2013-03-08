@@ -90,12 +90,25 @@ bool TrackMapsCoordinates::loadTrackDataFile()
 TrackCoordinates TrackMapsCoordinates::getCurrentTrackCoordinates() const
 {
     EventData &ed = EventData::getInstance();
+    TrackCoordinates currentTrackCoordinates;
     for (int i = 0; i < ltTrackCoordinates.size(); ++i)
     {
-        if (ltTrackCoordinates[i].name.toLower() == ed.getEventInfo().eventShortName.toLower())
+        if (ed.getEventInfo().eventPlace.contains(ltTrackCoordinates[i].name))
         {
-            return ltTrackCoordinates[i];
+            int year = ed.getEventInfo().fpDate.year();
+
+            if (year == ltTrackCoordinates[i].year)
+            {
+                return ltTrackCoordinates[i];
+            }
+
+            //if we don't have this years track coordinates, let's search for the newest ones
+            if ((year > ltTrackCoordinates[i].year) &&
+                (currentTrackCoordinates.year < ltTrackCoordinates[i].year))
+            {
+                currentTrackCoordinates = ltTrackCoordinates[i];
+            }
         }
     }
-    return TrackCoordinates();
+    return currentTrackCoordinates;
 }

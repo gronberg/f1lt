@@ -29,7 +29,7 @@
 #include "trackrecords.h"
 
 
-SeasonData::SeasonData() : season(2012)
+SeasonData::SeasonData() : season(2013)
 {
     ltTeams.clear();
     fillEventNamesMap();
@@ -41,8 +41,8 @@ bool SeasonData::loadSeasonFile()
 
     season = 0;
 
-    //on startup try to load current seasons data
-    loadSeasonData(2012);
+    //on startup try to load current seasons data    
+    loadSeasonData(QDate::currentDate().year());    
 
     bool ok;
     ok = trackMapsCoordinates.loadTrackDataFile();
@@ -105,7 +105,9 @@ bool SeasonData::loadSeasonData(int season)
             return false;
 
         qSort(ltTeams);
-        qSort(ltEvents);        
+        qSort(ltEvents);
+
+        emit seasonDataChanged();
     }
 
     return true;
@@ -160,6 +162,26 @@ void SeasonData::loadSeasonData(QDataStream &stream)
                 ltTeams[i].drivers[j].mainDriver = true;
             else
                 ltTeams[i].drivers[j].mainDriver = false;
+        }
+    }
+}
+
+/*!
+ * \brief SeasonData::checkSeasonData - checks if current season is loaded. If current date is < than first race FP1 date - loads last years data
+ */
+void SeasonData::checkSeasonData()
+{
+    if (season != QDate::currentDate().year())
+        loadSeasonData(QDate::currentDate().year());
+
+    LTEvent ev = getEvent(1);
+    if (ev.eventNo > 0)
+    {
+        if ((ev.fpDate.year() == QDate::currentDate().year()) &&
+            (ev.fpDate.month() == QDate::currentDate().month()) &&
+            (ev.fpDate.day() > QDate::currentDate().day()))
+        {
+                loadSeasonData(QDate::currentDate().year() - 1);
         }
     }
 }

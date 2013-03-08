@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Sat Jan 26 20:30:45 2013
+** Created: Fri Mar 8 20:47:48 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -754,22 +754,22 @@ public:
     void retranslateUi(QWidget *SessionDataWidget)
     {
         SessionDataWidget->setWindowTitle(QApplication::translate("SessionDataWidget", "Form", 0, QApplication::UnicodeUTF8));
-        eventNameLabel->setText(QApplication::translate("SessionDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        eventPlaceLabel->setText(QApplication::translate("SessionDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        eventDateLabel->setText(QApplication::translate("SessionDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        eventLapsLabel->setText(QApplication::translate("SessionDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
-        eventMapLabel->setText(QApplication::translate("SessionDataWidget", "TextLabel", 0, QApplication::UnicodeUTF8));
+        eventNameLabel->setText(QString());
+        eventPlaceLabel->setText(QString());
+        eventDateLabel->setText(QString());
+        eventLapsLabel->setText(QString());
+        eventMapLabel->setText(QString());
         recordsLabel->setText(QApplication::translate("SessionDataWidget", "Track records:", 0, QApplication::UnicodeUTF8));
         label_9->setText(QApplication::translate("SessionDataWidget", "Quali record:", 0, QApplication::UnicodeUTF8));
-        rRTLabel->setText(QApplication::translate("SessionDataWidget", "time", 0, QApplication::UnicodeUTF8));
-        qRTLabel->setText(QApplication::translate("SessionDataWidget", "time", 0, QApplication::UnicodeUTF8));
-        rRDLabel->setText(QApplication::translate("SessionDataWidget", "driver", 0, QApplication::UnicodeUTF8));
+        rRTLabel->setText(QString());
+        qRTLabel->setText(QString());
+        rRDLabel->setText(QString());
         label_10->setText(QApplication::translate("SessionDataWidget", "Race record:", 0, QApplication::UnicodeUTF8));
-        rRDTLabel->setText(QApplication::translate("SessionDataWidget", "team", 0, QApplication::UnicodeUTF8));
-        rRYLabel->setText(QApplication::translate("SessionDataWidget", "year", 0, QApplication::UnicodeUTF8));
-        qRDTLabel->setText(QApplication::translate("SessionDataWidget", "team", 0, QApplication::UnicodeUTF8));
-        qRDLabel->setText(QApplication::translate("SessionDataWidget", "driver", 0, QApplication::UnicodeUTF8));
-        qRYLabel->setText(QApplication::translate("SessionDataWidget", "year", 0, QApplication::UnicodeUTF8));
+        rRDTLabel->setText(QString());
+        rRYLabel->setText(QString());
+        qRDTLabel->setText(QString());
+        qRDLabel->setText(QString());
+        qRYLabel->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("SessionDataWidget", "Event info", 0, QApplication::UnicodeUTF8));
         s3LapLabel->setText(QString());
         s2TimeLabel->setText(QString());

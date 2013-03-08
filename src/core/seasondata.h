@@ -122,7 +122,7 @@ struct LTEvent
             return true;
 
         return false;
-    }
+    }        
 
 //    LTTrackCoordinates trackCoordinates;
 };
@@ -132,8 +132,9 @@ struct LTEvent
  * \brief The SeasonData class stores all basic informations loaded from season.dat file plus it gives access to session defaults and track map coordinates.
  * This is a singleton.
  */
-class SeasonData
+class SeasonData : public QObject
 {
+    Q_OBJECT
 public:
     static SeasonData &getInstance()
     {
@@ -144,6 +145,7 @@ public:
     bool loadSeasonFile();
     bool loadSeasonData(int season);
     void loadSeasonData(QDataStream &stream);
+    void checkSeasonData();
 
     void updateTeamList(const QVector<LTTeam> &teams);
     void updateTeamList(const DriverData &dd);
@@ -193,7 +195,8 @@ public:
 
     void fillEventNamesMap();
 
-
+signals:
+    void seasonDataChanged();
 
 private:
     SeasonData();

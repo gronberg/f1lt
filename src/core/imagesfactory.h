@@ -41,6 +41,8 @@ public:
     QList<QPixmap*> *loadCarThumbnails(int size, bool clear = true);
     QPixmap &getCarThumbnail(int no, int size);
 
+    void reloadCarThumbnails();
+
     friend class ImagesFactory;
 
 private:
@@ -75,8 +77,9 @@ private:
 /*!
  * \brief The ImagesFactory class is a singleton used only to give access to HelmetsFactory and CarThumbnailsFactory objects.
  */
-class ImagesFactory
+class ImagesFactory : public QObject
 {
+    Q_OBJECT
 public:
     static ImagesFactory &getInstance()
     {
@@ -86,6 +89,13 @@ public:
 
     CarThumbnailsFactory &getCarThumbnailsFactory() { return carThumbnailsFactory; }
     HelmetsFactory &getHelmetsFactory() { return helmetsFactory; }
+
+public slots:
+    void reloadGraphics()
+    {
+        carThumbnailsFactory.reloadCarThumbnails();
+        helmetsFactory.reloadHelmets();
+    }
 
 private:
     ImagesFactory() { }

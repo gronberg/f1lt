@@ -1,6 +1,7 @@
 #include "eventstatuswidget.h"
 #include "ui_eventstatuswidget.h"
 #include <QDebug>
+#include <QBuffer>
 #include <QMatrix>
 
 #include "../core/eventdata.h"
@@ -19,6 +20,7 @@ EventStatusWidget::EventStatusWidget(QWidget *parent) :
     icons[5] = QPixmap(":/ui_icons/weather_dry.png").scaledToHeight(20, Qt::SmoothTransformation);
     icons[6] = QPixmap(":/ui_icons/weather_wet.png").scaledToHeight(20, Qt::SmoothTransformation);
     icons[7] = QPixmap(":/ui_icons/weather_wind.png").scaledToHeight(18, Qt::SmoothTransformation);
+
 
     ui->airTempLabelIcon->setPixmap(QPixmap(":/ui_icons/weather_air_temp.png").scaledToHeight(20, Qt::SmoothTransformation));
     ui->trackTempLabelIcon->setPixmap(QPixmap(":/ui_icons/weather_track_temp.png").scaledToHeight(20, Qt::SmoothTransformation));
@@ -53,9 +55,9 @@ void EventStatusWidget::updateEventStatus()
                 ui->statusLabelIcon->setPixmap(icons[2]);
                 break;
 
-            case LTPackets::SAFETY_CAR_DEPLOYED:
-				ui->statusLabelIcon->setPixmap(icons[3]);
-				break;
+            case LTPackets::SAFETY_CAR_DEPLOYED:            
+                ui->statusLabelIcon->setPixmap(icons[3]);
+                break;
 
             case LTPackets::SAFETY_CAR_STANDBY:
                 break;
