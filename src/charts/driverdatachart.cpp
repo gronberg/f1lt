@@ -64,7 +64,7 @@ void PopupInfoBox::paint(QPainter *p, int x, int y, const QRect &paintRect)
 }
 
 DriverDataChart::DriverDataChart(double n, double x, QColor col, QWidget *parent) :
-    ChartWidget(n, x, col, parent), popupBox(0), driverData(0)
+    ChartWidget(n, x, col, parent), driverData(0), popupBox(0)
 {    
     if (driverData != 0)
     {

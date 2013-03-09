@@ -23,6 +23,7 @@
 #ifndef NOSESSIONBOARDWIDGET_H
 #define NOSESSIONBOARDWIDGET_H
 
+#include <QMouseEvent>
 #include <QtGui/QWidget>
 #include "ui_nosessionboardwidget.h"
 
@@ -36,6 +37,14 @@ public:
 
     void showSessionBoard(QString msg);
     void showStartupBoard();
+
+protected:
+    void mousePressEvent(QMouseEvent *);
+
+signals:
+    void connectClicked();
+    void playClicked();
+    void loadClicked();
 
 private:
     Ui::NoSessionBoardWidgetClass ui;

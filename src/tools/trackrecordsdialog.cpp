@@ -77,7 +77,7 @@ void TrackRecordsDialog::loadTrackRecords()
 
     if (currentIndex == -1)
     {
-        TrackRecords::getInstance().getCurrentTrackRecords(&tr, &twr, &tv);
+        currentIndex = TrackRecords::getInstance().getCurrentTrackRecords(&tr, &twr, &tv);
 
         qDebug() << twr << tv;
 
@@ -88,7 +88,14 @@ void TrackRecordsDialog::loadTrackRecords()
 
             tr = &TrackRecords::getInstance().getTrackRecords().first();
             tv = &(*tr)[0];
-            twr = &(*tv)[0];
+            twr = &(*tv)[0];            
+        }
+
+        QList<QListWidgetItem*> items = ui->listWidget->findItems(tr->name, Qt::MatchContains);
+
+        if (!items.isEmpty())
+        {
+            ui->listWidget->setCurrentItem(items.first());
         }
     }
     else

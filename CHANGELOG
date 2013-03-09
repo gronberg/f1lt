@@ -4,11 +4,13 @@ v2.0.0:
 - added proxy settings - it is now possible to connect with the live timing server using proxy
 - added possibility to choose different colors for displaying lap times, position numbers, etc.
 - new .lt file format - it is smaller and independent of the Qt library
-- for Linux users only - changed the storage of .lt and .ini files, they are now saved in $HOME/.config/f1lt
 - classification in driver tracker can be now turned off
 - added IN and OUT laps into lap history during practices and qualis
 - implemented auto-save recorded session file every x minutes (x can be set in the preferences)
 - retired drivers are now not drawn in radar during races
+- new application icons
+- new startup screen
+- for Linux users only - changed the storage of .lt and .ini files, they are now saved in $HOME/.config/f1lt
 
 
 v1.5.0 (17-11-2012):

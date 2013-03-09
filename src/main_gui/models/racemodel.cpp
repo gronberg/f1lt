@@ -31,7 +31,7 @@ RaceModel::RaceModel(QObject *parent) : LTModel(parent), eventData(EventData::ge
 }
 
 int RaceModel::rowCount(const QModelIndex &) const
-{
+{    
     return eventData.getDriversData().size() + 3;
 }
 

@@ -27,7 +27,7 @@
 NoSessionBoardWidget::NoSessionBoardWidget(QWidget *parent)
     : QWidget(parent)
 {
-	ui.setupUi(this);
+	ui.setupUi(this);    
 }
 
 NoSessionBoardWidget::~NoSessionBoardWidget()
@@ -66,10 +66,36 @@ void NoSessionBoardWidget::showStartupBoard()
 	ui.startupWidget->setVisible(true);
 
     LTEvent event = SeasonData::getInstance().getNextEvent();
-	QString str = event.eventName;
+    QString str = event.eventName;
+    str += "\n(" + event.fpDate.toString("dd-MM-yyyy") + " - " + event.raceDate.toString("dd-MM-yyyy") + ")";
 
 	ui.sessionLabel2->setText(str);
     QPixmap pix = event.trackImg.height() > 600 ? event.trackImg.scaledToHeight(600, Qt::SmoothTransformation) : event.trackImg;
     ui.trackMapLabel->setPixmap(pix);
 
+    ui.versionLabel->setText("F1LT " + F1LTCore::programVersion());
+
+}
+
+void NoSessionBoardWidget::mousePressEvent(QMouseEvent *ev)
+{
+    if ((ev->pos().x() >= ui.connectLabel->x()) &&
+        (ev->pos().x() < (ui.connectLabel->width() + ui.connectLabel->x())) &&
+        (ev->pos().y() >= ui.connectLabel->y()) &&
+        (ev->pos().y() <= (ui.connectLabel->y() + ui.connectLabel->height())))
+        emit connectClicked();
+
+    if ((ev->pos().x() >= ui.openLabel->x()) &&
+        (ev->pos().x() < (ui.openLabel->width() + ui.openLabel->x())) &&
+        (ev->pos().y() >= ui.openLabel->y()) &&
+        (ev->pos().y() <= (ui.openLabel->y() + ui.openLabel->height())))
+        emit playClicked();
+
+    if ((ev->pos().x() >= ui.loadLabel->x()) &&
+        (ev->pos().x() < (ui.loadLabel->width() + ui.loadLabel->x())) &&
+        (ev->pos().y() >= ui.loadLabel->y()) &&
+        (ev->pos().y() <= (ui.loadLabel->y() + ui.loadLabel->height())))
+        emit loadClicked();
+
+    QWidget::mousePressEvent(ev);
 }

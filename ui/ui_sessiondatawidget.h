@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'sessiondatawidget.ui'
 **
-** Created: Fri Mar 8 20:47:48 2013
+** Created: Sat Mar 9 13:50:06 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -148,6 +148,7 @@ public:
         scrollArea_2 = new QScrollArea(widget);
         scrollArea_2->setObjectName(QString::fromUtf8("scrollArea_2"));
         scrollArea_2->setFrameShape(QFrame::NoFrame);
+        scrollArea_2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_2"));

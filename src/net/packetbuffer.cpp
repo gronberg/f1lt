@@ -25,7 +25,7 @@
 #include <QDebug>
 
 PacketBuffer::PacketBuffer(PacketParser *parser, QObject *parent) :
-    packetParser(parser), QObject(parent), delay(0)
+    QObject(parent), delay(0), packetParser(parser)
 {
     timer = new QTimer(this);
 

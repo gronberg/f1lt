@@ -28,6 +28,7 @@ class DriverTrackerPositioner : public DriverRadarPositioner
 {
 public:
     DriverTrackerPositioner(DriverData *dd = 0);
+    virtual ~DriverTrackerPositioner() { }
 
     virtual void paint(QPainter *p, bool selected = false);
     virtual QPoint getCoordinates();

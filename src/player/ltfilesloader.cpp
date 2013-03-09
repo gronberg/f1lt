@@ -22,9 +22,7 @@ bool LTFilesLoader::loadFile(QString fName, QVector<QPair<int, Packet> > &packet
 
         delete [] tab;
         if (sbuf == "F1LT")
-        {
-            EventData::getInstance().clear();
-
+        {            
             //old files didn't contain any info about FP number, try to guess it from the file name
             QFileInfo fInfo(fName);
             QRegExp reg("fp(\\d)");
@@ -36,8 +34,7 @@ bool LTFilesLoader::loadFile(QString fName, QVector<QPair<int, Packet> > &packet
         }
 
         if (sbuf == "F1LT2_LT")
-        {
-            EventData::getInstance().clear();
+        {            
             return loadV2File(stream, packets);                
         }
     }
@@ -77,9 +74,7 @@ bool LTFilesLoader::loadV1File(QDataStream &stream, QVector<QPair<int, Packet> >
     ltEvent.laps = ibuf;
 
     stream >> pixBuf;
-    ltEvent.trackImg = pixBuf;
-
-    EventData::getInstance().setEventInfo(ltEvent);
+    ltEvent.trackImg = pixBuf;    
 
     //load drivers data
     stream >> size;
@@ -102,6 +97,9 @@ bool LTFilesLoader::loadV1File(QDataStream &stream, QVector<QPair<int, Packet> >
     }
     SeasonData::getInstance().loadSeasonData(ltEvent.fpDate.year());
     SeasonData::getInstance().updateTeamList(ltTeamList);
+
+    EventData::getInstance().clear();
+    EventData::getInstance().setEventInfo(ltEvent);
 
     stream >> size;
     packets.resize(size);
@@ -153,6 +151,9 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
     stream >> ibuf;
     ltEvent.laps = ibuf;
 
+    SeasonData::getInstance().loadSeasonData(ltEvent.fpDate.year());
+    EventData::getInstance().clear();
+
     stream >> ibuf;
     EventData::getInstance().setEventType((LTPackets::EventType)ibuf);
 
@@ -160,8 +161,6 @@ bool LTFilesLoader::loadV2File(QDataStream &stream, QVector<QPair<int, Packet> >
     if (EventData::getInstance().getEventType() == LTPackets::PRACTICE_EVENT)
         EventData::getInstance().setFPNumber(ibuf);
 
-
-    SeasonData::getInstance().loadSeasonData(ltEvent.fpDate.year());
     EventData::getInstance().setEventInfo(ltEvent);
 
     //load drivers data

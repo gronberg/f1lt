@@ -45,5 +45,8 @@
         <file>h2h.png</file>
         <file>ltc.png</file>
         <file>sa.png</file>
+        <file>start-label-con.png</file>
+        <file>start-label-load.png</file>
+        <file>start-label-open.png</file>
     </qresource>
 </RCC>

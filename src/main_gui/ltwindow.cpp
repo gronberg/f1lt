@@ -77,6 +77,10 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(sessionTimer, SIGNAL(synchronizingTimer(bool)), delayWidget, SLOT(synchronizingTimer(bool)));
     connect(sessionTimer, SIGNAL(synchronizingTimer(bool)), driverTrackerWidget, SLOT(pauseTimer(bool)));
 
+    connect(ui->messageBoardWidget, SIGNAL(connectClicked()), this, SLOT(on_actionConnect_triggered()));
+    connect(ui->messageBoardWidget, SIGNAL(playClicked()), this, SLOT(on_actionOpen_triggered()));
+    connect(ui->messageBoardWidget, SIGNAL(loadClicked()), this, SLOT(on_actionLT_files_data_base_triggered()));
+
     loadSettings();
 
     delayWidgetAction = ui->mainToolBar->addWidget(delayWidget);
@@ -1132,6 +1136,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
 
     setupDialogs();
 
+    setWindowTitle("F1LT");
     if (connect)
     {
         if (settings->value("ui/auto_connect").toBool())
@@ -1141,7 +1146,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
             ui->messageBoardWidget->showStartupBoard();
             showSessionBoard(true);
         }
-    }
+    }            
 }
 
 void LTWindow::showSessionBoard(bool show)

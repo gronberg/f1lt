@@ -333,7 +333,7 @@ public:
         return Track::null();
     }
 
-    void getCurrentTrackRecords(Track **track, TrackWeekendRecords **twr, TrackVersion **tv);
+    int getCurrentTrackRecords(Track **track, TrackWeekendRecords **twr, TrackVersion **tv);
     void gatherSessionRecords(bool withDriverRecords = false);
     void gatherDriverRecords(TrackWeekendRecords *twr, TrackVersion *tv);
 

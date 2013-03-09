@@ -85,7 +85,7 @@ int FPLapTimesChart::checkLapDataCoordinates(int x, int y)
     return 0;
 }
 
-void FPLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
+void FPLapTimesChart::drawAxes(QPainter *p, int, int)
 {
     p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
 
@@ -537,7 +537,7 @@ int AllQualiLapTimesChart::checkLapDataCoordinates(int x, int y)
     return 0;
 }
 
-void AllQualiLapTimesChart::drawAxes(QPainter *p, int firstLap, int lastLap)
+void AllQualiLapTimesChart::drawAxes(QPainter *p, int, int)
 {
     p->setPen(QColor(ColorsManager::getInstance().getDefaultColor(LTPackets::WHITE)));
 

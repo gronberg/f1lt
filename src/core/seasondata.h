@@ -200,7 +200,7 @@ signals:
 
 private:
     SeasonData();
-    SeasonData(const SeasonData &) { }
+    SeasonData(const SeasonData &) : QObject() { }
     int season;
 
     QMap<int, int> seasonOffsets;        //only one season data from season.dat file will be kept in the memory during runtime, this map holds offsets of all seasons in the file

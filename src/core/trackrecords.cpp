@@ -208,7 +208,7 @@ bool TrackRecords::saveTrackRecords(QString fileName)
     return true;
 }
 
-void TrackRecords::getCurrentTrackRecords(Track **track, TrackWeekendRecords **twr, TrackVersion **tv)
+int TrackRecords::getCurrentTrackRecords(Track **track, TrackWeekendRecords **twr, TrackVersion **tv)
 {
     LTEvent event = EventData::getInstance().getEventInfo();
 
@@ -229,7 +229,7 @@ void TrackRecords::getCurrentTrackRecords(Track **track, TrackWeekendRecords **t
                     *track = &trackRecords[i];
                     *twr = t;
                     *tv = &trackRecords[i].trackVersions[j];
-                    return;
+                    return i;
                 }
             }
             //if no records from this year were found, they have to be added
@@ -247,10 +247,11 @@ void TrackRecords::getCurrentTrackRecords(Track **track, TrackWeekendRecords **t
                 *track = &trackRecords[i];
                 *twr = t;
                 *tv = &trackRecords[i].trackVersions[j];
-                return;
+                return i;
             }
         }
     }
+    return -1;
 }
 
 QString TrackRecords::getCurrentSessionAsString()

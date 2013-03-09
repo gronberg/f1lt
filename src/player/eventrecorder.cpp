@@ -26,7 +26,7 @@
 
 
 EventRecorder::EventRecorder(SessionTimer *st, QObject *parent) :
-    QObject(parent), sessionTimer(st), eventData(EventData::getInstance()), elapsedSeconds(0), sessionRecorded(false), recordStartTime(0), autoSaveRecord(-1), autoSaveCounter(-1)
+    QObject(parent), eventData(EventData::getInstance()), recordStartTime(0), elapsedSeconds(0), autoSaveRecord(-1), autoSaveCounter(-1), sessionRecorded(false), sessionTimer(st)
 {
 }
 

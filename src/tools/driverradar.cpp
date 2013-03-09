@@ -26,7 +26,7 @@
 #include "../core/colorsmanager.h"
 
 DriverRadar::DriverRadar(QWidget *parent) :
-    QWidget(parent), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0), selectedDriver(-2), dti(0)
+    QWidget(parent), selectedDriver(-2), dti(0), radarX(0), radarY(0), radarR(0.0), radarPitR(0.0), radarLappedR(0.0)
 {
     loadDriversList();
     QWidget::setMinimumSize(50, 200);

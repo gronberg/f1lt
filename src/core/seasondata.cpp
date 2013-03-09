@@ -41,14 +41,13 @@ bool SeasonData::loadSeasonFile()
 
     season = 0;
 
+    bool ok[3];
     //on startup try to load current seasons data    
-    loadSeasonData(QDate::currentDate().year());    
+    ok[0] = loadSeasonData(QDate::currentDate().year());
+    ok[1] = trackMapsCoordinates.loadTrackDataFile();
 
-    bool ok;
-    ok = trackMapsCoordinates.loadTrackDataFile();
-
-    ok = TrackRecords::getInstance().loadTrackRecords(F1LTCore::trackRercordsFile());    
-    return ok;
+    ok[2] = TrackRecords::getInstance().loadTrackRecords(F1LTCore::trackRercordsFile());
+    return (ok[0] && ok[1] && ok[2]);
 }
 
 bool SeasonData::loadSeasonData(int season)

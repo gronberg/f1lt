@@ -1277,11 +1277,11 @@ void PacketParser::parsePackets(const QVector<Packet> &packets)
 
 void PacketParser::parseBufferedPackets(const QVector<QPair<Packet, qint64> > &packets)
 {
-    bool emitSignal = false;
+//    bool emitSignal = false;
     for (int i = 0; i < packets.size(); ++i)
     {
-        if (i == packets.size() - 1)
-            emitSignal = true;
+//        if (i == packets.size() - 1)
+//            emitSignal = true;
 
         Packet packet = packets[i].first;
         if (packet.carID)
@@ -1357,7 +1357,7 @@ void PacketParser::decryptionKeyObtained(unsigned int key)
 }
 
 
-void PacketParser::savePacket(const QByteArray &buf)
+void PacketParser::savePacket(const QByteArray &)
 {
     //QFile file(QString("packets/packet_%1.dat").arg(packetNo++));
     //if (file.open(QIODevice::WriteOnly))
