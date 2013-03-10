@@ -22,6 +22,7 @@
 #define COLORSMANAGER_H
 
 #include <QColor>
+#include <QImage>
 #include <QList>
 
 #include "ltpackets.h"
@@ -92,6 +93,10 @@ public:
     {
         return defaultDriverColors;
     }
+
+    void calculateDefaultDriverColors();
+    QColor calculateAverageColor(const QImage &car, int idx);
+    bool isColorInTheList(QColor color, int idx);
 
 private:
     ColorsManager();

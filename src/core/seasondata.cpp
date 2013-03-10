@@ -25,6 +25,7 @@
 #include <QDataStream>
 #include <QFile>
 
+#include "colorsmanager.h"
 #include "eventdata.h"
 #include "trackrecords.h"
 
@@ -107,6 +108,7 @@ bool SeasonData::loadSeasonData(int season)
         qSort(ltEvents);
 
         emit seasonDataChanged();
+        ColorsManager::getInstance().calculateDefaultDriverColors();
     }
 
     return true;
