@@ -52,7 +52,9 @@ QColor ColorsManager::getCarColor(int no)
     QColor color = getColor(LTPackets::BACKGROUND);
 
     if (no > 0 && no < driverColors.size()+2)
+    {
         color = driverColors[no <= 12 ? no-1 : no -2];
+    }
 
     return color;
 }
@@ -72,7 +74,7 @@ void ColorsManager::calculateDefaultDriverColors()
             }
             else
             {
-                average = driverColors[k-1];
+                average = defaultDriverColors[k-1];
 
                 int red = average.red() + 50 > 255 ? 255 : average.red() + 50;
                 int green = average.green() + 50 > 255 ? 255 : average.green() + 50;
@@ -81,24 +83,17 @@ void ColorsManager::calculateDefaultDriverColors()
                 average = QColor(red, green, blue);
             }
 
-            qDebug() << "NUMER=" << i << average;
-            driverColors[k] = average;
+            //if driver is using his default colors, we update theese too
+            if (driverColors[k] == defaultDriverColors[k])
+                driverColors[k] = average;
+
+            defaultDriverColors[k] = average;
             ++k;
         }
     }
 }
 
-class MyColor : public QColor
-{
-public:
-    MyColor(QColor c) : QColor(c) { }
-    bool operator<(const QColor &color) const
-    {
-        return ((red() < color.red()));// && (blue() < color.blue()) && (green() < color.green()));
-    }
-};
-
-void addColor(QMap<MyColor, int> &colors, MyColor color)
+void ColorsManager::addColor(QMap<MyColor, int> &colors, MyColor color)
 {
     QList<MyColor> keys = colors.keys();
     for (int i = 0; i < keys.size(); ++i)
@@ -112,7 +107,6 @@ void addColor(QMap<MyColor, int> &colors, MyColor color)
         }
     }
     colors.insert(color, 1);
-//    qDebug() << "COL="<<colors.key(color).red() << colors.key(color).green() << colors.key(color).blue();
 }
 
 QColor ColorsManager::calculateAverageColor(const QImage &car, int idx)
@@ -145,12 +139,12 @@ QColor ColorsManager::calculateAverageColor(const QImage &car, int idx)
         }
     }
 
-    int max = 0;
-    QColor color;
     QList<MyColor> keys = colors.keys();
-    for (int i = 0; i < keys.size(); ++i)
+
+    int max = colors[keys[keys.size()-1]];
+    QColor color = static_cast<QColor>(keys[keys.size()-1]);
+    for (int i = 0; i < keys.size()-1; ++i)
     {
-        qDebug() << keys[i].red() << keys[i].green() << keys[i].blue() << colors[keys[i]];
         if (colors[keys[i]] > max && !isColorInTheList(keys[i], idx))
         {
             max = colors[keys[i]];
@@ -158,19 +152,7 @@ QColor ColorsManager::calculateAverageColor(const QImage &car, int idx)
         }
     }
 
-//    if (secondDriver)
-//    {
-//        int red = color.red() + 50 > 255 ? 255 : color.red() + 50;
-//        int green = color.green() + 50 > 255 ? 255 : color.green() + 50;
-//        int blue = color.blue() + 50 > 255 ? 255 : color.blue() + 50;
-
-//        color = QColor(red, green, blue);
-//    }
-
     return color;
-
-//    if (secondDriver)
-    //        average += 5;
 }
 
 bool ColorsManager::isColorInTheList(QColor color, int idx)
@@ -178,9 +160,9 @@ bool ColorsManager::isColorInTheList(QColor color, int idx)
     for (int i = 0; i < idx; ++i)
     {
 
-        if ((abs(driverColors[i].red() - color.red()) <= 40) &&
-            (abs(driverColors[i].green() - color.green()) <= 40) &&
-            (abs(driverColors[i].blue() - color.blue()) <= 40))
+        if ((abs(defaultDriverColors[i].red() - color.red()) <= 30) &&
+            (abs(defaultDriverColors[i].green() - color.green()) <= 30) &&
+            (abs(defaultDriverColors[i].blue() - color.blue()) <= 30))
             return true;
     }
     return false;

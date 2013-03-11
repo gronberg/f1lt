@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'preferencesdialog.ui'
 **
-** Created: Sat Mar 9 16:18:57 2013
+** Created: Mon Mar 11 20:54:08 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -113,7 +113,7 @@ public:
     {
         if (PreferencesDialog->objectName().isEmpty())
             PreferencesDialog->setObjectName(QString::fromUtf8("PreferencesDialog"));
-        PreferencesDialog->resize(447, 389);
+        PreferencesDialog->resize(447, 395);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/ui_icons/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         PreferencesDialog->setWindowIcon(icon);
@@ -518,7 +518,7 @@ public:
         QObject::connect(buttonBox, SIGNAL(accepted()), PreferencesDialog, SLOT(accept()));
         QObject::connect(buttonBox, SIGNAL(rejected()), PreferencesDialog, SLOT(reject()));
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(PreferencesDialog);

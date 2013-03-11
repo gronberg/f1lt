@@ -27,11 +27,23 @@
 
 #include "ltpackets.h"
 
+class MyColor : public QColor
+{
+public:
+    MyColor(QColor c) : QColor(c) { }
+    bool operator<(const QColor &color) const
+    {
+        return ((red() < color.red()));// && (blue() < color.blue()) && (green() < color.green()));
+    }
+};
+
 /*!
  * \brief This class is responsible for holding interace and driver colors. This is a singleton.
  */
-class ColorsManager
+class ColorsManager : public QObject
 {
+    Q_OBJECT
+
 public:    
 
     static ColorsManager &getInstance()
@@ -94,9 +106,12 @@ public:
         return defaultDriverColors;
     }
 
-    void calculateDefaultDriverColors();
     QColor calculateAverageColor(const QImage &car, int idx);
     bool isColorInTheList(QColor color, int idx);
+    void addColor(QMap<MyColor, int> &colors, MyColor color);
+
+public slots:
+    void calculateDefaultDriverColors();    
 
 private:
     ColorsManager();

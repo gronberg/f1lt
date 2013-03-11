@@ -107,8 +107,7 @@ bool SeasonData::loadSeasonData(int season)
         qSort(ltTeams);
         qSort(ltEvents);
 
-        emit seasonDataChanged();
-        ColorsManager::getInstance().calculateDefaultDriverColors();
+        emit seasonDataChanged();        
     }
 
     return true;
@@ -172,6 +171,7 @@ void SeasonData::loadSeasonData(QDataStream &stream)
  */
 void SeasonData::checkSeasonData()
 {
+    return;
     if (season != QDate::currentDate().year())
         loadSeasonData(QDate::currentDate().year());
 
@@ -207,10 +207,12 @@ void SeasonData::updateTeamList(const QVector<LTTeam> &teams)
             for (int k = 0; k < teams[i].drivers.size(); ++k)
             {
                 int didx = ltTeams[idx].drivers.indexOf(teams[i].drivers[k]);
+
+                qDebug() << "APPEND" << teams[i].drivers[k].name;
                 if (didx == -1)
                 {
                     ltTeams[idx].drivers.append(teams[i].drivers[k]);
-                    ltTeams[idx].drivers.last().mainDriver = true;
+                    ltTeams[idx].drivers.last().mainDriver = true;                    
                 }
                 else
                 {
@@ -228,24 +230,27 @@ void SeasonData::updateTeamList(const DriverData &dd)
 {
     for (int j = 0; j < ltTeams.size(); ++j)
     {
-        bool foundNumberWithoutName = false;
+        bool foundNumberWithoutName = false, foundAlready = false;
 
         for (int k = 0; k < ltTeams[j].drivers.size(); ++k)
-        {
+        {            
             if (ltTeams[j].drivers[k].no == dd.getNumber())
             {
-                ltTeams[j].drivers[k].mainDriver = false;
-                foundNumberWithoutName = true;
-            }
-
-            if (ltTeams[j].drivers[k].name == dd.getDriverName())
-            {
-                ltTeams[j].drivers[k].mainDriver = true;
-                foundNumberWithoutName = false;
+                if (ltTeams[j].drivers[k].name == dd.getDriverName())
+                {
+                    ltTeams[j].drivers[k].mainDriver = true;
+                    foundNumberWithoutName = false;
+                    foundAlready = true;
+                }
+                else
+                {
+                    ltTeams[j].drivers[k].mainDriver = false;
+                    foundNumberWithoutName = true;
+                }
             }
         }
 
-        if (foundNumberWithoutName)
+        if (foundNumberWithoutName && !foundAlready)
         {
             LTDriver driver;
             driver.name = dd.getDriverName();
@@ -266,7 +271,9 @@ QPixmap SeasonData::getCarImg(int no)
         for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
         {
             if (ltTeams[i].drivers[j].no == no)
+            {
                 return ltTeams[i].carImg;
+            }
         }
     }
     return QPixmap();

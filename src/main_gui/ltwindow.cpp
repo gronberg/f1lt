@@ -64,6 +64,9 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(showNoSessionBoard(bool, QString)));
 
     connect(&SeasonData::getInstance(), SIGNAL(seasonDataChanged()), &ImagesFactory::getInstance(), SLOT(reloadGraphics()));
+    connect(&SeasonData::getInstance(), SIGNAL(seasonDataChanged()), &ColorsManager::getInstance(), SLOT(calculateDefaultDriverColors()));
+    connect(&SeasonData::getInstance(), SIGNAL(seasonDataChanged()), saw, SLOT(setupColors()));
+
 
     connect(prefs, SIGNAL(driversColorsChanged()), saw, SLOT(setupColors()));
 
@@ -82,6 +85,8 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(ui->messageBoardWidget, SIGNAL(loadClicked()), this, SLOT(on_actionLT_files_data_base_triggered()));
 
     loadSettings();
+    ColorsManager::getInstance().calculateDefaultDriverColors();
+    saw->setupColors();
 
     delayWidgetAction = ui->mainToolBar->addWidget(delayWidget);
     delayWidgetAction->setVisible(true);
