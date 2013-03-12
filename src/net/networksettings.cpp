@@ -31,8 +31,8 @@ NetworkSettings::NetworkSettings()
     socketHost = "live-timing.formula1.com";
     socketPort = 4321;
 
-//    socketHost = "192.168.1.2";
-//    socketPort = 6666;
+    socketHost = "192.168.1.2";
+    socketPort = 6666;
 
     ltDataUrl = "http://lt.f1lt.pl/";
     ltDataList = "http://lt.f1lt.pl/lis.php";

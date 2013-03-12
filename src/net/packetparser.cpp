@@ -190,7 +190,7 @@ bool PacketParser::parsePacket(const QByteArray &buf, Packet &packet, int &pos)
         }
     }
 
-//    decryptPacket = false;
+    decryptPacket = false;
     packet.encrypted = decryptPacket;
 
     if (packet.length > 0)
@@ -1007,8 +1007,8 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 
              if (!eventData.frame || number == 1) // || decryption_failure
              {
-                eventData.frame = number;
-                emit requestKeyFrame(number);
+//                eventData.frame = number;
+//                emit requestKeyFrame(number);
 
 //                 decryptionKeyObtained(2841044872);   //valencia race
 //                  decryptionKeyObtained(2971732062);      //valencia qual

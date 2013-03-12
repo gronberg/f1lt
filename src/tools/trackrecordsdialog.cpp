@@ -67,13 +67,17 @@ void TrackRecordsDialog::exec()
     QDialog::show();
 }
 
-void TrackRecordsDialog::loadTrackRecords()
+void TrackRecordsDialog::loadTrackRecords(int year)
 {
+    qDebug() << "UPDATE!";
     loadingRecords = true;
 
     TrackVersion *tv = currentTV;
     TrackWeekendRecords *twr = currentTWR;
     Track *tr = 0;
+
+    if (year == 0)
+        year = EventData::getInstance().getEventInfo().fpDate.year();
 
     if (currentIndex == -1)
     {
@@ -81,7 +85,7 @@ void TrackRecordsDialog::loadTrackRecords()
 
         qDebug() << twr << tv;
 
-        if (twr == 0 || tv == 0)
+        if (twr == 0 || tv == 0 || tr == 0)
         {
             if (TrackRecords::getInstance().getTrackRecords().isEmpty())
                 return;
@@ -100,13 +104,15 @@ void TrackRecordsDialog::loadTrackRecords()
     }
     else
     {
-        tr = &TrackRecords::getInstance()[currentIndex];
-        tr->getTrackRecords(&tv, &twr, EventData::getInstance().getEventInfo().fpDate.year());
+        tr = &TrackRecords::getInstance()[currentIndex];        
+        tr->getTrackRecords(&tv, &twr, year);
+
         if (tv == 0 || twr == 0)
         {
-            tv = &(*tr)[0];
-            twr = &(*tv)[0];
+            tv = &tr->last();
+            twr = &tv->last();
         }
+        qDebug() << "Ffdsfadfasdfa" << EventData::getInstance().getEventInfo().fpDate.year() << twr->year;
     }
 
     setWindowTitle("Track records: " + tr->name);
@@ -128,11 +134,25 @@ void TrackRecordsDialog::loadTrackRecords()
     for (int i = 0; i < tv->trackWeekendRecords.size(); ++i)
         ui->yearBox->addItem(QString::number(tv->trackWeekendRecords[i].year));
 
+    qDebug() << twr->year;
     idx = ui->yearBox->findText(QString::number(twr->year));
     if (idx != -1)
         ui->yearBox->setCurrentIndex(idx);
     else
         ui->yearBox->setCurrentIndex(0);
+
+    currentTV = tv;
+    currentTWR = twr;
+
+    updateRecordsLabels();
+
+    loadingRecords = false;
+}
+
+void TrackRecordsDialog::updateRecordsLabels()
+{
+    TrackVersion *tv = currentTV;
+    TrackWeekendRecords *twr = currentTWR;
 
     QPalette palette;
     ui->qRTLabel->setText(tv->trackRecords[QUALI_RECORD].time.toString());
@@ -198,11 +218,6 @@ void TrackRecordsDialog::loadTrackRecords()
     ui->s2SLabel->setPalette(palette);
     ui->s3SLabel->setPalette(palette);
     ui->tSLabel->setPalette(palette);
-
-    currentTV = tv;
-    currentTWR = twr;
-
-    loadingRecords = false;
 }
 
 void TrackRecordsDialog::on_listWidget_clicked(const QModelIndex &index)
@@ -302,10 +317,11 @@ void TrackRecordsDialog::update()
 
     Track &tr = TrackRecords::getInstance()[currentIndex];
 
-    if (tr.name == EventData::getInstance().getEventInfo().eventPlace)
+    if ((tr.name == EventData::getInstance().getEventInfo().eventPlace) &&
+        (ui->yearBox->currentText().toInt() == EventData::getInstance().getEventInfo().fpDate.year()))
     {
         TrackRecords::getInstance().gatherSessionRecords(true);
-        loadTrackRecords();
+        updateRecordsLabels();
 
         if (drDialog->isVisible())
         {
@@ -321,7 +337,7 @@ void TrackRecordsDialog::on_yearBox_currentIndexChanged(const QString &arg1)
     {
         currentTWR = &currentTV->getTrackWeekendRecords(arg1.toInt());
         if (*currentTWR != TrackWeekendRecords::null())
-            loadTrackRecords();
+            loadTrackRecords(currentTWR->year);
         else
             currentTWR = 0;
 
@@ -336,7 +352,7 @@ void TrackRecordsDialog::on_trackVersionBox_activated(const QString &arg1)
         if (*currentTV != TrackVersion::null())
         {
             currentTWR = &(*currentTV)[0];
-            loadTrackRecords();
+            loadTrackRecords(currentTWR->year);
         }
         else
         {

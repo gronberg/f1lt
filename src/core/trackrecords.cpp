@@ -212,6 +212,9 @@ int TrackRecords::getCurrentTrackRecords(Track **track, TrackWeekendRecords **tw
 {
     LTEvent event = EventData::getInstance().getEventInfo();
 
+    if (event.eventNo == 0)
+        event = SeasonData::getInstance().getCurrentEvent();
+
     for (int i = 0; i < trackRecords.size(); ++i)
     {
         if (trackRecords[i].name == event.eventPlace)

@@ -196,6 +196,19 @@ struct TrackVersion
         return TrackWeekendRecords::null();
     }
 
+    int size() const
+    {
+        return trackWeekendRecords.size();
+    }
+
+    TrackWeekendRecords &last()
+    {
+        if (!trackWeekendRecords.isEmpty())
+            return trackWeekendRecords.last();
+
+        return TrackWeekendRecords::null();
+    }
+
     TrackVersion &operator=(const TrackVersion &tr)
     {
         if (this == &tr)
@@ -258,6 +271,14 @@ struct Track
     {
         if (idx >= 0 && idx < trackVersions.size())
             return trackVersions[idx];
+
+        return TrackVersion::null();
+    }
+
+    TrackVersion &last()
+    {
+        if (!trackVersions.isEmpty())
+            return trackVersions.last();
 
         return TrackVersion::null();
     }
@@ -329,6 +350,19 @@ public:
     {
         if (idx >= 0 && idx < trackRecords.size())
             return trackRecords[idx];
+
+        return Track::null();
+    }
+
+    int size() const
+    {
+        return trackRecords.size();
+    }
+
+    Track &last()
+    {
+        if (!trackRecords.isEmpty())
+            return trackRecords.last();
 
         return Track::null();
     }

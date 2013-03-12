@@ -40,7 +40,8 @@ public:
     explicit TrackRecordsDialog(QWidget *parent = 0);
     ~TrackRecordsDialog();
 
-    void loadTrackRecords();
+    void loadTrackRecords(int year = 0);
+    void updateRecordsLabels();
 
     void exec();
 

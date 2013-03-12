@@ -171,9 +171,10 @@ void SeasonData::loadSeasonData(QDataStream &stream)
  */
 void SeasonData::checkSeasonData()
 {
-    return;
     if (season != QDate::currentDate().year())
         loadSeasonData(QDate::currentDate().year());
+
+    return;
 
     LTEvent ev = getEvent(1);
     if (ev.eventNo > 0)
@@ -286,6 +287,10 @@ QString SeasonData::getDriverName(QString &name)
         for (int j = 0; j < ltTeams[i].drivers.size(); ++j)
         {
             if (ltTeams[i].drivers[j].name.toUpper() == name.toUpper())
+                return ltTeams[i].drivers[j].name;
+
+            //size of data that holds driver name is stored on 4 bytes only, and van der Garde name is shortened by server
+            if (name.toUpper() == "G. VAN DER GAR" && ltTeams[i].drivers[j].name.toUpper().contains(name.toUpper()))
                 return ltTeams[i].drivers[j].name;
         }
     }

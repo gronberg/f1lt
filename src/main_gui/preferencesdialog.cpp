@@ -280,7 +280,7 @@ int PreferencesDialog::getAutoSaveRecord()
 
 void PreferencesDialog::on_autoStopRecordBox_toggled(bool checked)
 {
-    ui->autoSaveRecordSpinBox->setEnabled(checked);
+    ui->autoStopRecordSpinBox->setEnabled(checked);
 }
 
 void PreferencesDialog::setAutoConnect(bool val)
