@@ -174,8 +174,6 @@ void SeasonData::checkSeasonData()
     if (season != QDate::currentDate().year())
         loadSeasonData(QDate::currentDate().year());
 
-    return;
-
     LTEvent ev = getEvent(1);
     if (ev.eventNo > 0)
     {

@@ -122,7 +122,12 @@ struct LTEvent
             return true;
 
         return false;
-    }        
+    }
+
+    bool operator!=(const LTEvent &event) const
+    {
+        return !this->operator ==(event);
+    }
 
 //    LTTrackCoordinates trackCoordinates;
 };
@@ -209,7 +214,7 @@ private:
 
     SessionDefaults sessionDefaults;
     TrackMapsCoordinates trackMapsCoordinates;
-    QMap<QString, QString> eventNamesMap;    
+    QMap<QString, QString> eventNamesMap;
 };
 
 #endif // SEASONDATA_H

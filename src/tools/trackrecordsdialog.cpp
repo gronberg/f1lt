@@ -69,7 +69,6 @@ void TrackRecordsDialog::exec()
 
 void TrackRecordsDialog::loadTrackRecords(int year)
 {
-    qDebug() << "UPDATE!";
     loadingRecords = true;
 
     TrackVersion *tv = currentTV;
@@ -82,8 +81,6 @@ void TrackRecordsDialog::loadTrackRecords(int year)
     if (currentIndex == -1)
     {
         currentIndex = TrackRecords::getInstance().getCurrentTrackRecords(&tr, &twr, &tv);
-
-        qDebug() << twr << tv;
 
         if (twr == 0 || tv == 0 || tr == 0)
         {
@@ -112,7 +109,6 @@ void TrackRecordsDialog::loadTrackRecords(int year)
             tv = &tr->last();
             twr = &tv->last();
         }
-        qDebug() << "Ffdsfadfasdfa" << EventData::getInstance().getEventInfo().fpDate.year() << twr->year;
     }
 
     setWindowTitle("Track records: " + tr->name);
@@ -134,7 +130,6 @@ void TrackRecordsDialog::loadTrackRecords(int year)
     for (int i = 0; i < tv->trackWeekendRecords.size(); ++i)
         ui->yearBox->addItem(QString::number(tv->trackWeekendRecords[i].year));
 
-    qDebug() << twr->year;
     idx = ui->yearBox->findText(QString::number(twr->year));
     if (idx != -1)
         ui->yearBox->setCurrentIndex(idx);
@@ -291,7 +286,7 @@ void TrackRecordsDialog::setFont(const QFont &font)
         ui->gridLayout_2->itemAt(i)->widget()->setFont(font);
     }
 
-    ui->groupBox->setFont(font);
+    ui->trackRecordsLabel->setFont(font);
     ui->recordsLabel->setFont(font);
     ui->label->setFont(font);
 

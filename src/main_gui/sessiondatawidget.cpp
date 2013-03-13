@@ -117,6 +117,12 @@ void SessionDataWidget::updateEventInfo()
 
     LTEvent event = eventData.getEventInfo();
 
+    if (event != currentEvent)
+        currentEvent = event;
+
+    else
+        return;
+
     QPalette palette;
     ui->eventNameLabel->setText(event.eventName);
     palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::YELLOW));
@@ -134,24 +140,7 @@ void SessionDataWidget::updateEventInfo()
     palette.setBrush(QPalette::Foreground, ColorsManager::getInstance().getColor(LTPackets::CYAN));
     ui->eventLapsLabel->setPalette(palette);
 
-//    if (ui->eventMapLabel->pixmap() == 0 || ui->eventMapLabel->pixmap()->isNull())
-    {
-        QPixmap trackImg = eventData.getEventInfo().trackImg;
-        if (!trackImg.isNull())
-        {
-            QPixmap pix = trackImg;
-            int w = ui->scrollArea_2->width() - 20;
-            int h = ui->scrollArea_2->height() - 20;
-
-            if (pix.width() > w)
-                pix = trackImg.scaledToWidth(w, Qt::SmoothTransformation);
-
-            if (pix.height() > h)
-                pix = trackImg.scaledToHeight(h, Qt::SmoothTransformation);
-
-            ui->eventMapLabel->setPixmap(pix);
-        }
-    }
+    resizeTrackMap();
 
     Track *track = 0;
     TrackVersion *tv = 0;
@@ -245,7 +234,26 @@ void SessionDataWidget::updateEventInfo()
 
 //            ui->tableWidget_5->setColumnWidth(0, trackImg.width());
 //        }
-//    }
+    //    }
+}
+
+void SessionDataWidget::resizeTrackMap()
+{
+    QPixmap trackImg = currentEvent.trackImg;
+    if (!trackImg.isNull())
+    {
+        QPixmap pix = trackImg;
+        int w = ui->scrollArea_2->width() - 20;
+        int h = ui->scrollArea_2->height() - 20;
+
+        if (pix.width() > w)
+            pix = trackImg.scaledToWidth(w, Qt::SmoothTransformation);
+
+        if (pix.height() > h)
+            pix = trackImg.scaledToHeight(h, Qt::SmoothTransformation);
+
+        ui->eventMapLabel->setPixmap(pix);
+    }
 }
 
 void SessionDataWidget::updateSpeedRecords()
@@ -464,6 +472,8 @@ void SessionDataWidget::on_tabWidget_currentChanged(int index)
 void SessionDataWidget::resizeEvent(QResizeEvent *)
 {
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
+    if (ui->tabWidget->currentIndex() == 0)
+        resizeTrackMap();
 }
 
 void SessionDataWidget::setFont(const QFont &font)

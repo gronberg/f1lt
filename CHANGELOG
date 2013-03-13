@@ -1,4 +1,4 @@
-v2.0.0:
+v2.0.0 (13-03-2013):
 - added delay option - live timing can be now synchronized with the tv coverage
 - added track records database - application gathers driver best laps from the weekend and displays them in driver info tab, there is also a tool to access all records
 - added proxy settings - it is now possible to connect with the live timing server using proxy
@@ -10,6 +10,7 @@ v2.0.0:
 - added IN and OUT laps into lap history during practices and qualis
 - implemented auto-save recorded session file every x minutes (x can be set in the preferences)
 - retired drivers are now not drawn in radar during races
+- application now correctly recognizes free practice number during session replay
 - new application icons
 - new startup screen
 - for Linux users only - changed the storage of .lt and .ini files, they are now saved in $HOME/.config/f1lt

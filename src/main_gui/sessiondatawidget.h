@@ -60,6 +60,8 @@ public:
     void updatePitStops(bool clear = false);
     void updateEventInfo();
 
+    void resizeTrackMap();
+
 
     void clearData();
     void clearFastestLaps();
@@ -84,6 +86,8 @@ private:
     SpeedRecordsModel speedRecordsModel;
     FastestLapsModel fastestLapsModel;
     PitStopsModel pitStopsModel;
+
+    LTEvent currentEvent;
 };
 
 #endif // SESSIONDATAWIDGET_H
