@@ -34,7 +34,7 @@ void SessionTimer::timerTimeout()
 //    if (!counterMode)
     {
         EventData &eventData = EventData::getInstance();
-        if (eventData.isSessionStarted())
+        if (eventData.isSessionStarted() && !eventData.isQualiBreak())
         {
             if (timerDelay != 0)
             {
@@ -63,8 +63,12 @@ void SessionTimer::timerTimeout()
                         if (hours < 0)
                         {
                             secs = mins = hours = 0;
-                            eventData.setSessionFinished(true);
-//                            counterMode = true;
+
+                            if (eventData.getEventType() == LTPackets::QUALI_EVENT && eventData.getQualiPeriod() < 3)
+                                eventData.setQualiBreak(true);
+
+                            else
+                                eventData.setSessionFinished(true);
                         }
                     }
                 }

@@ -37,8 +37,8 @@
 
 
 
-HeadToHeadDialog::HeadToHeadDialog(bool rev, QWidget *parent) :
-    QDialog(parent, Qt::Window), ui(new Ui::HeadToHeadDialog), reversedOrder(rev), eventData(EventData::getInstance()), thumbnailsSize(150)
+HeadToHeadDialog::HeadToHeadDialog(QWidget *parent) :
+    QDialog(parent, Qt::Window), ui(new Ui::HeadToHeadDialog), eventData(EventData::getInstance()), thumbnailsSize(150)
 {
     ui->setupUi(this);
 
@@ -303,7 +303,7 @@ void HeadToHeadDialog::updateData()
     double interval = 0.0;
     for (; k <= lastLap; ++k, ++j)
     {
-        int lapNo = reversedOrder ? lastLap - k + firstLap : k;
+        int lapNo = lastLap - k + firstLap;
         LapTime laps[4];
 
         if (ui->tableWidget->rowCount() <= j+2)

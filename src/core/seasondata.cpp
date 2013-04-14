@@ -415,8 +415,9 @@ const LTEvent &SeasonData::getEvent(const QDate &date) const
 }
 
 const LTEvent &SeasonData::getCurrentEvent()const
-{
-    return getEvent(QDate::currentDate());
+{        
+    qDebug() << "DATE: " + QDateTime::currentDateTime().time().toString("hh:mm") + ", UTC=" + QDateTime::currentDateTimeUtc().time().toString("hh:mm");
+    return getEvent(QDateTime::currentDateTimeUtc().date());
 }
 
 const LTEvent &SeasonData::getNextEvent() const

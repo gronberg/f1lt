@@ -38,13 +38,10 @@ class HeadToHeadDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit HeadToHeadDialog(bool rev = false, QWidget *parent = 0);
+    explicit HeadToHeadDialog(QWidget *parent = 0);
     ~HeadToHeadDialog();
 
     void setFont(const QFont &);
-
-    void setReversedOrder(bool rev) { reversedOrder = rev; }
-    bool isReversedOrder() { return reversedOrder; }
 
     void loadDriversList();
 
@@ -85,8 +82,6 @@ private:
     GapCompChart *gapCompChart;
     PosCompChart *posCompChart;
     QList<QPixmap> *smallCarImg;
-
-    bool reversedOrder;
 
     EventData &eventData;
     int thumbnailsSize;

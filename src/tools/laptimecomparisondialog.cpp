@@ -36,8 +36,8 @@
 #include "../core/colorsmanager.h"
 #include "../main_gui/ltitemdelegate.h"
 
-LapTimeComparisonDialog::LapTimeComparisonDialog(bool rev, QWidget *parent) :
-    QDialog(parent, Qt::Window), ui(new Ui::LapTimeComparisonDialog), reversedOrder(rev), eventData(EventData::getInstance()), thumbnailsSize(150)
+LapTimeComparisonDialog::LapTimeComparisonDialog(QWidget *parent) :
+    QDialog(parent, Qt::Window), ui(new Ui::LapTimeComparisonDialog), eventData(EventData::getInstance()), thumbnailsSize(150)
 {
     ui->setupUi(this);
 
@@ -196,7 +196,7 @@ void LapTimeComparisonDialog::updateData()
     int j = 0, k = firstLap;
     for (; k <= lastLap; ++k, ++j)
     {
-        int lapNo = reversedOrder ? lastLap - k + firstLap : k;
+        int lapNo = lastLap - k + firstLap;
         LapTime laps[4];
 
         if (ui->tableWidget->rowCount() <= j+1)

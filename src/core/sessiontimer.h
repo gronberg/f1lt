@@ -23,6 +23,7 @@
 #ifndef SESSIONTIMER_H
 #define SESSIONTIMER_H
 
+#include <QDebug>
 #include <QObject>
 #include <QTime>
 #include <QTimer>
@@ -54,6 +55,7 @@ public slots:
 
     void start(int t = 1000)
     {
+        qDebug() << "START TIMER!";
         interval = t;
         timer.stop();
         counterMode = false;

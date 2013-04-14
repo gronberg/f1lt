@@ -212,8 +212,8 @@ public:
 
     bool isInPits() const
     {
-        if (!lastLap.getTime().toString().isEmpty() &&
-             (lastLap.getTime().toString() == "IN PIT" || getColorData().numberColor() == LTPackets::PIT))
+        if ((!lastLap.getTime().toString().isEmpty() && (lastLap.getTime().toString() == "IN PIT")) ||
+             getColorData().numberColor() == LTPackets::PIT)
             return true;
 
         return false;

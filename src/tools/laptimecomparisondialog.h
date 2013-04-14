@@ -39,13 +39,10 @@ class LapTimeComparisonDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit LapTimeComparisonDialog(bool rev = false, QWidget *parent = 0);
+    explicit LapTimeComparisonDialog(QWidget *parent = 0);
     ~LapTimeComparisonDialog();
     
     void setFont(const QFont &);
-
-    void setReversedOrder(bool rev) { reversedOrder = rev; }
-    bool isReversedOrder() { return reversedOrder; }
 
     void loadDriversList();
 
@@ -82,8 +79,6 @@ private:
     LapCompChart *lapCompChart;
     QColor color[4];
     QList<QPixmap> *smallCarImg;
-
-    bool reversedOrder;
 
     EventData &eventData;
     int thumbnailsSize;

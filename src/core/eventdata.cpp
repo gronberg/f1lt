@@ -59,6 +59,7 @@ EventData::EventData()
 
     sessionStarted = false;
     sessionFinished = false;
+    qualiBreak = false;
 
     baseEventId = 7066;
     baseEventInc = 6;

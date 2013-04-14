@@ -275,6 +275,9 @@ public:
     bool isSessionFinished()             const { return sessionFinished; }
     void setSessionFinished(bool st)     { sessionFinished = st; }
 
+    bool isQualiBreak()                 const { return qualiBreak; }
+    void setQualiBreak(bool qb)          { qualiBreak = qb; }
+
     const QString &getCommentary()             const { return commentary; }
     int getQualiPeriod()                const { return qualiPeriod; }
 
@@ -315,6 +318,7 @@ private:
 
     bool sessionStarted;
     bool sessionFinished;
+    bool qualiBreak;
 
     QString commentary;
 

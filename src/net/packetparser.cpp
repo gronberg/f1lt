@@ -931,7 +931,7 @@ void PacketParser::clearBuffer()
 
 void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 {
-//    if (packet.type != LTPackets::SYS_COMMENTARY && packet.type != LTPackets::SYS_TIMESTAMP)
+    if (packet.type != LTPackets::SYS_COMMENTARY && packet.type != LTPackets::SYS_TIMESTAMP)
         qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTPackets::SYS_COMMENTARY) ? packet.longData.constData() : "");
 
     unsigned int number, i;
@@ -1008,10 +1008,11 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
              if (!eventData.frame || number == 1) // || decryption_failure
              {
                 eventData.frame = number;
-                emit requestKeyFrame(number);
+//                emit requestKeyFrame(number);
 
 //                 decryptionKeyObtained(2841044872);   //valencia race
-//                  decryptionKeyObtained(2971732062);      //valencia qual
+                  decryptionKeyObtained(2971732062);      //valencia qual
+//                decryptionKeyObtained(3230237603);      //valencia fp1
 //                onDecryptionKeyObtained(3585657959);  //?
 //                onDecryptionKeyObtained(2488580439);  //qual
 //                 onDecryptionKeyObtained(2438680630);  //race
@@ -1054,10 +1055,11 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                     //session actually starts when we get the 59 seconds mark (i.e. Q1 starts when the time is 19:59)
                     j = eventData.remainingTime.second();
 
-                    if (!eventData.sessionStarted && j != 0 && (eventData.eventType != LTPackets::RACE_EVENT ||
+                    if ((!eventData.sessionStarted || eventData.qualiBreak) && j != 0 && (eventData.eventType != LTPackets::RACE_EVENT ||
                         (eventData.eventType == LTPackets::RACE_EVENT && eventData.lapsCompleted < eventData.eventInfo.laps)))
                     {
                         eventData.sessionStarted = true;
+                        eventData.qualiBreak = false;
                         eventData.sessionFinished = false;
                     }
 

@@ -381,7 +381,7 @@ void LTWindow::on_actionLap_time_comparison_triggered()
     }
     if (ltcDialog.size() < 30)
     {
-        LapTimeComparisonDialog *ltc = new LapTimeComparisonDialog(settings->value("ui/reversed_lap_time_comparison").toBool());
+        LapTimeComparisonDialog *ltc = new LapTimeComparisonDialog();
         ltc->show(ui->ltWidget->getCurrentDriverId());
         ltc->setFont(prefs->getMainFont());
         ltcDialog.append(ltc);
@@ -401,7 +401,7 @@ void LTWindow::on_actionHead_to_head_triggered()
     }
     if (h2hDialog.size() < 30)
     {
-        HeadToHeadDialog *h2h = new HeadToHeadDialog(settings->value("ui/reversed_head_to_head").toBool());
+        HeadToHeadDialog *h2h = new HeadToHeadDialog();
         h2h->show(ui->ltWidget->getCurrentDriverId());
         h2h->setFont(prefs->getMainFont());
         h2hDialog.append(h2h);
@@ -432,7 +432,8 @@ void LTWindow::on_actionFollow_a_driver_triggered()
 
 void LTWindow::sessionStarted()
 {
-    if (!sessionTimer->isActive() && (!playing || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))
+    if (!sessionTimer->isActive() &&
+        ((!playing && !eventData.isQualiBreak()) || (playing && eventPlayer->isPlaying() && !eventPlayer->isPaused())))
     {
         sessionTimer->start(1000);
         driverTrackerWidget->startTimer(1000);
@@ -703,14 +704,12 @@ void LTWindow::on_actionPreferences_triggered()
 
         for (int i = 0; i < h2hDialog.size(); ++i)
         {
-            h2hDialog[i]->setReversedOrder(settings->value("ui/reversed_head_to_head").toBool());
             if (h2hDialog[i]->isVisible())
                 h2hDialog[i]->updateData();
         }
 
         for (int i = 0; i < ltcDialog.size(); ++i)
         {
-            ltcDialog[i]->setReversedOrder(settings->value("ui/reversed_lap_time_comparison").toBool());
             if (ltcDialog[i]->isVisible())
                 ltcDialog[i]->updateData();
         }

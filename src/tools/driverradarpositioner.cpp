@@ -27,7 +27,7 @@
 #include "../core/eventdata.h"
 
 DriverRadarPositioner::DriverRadarPositioner(DriverData *dd, int x, int y, double r, double r1, double rL) :
-    driverData(dd), avgTime(100), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false), finished(false), qualiOut(false),
+    driverData(dd), avgTime(100), currentDeg(0), currSector(1), currentLapTime(0), startingNewLap(false), inPits(false), lapped(false), finished(false), qualiOut(false),
     excluded(false), speed(1), radarX(x), radarY(y), radarR(r), radarPitR(r1), radarLappedR(rL)
 {
     avgSectorTimes[0] = 0.0;
