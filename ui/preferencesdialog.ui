@@ -81,7 +81,7 @@
        <item>
         <widget class="QCheckBox" name="autoConnectBox">
          <property name="text">
-          <string>Connect to LT serwer automatically after application start</string>
+          <string>Connect to LT server automatically after application start</string>
          </property>
         </widget>
        </item>
