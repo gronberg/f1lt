@@ -66,15 +66,13 @@ public:
 
     static QString seasonDataFile()
     {
-        //QString prefix = STR(INSTALL_PREFIX);
-        //return prefix+"share/F1LT/season.dat";
 #ifdef WIN32
         return programHomeDir() + "/season.dat";
 #else
-        QString prefix = STR(INSTALL_PREFIX);
+        QString prefix = STR(SHARE_PREFIX);
         QDir dir;
         if (dir.exists(prefix))
-            return prefix + "/share/season.dat";
+            return prefix + "/season.dat";
         else
             return programHomeDir() + "/season.dat";
 #endif
@@ -85,26 +83,36 @@ public:
 #ifdef WIN32
         return programHomeDir() + "/trackdata.dat";
 #else
-        QString prefix = STR(INSTALL_PREFIX);
+        QString prefix = STR(SHARE_PREFIX);
         QDir dir;
         if (dir.exists(prefix))
-            return prefix + "/share/trackdata.dat";
+            return prefix + "/trackdata.dat";
         else
             return programHomeDir() + "/trackdata.dat";
 #endif
     }
 
-    static QString trackRercordsFile()
+    static QString trackRercordsFile(bool forRead = true)
     {
 #ifdef WIN32
         return programHomeDir() + "/trackrecords.dat";
 #else
-        QString prefix = STR(INSTALL_PREFIX);
-        QDir dir;
-        if (dir.exists(prefix))
-            return prefix + "/share/trackrecords.dat";
+        QString homeFilePath = QDir::homePath() + "/.config/f1lt/trackrecords.dat";
+        QFileInfo fileInfo(homeFilePath);
+
+        if (forRead && !fileInfo.exists())
+        {
+            QString prefix = STR(SHARE_PREFIX);
+            QDir dir;
+            if (dir.exists(prefix))
+                return prefix + "/trackrecords.dat";
+            else
+                return programHomeDir() + "/trackrecords.dat";
+        }
         else
-            return programHomeDir() + "/trackrecords.dat";
+        {
+            return homeFilePath;
+        }
 #endif
     }
 

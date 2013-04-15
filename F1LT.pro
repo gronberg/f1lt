@@ -6,8 +6,18 @@ QT += core \
     network
 
 TARGET = F1LT
+
+#--------------------------------------------------------------
+# installation prefixes
 PREFIX = /opt/$$TARGET
+
+#by default application data will be stored in /opt/F1LT/share
+SHARE=$$PREFIX/share
+#--------------------------------------------------------------
+
 DEFINES += INSTALL_PREFIX=$$PREFIX
+DEFINES += SHARE_PREFIX=$$SHARE
+
 target.path = $$PREFIX/bin/
 TEMPLATE = app
 
@@ -19,7 +29,7 @@ INSTALLS += target \
     DATA_FILES
 
 DATA_FILES.files = season.dat trackdata.dat trackrecords.dat
-DATA_FILES.path = $$PREFIX/share/
+DATA_FILES.path = $$SHARE
 
 RC_FILE = f1lt.rc
 
@@ -182,4 +192,5 @@ RESOURCES += icons/icons.qrc \
     other_files.qrc
 
 OTHER_FILES += \
-    CHANGELOG
+    CHANGELOG \
+    INSTALL

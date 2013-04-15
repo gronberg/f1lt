@@ -294,7 +294,7 @@ void LapTimeComparisonDialog::updateData()
                                 if (laps[j].toString() != "")
                                     msecs[ji++] = laps[j].toMsecs();
                                 else
-                                    msecs[ji++] = 999999999998;
+                                    msecs[ji++] = 1000000;
                             }
                         }
                         double maxGap = std::max(std::max(msecs[0], msecs[1]), msecs[2]);

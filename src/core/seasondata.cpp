@@ -38,6 +38,7 @@ SeasonData::SeasonData() : season(2013)
 
 bool SeasonData::loadSeasonFile()
 {
+    qDebug() << F1LTCore::seasonDataFile() << F1LTCore::trackDataFile() << F1LTCore::trackRercordsFile(true);
     ltTeams.clear();
 
     season = 0;
@@ -47,7 +48,7 @@ bool SeasonData::loadSeasonFile()
     ok[0] = loadSeasonData(QDate::currentDate().year());
     ok[1] = trackMapsCoordinates.loadTrackDataFile();
 
-    ok[2] = TrackRecords::getInstance().loadTrackRecords(F1LTCore::trackRercordsFile());
+    ok[2] = TrackRecords::getInstance().loadTrackRecords(F1LTCore::trackRercordsFile(true));
     return (ok[0] && ok[1] && ok[2]);
 }
 

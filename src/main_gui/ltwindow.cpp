@@ -769,7 +769,7 @@ bool LTWindow::close()
     if (trackRecordsDialog->isVisible())
         trackRecordsDialog->close();
 
-    TrackRecords::getInstance().saveTrackRecords(F1LTCore::trackRercordsFile());
+    TrackRecords::getInstance().saveTrackRecords(F1LTCore::trackRercordsFile(false));
 
     return QMainWindow::close();
 }
