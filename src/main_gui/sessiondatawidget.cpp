@@ -88,7 +88,7 @@ void SessionDataWidget::setupContents()
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
 }
 
-void SessionDataWidget::updateData()
+void SessionDataWidget::updateData(const DataUpdates &dataUpdates)
 {
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
     updateFastestLaps();
@@ -97,7 +97,8 @@ void SessionDataWidget::updateData()
         case 0:
             updateEventInfo();
         case 2:
-            updateSpeedRecords();            
+            if (dataUpdates.speedRecordsUpdate)
+                updateSpeedRecords();
             break;
 
 //        case 1:
@@ -105,7 +106,8 @@ void SessionDataWidget::updateData()
 //            break;
 
         case 3:
-            updatePitStops();
+            if (dataUpdates.pitStopsUpdate)
+                updatePitStops();
             break;
     }    
 }

@@ -45,9 +45,9 @@ DataStreamReader::DataStreamReader(QObject *parent) :
     connect(&parser, SIGNAL(sessionStarted()), this, SIGNAL(sessionStarted()));
     connect(&parser, SIGNAL(packetParsed(Packet)), this, SIGNAL(packetParsed(Packet)));
     connect(&parser, SIGNAL(packetParsed(QPair<Packet, qint64>)), this, SIGNAL(packetParsed(QPair<Packet, qint64>)));
-    connect(&parser, SIGNAL(eventDataChanged()), this, SIGNAL(eventDataChanged()));
-    connect(&parser, SIGNAL(driverDataChanged(int)), this, SIGNAL(driverDataChanged(int)));
-    connect(&parser, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+    connect(&parser, SIGNAL(eventDataChanged(const DataUpdates &)), this, SIGNAL(eventDataChanged(const DataUpdates &)));
+    connect(&parser, SIGNAL(driverDataChanged(int, const DataUpdates &)), this, SIGNAL(driverDataChanged(int, const DataUpdates &)));
+    connect(&parser, SIGNAL(dataChanged(const DataUpdates &)), this, SIGNAL(dataChanged(const DataUpdates &)));
     connect(&parser, SIGNAL(requestKeyFrame(uint)), &httpReader, SLOT(obtainKeyFrame(uint)));
     connect(&parser, SIGNAL(requestDecryptionKey(uint)), &httpReader, SLOT(obtainDecryptionKey(uint)));
 }

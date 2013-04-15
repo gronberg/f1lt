@@ -300,8 +300,6 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
                             eventData.driversData[packet.carID-1].posHistory.last() = ibuf;
 
                     }
-
-                    qDebug() << "POS=" << eventData.driversData[packet.carID-1].getDriverName() << eventData.driversData[packet.carID-1].lastLap.lapTime << eventData.driversData[packet.carID-1].getPosition();
             }
 //            else
                 if ((eventData.driversData[packet.carID-1].lastLap.sectorTimes[0].toString() == "STOP" ||
@@ -376,7 +374,7 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
     eventData.driversData[packet.carID-1].carID = packet.carID;
 
     if (emitSignal)
-        emit driverDataChanged(packet.carID);
+        emit driverDataChanged(packet.carID, dataUpdates);
 }
 
 void PacketParser::handleRaceEvent(const Packet &packet)
@@ -507,6 +505,7 @@ void PacketParser::handleRaceEvent(const Packet &packet)
                 eventData.driversData[packet.carID-1].addPitStop(pd);
             }
             eventData.driversData[packet.carID-1].colorData.pitColor(1) = (LTPackets::Colors)packet.data;
+            dataUpdates.pitStopsUpdate = true;
 
             break;
 
@@ -552,6 +551,7 @@ void PacketParser::handleRaceEvent(const Packet &packet)
             }
 
             eventData.driversData[packet.carID-1].colorData.pitColor(2) = (LTPackets::Colors)packet.data;
+            dataUpdates.pitStopsUpdate = true;
 
             break;
 
@@ -589,6 +589,8 @@ void PacketParser::handleRaceEvent(const Packet &packet)
             eventData.driversData[packet.carID-1].addPitStop(pd);
 
             eventData.driversData[packet.carID-1].colorData.pitColor(3)= (LTPackets::Colors)packet.data;
+            dataUpdates.pitStopsUpdate = true;
+
             break;
 
         case LTPackets::RACE_NUM_PITS:
@@ -1074,6 +1076,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                         eventData.weather.setTrackTemp(dbuf);
                         eventData.saveWeather();
                     }
+                    dataUpdates.weatherUpdate = true;
                     break;
 
                 case LTPackets::WEATHER_AIR_TEMP:
@@ -1083,6 +1086,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                         eventData.weather.setAirTemp(dbuf);
                         eventData.saveWeather();
                     }
+                    dataUpdates.weatherUpdate = true;
                     break;
 
                 case LTPackets::WEATHER_WIND_SPEED:
@@ -1092,6 +1096,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                         eventData.weather.setWindSpeed(dbuf);
                         eventData.saveWeather();
                     }
+                    dataUpdates.weatherUpdate = true;
                     break;
 
                 case LTPackets::WEATHER_HUMIDITY:
@@ -1101,6 +1106,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                         eventData.weather.setHumidity(dbuf);
                         eventData.saveWeather();
                     }
+                    dataUpdates.weatherUpdate = true;
                     break;
 
                 case LTPackets::WEATHER_PRESSURE:
@@ -1111,7 +1117,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                         eventData.weather.setPressure(dbuf);
                         eventData.saveWeather();
                     }
-
+                    dataUpdates.weatherUpdate = true;
                     break;
 
                 case LTPackets::WEATHER_WIND_DIRECTION:
@@ -1121,6 +1127,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                         eventData.weather.setWindDirection(dbuf);
                         eventData.saveWeather();
                     }
+                    dataUpdates.weatherUpdate = true;
                     break;
 
                 case LTPackets::WEATHER_WET_TRACK:
@@ -1130,6 +1137,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                         eventData.weather.setWetDry(ibuf);
                         eventData.saveWeather();
                     }
+                    dataUpdates.weatherUpdate = true;
                     break;
 
                 default:
@@ -1150,6 +1158,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
         case LTPackets::SYS_NOTICE:
             break;
         case LTPackets::SYS_SPEED:
+            dataUpdates.speedRecordsUpdate = true;
             switch((int)copyPacket.longData[0])
             {
                 case LTPackets::SPEED_SECTOR1:
@@ -1218,6 +1227,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 
             break;
         case LTPackets::SYS_COMMENTARY:
+            dataUpdates.commentaryUpdate = true;
             s = copyPacket.longData.mid(2, copyPacket.longData.size()-2);
 
             if ((int)copyPacket.longData[0] < 32)
@@ -1253,11 +1263,12 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
             break;
     }
     if (emitSignal)
-        emit eventDataChanged();
+        emit eventDataChanged(dataUpdates);
 }
 
 void PacketParser::parsePackets(const QVector<Packet> &packets)
 {
+    dataUpdates.setAllFalse();
     for (int i = 0; i < packets.size(); ++i)
     {
         Packet packet = packets[i];
@@ -1274,11 +1285,12 @@ void PacketParser::parsePackets(const QVector<Packet> &packets)
             eventData.lapsCompleted = 0;
         }
     }
-    emit dataChanged();
+    emit dataChanged(dataUpdates);
 }
 
 void PacketParser::parseBufferedPackets(const QVector<QPair<Packet, qint64> > &packets)
 {
+    dataUpdates.setAllFalse();
 //    bool emitSignal = false;
     for (int i = 0; i < packets.size(); ++i)
     {
@@ -1294,11 +1306,12 @@ void PacketParser::parseBufferedPackets(const QVector<QPair<Packet, qint64> > &p
 
         emit packetParsed(packets[i]);
     }
-    emit dataChanged();
+    emit dataChanged(dataUpdates);
 }
 
 void PacketParser::parseBufferedPackets(const QPair<Packet, qint64> &packetPair)
 {
+    dataUpdates.setAllFalse();
     Packet copyPacket = packetPair.first;
     if (copyPacket.carID)
         parseCarPacket(copyPacket, true);

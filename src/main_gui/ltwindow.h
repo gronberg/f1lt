@@ -92,9 +92,9 @@ private slots:
     void error(QNetworkReply::NetworkError);
     void on_actionConnect_triggered();
 
-    void eventDataChanged();
-    void driverDataChanged(int);
-    void dataChanged();
+    void eventDataChanged(const DataUpdates &);
+    void driverDataChanged(int, const DataUpdates &);
+    void dataChanged(const DataUpdates &);
     void sessionStarted();
     void showNoSessionBoard(bool, QString);
 

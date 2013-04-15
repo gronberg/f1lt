@@ -32,6 +32,41 @@
 class PacketParser;
 class PacketBuffer;
 
+struct DataUpdates
+{
+    bool commentaryUpdate;
+    bool weatherUpdate;
+    bool speedRecordsUpdate;
+    bool fastestLapsUpdate;
+    bool pitStopsUpdate;
+
+    DataUpdates(bool set = false)
+    {
+        if (set)
+            setAllTrue();
+        else
+            setAllFalse();
+    }
+
+    void setAllTrue()
+    {
+        commentaryUpdate = true;
+        weatherUpdate = true;
+        speedRecordsUpdate = true;
+        fastestLapsUpdate = true;
+        pitStopsUpdate = true;
+    }
+
+    void setAllFalse()
+    {
+        commentaryUpdate = false;
+        weatherUpdate = false;
+        speedRecordsUpdate = false;
+        fastestLapsUpdate = false;
+        pitStopsUpdate = false;
+    }
+};
+
 struct Packet
 {
     int length;
@@ -119,9 +154,9 @@ public slots:
 signals:
      void packetParsed(const Packet&);
      void packetParsed(const QPair<Packet, qint64>&);
-     void eventDataChanged();
-     void driverDataChanged(int id);
-     void dataChanged();
+     void eventDataChanged(const DataUpdates &dataUpdates);
+     void driverDataChanged(int id, const DataUpdates &dataUpdates);
+     void dataChanged(const DataUpdates &dataUpdates);
 
      void noLiveSession(bool, QString);
      void sessionStarted();
@@ -145,6 +180,7 @@ private:
 
     PacketBuffer *packetBuffer;
 
+    DataUpdates dataUpdates;
 };
 
 #endif // PACKETPARSER_H

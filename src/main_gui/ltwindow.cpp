@@ -54,9 +54,9 @@ LTWindow::LTWindow(QWidget *parent) :
 
     connect(streamReader, SIGNAL(tryAuthorize()), this, SLOT(tryAuthorize()));
     connect(streamReader, SIGNAL(authorized(QString)), this, SLOT(authorized(QString)));
-    connect(streamReader, SIGNAL(eventDataChanged()), this, SLOT(eventDataChanged()));
-    connect(streamReader, SIGNAL(driverDataChanged(int)), this, SLOT(driverDataChanged(int)));
-    connect(streamReader, SIGNAL(dataChanged()), this, SLOT(dataChanged()));
+    connect(streamReader, SIGNAL(eventDataChanged(const DataUpdates&)), this, SLOT(eventDataChanged(const DataUpdates&)));
+    connect(streamReader, SIGNAL(driverDataChanged(int, const DataUpdates&)), this, SLOT(driverDataChanged(int, const DataUpdates&)));
+    connect(streamReader, SIGNAL(dataChanged(const DataUpdates&)), this, SLOT(dataChanged(const DataUpdates&)));
     connect(streamReader, SIGNAL(sessionStarted()), this, SLOT(sessionStarted()));
     connect(streamReader, SIGNAL(authorizationError()), this, SLOT(authorizationError()));
     connect(streamReader, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
@@ -158,14 +158,14 @@ LTWindow::~LTWindow()
 
 //------------------------- updating the data ----------------------
 
-void LTWindow::eventDataChanged()
+void LTWindow::eventDataChanged(const DataUpdates &dataUpdates)
 {
     if (!playing)
         setWindowTitle("F1LT - " + eventData.getEventInfo().eventName);
     if (!playing && !recording && !ui->actionRecord->isEnabled())
         ui->actionRecord->setEnabled(true);
 
-    if (eventData.getCommentary().size() > ui->textEdit->toPlainText().size())
+    if (dataUpdates.commentaryUpdate)
     {        
         ui->textEdit->setText(eventData.getCommentary());
 
@@ -178,9 +178,9 @@ void LTWindow::eventDataChanged()
 
 //    ui->trackStatusWidget->updateTrackStatus(eventData);
     ui->eventStatusWidget->updateEventStatus();
-    ui->sessionDataWidget->updateData();
+    ui->sessionDataWidget->updateData(dataUpdates);
 
-    if (ui->tabWidget->currentIndex() == 2)
+    if ((ui->tabWidget->currentIndex() == 2) && dataUpdates.weatherUpdate)
     	ui->weatherChartsWidget->updateCharts();
 
 //    if (recording)
@@ -192,7 +192,7 @@ void LTWindow::eventDataChanged()
         trackRecordsDialog->update();
 }
 
-void LTWindow::driverDataChanged(int carID)
+void LTWindow::driverDataChanged(int carID, const DataUpdates &dataUpdates)
 {
     if (!playing && !recording && !ui->actionRecord->isEnabled())
         ui->actionRecord->setEnabled(true);
@@ -254,11 +254,12 @@ void LTWindow::driverDataChanged(int carID)
     }
 }
 
-void LTWindow::dataChanged()
+void LTWindow::dataChanged(const DataUpdates &dataUpdates)
 {
     if (playing)
         setWindowTitle("F1LT - " + eventData.getEventInfo().eventName + " (" + eventPlayer->playedFile() + ")");
 //    if (eventData.commentary.size() > ui->textEdit->toPlainText().size())
+    if (dataUpdates.commentaryUpdate)
     {        
         ui->textEdit->setText(eventData.getCommentary());
 
@@ -309,7 +310,7 @@ void LTWindow::dataChanged()
 //        }
 //    }
 
-    if (ui->tabWidget->currentIndex() == 2)
+    if ((ui->tabWidget->currentIndex() == 2) && dataUpdates.weatherUpdate)
 		ui->weatherChartsWidget->updateCharts();
 
     if (saw->isVisible())
@@ -364,7 +365,7 @@ void LTWindow::on_tabWidget_currentChanged(int index)
             break;
 
         case 1:
-            ui->sessionDataWidget->updateData();
+            ui->sessionDataWidget->updateData(DataUpdates(true));
             break;
     }
 }

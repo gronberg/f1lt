@@ -31,6 +31,7 @@
 
 #include "../core/colorsmanager.h"
 #include "../core/eventdata.h"
+#include "../net/packetparser.h"
 #include "models/fastestlapsmodel.h"
 #include "models/pitstopsmodel.h"
 #include "models/speedrecordsmodel.h"
@@ -54,7 +55,7 @@ public:
     void setFont(const QFont &);
     void setupContents();
 
-    void updateData();
+    void updateData(const DataUpdates &dataUpdates);
     void updateSpeedRecords();
     void updateFastestLaps();
     void updatePitStops(bool clear = false);

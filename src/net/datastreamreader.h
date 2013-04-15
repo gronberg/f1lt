@@ -68,9 +68,9 @@ signals:
 
     void packetParsed(const Packet&);
     void packetParsed(const QPair<Packet, qint64>&);
-    void eventDataChanged();
-    void driverDataChanged(int id);
-    void dataChanged();    
+    void eventDataChanged(const DataUpdates &);
+    void driverDataChanged(int id, const DataUpdates &);
+    void dataChanged(const DataUpdates &);
     
 public slots:
     //void connected();
