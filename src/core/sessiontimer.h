@@ -45,6 +45,7 @@ public:
 signals:
     void timeout();
     void synchronizingTimer(bool);
+    void updateWeather();
     
 public slots:
 

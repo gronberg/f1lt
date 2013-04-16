@@ -97,6 +97,7 @@ private slots:
     void dataChanged(const DataUpdates &);
     void sessionStarted();
     void showNoSessionBoard(bool, QString);
+    void updateWeather();
 
     void timeout();
 //    void on_tableWidget_cellDoubleClicked(int row, int column);

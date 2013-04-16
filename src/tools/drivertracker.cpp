@@ -59,19 +59,20 @@ void DriverTracker::setupDrivers(int speed)
     {
         drp[i]->setStartupPosition();
         drp[i]->setExcluded(false);
-    }
+    }    
 
     for (int i = 0; i < drp.size(); ++i)
     {
         DriverTrackerPositioner *dtp = static_cast<DriverTrackerPositioner*>(drp[i]);
 
-        int labWidth = label.width() + 10;
+        int labWidth = drawClassification ? label.width() + 10 : 10;
         int px = labWidth + (width() - labWidth - trackMap.width())/2;
         int py = (height() - trackMap.height()-50)/2;
         int pitX = 15;
         int pitY = height()-60;
         int pitW = width() - 30;
         int pitH = 50;
+
         dtp->setMapCoords(px, py, pitX, pitY, pitW, pitH);
         dtp->setSpeed(speed);
     }
@@ -96,7 +97,7 @@ void DriverTracker::loadDriversList()
 
 
 void DriverTracker::resizeEvent(QResizeEvent *)
-{
+{    
     for (int i = 0; i < drp.size(); ++i)
     {
         DriverTrackerPositioner *dtp = static_cast<DriverTrackerPositioner*>(drp[i]);
@@ -109,6 +110,7 @@ void DriverTracker::resizeEvent(QResizeEvent *)
         int pitY = height()-60;
         int pitW = width() - 30;
         int pitH = 50;
+
         dtp->setMapCoords(px, py, pitX, pitY, pitW, pitH);
     }
 }
@@ -122,9 +124,10 @@ void DriverTracker::paintEvent(QPaintEvent *)
     p.setBrush(QBrush(QColor(ColorsManager::getInstance().getColor(LTPackets::BACKGROUND))));
     p.drawRect(0, 0, width(), height());
 
+
     int labWidth = drawClassification ? label.width() + 10 : 10;
     int px = labWidth + (width() - labWidth - trackMap.width())/2;
-    int py = (height() - trackMap.height()-50)/2;
+    int py = (height() - trackMap.height()-50)/2;    
 
     QPoint point(px, py);
     p.drawPixmap(point, trackMap);

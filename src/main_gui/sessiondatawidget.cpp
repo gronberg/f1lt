@@ -422,6 +422,13 @@ void SessionDataWidget::updatePitStops(bool clear)
 
 void SessionDataWidget::on_tabWidget_currentChanged(int index)
 {
+    if (ui->eventMapLabel->pixmap())
+    {
+        if (ui->eventMapLabel->pixmap()->width() < 10)
+        {
+            resizeTrackMap();
+        }
+    }
     int w;
     switch (index)
     {

@@ -1,3 +1,5 @@
+This file explains how to install the application on UNIX systems.
+
 To compile and install the application run:
 qmake
 make

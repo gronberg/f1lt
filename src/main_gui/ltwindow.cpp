@@ -63,6 +63,9 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
     connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(showNoSessionBoard(bool, QString)));
 
+    sessionTimer = new SessionTimer(this);
+    connect(sessionTimer, SIGNAL(updateWeather()), this, SLOT(updateWeather()));
+
     connect(&SeasonData::getInstance(), SIGNAL(seasonDataChanged()), &ImagesFactory::getInstance(), SLOT(reloadGraphics()));
     connect(&SeasonData::getInstance(), SIGNAL(seasonDataChanged()), &ColorsManager::getInstance(), SLOT(calculateDefaultDriverColors()));
     connect(&SeasonData::getInstance(), SIGNAL(seasonDataChanged()), saw, SLOT(setupColors()));
@@ -70,7 +73,6 @@ LTWindow::LTWindow(QWidget *parent) :
 
     connect(prefs, SIGNAL(driversColorsChanged()), saw, SLOT(setupColors()));
 
-    sessionTimer = new SessionTimer(this);
     eventRecorder = new EventRecorder(sessionTimer, this);
     eventPlayer = new EventPlayer(this);
 
@@ -469,7 +471,13 @@ void LTWindow::showNoSessionBoard(bool show, QString msg)
 		showSessionBoard(false);
         eventRecorder->setSessionRecorded(false);
         ui->ltWidget->updateLT();
-	}
+    }
+}
+
+void LTWindow::updateWeather()
+{
+    if (ui->tabWidget->currentIndex() == 2)
+        ui->weatherChartsWidget->updateCharts();
 }
 
 void LTWindow::ltWidgetDriverSelected(int id)
@@ -790,6 +798,7 @@ void LTWindow::setupDialogs()
         stw->loadDriversList();
 
     driverTrackerWidget->setup();
+    ui->sessionDataWidget->resizeTrackMap();
 }
 
 //-------------------- connection with server ----------------------

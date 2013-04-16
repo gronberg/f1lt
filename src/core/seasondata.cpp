@@ -38,7 +38,6 @@ SeasonData::SeasonData() : season(2013)
 
 bool SeasonData::loadSeasonFile()
 {
-    qDebug() << F1LTCore::seasonDataFile() << F1LTCore::trackDataFile() << F1LTCore::trackRercordsFile(true);
     ltTeams.clear();
 
     season = 0;

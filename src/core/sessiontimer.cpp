@@ -54,6 +54,7 @@ void SessionTimer::timerTimeout()
                     secs = 59;
                     --mins;
                     eventData.saveWeather();
+                    emit updateWeather();
 
                     if (mins < 0)
                     {

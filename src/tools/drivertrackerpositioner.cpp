@@ -203,7 +203,7 @@ QPoint DriverTrackerPositioner::getSCCoordinates()
 void DriverTrackerPositioner::paint(QPainter *p, bool selected)
 {
     if (driverData && driverData->getCarID() > 0)
-    {
+    {                
         QPoint point = getCoordinates();
 
         QColor drvColor = ColorsManager::getInstance().getCarColor(driverData->getNumber());
