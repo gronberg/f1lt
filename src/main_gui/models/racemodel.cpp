@@ -123,8 +123,8 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
         case 5:
             if (role == Qt::DisplayRole)
             {
-                if (selectedDriver.first != 0 && selectedDriver.second == 5)
-                    return gapToSelected(dd);
+                if (selectedDriver.first != 0 && selectedDriver.second >= 5)
+                    return gapToSelected(dd, 5);
 
                 return dd.getLastLap().getInterval();
             }
@@ -140,8 +140,8 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
         case 6:
             if (role == Qt::DisplayRole)
             {
-                if (selectedDriver.first != 0 && selectedDriver.second == 6 && dd.getLastLap().getTime().isValid())
-                    return gapToSelected(dd);
+                if (selectedDriver.first != 0 && selectedDriver.second >= 5 && dd.getLastLap().getTime().isValid())
+                    return gapToSelected(dd, 6);
 
                 return dd.getLastLap().getTime().toString();
             }
@@ -161,7 +161,12 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
 
         case 7:
             if (role == Qt::DisplayRole)
+            {
+                if (selectedDriver.first != 0 && selectedDriver.second >= 5 && dd.getLastLap().getSectorTime(1).isValid())
+                    return gapToSelected(dd, 7);
+
                 return dd.getLastLap().getSectorTime(1).toString();
+            }
 
             if (role == Qt::ForegroundRole)
                 return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(1));
@@ -173,7 +178,12 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
 
         case 8:
             if (role == Qt::DisplayRole)
+            {
+                if (selectedDriver.first != 0 && selectedDriver.second >= 5 && dd.getLastLap().getSectorTime(2).isValid())
+                    return gapToSelected(dd, 8);
+
                 return dd.getLastLap().getSectorTime(2).toString();
+            }
 
             if (role == Qt::ForegroundRole)
                 return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(2));
@@ -185,7 +195,12 @@ QVariant RaceModel::driverRowData(const DriverData &dd, const QModelIndex &index
 
         case 9:
             if (role == Qt::DisplayRole)
+            {
+                if (selectedDriver.first != 0 && selectedDriver.second >= 5 && dd.getLastLap().getSectorTime(3).isValid())
+                    return gapToSelected(dd, 9);
+
                 return dd.getLastLap().getSectorTime(3).toString();
+            }
 
             if (role == Qt::ForegroundRole)
                 return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(3));
@@ -277,25 +292,48 @@ QVariant RaceModel::extraRowData(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant RaceModel::gapToSelected(const DriverData &dd) const
-{
+QVariant RaceModel::gapToSelected(const DriverData &dd, int column) const
+{    
     DriverData currD = eventData.getDriverDataById(selectedDriver.first);
 
-    if (selectedDriver.first == dd.getCarID() && selectedDriver.second == 5)
-        return "";
-
-    else if (selectedDriver.second == 6 && (selectedDriver.first == dd.getCarID() || !currD.getLastLap().getTime().isValid() || !dd.getLastLap().getTime().isValid()))
+    if (column == 6 && (selectedDriver.first == dd.getCarID() || !currD.getLastLap().getTime().isValid() || !dd.getLastLap().getTime().isValid()))
     {        
         return dd.getLastLap().getTime().toString();
     }
 
-    if (selectedDriver.second == 5)
-    {
+    if (column == 5)
+    {        
+        if (selectedDriver.first == dd.getCarID())
+            return "";
+
         return eventData.calculateInterval(dd, currD, -1);//EventData.getInstance().lapsCompleted);//.driversData.get(currentCar-1).lastLap.numLap);
     }
-    if (selectedDriver.second == 6)
+    if (column == 6)
     {
-        return DriverData::calculateGap(dd.getLastLap().getTime(), currD.getLastLap().getTime());
+        QString gap = DriverData::calculateGap(dd.getLastLap().getTime(), currD.getLastLap().getTime());
+
+        if (gap.size() > 0 && gap[0] != '-')
+            gap = "+" + gap;
+
+        return gap;
+    }
+
+    if (column > 6)
+    {
+        int sector = column - 6;
+
+        if ((selectedDriver.first == dd.getCarID()) || !currD.getLastLap().getSectorTime(sector).isValid())
+            return dd.getLastLap().getSectorTime(sector).toString();
+
+        else
+        {
+            QString gap = DriverData::calculateGap(dd.getLastLap().getSectorTime(sector), currD.getLastLap().getSectorTime(sector));
+
+            if ((gap.size() > 0) && (gap[0] != '-') && (gap != "0.000"))
+                gap = "+" + gap;
+
+            return gap.left(gap.size()-2);
+        }
     }
 
     return "";

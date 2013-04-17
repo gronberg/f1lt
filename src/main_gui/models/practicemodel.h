@@ -39,12 +39,12 @@ public:
     virtual QVariant headerRowData(const QModelIndex &index, int role) const;
     virtual QVariant extraRowData(const QModelIndex &index, int role) const;
 
-    QVariant gapToSelected(const DriverData &dd) const;
+    QVariant gapToSelected(const DriverData &dd, int column) const;
 
     virtual bool selectDriver(int id, int column)
     {
         LTModel::selectDriver(id, column);
-        if (column == 0 || column == 4)
+        if (column == 0 || (column >= 4 && column < 9))
         {
             updateLT();
             return true;

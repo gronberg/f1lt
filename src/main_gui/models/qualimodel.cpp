@@ -150,8 +150,8 @@ QVariant QualiModel::driverRowData(const DriverData &dd, const QModelIndex &inde
         case 4:
             if (role == Qt::DisplayRole)
             {
-                if (selectedDriver.first != 0 && selectedDriver.second == 4)
-                    return gapToSelected(dd);
+                if (selectedDriver.first != 0 && selectedDriver.second >= 4)
+                    return gapToSelected(dd, 4);
 
                 if (qualiPeriodSelected == 10 && &dd != driversData.first())
                     return DriverData::calculateGap(dd.getQualiTime(1), driversData.first()->getQualiTime(1));
@@ -168,8 +168,8 @@ QVariant QualiModel::driverRowData(const DriverData &dd, const QModelIndex &inde
         case 5:
             if (role == Qt::DisplayRole)
             {
-                if (selectedDriver.first != 0 && selectedDriver.second == 5)
-                    return gapToSelected(dd);
+                if (selectedDriver.first != 0 && selectedDriver.second >= 4)
+                    return gapToSelected(dd, 5);
 
                 if (qualiPeriodSelected == 20 && &dd != driversData.first())
                     return DriverData::calculateGap(dd.getQualiTime(2), driversData.first()->getQualiTime(2));
@@ -188,8 +188,8 @@ QVariant QualiModel::driverRowData(const DriverData &dd, const QModelIndex &inde
         case 6:
             if (role == Qt::DisplayRole)
             {
-                if (selectedDriver.first != 0 && selectedDriver.second == 6)
-                    return gapToSelected(dd);
+                if (selectedDriver.first != 0 && selectedDriver.second >= 4)
+                    return gapToSelected(dd, 6);
 
                 if (qualiPeriodSelected == 30 && &dd != driversData.first())
                     return DriverData::calculateGap(dd.getQualiTime(3), driversData.first()->getQualiTime(3));
@@ -208,7 +208,12 @@ QVariant QualiModel::driverRowData(const DriverData &dd, const QModelIndex &inde
 
         case 7:
             if (role == Qt::DisplayRole)
+            {
+                if (selectedDriver.first != 0 && selectedDriver.second >= 4 && dd.getLastLap().getSectorTime(1).isValid())
+                    return gapToSelected(dd, 7);
+
                 return dd.getLastLap().getSectorTime(1).toString();
+            }
 
             if (role == Qt::ForegroundRole)
                 return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(1));
@@ -220,7 +225,12 @@ QVariant QualiModel::driverRowData(const DriverData &dd, const QModelIndex &inde
 
         case 8:
             if (role == Qt::DisplayRole)
+            {
+                if (selectedDriver.first != 0 && selectedDriver.second >= 4 && dd.getLastLap().getSectorTime(2).isValid())
+                    return gapToSelected(dd, 8);
+
                 return dd.getLastLap().getSectorTime(2).toString();
+            }
 
             if (role == Qt::ForegroundRole)
                 return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(2));
@@ -232,7 +242,12 @@ QVariant QualiModel::driverRowData(const DriverData &dd, const QModelIndex &inde
 
         case 9:
             if (role == Qt::DisplayRole)
+            {
+                if (selectedDriver.first != 0 && selectedDriver.second >= 4 && dd.getLastLap().getSectorTime(3).isValid())
+                    return gapToSelected(dd, 9);
+
                 return dd.getLastLap().getSectorTime(3).toString();
+            }
 
             if (role == Qt::ForegroundRole)
                 return ColorsManager::getInstance().getColor(dd.getColorData().sectorColor(3));
@@ -332,15 +347,44 @@ QVariant QualiModel::extraRowData(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant QualiModel::gapToSelected(const DriverData &dd) const
+QVariant QualiModel::gapToSelected(const DriverData &dd, int column) const
 {
-    int qPeriod = selectedDriver.second-3;
-    if (selectedDriver.first == dd.getCarID())
-        return dd.getQualiTime(qPeriod).toString();
+    int qPeriod = column-3;
 
-    QString gap = DriverData::calculateGap(dd.getQualiTime(qPeriod), eventData.getDriverDataById(selectedDriver.first).getQualiTime(qPeriod));
+    DriverData currD = eventData.getDriverDataById(selectedDriver.first);
 
-    return gap;
+    if (qPeriod > 0 && qPeriod < 4)
+    {
+        if ((selectedDriver.first == dd.getCarID()) || !currD.getQualiTime(qPeriod).isValid())
+            return dd.getQualiTime(qPeriod).toString();
+
+        QString gap = DriverData::calculateGap(dd.getQualiTime(qPeriod), currD.getQualiTime(qPeriod));
+
+        if (gap.size() > 0 && gap[0] != '-')
+            gap = "+" + gap;
+
+        return gap;
+    }
+
+    if (column > 6)
+    {
+        int sector = column - 6;
+
+        if ((selectedDriver.first == dd.getCarID()) || !currD.getLastLap().getSectorTime(sector).isValid())
+            return dd.getLastLap().getSectorTime(sector).toString();
+
+        else
+        {
+            QString gap = DriverData::calculateGap(dd.getLastLap().getSectorTime(sector), currD.getLastLap().getSectorTime(sector));
+
+            if ((gap.size() > 0) && (gap[0] != '-') && (gap != "0.000"))
+                gap = "+" + gap;
+
+            return gap.left(gap.size()-2);
+        }
+    }
+
+    return "";
 }
 
 LapTime QualiModel::findBestQ1Time() const

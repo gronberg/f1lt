@@ -190,7 +190,7 @@ void LTWindow::eventDataChanged(const DataUpdates &dataUpdates)
         trackRecordsDialog->update();
 }
 
-void LTWindow::driverDataChanged(int carID, const DataUpdates &dataUpdates)
+void LTWindow::driverDataChanged(int carID, const DataUpdates &)
 {
     if (!playing && !recording && !ui->actionRecord->isEnabled())
         ui->actionRecord->setEnabled(true);

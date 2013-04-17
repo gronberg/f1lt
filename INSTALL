@@ -1,6 +1,6 @@
 This file explains how to install the application on UNIX systems.
 
-To compile and install the application run:
+To compile and install F1LT you need Qt >= 4.7. Compilation and installation is done in 3 steps:
 qmake
 make
 make install
@@ -15,9 +15,9 @@ Default installation prefix is /opt/F1LT. The following directory structure will
 /opt/F1LT/share/trackrecords.dat
 /opt/F1LT/share/trackdata.dat
 
-Because trackrecords.dat file is updated after every session, a copy of this file is created in $HOME/.config/f1lt directory after first running of the program. Application reads data from and stores records into this copy (the original trackrecords.dat file is read only after first installation), so when you update the program, you will not loose your records.
+Because trackrecords.dat file is updated after every session, a copy of this file is created in $HOME/.config/f1lt directory after first run of the program. Application reads data from and stores records into this copy (the original trackrecords.dat file is read only after first installation), so when you update the program, you will not loose your records.
 
-Installation prefix can be set in F1LT.pro file - modify the following variables:
+Installation prefix can be set in F1LT.pro file by modifying the following variables:
 
 PREFIX = /opt/$$TARGET
 SHARE = $$PREFIX/share
@@ -29,5 +29,5 @@ PREFIX = /usr/local
 SHARE=$$PREFIX/share/$$TARGET
 
 
-!!WARNING!!
+!!!WARNING!!!
 When running `make uninstall`, the whole $$PREFIX/bin and $$SHARE directories will be removed! Use this very carefully.

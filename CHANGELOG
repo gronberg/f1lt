@@ -1,10 +1,12 @@
-v2.0.1 (?-04-2013):
+v2.0.1 (18-04-2013):
 - fixed lap order in head to head and lap time comparison
 - fixed driver tracker crashes
 - all drivers are now "in pits" before fp/quali start
 - fixed getting current track data and map according to system time (UTC time is now used instead)
 - fixed quali timer - it now doesn't start during quali breaks
 - optimized painting weather charts, should decrease CPU load
+- commentary auto-scrolling can be disabled now
+- driver sector times can now be also compared with a selected driver on the main view
 - UNIX only: trackrecords.dat file is now also saved in $HOME/.config/f1lt directory, application reads and stores records there, global trackrecords.dat file is used only during first run of the application
 - UNIX only: installation prefixes can be now easily set in F1LT.pro file (see INSTALL file)
 

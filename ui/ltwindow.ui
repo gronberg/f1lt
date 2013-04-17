@@ -374,8 +374,8 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset>
-     <normaloff>:/ui_icons/icon3.png</normaloff>:/ui_icons/icon3.png</iconset>
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/icon.png</normaloff>:/ui_icons/icon.png</iconset>
    </property>
    <property name="text">
     <string>About</string>
@@ -388,6 +388,10 @@
    </property>
   </action>
   <action name="actionAbout_Qt">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/qt.png</normaloff>:/ui_icons/qt.png</iconset>
+   </property>
    <property name="text">
     <string>About Qt</string>
    </property>
@@ -509,7 +513,7 @@
     <string>Driver tracker</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+R</string>
+    <string>Ctrl+D</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -522,6 +526,9 @@
    </property>
    <property name="text">
     <string>Track records</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

@@ -1012,10 +1012,10 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
              if (!eventData.frame || number == 1) // || decryption_failure
              {
                 eventData.frame = number;
-//                emit requestKeyFrame(number);
+                emit requestKeyFrame(number);
 
 //                 decryptionKeyObtained(2841044872);   //valencia race
-                  decryptionKeyObtained(2971732062);      //valencia qual
+//                  decryptionKeyObtained(2971732062);      //valencia qual
 //                decryptionKeyObtained(3230237603);      //valencia fp1
 //                onDecryptionKeyObtained(3585657959);  //?
 //                onDecryptionKeyObtained(2488580439);  //qual
@@ -1252,13 +1252,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
            uc = copyPacket.longData[1];
            int ts = uc << 8;
            uc = copyPacket.longData[0];
-           ts |= uc | 0 << 16;// & 0xff0000;
-//           if ((eventData.timeStamp==0 && ts <= 1000) ||
-//               (ts >= eventData.timeStamp+75 && ts < eventData.timeStamp+1000))
-//           {
-////                eventData.saveWeatherData();
-//                eventData.timeStamp = ts;
-//           }
+           ts |= uc | 0 << 16;
         }
             break;
         default:
@@ -1353,7 +1347,6 @@ void PacketParser::keyFrameObtained(const QByteArray &keyFrame)
 
 void PacketParser::decryptionKeyObtained(unsigned int key)
 {
-    qDebug() << "GOT KEY" << key << "size="<<encryptedPackets.size() << "old key=" << decrypter.key;
     eventData.key = key;
     decrypter.key = key;
 

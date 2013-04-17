@@ -33,7 +33,7 @@ DATA_FILES.path = $$SHARE
 
 RC_FILE = f1lt.rc
 
-#DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
@@ -189,7 +189,7 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/trackrecordsdialog.ui \
     ui/driverrecordsdialog.ui \
     ui/drivercolorsdialog.ui \
-    src/main_gui/commentarywidget.ui
+    ui/commentarywidget.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

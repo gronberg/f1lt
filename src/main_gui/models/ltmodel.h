@@ -90,6 +90,8 @@ public:
         }
         return true;
     }
+
+
     virtual void headerClicked(int)
     {
 
@@ -107,7 +109,7 @@ protected:
     virtual void gatherDriversData();
     QList<DriverData *> driversData;
 
-    QPair<int, int> selectedDriver;     //first - driver id, second - column code
+    QPair<int, int> selectedDriver;     //first - driver id, second - column
     
 };
 
