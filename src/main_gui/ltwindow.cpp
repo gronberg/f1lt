@@ -169,14 +169,10 @@ void LTWindow::eventDataChanged(const DataUpdates &dataUpdates)
 
     if (dataUpdates.commentaryUpdate)
     {        
-        ui->textEdit->setText(eventData.getCommentary());
-
-        QTextCursor c = ui->textEdit->textCursor();
-        c.movePosition(QTextCursor::End);
-        ui->textEdit->setTextCursor(c);
+        ui->commentaryWidget->update();
     }
-    if (eventData.getCommentary().size() == 0 && ui->textEdit->toPlainText().size() > 0)
-        ui->textEdit->clear();
+    if (eventData.getCommentary().size() == 0 && ui->commentaryWidget->getCommentary().size() > 0)
+        ui->commentaryWidget->clear();
 
 //    ui->trackStatusWidget->updateTrackStatus(eventData);
     ui->eventStatusWidget->updateEventStatus();
@@ -200,48 +196,24 @@ void LTWindow::driverDataChanged(int carID, const DataUpdates &dataUpdates)
         ui->actionRecord->setEnabled(true);
 
     if (carID > -1)
-    {                
-//        eventData.driversData[dd.carID-1] = dd;
-
+    {
         ui->ltWidget->updateLT();
 
-        //if (currDriver == (dd.carID-1))
-//        for (int i = 0; i < ui->tableWidget->rowCount(); ++i)
-//        {
-//            QTableWidgetItem *item = ui->tableWidget->item(i, 1);
-
-//            if (item && currDriver >= 0 && item->text().toInt() == eventData.getDriversData()[currDriver].getNumber())
-//            {
-//                ui->tableWidget->setCurrentCell(i, 1);
-//                break;
-//            }
-//        }
-
         ui->sessionDataWidget->updateFastestLaps();
-//        ui->tableWidget->updateLT();
-        switch(ui->tabWidget->currentIndex())
+
+        if (ui->tabWidget->currentIndex() == 0)
         {
-            case 0:                
-
-//                if (currDriver >= 0 && currDriver == carID-1)
-                    ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
-
-                break;
-
-//            case 1:
-//                ui->sessionDataWidget->updateData(dd.carID);
-//                break;
+            ui->driverDataWidget->updateDriverData(carID);
         }
 
-//        if (h2hDialog->isVisible())
         for (int i = 0; i < ltcDialog.size(); ++i)
-            ltcDialog[i]->driverUpdated(eventData.getDriversData()[carID-1]);
+            ltcDialog[i]->driverUpdated(*eventData.getDriverDataByIdPtr(carID));
 
         for (int i = 0; i < h2hDialog.size(); ++i)
-            h2hDialog[i]->driverUpdated(eventData.getDriversData()[carID-1]);
+            h2hDialog[i]->driverUpdated(*eventData.getDriverDataByIdPtr(carID));
 
         for (int i = 0; i < fadDialog.size(); ++i)
-            fadDialog[i]->driverUpdated(eventData.getDriversData()[carID-1]);
+            fadDialog[i]->driverUpdated(*eventData.getDriverDataByIdPtr(carID));
 
         if (saw->isVisible())
             saw->update();
@@ -251,8 +223,6 @@ void LTWindow::driverDataChanged(int carID, const DataUpdates &dataUpdates)
 
         if (trackRecordsDialog->isVisible())
             trackRecordsDialog->update();
-//        if (recording)
-//            eventRecorder->updateDriverData(eventData.driversData[carID-1]);
     }
 }
 
@@ -260,14 +230,10 @@ void LTWindow::dataChanged(const DataUpdates &dataUpdates)
 {
     if (playing)
         setWindowTitle("F1LT - " + eventData.getEventInfo().eventName + " (" + eventPlayer->playedFile() + ")");
-//    if (eventData.commentary.size() > ui->textEdit->toPlainText().size())
+
     if (dataUpdates.commentaryUpdate)
     {        
-        ui->textEdit->setText(eventData.getCommentary());
-
-        QTextCursor c = ui->textEdit->textCursor();
-        c.movePosition(QTextCursor::End);
-        ui->textEdit->setTextCursor(c);
+        ui->commentaryWidget->update();
     }
 
 //    ui->trackStatusWidget->updateTrackStatus(eventData);
@@ -276,41 +242,30 @@ void LTWindow::dataChanged(const DataUpdates &dataUpdates)
     if (!eventPlayer->isPlaying())
         ui->sessionDataWidget->updateEventInfo();
 
-    ui->sessionDataWidget->updateFastestLaps();
-    ui->sessionDataWidget->updateSpeedRecords();
-    ui->sessionDataWidget->updatePitStops(true);
+//    ui->sessionDataWidget->updateFastestLaps();
+//    ui->sessionDataWidget->updateSpeedRecords();
+//    ui->sessionDataWidget->updatePitStops(true);
+    ui->sessionDataWidget->updateData(dataUpdates);
 
 //    if (currDriver >= 0)
-        ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
+    ui->driverDataWidget->updateDriverData(dataUpdates);//printDriverData(currDriver);
 
     for (int i = 0; i < ltcDialog.size(); ++i)
     {
-        ltcDialog[i]->updateData();
-        ltcDialog[i]->updateCharts();
+        ltcDialog[i]->updateData(dataUpdates);
     }
 
     for (int i = 0; i < h2hDialog.size(); ++i)
     {
-        h2hDialog[i]->updateData();
-        h2hDialog[i]->updateCharts();
+        h2hDialog[i]->updateData(dataUpdates);
     }
 
     for (int i = 0; i < fadDialog.size(); ++i)
     {
-        fadDialog[i]->updateData();
+        fadDialog[i]->updateData(dataUpdates);
     }
 
     ui->ltWidget->updateLT();
-//    for (int i = 0; i < ui->tableWidget->rowCount(); ++i)
-//    {
-//        QTableWidgetItem *item = ui->tableWidget->item(i, 1);
-
-//        if (item && currDriver >= 0 && item->text().toInt() == eventData.getDriversData()[currDriver].getNumber())
-//        {
-//            ui->tableWidget->setCurrentCell(i, 1);
-//            break;
-//        }
-//    }
 
     if ((ui->tabWidget->currentIndex() == 2) && dataUpdates.weatherUpdate)
 		ui->weatherChartsWidget->updateCharts();
@@ -325,44 +280,14 @@ void LTWindow::dataChanged(const DataUpdates &dataUpdates)
         trackRecordsDialog->update();
 }
 
-//void LTWindow::on_tableWidget_cellDoubleClicked(int row, int)
-//{
-//    QList<DriverData> driverList = eventData.getDriversData();
-//    qSort(driverList);
-
-//    ui->tabWidget->setCurrentIndex(0);
-//    if (row-1 < driverList.size() && (row-1 >= 0))
-//    {
-//        DriverData dd = driverList[row-1];
-//        currDriver = dd.getCarID() - 1;
-
-//        ui->driverDataWidget->printDriverData(currDriver);
-//    }
-//}
-
-//void LTWindow::on_tableWidget_cellClicked(int row, int)
-//{
-//    QList<DriverData> driverList = eventData.getDriversData();
-//    qSort(driverList);
-
-//    if (row-1 < driverList.size() && (row-1 >= 0))
-//    {
-//        DriverData dd = driverList[row-1];
-//        currDriver = dd.getCarID() - 1;
-
-//        ui->driverDataWidget->printDriverData(currDriver);
-//    }
-//}
-
 void LTWindow::on_tabWidget_currentChanged(int index)
 {
     switch(index)
     {
         case 0:
-//            eventData.driversData[dd.carID-1] = dd;
             ui->driverDataWidget->updateView();
-            if (currDriver >= 0)// && currDriver == dd.carID-1)
-                ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
+            if (currDriver >= 0)
+                ui->driverDataWidget->updateDriverData(currDriver);
 
             break;
 
@@ -409,8 +334,6 @@ void LTWindow::on_actionHead_to_head_triggered()
         h2h->setFont(prefs->getMainFont());
         h2hDialog.append(h2h);
     }
-//    h2hDialog->raise();
-//    h2hDialog->activateWindow();
 }
 
 void LTWindow::on_actionFollow_a_driver_triggered()
@@ -457,7 +380,7 @@ void LTWindow::showNoSessionBoard(bool show, QString msg)
 	{
         //ui->tableWidget->clear();
         ui->ltWidget->clearData();
-		ui->textEdit->clear();
+        ui->commentaryWidget->clear();
 		ui->driverDataWidget->clearData();
 		ui->sessionDataWidget->clearData();
         driverTrackerWidget->setup();
@@ -512,39 +435,6 @@ void LTWindow::timeout()
         sessionTimer->stop();
         driverTrackerWidget->stopTimer();
     }
-
-//        if (!(eventData.getEventType() == LTPackets::RACE_EVENT && eventData.getCompletedLaps() == eventData.getEventInfo().laps) &&
-//            !((eventData.getEventType() == LTPackets::QUALI_EVENT || eventData.getEventType() == LTPackets::RACE_EVENT) && eventData.getFlagStatus() == LTPackets::RED_FLAG))
-//        {
-//            int hours = eventData.getRemainingTime().hour();
-//            int mins = eventData.getRemainingTime().minute();
-//            int secs = eventData.getRemainingTime().second();
-//            --secs;
-//            if (secs < 0)
-//            {
-//                secs = 59;
-//                --mins;
-//                eventData.saveWeather();
-
-//                if (mins < 0)
-//                {
-//                    --hours;
-//                    mins = 59;
-
-//                    if (hours < 0)
-//                    {
-//                        secs = mins = hours = 0;
-//                        //we don't stop the timer here as it will be needed ie. for session recording, we only change the value of sessionStarted to false
-//                        eventData.setSessionStarted(false);
-//    //                    eventTimer->stop();
-//                    }
-//                }
-//            }
-//            eventData.setRemainingTime(QTime(hours, mins, secs));
-////            ui->trackStatusWidget->updateTrackStatus(eventData);
-//            ui->eventStatusWidget->updateEventStatus();
-//        }
-//    }
 }
 
 //-------------------- settings ----------------------------
@@ -616,6 +506,8 @@ void LTWindow::loadSettings()
     ltFilesManagerDialog->loadSettings(settings);
     trackRecordsDialog->loadSettings(*settings);
 
+    ui->commentaryWidget->loadSettings(*settings);
+
     QList<QColor> colors = ColorsManager::getInstance().getColors();
     for (int i = 0; i < ColorsManager::getInstance().getColors().size(); ++i)
     {
@@ -657,6 +549,7 @@ void LTWindow::saveSettings()
     driverTrackerWidget->saveSettings(settings);
     ltFilesManagerDialog->saveSettings(settings);
     trackRecordsDialog->saveSettings(*settings);
+    ui->commentaryWidget->saveSettings(*settings);
 
     for (int i = 0; i < ColorsManager::getInstance().getColors().size(); ++i)
     {
@@ -693,24 +586,6 @@ void LTWindow::on_actionPreferences_triggered()
 
         NetworkSettings::getInstance().setProxy(prefs->getProxy(), prefs->proxyEnabled());
 
-//        settings->setValue("fonts/main_family", prefs->getMainFont().family());
-//        settings->setValue("fonts/main_size", QString::number(prefs->getMainFont().pointSize()));
-//        settings->setValue("fonts/main_weight", QString::number(prefs->getMainFont().weight()));
-//        settings->setValue("fonts/main_italic", QString::number(prefs->getMainFont().italic()));
-
-//        settings->setValue("fonts/commentary_family", prefs->getCommentaryFont().family());
-//        settings->setValue("fonts/commentary_size", QString::number(prefs->getCommentaryFont().pointSize()));
-//        settings->setValue("fonts/commentary_weight", QString::number(prefs->getCommentaryFont().weight()));
-//        settings->setValue("fonts/commentary_italic", QString::number(prefs->getCommentaryFont().italic()));
-
-//        settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
-//        settings->setValue("ui/alt_colors", prefs->isAlternatingRowColors());
-
-//        settings->setValue("ui/reversed_lap_history", prefs->isReverseOrderLapHistory());
-//        settings->setValue("ui/reversed_head_to_head", prefs->isReverseOrderHeadToHead());
-//        settings->setValue("ui/reversed_lap_time_comparison", prefs->isReverseOrderLapTimeComparison());
-//        settings->setValue("ui/auto_record", prefs->isAutoRecord());
-
         for (int i = 0; i < h2hDialog.size(); ++i)
         {
             if (h2hDialog[i]->isVisible())
@@ -723,8 +598,7 @@ void LTWindow::on_actionPreferences_triggered()
                 ltcDialog[i]->updateData();
         }
 
-//        if (currDriver >= 0)
-            ui->driverDataWidget->updateDriverData();//printDriverData(currDriver);
+        ui->driverDataWidget->updateDriverData(currDriver);
 
         ui->ltWidget->setDrawCarThumbnails(settings->value("ui/car_thumbnails").toBool());
         driverTrackerWidget->drawTrackerClassification(settings->value("ui/draw_tracker_classification").toBool());        
@@ -746,7 +620,7 @@ void LTWindow::setFonts(const QFont &mainFont, const QFont &commentaryFont)
     for (int i = 0; i < fadDialog.size(); ++i)
         fadDialog[i]->setFont(mainFont);
 
-    ui->textEdit->setFont(commentaryFont);
+    ui->commentaryWidget->setFont(commentaryFont);
 //    ui->trackStatusWidget->setFont(mainFont);
     ui->eventStatusWidget->setFont(mainFont);
     prefs->setFonts(mainFont, commentaryFont);
@@ -1065,7 +939,7 @@ void LTWindow::eventPlayerOpenFile(QString fName)
     showSessionBoard(false);
 
     //ui->tableWidget->clear();
-    ui->textEdit->clear();
+    ui->commentaryWidget->clear();
     ui->driverDataWidget->clearData();
     ui->sessionDataWidget->clearData();
 
@@ -1137,7 +1011,7 @@ void LTWindow::eventPlayerStopClicked(bool connect)
     ui->ltWidget->clearData();
     ui->driverDataWidget->clearData();
     ui->sessionDataWidget->clearData();
-    ui->textEdit->clear();
+    ui->commentaryWidget->clear();
     saw->resetView();
     eventRecorder->setSessionRecorded(false);
     sessionTimer->stop();

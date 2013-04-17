@@ -28,6 +28,7 @@
 
 #include "../core/colorsmanager.h"
 #include "../core/eventdata.h"
+#include "../net/packetparser.h"
 
 namespace Ui {
 class FollowADriverDialog;
@@ -71,6 +72,17 @@ public slots:
         if (driverInRange(dd))
             updateData();
 
+    }
+
+    void updateData(const DataUpdates &dataUpdates)
+    {
+        QSetIterator<int> iter(dataUpdates.driverIds);
+        while (iter.hasNext())
+        {
+            DriverData *dd = eventData.getDriverDataByIdPtr(iter.next());
+            if ((dd != 0) && driverInRange(*dd))
+                updateData();
+        }
     }
 
 protected:

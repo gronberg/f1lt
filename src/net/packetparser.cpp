@@ -237,6 +237,8 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
         emit noLiveSession(false, "");
     }
 
+    dataUpdates.driverIds.insert(packet.carID);
+
     qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
 
     if (packet.carID > eventData.driversData.size() || packet.carID < 1)

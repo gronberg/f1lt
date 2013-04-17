@@ -32,6 +32,7 @@
 
 #include "../core/seasondata.h"
 #include "../charts/driverdatachart.h"
+#include "../net/packetparser.h"
 
 #include "models/driverlaphistorymodel.h"
 
@@ -57,10 +58,18 @@ public:
     void clearData();       
 
 public slots:
-    void updateDriverData()
+    void updateDriverData(int id)
     {
-        printDriverData(currentDriver);
+        if (id == currentDriver)
+            printDriverData(currentDriver);
     }
+
+    void updateDriverData(const DataUpdates &dataUpdates)
+    {
+        if (dataUpdates.driverIds.contains(currentDriver))
+            printDriverData(currentDriver);
+    }
+
 
     void printDriverData(int id);
     void printDriverChart(int id);

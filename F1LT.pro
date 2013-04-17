@@ -98,7 +98,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/core/colorsmanager.cpp \
     src/core/sessiondefaults.cpp \
     src/core/trackmapscoordinates.cpp \
-    src/player/ltfilesloader.cpp
+    src/player/ltfilesloader.cpp \
+    src/main_gui/commentarywidget.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -163,7 +164,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/core/colorsmanager.h \
     src/core/sessiondefaults.h \
     src/core/trackmapscoordinates.h \
-    src/player/ltfilesloader.h
+    src/player/ltfilesloader.h \
+    src/main_gui/commentarywidget.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -186,7 +188,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/delaywidget.ui \
     ui/trackrecordsdialog.ui \
     ui/driverrecordsdialog.ui \
-    ui/drivercolorsdialog.ui
+    ui/drivercolorsdialog.ui \
+    src/main_gui/commentarywidget.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

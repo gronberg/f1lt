@@ -26,6 +26,7 @@
 #include <QList>
 #include "../core/seasondata.h"
 #include "../charts/lapcompchart.h"
+#include "../net/packetparser.h"
 
 #include <QComboBox>
 
@@ -59,6 +60,19 @@ public slots:
         for (int i = 0; i < 2; ++i)
         {
             if (dd.getCarID() == eventData.getDriverId(getNumber(i)))
+            {
+                updateData();
+                updateCharts();
+                return;
+            }
+        }
+    }
+
+    void updateData(const DataUpdates &dataUpdates)
+    {
+        for (int i = 0; i < 2; ++i)
+        {
+            if (dataUpdates.driverIds.contains(eventData.getDriverId(getNumber(i))))
             {
                 updateData();
                 updateCharts();

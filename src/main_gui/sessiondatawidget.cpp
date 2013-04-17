@@ -96,6 +96,7 @@ void SessionDataWidget::updateData(const DataUpdates &dataUpdates)
     {
         case 0:
             updateEventInfo();
+
         case 2:
             if (dataUpdates.speedRecordsUpdate)
                 updateSpeedRecords();

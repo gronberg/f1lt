@@ -40,6 +40,8 @@ struct DataUpdates
     bool fastestLapsUpdate;
     bool pitStopsUpdate;
 
+    QSet<int> driverIds;
+
     DataUpdates(bool set = false)
     {
         if (set)
@@ -55,6 +57,7 @@ struct DataUpdates
         speedRecordsUpdate = true;
         fastestLapsUpdate = true;
         pitStopsUpdate = true;
+        driverIds.clear();
     }
 
     void setAllFalse()
@@ -64,6 +67,7 @@ struct DataUpdates
         speedRecordsUpdate = false;
         fastestLapsUpdate = false;
         pitStopsUpdate = false;
+        driverIds.clear();
     }
 };
 
