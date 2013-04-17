@@ -71,6 +71,9 @@ public:
     bool drawTrackerClassification();
     void setDrawTrackerClassification(bool);
 
+    void setCheckForUpdatesEnabled(bool);
+    bool isCheckForUpdatesEnabled();
+
     QNetworkProxy getProxy();
     bool proxyEnabled();
 

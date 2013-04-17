@@ -47,6 +47,7 @@
 #include "../tools/sessiontimeswidget.h"
 #include "../core/sessiontimer.h"
 #include "delaywidget.h"
+#include "updatescheckerdialog.h"
 
 
 namespace Ui {
@@ -99,6 +100,8 @@ private slots:
     void showNoSessionBoard(bool, QString);
     void updateWeather();
 
+    void onNewVersionAvailable();
+
     void timeout();
 //    void on_tableWidget_cellDoubleClicked(int row, int column);
 //    void on_tableWidget_cellClicked(int row, int);
@@ -134,6 +137,8 @@ private slots:
     void on_actionDriver_tracker_triggered();
 
     void on_actionTrack_records_triggered();
+
+    void on_actionCheck_for_updates_triggered();
 
 private:
     Ui::LTWindow *ui;
@@ -173,6 +178,8 @@ private:
 
     DelayWidget *delayWidget;
     QAction *delayWidgetAction;
+
+    UpdatesCheckerDialog *updatesCheckerDialog;
 
 };
 

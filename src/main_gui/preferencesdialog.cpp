@@ -89,6 +89,8 @@ int PreferencesDialog::exec(QSettings *set)
     setAutoStopRecord(settings->value("ui/auto_stop_record", -1).toInt());
     setAutoSaveRecord(settings->value("ui/auto_save_record", -1).toInt());
 
+    setCheckForUpdatesEnabled(settings->value("ui/check_for_updates", true).toBool());
+
 
     QNetworkProxy proxy = NetworkSettings::getInstance().getProxy();
 
@@ -130,6 +132,8 @@ void PreferencesDialog::on_buttonBox_accepted()
 
     settings->setValue("ui/auto_connect", isAutoConnect());
     settings->setValue("ui/draw_tracker_classification", drawTrackerClassification());
+
+    settings->setValue("ui/check_for_updates", isCheckForUpdatesEnabled());
 
     ColorsManager::getInstance().setColors(colors);
 }
@@ -300,6 +304,16 @@ bool PreferencesDialog::drawTrackerClassification()
 void PreferencesDialog::setDrawTrackerClassification(bool val)
 {
     ui->trackerBox->setChecked(val);
+}
+
+void PreferencesDialog::setCheckForUpdatesEnabled(bool val)
+{
+    ui->updateCheckBox->setChecked(val);
+}
+
+bool PreferencesDialog::isCheckForUpdatesEnabled()
+{
+    return ui->updateCheckBox->isChecked();
 }
 
 void PreferencesDialog::on_proxyCheckBox_toggled(bool checked)

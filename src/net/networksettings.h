@@ -92,6 +92,11 @@ public:
         return ltDataList;
     }
 
+    QString getVersionUrl()
+    {
+        return versionUrl;
+    }
+
     bool usingProxy()
     {
         return proxyOn;
@@ -142,6 +147,8 @@ private:
 
     QString ltDataUrl;
     QString ltDataList;
+
+    QString versionUrl;
 
     bool proxyOn;
     QNetworkProxy proxy;

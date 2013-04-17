@@ -49,6 +49,7 @@ LTWindow::LTWindow(QWidget *parent) :
     stw = new SessionTimesWidget();
     driverTrackerWidget = new DriverTrackerWidget();
     aboutDialog = new AboutDialog(this);
+    updatesCheckerDialog = new UpdatesCheckerDialog(this);
 
 //    ui->trackStatusWidget->setupItems();
 
@@ -62,6 +63,8 @@ LTWindow::LTWindow(QWidget *parent) :
     connect(streamReader, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
     connect(streamReader, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
     connect(streamReader, SIGNAL(noLiveSession(bool, QString)), this, SLOT(showNoSessionBoard(bool, QString)));
+
+    connect(updatesCheckerDialog, SIGNAL(newVersionAvailable()), this, SLOT(onNewVersionAvailable()));
 
     sessionTimer = new SessionTimer(this);
     connect(sessionTimer, SIGNAL(updateWeather()), this, SLOT(updateWeather()));
@@ -403,6 +406,11 @@ void LTWindow::updateWeather()
         ui->weatherChartsWidget->updateCharts();
 }
 
+void LTWindow::onNewVersionAvailable()
+{
+    updatesCheckerDialog->show(false);
+}
+
 void LTWindow::ltWidgetDriverSelected(int id)
 {
     ui->driverDataWidget->printDriverData(id);
@@ -527,6 +535,10 @@ void LTWindow::loadSettings()
     ColorsManager::getInstance().setDriverColors(colors);
 
     saw->loadSettings(*settings);
+    updatesCheckerDialog->loadSettings(*settings);
+
+    if (settings->value("ui/check_for_updates", true).toBool())
+        updatesCheckerDialog->checkForUpdates();
 }
 
 void LTWindow::saveSettings()
@@ -562,6 +574,7 @@ void LTWindow::saveSettings()
         QVariant color = ColorsManager::getInstance().getDriverColors()[i];
         settings->setValue(QString("ui/driver_color_%1").arg(i), color);
     }
+    updatesCheckerDialog->saveSettings(*settings);
 
 //    settings->setValue("ui/ltresize", prefs->isSplitterOpaqueResize());
 //    settings->setValue("ui/alt_colors", prefs->isAlternatingRowColors());
@@ -1083,4 +1096,9 @@ void LTWindow::on_actionDriver_tracker_triggered()
 void LTWindow::on_actionTrack_records_triggered()
 {
     trackRecordsDialog->exec();
+}
+
+void LTWindow::on_actionCheck_for_updates_triggered()
+{
+    updatesCheckerDialog->show();
 }

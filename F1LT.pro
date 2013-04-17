@@ -33,7 +33,7 @@ DATA_FILES.path = $$SHARE
 
 RC_FILE = f1lt.rc
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+#DEFINES += QT_NO_DEBUG_OUTPUT
 SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/main_gui/weatherchartswidget.cpp \
     src/main_gui/nosessionboardwidget.cpp \
@@ -99,7 +99,8 @@ SOURCES += src/tools/sessionanalysiswidget.cpp \
     src/core/sessiondefaults.cpp \
     src/core/trackmapscoordinates.cpp \
     src/player/ltfilesloader.cpp \
-    src/main_gui/commentarywidget.cpp
+    src/main_gui/commentarywidget.cpp \
+    src/main_gui/updatescheckerdialog.cpp
 HEADERS += src/tools/sessionanalysiswidget.h \
     src/main_gui/weatherchartswidget.h \
     src/main_gui/nosessionboardwidget.h \
@@ -165,7 +166,8 @@ HEADERS += src/tools/sessionanalysiswidget.h \
     src/core/sessiondefaults.h \
     src/core/trackmapscoordinates.h \
     src/player/ltfilesloader.h \
-    src/main_gui/commentarywidget.h
+    src/main_gui/commentarywidget.h \
+    src/main_gui/updatescheckerdialog.h
 FORMS += ui/sessionanalysiswidget.ui \
     ui/weatherchartswidget.ui \
     ui/nosessionboardwidget.ui \
@@ -189,7 +191,8 @@ FORMS += ui/sessionanalysiswidget.ui \
     ui/trackrecordsdialog.ui \
     ui/driverrecordsdialog.ui \
     ui/drivercolorsdialog.ui \
-    ui/commentarywidget.ui
+    ui/commentarywidget.ui \
+    ui/updatescheckerdialog.ui
 INCLUDEPATH += src/
 RESOURCES += icons/icons.qrc \
     other_files.qrc

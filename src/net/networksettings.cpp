@@ -36,6 +36,8 @@ NetworkSettings::NetworkSettings()
 
     ltDataUrl = "http://lt.f1lt.pl/";
     ltDataList = "http://lt.f1lt.pl/lis.php";
+
+    versionUrl = "http://f1lt.pl/version";
 }
 
 void NetworkSettings::loadSettings(const QSettings &settings)

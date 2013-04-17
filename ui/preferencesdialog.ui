@@ -181,6 +181,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="updateCheckBox">
+         <property name="text">
+          <string>Check for program updates at startup</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

@@ -1,4 +1,5 @@
 v2.0.1 (18-04-2013):
+- added 'check for updates' feature - you should now be on time with application updates
 - fixed lap order in head to head and lap time comparison
 - fixed driver tracker crashes
 - all drivers are now "in pits" before fp/quali start
