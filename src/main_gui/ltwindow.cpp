@@ -958,6 +958,8 @@ void LTWindow::eventPlayerOpenFile(QString fName)
 
     ui->ltWidget->loadCarImages();
 
+//    eventData.clear();
+
     ui->actionRecord->setVisible(false);
     ui->actionStop_recording->setVisible(false);
     eventPlayerAction->setVisible(true);
@@ -969,6 +971,7 @@ void LTWindow::eventPlayerOpenFile(QString fName)
     playing = true;
 
     eventPlayer->startPlaying();
+    ui->eventStatusWidget->updateEventStatus();
     setupDialogs();
     saw->resetView();
 }

@@ -61,6 +61,10 @@ void EventStatusWidget::updateEventStatus()
 
             case LTPackets::SAFETY_CAR_STANDBY:
                 break;
+
+            default:
+                ui->statusLabelIcon->setPixmap(icons[0]);
+                break;
         }
     }
     else
