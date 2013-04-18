@@ -237,7 +237,7 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
         emit noLiveSession(false, "");
     }
 
-    dataUpdates.driverIds.insert(packet.carID);
+//    dataUpdates.driverIds.insert(packet.carID);
 
     qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
 
@@ -1264,7 +1264,7 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 
 void PacketParser::parsePackets(const QVector<Packet> &packets)
 {
-    dataUpdates.setAllFalse();
+//    dataUpdates.setAllFalse();
     for (int i = 0; i < packets.size(); ++i)
     {
         Packet packet = packets[i];

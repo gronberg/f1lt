@@ -71,15 +71,16 @@ void UpdatesCheckerDialog::finished()
     {
         ui->textEdit->setText("<p align=\"center\"><h1>F1LT new version (" + version + ") is available!</h1></p>");
         ui->textEdit->append("<p align=\"center\"><img src=\":/ui_icons/icon.png\"/></p>");
-        ui->textEdit->append("<p align=\"center\"><h3>You can download it at <a href=\"http://f1lt.pl\">F1LT home site</a>.</h3></p>");
+        ui->textEdit->append("<p align=\"center\"><h3>You can download it at <a style=\"color:red\" href=\"http://f1lt.pl\">F1LT home site</a>.</h3></p>");
 
         if (!isVisible())
             emit newVersionAvailable();
     }
     else
     {
-        ui->textEdit->setText("<p align=\"center\"><h3>You already have the latest version installed.</h3></p>");
+        ui->textEdit->setText("<p align=\"center\"><h2>There are no updates.</h2></p>");
         ui->textEdit->append("<p align=\"center\"><img src=\":/ui_icons/icon.png\"/></p>");
+        ui->textEdit->append("<p align=\"center\"><h3>You already have the latest F1LT version installed.</h3></p>");
     }
 }
 
