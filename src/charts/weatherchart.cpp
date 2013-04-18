@@ -124,7 +124,6 @@ void WeatherChart::drawChart(QPainter *p)
 {    
     EventData &ed = EventData::getInstance();
 
-    qDebug() << "W" << ed.getWeather().getSize(weatherId);
     int sz = last - first + 1;
     if (sz > 1 && first < ed.getWeather().getSize(weatherId))
     {

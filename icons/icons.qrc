@@ -49,5 +49,6 @@
         <file>start-label-load.png</file>
         <file>start-label-open.png</file>
         <file>qt.png</file>
+        <file>soft_update.png</file>
     </qresource>
 </RCC>

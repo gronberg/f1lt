@@ -174,8 +174,8 @@ void LTWindow::eventDataChanged(const DataUpdates &dataUpdates)
     {        
         ui->commentaryWidget->update();
     }
-    if (eventData.getCommentary().size() == 0 && ui->commentaryWidget->getCommentary().size() > 0)
-        ui->commentaryWidget->clear();
+//    if (eventData.getCommentary().size() == 0 && ui->commentaryWidget->getCommentary().size() > 0)
+//        ui->commentaryWidget->clear();
 
 //    ui->trackStatusWidget->updateTrackStatus(eventData);
     ui->eventStatusWidget->updateEventStatus();

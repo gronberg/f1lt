@@ -227,6 +227,7 @@ void LTWidget::on_tableView_clicked(const QModelIndex &index)
             currDriverId = dd->getCarID();
 
             ltModel->selectDriver(currDriverId, index.column());
+            ltModel->updateLT();
 
             emit driverSelected(currDriverId);
         }

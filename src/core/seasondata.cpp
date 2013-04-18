@@ -207,7 +207,6 @@ void SeasonData::updateTeamList(const QVector<LTTeam> &teams)
             {
                 int didx = ltTeams[idx].drivers.indexOf(teams[i].drivers[k]);
 
-                qDebug() << "APPEND" << teams[i].drivers[k].name;
                 if (didx == -1)
                 {
                     ltTeams[idx].drivers.append(teams[i].drivers[k]);
@@ -415,8 +414,7 @@ const LTEvent &SeasonData::getEvent(const QDate &date) const
 }
 
 const LTEvent &SeasonData::getCurrentEvent()const
-{        
-    qDebug() << "DATE: " + QDateTime::currentDateTime().time().toString("hh:mm") + ", UTC=" + QDateTime::currentDateTimeUtc().time().toString("hh:mm");
+{
     return getEvent(QDateTime::currentDateTimeUtc().date());
 }
 

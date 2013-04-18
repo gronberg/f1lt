@@ -537,6 +537,10 @@
    </property>
   </action>
   <action name="actionCheck_for_updates">
+   <property name="icon">
+    <iconset resource="../icons/icons.qrc">
+     <normaloff>:/ui_icons/soft_update.png</normaloff>:/ui_icons/soft_update.png</iconset>
+   </property>
    <property name="text">
     <string>Check for updates</string>
    </property>

@@ -78,7 +78,7 @@ void UpdatesCheckerDialog::finished()
     }
     else
     {
-        ui->textEdit->setText("<p align=\"center\"><h2>There are no updates.</h2></p>");
+        ui->textEdit->setText("<p align=\"center\"><h2>No updates found.</h2></p>");
         ui->textEdit->append("<p align=\"center\"><img src=\":/ui_icons/icon.png\"/></p>");
         ui->textEdit->append("<p align=\"center\"><h3>You already have the latest F1LT version installed.</h3></p>");
     }

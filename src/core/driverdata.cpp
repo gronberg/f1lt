@@ -93,7 +93,6 @@ void DriverData::correctPosition(const EventData &ed)
     {
         int position = ed.correctPosition(qualiTimes[0]);
 
-        qDebug() << "CORRECT" << driver << position;
         if (position >= 1)
         {
             pos = position;

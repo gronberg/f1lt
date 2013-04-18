@@ -74,19 +74,35 @@ public:
     virtual QVariant extraRowData(const QModelIndex &index, int role) const = 0;
     virtual QModelIndex indexOf(int driverId);
 
+    virtual void getDiffColumns(int &low, int &high)
+    {
+        low = 0;
+        high = 0;
+    }
+
     virtual bool selectDriver(int id, int column)
     {
+        int low, high;
+        getDiffColumns(low, high);
+
         if (selectedDriver.first == id)
         {
-            if (selectedDriver.second == column)
-                selectedDriver.second = 0;
-            else
-                selectedDriver.second = column;
+            if (column >= low && column <= high)
+            {
+                if (selectedDriver.second >= low && selectedDriver.second <= high)
+                {
+                    selectedDriver.second = 0;
+                }
+                else
+                    selectedDriver.second = column;
+            }
         }
         else
         {
             selectedDriver.first = id;
-            selectedDriver.second = column;
+
+            if (column >= low && column <= high)
+                selectedDriver.second = column;
         }
         return true;
     }

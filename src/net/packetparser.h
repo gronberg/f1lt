@@ -120,6 +120,8 @@ public:
     void parseStreamBlock(const QByteArray &streamData);
 
     bool parsePacket(const QByteArray&, Packet &packet, int &pos);
+
+    void parseKeyFrame(const QByteArray &data);
     void parseCarPacket(Packet &packet, bool emitSignal = true);
     void parseSystemPacket(Packet &packet, bool emitSignal = true);
 

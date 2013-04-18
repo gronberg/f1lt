@@ -56,7 +56,6 @@ public slots:
 
     void start(int t = 1000)
     {
-        qDebug() << "START TIMER!";
         interval = t;
         timer.stop();
         counterMode = false;

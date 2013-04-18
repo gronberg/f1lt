@@ -93,6 +93,37 @@ void PacketParser::parseStreamBlock(const QByteArray &data)
     parsing = false;
 }
 
+void PacketParser::parseKeyFrame(const QByteArray &data)
+{
+    streamData = data;
+    Packet packet;
+    int pos = 0;
+
+    parsing = true;
+    while(parsePacket(streamData, packet, pos))
+    {
+        if (packet.encrypted && !eventData.key)
+        {
+            packet.longData.clear();
+            continue;
+        }
+        dataUpdates.setAllFalse();
+        if(!packet.carID && (packet.type == LTPackets::SYS_KEY_FRAME || packet.type == LTPackets::SYS_EVENT_ID))
+            decrypter.resetDecryption();
+
+        if (packet.carID)
+            parseCarPacket(packet, false);
+
+        else
+            parseSystemPacket(packet, false);
+
+        emit packetParsed(packet);
+
+        packet.longData.clear();
+    }
+    emit dataChanged(dataUpdates);
+}
+
 bool PacketParser::parsePacket(const QByteArray &buf, Packet &packet, int &pos)
 {
     static QByteArray pbuf;
@@ -239,7 +270,7 @@ void PacketParser::parseCarPacket(Packet &packet, bool emitSignal)
 
 //    dataUpdates.driverIds.insert(packet.carID);
 
-    qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
+//    qDebug()<<"CAR="<<packet.carID<<" "<<packet.type<<" "<<packet.data<<" "<<packet.length<<" "<<packet.longData.size()<<" "<<packet.longData.constData();
 
     if (packet.carID > eventData.driversData.size() || packet.carID < 1)
     {
@@ -681,8 +712,6 @@ void PacketParser::handleQualiEvent(const Packet &packet)
             eventData.driversData[packet.carID-1].qualiTimes[2] = LapTime(packet.longData.constData());
             eventData.driversData[packet.carID-1].colorData.qualiTimeColor(3) = (LTPackets::Colors)packet.data;
 
-            qDebug() << eventData.driversData[packet.carID-1].getDriverName() << eventData.driversData[packet.carID-1].lastLap.lapTime << eventData.driversData[packet.carID-1].getPosition();
-
             if (eventData.driversData[packet.carID-1].pos == 1 && eventData.driversData[packet.carID-1].qualiTimes[2].isValid())
             {
                 if (eventData.driversData[packet.carID-1].qualiTimes[2] < eventData.sessionRecords.fastestLap.lapTime)
@@ -935,8 +964,8 @@ void PacketParser::clearBuffer()
 
 void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 {
-    if (packet.type != LTPackets::SYS_COMMENTARY && packet.type != LTPackets::SYS_TIMESTAMP)
-        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTPackets::SYS_COMMENTARY) ? packet.longData.constData() : "");
+//    if (packet.type != LTPackets::SYS_COMMENTARY && packet.type != LTPackets::SYS_TIMESTAMP)
+//        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTPackets::SYS_COMMENTARY) ? packet.longData.constData() : "");
 
     unsigned int number, i;
 //    unsigned char packetLongData[129];
@@ -1341,7 +1370,8 @@ void PacketParser::keyFrameObtained(const QByteArray &keyFrame)
     else
     {
         clearEncryptedPackets();
-        parseStreamBlock(keyFrame);
+//        parseStreamBlock(keyFrame);
+        parseKeyFrame(keyFrame);
     }
 }
 
@@ -1358,12 +1388,15 @@ void PacketParser::decryptionKeyObtained(unsigned int key)
         decrypter.decrypt(encryptedPackets[i].longData);
 
         if(encryptedPackets[i].carID)
-            parseCarPacket(encryptedPackets[i]);
+            parseCarPacket(encryptedPackets[i], false);
 
         else
-            parseSystemPacket(encryptedPackets[i]);
-    }
+            parseSystemPacket(encryptedPackets[i], false);
+    }    
     encryptedPackets.clear();
+
+    dataUpdates.setAllTrue();
+    emit dataChanged(dataUpdates);
 }
 
 

@@ -104,6 +104,13 @@ public:
 
     QVariant gapToSelected(const DriverData &dd, int column) const;
 
+    virtual void getDiffColumns(int &low, int &high)
+    {
+        low = 4;
+        high = 9;
+    }
+
+
     virtual bool selectDriver(int id, int column)
     {
         LTModel::selectDriver(id, column);
