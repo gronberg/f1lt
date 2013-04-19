@@ -65,8 +65,7 @@ void LTFilesManager::finishedLTList()
     QStringList ltList = buf.split("<br>");
 
     disconnect(reply, SIGNAL(finished()), this, SLOT(finishedLTFile()));
-    disconnect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SIGNAL(error(QNetworkReply::NetworkError)));
-    disconnect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SIGNAL(downloadProgress(qint64,qint64)));
+    disconnect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SIGNAL(error(QNetworkReply::NetworkError)));    
 
     emit ltListObtained(ltList);
 }
@@ -77,6 +76,7 @@ void LTFilesManager::finishedLTFile()
 
     disconnect(reply, SIGNAL(finished()), this, SLOT(finishedLTList()));
     disconnect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SIGNAL(error(QNetworkReply::NetworkError)));
+    disconnect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SIGNAL(downloadProgress(qint64,qint64)));
 
     emit ltFileObtained(buf);            
 }

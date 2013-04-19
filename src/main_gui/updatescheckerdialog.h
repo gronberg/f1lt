@@ -57,7 +57,7 @@ signals:
     void newVersionAvailable();
     
 private slots:
-    void on_buttonBox_clicked(QAbstractButton *button);
+    void on_buttonBox_clicked(QAbstractButton *);
 
 private:
     Ui::UpdatesCheckerDialog *ui;

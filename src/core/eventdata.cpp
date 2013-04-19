@@ -245,6 +245,18 @@ int EventData::correctPosition(const LapTime &ld) const
     return timeList.indexOf(ld) + 1;
 }
 
+bool EventData::isFridayBeforeFP1()
+{
+    //on friday before FP1 starts there is already next GP weekend data loaded, but server still sends race results from previous race
+    if ((QDateTime::currentDateTimeUtc().date() == getEventInfo().fpDate) &&
+        getEventType() == LTPackets::RACE_EVENT)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 /*
 
 EventData eventData;*/

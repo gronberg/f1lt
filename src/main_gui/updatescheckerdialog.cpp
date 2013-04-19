@@ -119,7 +119,7 @@ void UpdatesCheckerDialog::show(bool check)
     }
 }
 
-void UpdatesCheckerDialog::on_buttonBox_clicked(QAbstractButton *button)
+void UpdatesCheckerDialog::on_buttonBox_clicked(QAbstractButton *)
 {
     accept();
 }

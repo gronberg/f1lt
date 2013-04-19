@@ -322,6 +322,10 @@ void TrackRecords::gatherSessionRecords(bool withDriverRecords)
     TrackWeekendRecords *twr = 0;
     TrackVersion *tv = 0;
     Track *track;
+
+    if (ed.isFridayBeforeFP1())
+        return;
+
     getCurrentTrackRecords(&track, &twr, &tv);
 
     if (twr != 0 && tv != 0)

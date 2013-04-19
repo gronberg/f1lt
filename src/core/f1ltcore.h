@@ -36,7 +36,7 @@ class F1LTCore
 {
 public:    
 
-    static QString programVersion() { return "2.0.1"; }
+    static QString programVersion() { return "2.0.2"; }
 
 
     static QString programHomeDir()

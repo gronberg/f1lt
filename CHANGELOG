@@ -1,3 +1,7 @@
+v2.0.2 (19-04-2013):
+- fixed bug with refreshing data during live session
+- fixed bug that caused starting recording previous race before FP1
+
 v2.0.1 (18-04-2013):
 - added 'check for updates' feature - you should now be on time with application updates
 - fixed lap order in head to head and lap time comparison

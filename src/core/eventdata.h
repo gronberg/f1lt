@@ -291,6 +291,8 @@ public:
 
     QVector<DriverData> &getDriversData()        { return driversData; }
 
+    bool isFridayBeforeFP1();
+
     friend class PacketParser;
     friend class DataStreamReader;
 

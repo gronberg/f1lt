@@ -68,7 +68,7 @@ void PacketParser::parseStreamBlock(const QByteArray &data)
 
         //after every SYS_KEY_FRAME packet decryption have to be reset
         if(!packet.carID && (packet.type == LTPackets::SYS_KEY_FRAME || packet.type == LTPackets::SYS_EVENT_ID))
-            decrypter.resetDecryption();
+            decrypter.resetDecryption();        
 
         if (packetBuffer->hasToBeBuffered())
         {
@@ -121,6 +121,7 @@ void PacketParser::parseKeyFrame(const QByteArray &data)
 
         packet.longData.clear();
     }
+    parsing = false;
     emit dataChanged(dataUpdates);
 }
 
@@ -964,8 +965,8 @@ void PacketParser::clearBuffer()
 
 void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
 {
-//    if (packet.type != LTPackets::SYS_COMMENTARY && packet.type != LTPackets::SYS_TIMESTAMP)
-//        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< ((packet.type != LTPackets::SYS_COMMENTARY) ? packet.longData.constData() : "");
+//    if (/*packet.type != LTPackets::SYS_COMMENTARY &&*/ packet.type != LTPackets::SYS_TIMESTAMP)
+//        qDebug()<<"SYS="<<packet.type<<" "<<packet.carID<<" "<<packet.data<<" "<<packet.length<<" "<< (/*(packet.type != LTPackets::SYS_COMMENTARY) ?*/ packet.longData.constData() /*: ""*/);
 
     unsigned int number, i;
 //    unsigned char packetLongData[129];
@@ -1089,7 +1090,8 @@ void PacketParser::parseSystemPacket(Packet &packet, bool emitSignal)
                     j = eventData.remainingTime.second();
 
                     if ((!eventData.sessionStarted || eventData.qualiBreak) && j != 0 && (eventData.eventType != LTPackets::RACE_EVENT ||
-                        (eventData.eventType == LTPackets::RACE_EVENT && eventData.lapsCompleted < eventData.eventInfo.laps)))
+                        (eventData.eventType == LTPackets::RACE_EVENT && eventData.lapsCompleted < eventData.eventInfo.laps)) &&
+                        !eventData.isFridayBeforeFP1())
                     {
                         eventData.sessionStarted = true;
                         eventData.qualiBreak = false;
@@ -1388,7 +1390,7 @@ void PacketParser::decryptionKeyObtained(unsigned int key)
         decrypter.decrypt(encryptedPackets[i].longData);
 
         if(encryptedPackets[i].carID)
-            parseCarPacket(encryptedPackets[i], false);
+            parseCarPacket(encryptedPackets[i], true);
 
         else
             parseSystemPacket(encryptedPackets[i], false);
