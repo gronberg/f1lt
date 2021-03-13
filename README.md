@@ -1,10 +1,10 @@
 <head>
-        <title>F1LT - Formula 1 live timing application</title>
+        <h1> <img class="icon" src="doc/icon.png"> F1LT - Formula 1 live timing application </h1>
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />        
         <link type="text/css" rel="stylesheet" href="doc/stylesheet.css"/>
 </head>
 <body>
-        <img class="icon" src="doc/icon.png"> <br><b>F1LT</b> is a Formula 1 live timing application written using Qt library for Windows and Linux systems. It is an alternative application to the java applet available on formula1.com site. To use the application you only need an account on formula1.com site, which is used to login into the live timing server and obtain the data. 
+        <br><b>F1LT</b> is a Formula 1 live timing application written using Qt library for Windows and Linux systems. It is an alternative application to the java applet available on formula1.com site. To use the application you only need an account on formula1.com site, which is used to login into the live timing server and obtain the data. 
         <br/><br/>
         Main features of the application:
         <ul>
